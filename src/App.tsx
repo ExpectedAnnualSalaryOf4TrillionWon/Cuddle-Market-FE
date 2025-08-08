@@ -10,7 +10,17 @@ function App() {
     <>
       {showMainHeader && <MainHeader />}
       <ChatButton />
-      <p className="font-custom text-7xl">Hello,World!</p>
+
+      <h1
+        className="heading1 p-md 
+          bg-blue-300                
+          tablet:bg-green-300 
+          desktop:bg-red-300
+          text-alert"
+      >
+        헤딩1 입니다
+      </h1>
+      <p className="bodyLarge">Hello,World!</p>
     </>
   );
 }
