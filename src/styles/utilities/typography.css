@@ -1,0 +1,32 @@
+@layer utilities {
+  /* 헤딩 */
+  /* @apply 키워드를 사용하면 (예시: text-heading1) 하나의 클래스네임의 Tailwind 클래스가 자동 생성됩니다. */
+  .heading1 {
+    @apply text-heading1;
+  }
+  .heading2 {
+    @apply text-heading2;
+  }
+  .heading3 {
+    @apply text-heading3;
+  }
+  .heading4 {
+    @apply text-heading4;
+  }
+  .heading5 {
+    @apply text-heading5;
+  }
+
+  /* 본문 */
+  .bodyLarge {
+    @apply text-bodyLarge;
+  }
+  .bodySmall {
+    @apply text-bodySmall;
+  }
+
+  /* 캡션 */
+  .caption {
+    @apply text-caption;
+  }
+}

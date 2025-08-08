@@ -1,1 +1,16 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* @layer 선언 없이도 Tailwind v4 기본 구조 안에서
+각 파일이 지정한 레이어(theme, base, utilities)에 맞춰 삽입되어 정상 동작합니다. */
+
+/* 토큰(theme 레이어로 직접 삽입) */
+@import './styles/tokens.colors.css' layer(theme);
+@import './styles/tokens.typography.css' layer(theme);
+@import './styles/tokens.spacing.css' layer(theme);
+@import './styles/tokens.layout.css' layer(theme);
+
+/* 폰트(base 레이어로 직접 삽입) */
+@import './styles/fonts.css' layer(base);
+
+/* 유틸리티(utilities 레이어) */
+@import './styles/utilities/typography.css' layer(utilities);

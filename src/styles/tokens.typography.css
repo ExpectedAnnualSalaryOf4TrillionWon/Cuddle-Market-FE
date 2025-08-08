@@ -1,0 +1,35 @@
+/* utilities 에서, @apply 키워드와 함께 사용하면 하나의 클래스네임의 Tailwind 클래스가 자동 생성됩니다. */
+/* 예시: @apply text-heading1; =>  --text-heading1 이라는 텍스트가 포함된 속성들은 전부 반영됩니다. */
+@theme {
+  --text-heading1: 36px;
+  --text-heading1--line-height: 1.25;
+  --text-heading1--font-weight: 500;
+
+  --text-heading2: 30px;
+  --text-heading2--line-height: 1.25;
+  --text-heading2--font-weight: 500;
+
+  --text-heading3: 24px;
+  --text-heading3--line-height: 1.375;
+  --text-heading3--font-weight: 500;
+
+  --text-heading4: 20px;
+  --text-heading4--line-height: 1.375;
+  --text-heading4--font-weight: 500;
+
+  --text-heading5: 18px;
+  --text-heading5--line-height: 1.375;
+  --text-heading5--font-weight: 500;
+
+  --text-bodyLarge: 16px;
+  --text-bodyLarge--line-height: 1.625;
+  --text-bodyLarge--font-weight: 400;
+
+  --text-bodySmall: 14px;
+  --text-bodySmall--line-height: 1.375;
+  --text-bodySmall--font-weight: 400;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 1.375;
+  --text-caption--font-weight: 400;
+}
