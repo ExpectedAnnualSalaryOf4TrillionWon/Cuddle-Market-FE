@@ -1,1 +1,100 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Cafe24Oneprettynight';
+  src: 
+    url('assets/fonts/Cafe24Oneprettynight-v2.0/Cafe24Oneprettynight-v2.0.woff2') format('woff2'),
+    url('assets/fonts/Cafe24Oneprettynight-v2.0/Cafe24Oneprettynight-v2.0.woff') format('woff'),
+    url('assets/fonts/Cafe24Oneprettynight-v2.0/Cafe24Oneprettynight-v2.0.ttf') format('truetype'),
+    url('assets/fonts/Cafe24Oneprettynight-v2.0/Cafe24Oneprettynight-v2.0.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Thin.subset.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-ExtraLight.subset.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Light.subset.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Regular.subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Medium.subset.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-SemiBold.subset.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Bold.subset.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-ExtraBold.subset.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('assets/fonts/Pretendard/Pretendard-Black.subset.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@layer utilities {
+  .font-Custom {
+    font-family: 'Pretendard', sans-serif;
+    line-height: 1.25;
+  }
+}
