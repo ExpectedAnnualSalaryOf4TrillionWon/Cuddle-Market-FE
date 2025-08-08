@@ -1,6 +1,16 @@
+import ChatButton from './features/chat/ChatButton';
+import { useLocation } from 'react-router-dom';
+import MainHeader from './components/layout/Header';
+
 function App() {
+  const location = useLocation();
+  const showMainHeader = location.pathname === '/' || location.pathname.startsWith('/products/');
+
   return (
     <>
+      {showMainHeader && <MainHeader />}
+      <ChatButton />
+
       <h1
         className="heading1 p-md 
           bg-blue-300                
