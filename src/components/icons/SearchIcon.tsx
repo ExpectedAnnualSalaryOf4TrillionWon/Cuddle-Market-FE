@@ -3,7 +3,7 @@ type SearchIconProps = {
   color?: string;
 };
 
-const SearchIcon = ({ size = 32, color = '#fff' }: SearchIconProps) => (
+const SearchIcon = ({ size = 24, color = '#fff' }: SearchIconProps) => (
   <svg
     width={size}
     height={size}
