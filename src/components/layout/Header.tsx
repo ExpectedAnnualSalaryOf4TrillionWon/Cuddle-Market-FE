@@ -1,6 +1,7 @@
 // import SearchIcon from '@icons/SearchIcon';
 import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
+import { RxAvatar } from 'react-icons/rx';
 import logoImage from '../../../public/assets/images/CuddleMarketLogo.png';
 
 export function Header() {
@@ -12,7 +13,7 @@ export function Header() {
         <div className="flex items-center justify-between gap-lg">
           {/* 로고 */}
           <div className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-12 object-contain" />
+            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
           </div>
 
           {/* 검색 영역 */}
@@ -57,23 +58,19 @@ export function Header() {
                 rounded-md
                 text-text-primary
                 hover:bg-light
-                transition-all
-              "
+                transition-all"
             >
               로그인
             </button>
 
             <button
-              className="
-                inline-flex items-center justify-center gap-sm
+              className="items-center justify-center gap-sm
                 h-9 px-lg py-sm
-                rounded-md
-                bg-dark text-bg
-                hover:opacity-90
                 transition-all
+                
               "
             >
-              회원가입
+              <RxAvatar size={22} />
             </button>
           </div>
         </div>
