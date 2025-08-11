@@ -1,3 +1,5 @@
+import { FiFilter } from 'react-icons/fi';
+
 const categories = [
   { id: 'all', name: '전체', count: 3847 },
   { id: 'food', name: '사료/간식', count: 623 },
@@ -67,6 +69,7 @@ const petCategories = {
     ],
   },
 };
+
 export function CategoryFilter() {
   return (
     <div className="bg-secondary">
@@ -106,18 +109,19 @@ export function CategoryFilter() {
           <div
             role="tablist"
             aria-label="반려동물 상위 분류"
-            className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-sm mb-lg
-            px-sm py-sm rounded-3xl
-            bg-dark/25"
+            className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-sm mb-lg px-sm py-sm rounded-3xl bg-dark/25"
           >
             {Object.entries(petCategories).map(([key, category]) => (
               <button
                 key={key}
                 role="tab"
                 type="button"
-                className={`w-full px-md py-sm rounded-3xl bg-bg bodySmall text-text-primary text-center  transition hover:bg-primary/10
-                  ${category.selected ? 'bg-dark' : 'bg-transparent'}
-                  `}
+                aria-selected={category.selected}
+                className={`w-full px-md py-sm rounded-3xl ${/* border/배경 */ ''}
+                  ${
+                    category.selected ? 'bg-dark' : 'bg-transparent'
+                  } bodySmall text-text-primary text-center transition hover:bg-primary/10
+                `}
               >
                 {category.name}
                 <span className="ml-sm caption text-text-secondary">{category.count}</span>
@@ -126,7 +130,7 @@ export function CategoryFilter() {
           </div>
 
           {/* 하위 분류(개체) */}
-          <div className="space-y-xl">
+          <div className="space-y-xl mb-2xl">
             {Object.entries(petCategories)
               .filter(([_, category]) => category.selected)
               .map(([key, category]) => (
@@ -149,9 +153,99 @@ export function CategoryFilter() {
                 </div>
               ))}
           </div>
+
+          {/* 세부 필터 */}
+          <div>
+            <button
+              type="button"
+              className="w-full items-center justify-between px-lg py-sm mb-lg h-10 rounded-md bg-light text-text-primary transition-all"
+            >
+              <div className="flex items-center gap-sm">
+                <FiFilter />
+                <span className="bodySmall">세부 필터</span>
+                <span className="items-center justify-center px-sm py-[2px] gap-sm whitespace-nowrap overflow-hidden rounded-md bg-secondary border border-border caption text-text-primary">
+                  상품상태 · 가격대 · 지역
+                </span>
+              </div>
+            </button>
+
+            <div className="space-y-lg">
+              <div className="grid grid-cols-1 desktop:grid-cols-3 gap-xl rounded-lg ">
+                <div>
+                  <h3 className="mb-md font-medium text-text-primary">상품 상태</h3>
+                  <div className="flex flex-wrap gap-sm">
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      새상품
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      거의새것
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      사용감있음
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      수리필요
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="mb-md font-medium text-text-primary">가격대</h3>
+                  <div className="flex flex-wrap gap-sm">
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      1만원 이하
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      1-5만원
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      5-10만원
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      10만원 이상
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="mb-md font-medium text-text-primary">지역</h3>
+                  <div className="flex flex-wrap gap-sm">
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      서울
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      경기
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      인천
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      부산
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      대구
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      광주
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      대전
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      울산
+                    </button>
+                    <button className="px-md rounded-md bg-light bodySmall transition-all">
+                      기타
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </div>
   );
 }
+
 export default CategoryFilter;
