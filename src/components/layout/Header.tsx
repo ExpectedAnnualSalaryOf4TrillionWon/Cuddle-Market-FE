@@ -1,5 +1,6 @@
-import SearchIcon from '@icons/SearchIcon';
+// import SearchIcon from '@icons/SearchIcon';
 import { useState } from 'react';
+import { IoIosSearch } from 'react-icons/io';
 import logoImage from '../../../public/assets/images/CuddleMarketLogo.png';
 
 export function Header() {
@@ -43,7 +44,7 @@ export function Header() {
                   transition-all
                 "
               >
-                <SearchIcon />
+                <IoIosSearch />
               </button>
             </div>
           </div>
