@@ -1,6 +1,7 @@
-import ChatButton from './features/chat/ChatButton';
+import Footer from '@components/layout/Footer';
 import { useLocation } from 'react-router-dom';
 import MainHeader from './components/layout/Header';
+import ChatButton from './features/chat/ChatButton';
 
 function App() {
   const location = useLocation();
@@ -21,6 +22,7 @@ function App() {
         헤딩1 입니다
       </h1>
       <p className="bodyLarge">Hello,World!</p>
+      <Footer />
     </>
   );
 }
