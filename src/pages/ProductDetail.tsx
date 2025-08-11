@@ -1,5 +1,6 @@
 import ProductCard from '@layout/ProductCard';
 import { BsChat } from 'react-icons/bs';
+import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
@@ -142,7 +143,10 @@ const ProductDetail = () => {
                 </div>
                 <div>
                   <h3 className="text-text-primary font-medium">{product.seller.name}</h3>
-                  <p className="text-text-secondary bodySmall">{product.location}</p>
+                  <div className="flex items-center gap-xs text-text-secondary bodySmall">
+                    <CiLocationOn />
+                    <span>{product.location}</span>
+                  </div>
                 </div>
               </div>
               <button className="w-full rounded-xl p-xs border border-border bg-bg/50">
@@ -182,11 +186,15 @@ const ProductDetail = () => {
                 </span>
                 <div className="flex items-center gap-lg text-text-secondary bodySmall">
                   <div className="flex items-center gap-1">
+                    <CiLocationOn />
                     <span>{product.location}</span>
                   </div>
+
                   <div className="flex items-center gap-1">
+                    <CiClock2 />
                     <span>{product.timeAgo}</span>
                   </div>
+
                   <span>조회 {product.viewCount}</span>
                   <span>찜 {product.likeCount}</span>
                 </div>
