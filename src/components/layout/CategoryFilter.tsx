@@ -14,6 +14,7 @@ const petCategories = {
   mammal: {
     name: '포유류',
     count: 2156,
+    selected: true,
     pets: [
       { id: 'dog', name: '강아지', count: 1245 },
       { id: 'cat', name: '고양이', count: 892 },
@@ -28,6 +29,7 @@ const petCategories = {
   bird: {
     name: '조류',
     count: 287,
+    selected: false,
     pets: [
       { id: 'parakeet', name: '잉꼬', count: 156 },
       { id: 'parrot', name: '앵무새', count: 89 },
@@ -37,6 +39,7 @@ const petCategories = {
   reptile: {
     name: '파충류',
     count: 198,
+    selected: false,
     pets: [
       { id: 'lizard', name: '도마뱀', count: 89 },
       { id: 'snake', name: '뱀', count: 67 },
@@ -46,6 +49,7 @@ const petCategories = {
   aquatic: {
     name: '수생동물',
     count: 156,
+    selected: false,
     pets: [
       { id: 'fish', name: '물고기', count: 89 },
       { id: 'shrimp', name: '새우', count: 45 },
@@ -55,6 +59,7 @@ const petCategories = {
   insect: {
     name: '곤충/절지동물',
     count: 67,
+    selected: false,
     pets: [
       { id: 'spider', name: '거미', count: 34 },
       { id: 'beetle', name: '딱정벌레', count: 23 },
@@ -64,7 +69,7 @@ const petCategories = {
 };
 export function CategoryFilter() {
   return (
-    <div className="border-b border-border bg-light">
+    <div className="bg-secondary">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-xl">
         {/* 상품 카테고리 */}
         <section aria-labelledby="category-heading" className="mb-2xl">
@@ -98,44 +103,51 @@ export function CategoryFilter() {
           </h3>
 
           {/* 상위 분류 탭 */}
-          <nav aria-label="반려동물 상위 분류" className="mb-lg">
-            <ul className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-sm">
-              {Object.entries(petCategories).map(([key, category]) => (
-                <li key={key}>
-                  <button
-                    type="button"
-                    className="w-full px-md py-sm rounded-md border border-border bg-bg bodySmall text-text-primary text-left transition focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 hover:bg-primary/10"
-                  >
-                    {category.name}
-                    <span className="ml-sm caption text-text-secondary">{category.count}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div
+            role="tablist"
+            aria-label="반려동물 상위 분류"
+            className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-5 gap-sm mb-lg
+            px-sm py-sm rounded-3xl
+            bg-dark/25"
+          >
+            {Object.entries(petCategories).map(([key, category]) => (
+              <button
+                key={key}
+                role="tab"
+                type="button"
+                className={`w-full px-md py-sm rounded-3xl bg-bg bodySmall text-text-primary text-center  transition hover:bg-primary/10
+                  ${category.selected ? 'bg-dark' : 'bg-transparent'}
+                  `}
+              >
+                {category.name}
+                <span className="ml-sm caption text-text-secondary">{category.count}</span>
+              </button>
+            ))}
+          </div>
 
           {/* 하위 분류(개체) */}
           <div className="space-y-xl">
-            {Object.entries(petCategories).map(([key, category]) => (
-              <div key={key} aria-labelledby={`pet-sub-${key}`}>
-                <h4 id={`pet-sub-${key}`} className="mb-sm heading5 text-text-primary">
-                  {category.name}
-                </h4>
-                <ul className="flex flex-wrap gap-sm">
-                  {category.pets.map(pet => (
-                    <li key={pet.id}>
+            {Object.entries(petCategories)
+              .filter(([_, category]) => category.selected)
+              .map(([key, category]) => (
+                <div key={key} aria-labelledby={`pet-sub-${key}`}>
+                  <h4 id={`pet-sub-${key}`} className="mb-sm heading5 text-text-primary">
+                    {category.name}
+                  </h4>
+                  <div className="flex flex-wrap gap-sm" role="tabpanel">
+                    {category.pets.map(pet => (
                       <button
+                        key={pet.id}
                         type="button"
                         className="inline-flex items-center px-md py-xs rounded-md border border-border bg-bg bodySmall text-text-primary transition focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 hover:bg-primary/10"
                       >
                         <span>{pet.name}</span>
                         <span className="ml-sm caption text-text-secondary">{pet.count}</span>
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                    ))}
+                  </div>
+                </div>
+              ))}
           </div>
         </section>
       </div>
