@@ -72,7 +72,7 @@ const petCategories = {
 
 export function CategoryFilter() {
   return (
-    <div className="bg-secondary">
+    <div>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-xl">
         {/* 상품 카테고리 */}
         <section aria-labelledby="category-heading" className="mb-2xl">
