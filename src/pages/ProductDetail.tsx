@@ -149,7 +149,10 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
-              <button className="w-full rounded-xl p-xs border border-border bg-bg/50">
+              <button
+                type="button"
+                className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer"
+              >
                 판매자 정보보기
               </button>
             </div>
