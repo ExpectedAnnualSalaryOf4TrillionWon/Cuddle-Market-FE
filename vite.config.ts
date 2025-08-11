@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
-      { find: '@components', replacement: '/src/components' },
+      { find: '@layout', replacement: '/src/components/layout' },
       { find: '@icons', replacement: '/src/components/icons' },
       { find: '@features', replacement: '/src/features' },
       { find: '@pages', replacement: '/src/pages' },

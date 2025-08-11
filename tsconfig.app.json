@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "/", // src 기준으로 절대경로 설정
+    "baseUrl": "/",
     "paths": {
-      "@components/*": ["src/components/layout/*"], // @components 별칭
+      "@layout/*": ["src/components/layout/*"],
       "@features/*": ["src/features/*"],
       "@icons/*": ["src/components/icons/*"],
       "@pages/*": ["src/pages/*"],
