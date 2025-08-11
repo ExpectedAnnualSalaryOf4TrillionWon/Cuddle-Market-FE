@@ -1,6 +1,7 @@
-import ChatButton from './features/chat/ChatButton';
+import Home from '@pages/Home';
 import { useLocation } from 'react-router-dom';
 import MainHeader from './components/layout/Header';
+import ChatButton from './features/chat/ChatButton';
 
 function App() {
   const location = useLocation();
@@ -9,18 +10,8 @@ function App() {
   return (
     <>
       {showMainHeader && <MainHeader />}
+      <Home />
       <ChatButton />
-
-      <h1
-        className="heading1 p-md 
-          bg-blue-300                
-          tablet:bg-green-300 
-          desktop:bg-red-300
-          text-alert"
-      >
-        헤딩1 입니다
-      </h1>
-      <p className="bodyLarge">Hello,World!</p>
     </>
   );
 }
