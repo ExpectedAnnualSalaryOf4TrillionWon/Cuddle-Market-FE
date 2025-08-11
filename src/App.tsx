@@ -1,7 +1,26 @@
+import ChatButton from './features/chat/ChatButton';
+import { useLocation } from 'react-router-dom';
+import MainHeader from './components/layout/Header';
+
 function App() {
+  const location = useLocation();
+  const showMainHeader = location.pathname === '/' || location.pathname.startsWith('/products/');
+
   return (
     <>
-      <p className="text-7xl">Hello,World!</p>
+      {showMainHeader && <MainHeader />}
+      <ChatButton />
+
+      <h1
+        className="heading1 p-md 
+          bg-blue-300                
+          tablet:bg-green-300 
+          desktop:bg-red-300
+          text-alert"
+      >
+        헤딩1 입니다
+      </h1>
+      <p className="bodyLarge">Hello,World!</p>
     </>
   );
 }
