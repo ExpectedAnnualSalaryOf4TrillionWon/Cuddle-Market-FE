@@ -1,72 +1,81 @@
-import { useNavigate } from 'react-router-dom';
+// 모바일 경우에 넣는 로고이미지는 다른 이미지입니다.
+import logoImage from '@images/CuddleMarketLogo.png';
 import { useState } from 'react';
+import { IoIosSearch } from 'react-icons/io';
+import { RxAvatar } from 'react-icons/rx';
 
-const MainHeader = () => {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleSearch = () => {
-    if (!searchTerm.trim()) return;
-    navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
-  };
-
-  const toggleDropdown = () => {
-    setDropdownOpen(prev => !prev);
-  };
+export function Header() {
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-blue-200 shadow-md h-30">
-      {/* 로고 */}
-      <div className="cursor-pointer" onClick={() => navigate('/')}>
-        <img src="/assets/images/CuddleMarketLogo.png" className="h-25" />
-      </div>
+    <header className="sticky top-0 z-1 bg-primary">
+      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md">
+        <div className="flex items-center justify-between gap-lg">
+          {/* 로고 */}
+          <div className="flex items-center">
+            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+          </div>
 
-      {/* 검색창 */}
-      <div className="flex-1 mx-8 flex h-12">
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onKeyDown={e => e.key === 'Enter' && handleSearch()}
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-blue-500 rounded-r-md hover:bg-blue-600 transition-colors w-12  flex items-center justify-center"
-        >
-          검색
-        </button>
-      </div>
+          {/* 검색 영역 */}
+          <div className="flex-1 max-w-[42rem] mx-lg">
+            <div className="flex items-center gap-sm">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="원하는 반려동물 용품을 검색해보세요"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="
+                    w-full
+                    px-lg py-sm
+                    border border-border rounded-lg
+                    bg-bg
+                    text-text-primary placeholder:text-text-secondary
+                    backdrop-blur-sm
+                  "
+                />
+              </div>
 
-      {/* 프로필 */}
-      <div className="relative">
-        <img
-          src="/assets/images/profile-default.png"
-          alt="profile"
-          onClick={toggleDropdown}
-          className="h-15 w-15 rounded-full cursor-pointer border border-gray-300"
-        />
-        {dropdownOpen && (
-          <ul className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
-            <li
-              onClick={() => navigate('/mypage')}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              <button
+                className="items-center justify-center gap-sm
+                  h-full px-sm py-sm
+                  border border-border rounded-md
+                  bg-bg/20 hover:bg-bg/30
+                  text-text-primary
+                  transition-all
+                "
+              >
+                <IoIosSearch />
+              </button>
+            </div>
+          </div>
+
+          {/* 로그인/회원가입 */}
+          <div className="flex items-center">
+            <button
+              className="items-center justify-center gap-sm
+                h-9 px-lg py-sm
+                rounded-md
+                text-text-primary
+                hover:bg-light
+                transition-all"
             >
-              마이페이지
-            </li>
-            <li
-              onClick={() => alert('로그아웃 기능')}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              로그인
+            </button>
+
+            <button
+              className="items-center justify-center gap-sm
+                h-9 px-lg py-sm
+                transition-all
+                
+              "
             >
-              로그아웃
-            </li>
-          </ul>
-        )}
+              <RxAvatar size={22} />
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );
-};
-
-export default MainHeader;
+}
+export default Header;
