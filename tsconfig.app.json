@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
+    "baseUrl": "/src",
+    "paths": {
+      "@layout/*": ["/components/layout/*"],
+      "@features/*": ["/features/*"],
+      "@icons/*": ["/components/icons/*"],
+      "@common/*": ["/src/components/common/*"],
+      "@pages/*": ["/pages/*"],
+      "@utils/*": ["/utils/*"]
+    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,

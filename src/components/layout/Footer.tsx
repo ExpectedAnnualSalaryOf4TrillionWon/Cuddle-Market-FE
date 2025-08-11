@@ -2,7 +2,7 @@ import logoImage from '../../../public/assets/images/CuddleMarketLogo.png';
 
 const Footer = () => {
   return (
-    <footer className="mt-2xl tablet:mt-3xl border-t border-border bg-light">
+    <footer className="pt-lg border-t border-border bg-light">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-start max-w-[var(--container-max-width)] mx-auto px-lg py-xl">
         <div className="sm:col-span-2 lg:col-span-1 w-[5rem] ">
           <img src={logoImage} alt="커들마켓" className="w-auto h-full object-contain" />
@@ -66,7 +66,7 @@ const Footer = () => {
             <li>고객센터: 1588-0000</li>
             <li>평일 09:00 - 18:00</li>
             <li>주말/공휴일 휴무</li>
-            <li>help@petmarket.co.kr</li>
+            <li>help@cuddlemarket.co.kr</li>
           </ul>
         </div>
       </div>
