@@ -1,23 +1,13 @@
 import { IoIosHeartEmpty } from 'react-icons/io';
 import bowl from '../../public/assets/images/bowl.jpg';
+import CategoryFilter from '@layout/CategoryFilter';
+
 const Home = () => {
   return (
     <div>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 탭 */}
-        <div className="flex flex-col gap-sm w-full">
-          <div className="grid grid-cols-3 items-center justify-center w-full mb-lg tablet:mb-xl p-sm rounded-xl bg-secondary">
-            <button className="bg-dark flex-1 items-center justify-center h-[calc(100%-1px)] gap-sm px-sm py-xs rounded-xl border border-transparent bodySmall font-medium text-text-primary whitespace-nowrap focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 transition-[color,box-shadow] data-[state=active]:bg-bg hover:bg-primary/10">
-              전체상품
-            </button>
-            <button className=" flex-1 items-center justify-center h-[calc(100%-1px)] gap-sm px-sm py-xs rounded-xl border border-transparent bodySmall font-medium text-text-primary whitespace-nowrap focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 transition-[color,box-shadow] data-[state=active]:bg-bg hover:bg-primary/10">
-              판매
-            </button>
-            <button className=" flex-1 items-center justify-center h-[calc(100%-1px)] gap-sm px-sm py-xs rounded-xl border border-transparent bodySmall font-medium text-text-primary whitespace-nowrap focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-primary/50 transition-[color,box-shadow] data-[state=active]:bg-bg hover:bg-primary/10">
-              판매요청
-            </button>
-          </div>
-        </div>
+        <CategoryFilter />
 
         {/* 섹션 타이틀 */}
         <div>
@@ -99,7 +89,6 @@ const Home = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
