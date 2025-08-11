@@ -2,7 +2,7 @@ import { IoIosHeartEmpty } from 'react-icons/io';
 import bowl from '../../public/assets/images/bowl.jpg';
 const Home = () => {
   return (
-    <div className="bg-primary/20">
+    <div>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 탭 */}
         <div className="flex flex-col gap-sm w-full">
