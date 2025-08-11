@@ -1,8 +1,7 @@
-import Footer from '@components/layout/Footer';
 import { useLocation } from 'react-router-dom';
+import Footer from './components/layout/Footer';
 import MainHeader from './components/layout/Header';
 import ChatButton from './features/chat/ChatButton';
-
 function App() {
   const location = useLocation();
   const showMainHeader = location.pathname === '/' || location.pathname.startsWith('/products/');
