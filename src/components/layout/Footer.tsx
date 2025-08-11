@@ -4,9 +4,9 @@ const Footer = () => {
   return (
     <footer className="mt-2xl tablet:mt-3xl border-t border-border bg-light">
       <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-4 max-w-[var(--container-max-width)] mx-auto px-lg py-xl tablet:py-2xl gap-xl tablet:gap-2xl">
-        <div className="flex gap-sm">
-          <div className="flex justify-center w-6 h-6 rounded bg-primary">
-            <img src={logoImage} alt="Cuddle Market" className="w-auto h-12 object-contain" />
+        <div className="flex items-start gap-sm">
+          <div className="w-[3rem]">
+            <img src={logoImage} alt="커들마켓" className="w-auto h-full object-contain" />
           </div>
           <h3 className="heading4 text-text-primary">펫마켓</h3>
         </div>
