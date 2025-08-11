@@ -5,7 +5,7 @@ const Footer = () => {
     <footer className="pt-lg border-t border-border bg-light">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-start max-w-[var(--container-max-width)] mx-auto px-lg py-xl">
         <div className="sm:col-span-2 lg:col-span-1 w-[5rem] ">
-          <img src={logoImage} alt="커들마켓" className="w-auto h-full object-contain" />
+          <img src={logoImage} alt="커들마켓" className="h-20" />
         </div>
 
         <div>
