@@ -1,3 +1,4 @@
+import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import bowl from '../../public/assets/images/bowl.jpg';
@@ -10,6 +11,8 @@ const Home = () => {
   };
   return (
     <div>
+      <CategoryFilter />
+
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 탭 */}
         <div className="flex flex-col gap-sm w-full">
