@@ -103,7 +103,7 @@ const ProductDetail = () => {
   const isAvailable = product.tradeStatus === 'available';
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
           {/* 이미지 갤러리 */}
