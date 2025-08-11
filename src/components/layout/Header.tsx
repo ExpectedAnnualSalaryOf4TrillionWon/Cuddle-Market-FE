@@ -1,8 +1,8 @@
-// import SearchIcon from '@icons/SearchIcon';
+// 모바일 경우에 넣는 로고이미지는 다른 이미지입니다.
+import logoImage from '@images/CuddleMarketLogo.png';
 import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
-import logoImage from '../../../public/assets/images/CuddleMarketLogo.png';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
