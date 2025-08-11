@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import Footer from '@layout';
+import Footer from '@layout/Footer';
 import MainHeader from './components/layout/Header';
 import ChatButton from './features/chat/ChatButton';
 function App() {
