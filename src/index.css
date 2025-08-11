@@ -12,3 +12,18 @@
 @import './styles/tokens.layout.css' layer(theme);
 /* 유틸리티(utilities 레이어) */
 @import './styles/utilities/typography.css' layer(utilities);
+
+/* Chrome / Edge / Safari */
+input[type='date'] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0; /* 안 보이게 */
+  position: absolute;
+  inset: 0; /* 클릭 영역 유지 */
+  cursor: pointer;
+}
+input[type='date']::-webkit-inner-spin-button {
+  display: none;
+} /* (옵션) 스핀 제거 */

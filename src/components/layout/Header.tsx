@@ -3,9 +3,16 @@ import logoImage from '@images/CuddleMarketLogo.png';
 import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
+import { useNavigate } from 'react-router-dom';
 
-export function Header() {
+const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  const goToSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e);
+    navigate('/signup');
+  };
 
   return (
     <header className="sticky top-0 z-1 bg-primary">
@@ -13,7 +20,7 @@ export function Header() {
         <div className="flex items-center justify-between gap-lg">
           {/* 로고 */}
           <div className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+            <img src={logoImage} alt="커들마켓" className="w-auto h-16 object-contain" />
           </div>
 
           {/* 검색 영역 */}
@@ -31,7 +38,6 @@ export function Header() {
                     border border-border rounded-lg
                     bg-bg
                     text-text-primary placeholder:text-text-secondary
-                    backdrop-blur-sm
                   "
                 />
               </div>
@@ -67,8 +73,8 @@ export function Header() {
               className="items-center justify-center gap-sm
                 h-9 px-lg py-sm
                 transition-all
-                
               "
+              onClick={goToSignUp}
             >
               <RxAvatar size={22} />
             </button>
@@ -77,5 +83,5 @@ export function Header() {
       </div>
     </header>
   );
-}
+};
 export default Header;
