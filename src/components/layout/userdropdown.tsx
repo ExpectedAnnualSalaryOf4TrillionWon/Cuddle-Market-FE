@@ -55,8 +55,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
         <>
           <button
             className="w-full px-md py-xs hover:bg-gray-100 transition"
-            onClick={() => {
+            onClick={e => {
               setIsOpen(false);
+              goToSignIn(e);
             }}
           >
             로그인
