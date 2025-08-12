@@ -1,8 +1,10 @@
-// import ProductCard from '@layout/ProductCard';
+
+import ProductCard from '@layout/ProductCard';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
+
 
 const product = {
   id: '1',
@@ -83,11 +85,13 @@ const relatedProducts = [
 const ProductDetail = () => {
   const { id } = useParams();
   console.log(id);
+
   const navigate = useNavigate();
   const goToUserPage = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e);
     navigate(`/user/${1}`);
   };
+
 
   // 거래 상태별 토큰 매핑
   const getTradeStatusInfo = (status: 'available' | 'trading' | 'reserved' | 'sold') => {
@@ -253,9 +257,9 @@ const ProductDetail = () => {
         <div className="mt-4xl">
           <h2 className="heading4 text-text-primary mb-lg">{product.seller.name}님의 다른 상품</h2>
           <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
-            {/* {relatedProducts.map(rp => (
-              // <ProductCard key={rp.id} {...rp} />
-            ))} */}
+            {relatedProducts.map(rp => (
+              <ProductCard key={rp.id} {...rp} />
+            ))}
           </div>
         </div>
       </div>
