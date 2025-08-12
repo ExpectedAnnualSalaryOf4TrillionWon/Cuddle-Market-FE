@@ -3,6 +3,7 @@ import logoImage from '@images/CuddleMarketLogo.png';
 import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
+import { Link } from 'react-router-dom';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,9 +13,9 @@ export function Header() {
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md">
         <div className="flex items-center justify-between gap-lg">
           {/* 로고 */}
-          <div className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </div>
+          </Link>
 
           {/* 검색 영역 */}
           <div className="flex-1 max-w-[42rem] mx-lg">
@@ -70,7 +71,7 @@ export function Header() {
                 
               "
             >
-              <RxAvatar size={22} />
+              <RxAvatar size={40} />
             </button>
           </div>
         </div>
