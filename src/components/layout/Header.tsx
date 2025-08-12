@@ -72,7 +72,7 @@ export function Header() {
           </div>
 
           {/* 유저 드롭다운 호출 */}
-          <div className="relative flex items-center">
+          <div className="relative flex items-center" ref={dropdownRef}>
             <button
               type="button"
               className="items-center justify-center gap-sm
