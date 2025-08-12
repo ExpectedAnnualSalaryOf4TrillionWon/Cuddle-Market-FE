@@ -1,8 +1,10 @@
+
 import ProductCard from '@layout/ProductCard';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 const product = {
   id: '1',
@@ -84,6 +86,13 @@ const ProductDetail = () => {
   const { id } = useParams();
   console.log(id);
 
+  const navigate = useNavigate();
+  const goToUserPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e);
+    navigate(`/user/${1}`);
+  };
+
+
   // 거래 상태별 토큰 매핑
   const getTradeStatusInfo = (status: 'available' | 'trading' | 'reserved' | 'sold') => {
     switch (status) {
@@ -150,6 +159,7 @@ const ProductDetail = () => {
                 </div>
               </div>
               <button
+                onClick={goToUserPage}
                 type="button"
                 className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer"
               >
