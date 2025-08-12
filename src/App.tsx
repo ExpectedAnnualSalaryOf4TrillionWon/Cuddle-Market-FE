@@ -1,6 +1,5 @@
 import Footer from '@layout/Footer';
 import { useLocation } from 'react-router-dom';
-import MainHeader from './components/layout/Header';
 import ChatButton from './features/chat/ChatButton';
 import AppRoutes from './routes/index';
 
@@ -10,7 +9,6 @@ function App() {
 
   return (
     <>
-      {showMainHeader && <MainHeader />}
       <AppRoutes />
       <ChatButton />
 
