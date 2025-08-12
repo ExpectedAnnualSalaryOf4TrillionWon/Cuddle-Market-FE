@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 // 상태관리 props 전달을 위한 타입설정
 interface UserDropdownProps {
   isOpen: boolean;
@@ -19,14 +21,20 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
 }) => {
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
+  const navigate = useNavigate();
+  const goToSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e);
+    navigate('/signin');
+  };
   return (
     <div className="absolute right-5 top-full mt-3 w-30 bg-point shadow-lg rounded-md border border-border z-50 opacity-85">
       {isLoggedIn /*로그인이 되어있을 경우*/ ? (
         <>
           <button
             className="w-full px-md py-xs hover:bg-dark transition"
-            onClick={() => {
+            onClick={e => {
               setIsOpen(false);
+              goToSignIn(e);
             }}
           >
             마이페이지

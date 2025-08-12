@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import UserDropdown from './userdropdown';
+import UserDropdown from './UserDropDown';
 
 
 
