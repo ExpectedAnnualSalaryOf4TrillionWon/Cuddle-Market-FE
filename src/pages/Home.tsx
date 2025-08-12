@@ -2,7 +2,6 @@ import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import bowl from '../../public/assets/images/bowl.jpg';
-import CategoryFilter from '@layout/CategoryFilter';
 
 const Home = () => {
   const navigate = useNavigate();
