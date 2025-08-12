@@ -5,11 +5,14 @@ import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import UserDropdown from './userdropdown';
 
-export function Header() {
+
+
+const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
 
   {
     /* 드롭다운 메뉴 밖에서 마우스 클릭시 드롭다운 비활성화 */
@@ -27,6 +30,10 @@ export function Header() {
     };
   }, []);
 
+ 
+  
+
+
   return (
     <header className="sticky top-0 z-1 bg-primary">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md">
@@ -35,6 +42,7 @@ export function Header() {
           <Link to="/" className="flex items-center">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
           </Link>
+
 
           {/* 검색 영역 */}
           <div className="flex-1 max-w-[42rem] mx-lg">
@@ -51,7 +59,6 @@ export function Header() {
                     border border-border rounded-lg
                     bg-bg
                     text-text-primary placeholder:text-text-secondary
-                    backdrop-blur-sm
                   "
                 />
               </div>
@@ -83,6 +90,7 @@ export function Header() {
               <RxAvatar size={40} />
             </button>
 
+
             {isDropdownOpen && (
               <UserDropdown
                 isOpen={isDropdownOpen}
@@ -96,6 +104,6 @@ export function Header() {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

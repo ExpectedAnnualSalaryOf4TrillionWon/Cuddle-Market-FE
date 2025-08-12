@@ -1,8 +1,7 @@
-import { useLocation } from 'react-router-dom';
 import Footer from '@layout/Footer';
-import MainHeader from './components/layout/Header';
+import { useLocation } from 'react-router-dom';
 import ChatButton from './features/chat/ChatButton';
-import Home from './pages/Home';
+import AppRoutes from './routes/index';
 
 function App() {
   const location = useLocation();
@@ -10,10 +9,8 @@ function App() {
 
   return (
     <>
-      {showMainHeader && <MainHeader />}
-      <Home />
+      <AppRoutes />
       <ChatButton />
-
       <Footer />
     </>
   );
