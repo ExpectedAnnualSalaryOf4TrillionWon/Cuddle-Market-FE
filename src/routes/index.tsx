@@ -1,7 +1,7 @@
-
 import Header from '@layout/Header';
 import Home from '@pages/Home';
 import ProductDetail from '@pages/ProductDetail';
+import Signup from '@pages/Signup';
 import UserPage from '@pages/UserPage';
 import { Outlet, Route, Routes } from 'react-router-dom';
 
@@ -26,9 +26,8 @@ const AppRoutes = () => {
 
       {/* Header 미포함 구간: Signup */}
       <Route element={<NoHeaderLayout />}>
- <Route path="/signup" element={<Signup />} /> 
+        <Route path="/signup" element={<Signup />} />
       </Route>
-
     </Routes>
   );
 };
