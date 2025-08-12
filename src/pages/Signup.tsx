@@ -3,26 +3,27 @@ import { CiCalendar, CiLock, CiMail, CiUser } from 'react-icons/ci';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoLocationOutline } from 'react-icons/io5';
 import { PiTagThin } from 'react-icons/pi';
+//max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
+
 const Signup = () => {
   return (
-    <div className="flex justify-center px-lg py-md bg-primary">
-      <div className="flex w-[25vw] items-center justify-center px-4 py-8">
-        <div className="w-full flex flex-col gap-8">
-          {/* 헤더 영역 */}
-          <div className="text-center flex flex-col items-center gap-6">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full">
-              <img src={logoImage} alt="" />
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <h2 className="heading3 text-text-primary">커들마켓에 오신 것을 환영합니다!</h2>
-              <p className="bodyLarge text-text-secondary">
-                안전한 반려동물 용품 거래를 시작해보세요
-              </p>
-            </div>
+    <div className="px-lg py-8 bg-primary">
+      <div className="">
+        {/* 헤더 영역 */}
+        <div className="text-center flex flex-col items-center gap-6 pb-2xl">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full">
+            <img src={logoImage} alt="" className="object-cover h-full" />
           </div>
-
+          <div className="flex flex-col items-center gap-1">
+            <h2 className="heading3 text-text-primary">커들마켓에 오신 것을 환영합니다!</h2>
+            <p className="bodyLarge text-text-secondary">
+              안전한 반려동물 용품 거래를 시작해보세요
+            </p>
+          </div>
+        </div>
+        <div className="flex justify-center w-full">
           {/* 카드 */}
-          <div className="flex flex-col gap-6 rounded-xl bg-light/90 shadow-2xl py-[2rem] px-[1.5rem]">
+          <div className="flex flex-col gap-6 rounded-xl bg-light/90 shadow-2xl py-[2rem] px-[1.5rem] w-[700px]">
             {/* 카드 헤더: grid → flex + gap */}
             <div className="flex flex-col items-center gap-1.5">
               <h4 className="heading4 text-center text-text-primary">회원가입</h4>
@@ -32,7 +33,7 @@ const Signup = () => {
             </div>
 
             {/* 카드 콘텐츠: 내부 섹션 간격을 gap으로 관리 */}
-            <div className="flex flex-col gap-8 px-8 pb-8 [&:last-child]:pb-6">
+            <div className="flex flex-col gap-8 pb-8 ">
               {/* 폼 */}
               <form className="flex flex-col gap-5">
                 {/* 이메일 */}
@@ -46,12 +47,13 @@ const Signup = () => {
                       id="signup-email"
                       type="email"
                       placeholder="이메일을 입력해주세요"
+                      maxLength={100}
                       required
                       className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
                   <p id="signup-email-error" className="text-sm font-medium text-[#f87171]">
-                    유효한 이메일 주소를 입력해주세요.
+                    이메일 형식에 맞게 입력해주세요.
                   </p>
                 </div>
 
@@ -66,9 +68,14 @@ const Signup = () => {
                       id="signup-name"
                       placeholder="실제 이름을 입력해주세요"
                       required
+                      maxLength={15}
                       className="flex h-12 w-full rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
+                  <p className="text-sm font-medium text-[#000]">
+                    이름은 2글자 이상 15자 이하입니다.
+                  </p>
+                  {/* 이름 입력필드가 비어있을 경우의 안내문구 */}
                   <p id="signup-name-error" className="text-sm font-medium text-[#f87171]">
                     이름을 입력해주세요.
                   </p>
@@ -88,11 +95,16 @@ const Signup = () => {
                       id="signup-nickname"
                       placeholder="사용할 닉네임을 입력해주세요"
                       required
+                      maxLength={12}
                       className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
-                  <p id="signup-nickname-error" className="text-sm font-medium text-[#f87171]">
-                    닉네임은 2~12자, 특수문자 제외로 입력해주세요.
+                  <p className="text-sm font-medium text-[#000]">
+                    닉네임은 2글자 이상 12자 이하입니다.
+                  </p>
+                  {/* 닉네임 입력필드가 비어있을 경우의 안내문구 */}
+                  <p id="signup-name-error" className="text-sm font-medium text-[#f87171]">
+                    닉네임을 입력해주세요.
                   </p>
                 </div>
 
@@ -114,6 +126,7 @@ const Signup = () => {
                       className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 pr-12 transition-[color,box-shadow]"
                     />
                   </div>
+                  {/* 비밀번호 유효성 검증 실패했을 비어있을 경우의 안내문구 */}
                   <p id="signup-password-error" className="text-sm font-medium text-[#f87171]">
                     영문과 숫자 조합 8자 이상으로 설정해주세요.
                   </p>
@@ -137,6 +150,7 @@ const Signup = () => {
                       className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 pr-12 transition-[color,box-shadow]"
                     />
                   </div>
+                  {/* 비밀번호가 일치하지 않을 경우의 안내문구 */}
                   <p
                     id="signup-confirm-password-error"
                     className="text-sm font-medium text-[#f87171]"
@@ -159,9 +173,10 @@ const Signup = () => {
                       id="signup-birth-date"
                       type="date"
                       required
-                      className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
+                      className="flex h-12 w-full rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
+                  {/* 생년월일 입력필드가 비어있을 경우의 안내문구 */}
                   <p id="signup-birth-date-error" className="text-sm font-medium text-[#f87171]">
                     생년월일을 선택해주세요.
                   </p>
@@ -197,6 +212,7 @@ const Signup = () => {
                       </select>
                       <IoIosArrowDown className="absolute right-3 top-1/2 translate-y-[-50%]" />
                     </div>
+                    {/* 시/도 입력필드가 비어있을 경우의 안내문구 */}
                     <p id="signup-city-error" className="text-sm font-medium text-[#f87171]">
                       시/도를 선택해주세요.
                     </p>
@@ -216,8 +232,9 @@ const Signup = () => {
                       </select>
                       <IoIosArrowDown className="absolute right-3 top-1/2 translate-y-[-50%]" />
                     </div>
+                    {/* 군/구 입력필드가 비어있을 경우의 안내문구 */}
                     <p id="signup-district-error" className="text-sm font-medium text-[#f87171]">
-                      시/군/구를 선택해주세요.
+                      군/구를 선택해주세요.
                     </p>
                   </div>
                 </div>
