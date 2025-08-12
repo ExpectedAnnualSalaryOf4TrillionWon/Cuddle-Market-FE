@@ -11,7 +11,6 @@ function App() {
     <>
       <AppRoutes />
       <ChatButton />
-
       <Footer />
     </>
   );
