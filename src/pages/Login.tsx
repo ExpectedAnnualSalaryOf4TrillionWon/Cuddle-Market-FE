@@ -22,13 +22,6 @@ const Login = () => {
     navigate('/signup');
   };
 
-  // 공통 텍스트 브레이크 방지 스타일
-  const noBreakStyle = {
-    whiteSpace: 'nowrap' as const,
-    wordBreak: 'keep-all' as const,
-    overflowWrap: 'normal' as const,
-  };
-
   return (
     <div className="flex justify-center bg-secondary pb-4">
       <div className="max-w-6xl bg-point">
