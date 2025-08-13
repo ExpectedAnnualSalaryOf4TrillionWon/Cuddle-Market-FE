@@ -3,6 +3,7 @@ import { CiCalendar, CiLock, CiMail, CiUser } from 'react-icons/ci';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoLocationOutline } from 'react-icons/io5';
 import { PiTagThin } from 'react-icons/pi';
+
 //max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
 
 const Signup = () => {
