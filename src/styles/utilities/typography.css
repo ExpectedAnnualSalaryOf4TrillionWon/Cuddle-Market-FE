@@ -42,4 +42,8 @@
     white-space: nowrap;
     overflow-wrap: normal;
   }
+
+  .nobreakstyle {
+    @apply whitespace-nowrap break-keep overflow-hidden text-ellipsis;
+  }
 }
