@@ -95,7 +95,7 @@ const Signup = () => {
     setShowCitySelect(false);
   };
   return (
-    <div className="px-lg py-8 bg-primary h-[100vh] flex items-center justify-center">
+    <div className="px-lg py-8 bg-primary h-[80%] flex items-center justify-center">
       <div>
         {/* 헤더 영역 */}
         <div className="text-center flex flex-col items-center gap-6 pb-2xl">
@@ -111,7 +111,7 @@ const Signup = () => {
         </div>
         <div className="flex justify-center w-full">
           {/* 카드 */}
-          <div className="flex flex-col gap-6 rounded-xl bg-light/90 shadow-2xl py-[2rem] px-[1.5rem] w-[700px]">
+          <div className="flex flex-col gap-6 rounded-xl bg-light/90 shadow-2xl py-[2rem] px-[1.5rem] w-[500px]">
             {/* 카드 헤더: grid → flex + gap */}
             <div className="flex flex-col items-center gap-1.5">
               <h4 className="heading4 text-center text-text-primary">회원가입</h4>
