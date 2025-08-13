@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '@images/CuddleMarketLogo.png';
+import userDefaultImage from '@images/userDefault.svg';
 
 type UserInfo = {
   nickname: string;
@@ -40,19 +41,25 @@ const MyPage = () => {
 
   return (
     <div>
+      {' '}
+      {/* 홈버튼 */}
       <div className="sticky top-0 p-md bg-primary">
         <Link to="/">
           <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
         </Link>
       </div>
-
       <div className="flex flex-col max-w-[var(--container-max-width)] px-xs py-md items-center justify-between  border-border ">
         {/* 본문 */}
         <main className="flex flex-1 px-xs py-md space-x-sm">
           {/* 좌측 내 정보 영역 */}
           <aside className="w-76 flex flex-col justify-between border border-border rounded-md p-6 shadow-xs bg-secondary">
             <div>
-              <h2 className="text-heading4 font-bold mb-4">내 정보</h2>
+              {/* 유저 이미지 */}
+              <div className="flex justify-center items-center">
+                <img src={userDefaultImage} alt="유저이미지" className="w-auto h-22" />
+              </div>
+
+              <h2 className="text-heading4 font-bold my-4">내 정보</h2>
               <div className="grid grid-cols-[100px_1fr] gap-y-sm text-text-primary">
                 <div className="text-heading5 font-semibold">닉네임</div>
                 <div>{userInfo.nickname}</div>
