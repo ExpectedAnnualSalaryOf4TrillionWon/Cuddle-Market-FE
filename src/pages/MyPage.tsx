@@ -98,6 +98,13 @@ const MyPage = () => {
             <div className="flex-1 border border-border rounded-md p-lg shadow-sm">
               <MyList activeTab={activeTab} />
             </div>
+
+            <button
+              onClick={() => alert('목록 5개씩 추가렌더링!')}
+              className="w-full bg-dark rounded-md shadow-2xs"
+            >
+              더보기
+            </button>
           </section>
         </main>
       </div>
