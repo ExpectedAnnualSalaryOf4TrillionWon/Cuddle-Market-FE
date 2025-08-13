@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '@images/CuddleMarketLogo.png';
 import userDefaultImage from '@images/userDefault.svg';
+import MyList from '@layout/mylist';
 
 type UserInfo = {
   nickname: string;
@@ -28,17 +29,6 @@ const MyPage = () => {
     createdAt: '2023-01-01',
   };
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'products':
-        return <div>내 상품 </div>;
-      case 'transactions':
-        return <div>거래내역</div>;
-      case 'wishlist':
-        return <div>찜한 상품</div>;
-    }
-  };
-
   return (
     <div>
       {' '}
@@ -48,11 +38,11 @@ const MyPage = () => {
           <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
         </Link>
       </div>
-      <div className="flex flex-col max-w-[var(--container-max-width)] px-xs py-md items-center justify-between  border-border ">
+      <div className="flex px-md py-xs items-center justify-center  border-border ">
         {/* 본문 */}
-        <main className="flex flex-1 px-xs py-md space-x-sm">
+        <main className="flex flex-1 px-xs py-md space-x-sm max-w-[var(--container-max-width)] gap-lg ">
           {/* 좌측 내 정보 영역 */}
-          <aside className="w-76 flex flex-col justify-between border border-border rounded-md p-6 shadow-xs bg-secondary">
+          <aside className="min-w-[240px] h-[25%] flex flex-col justify-between border border-border rounded-md p-6 shadow-xs bg-secondary">
             <div>
               {/* 유저 이미지 */}
               <div className="flex justify-center items-center">
@@ -86,17 +76,17 @@ const MyPage = () => {
           </aside>
 
           {/* 우측 탭 및 컨텐츠 영역 */}
-          <section className="flex-1 flex flex-col">
+          <section className="flex-1 flex flex-col min-w-[400px]  max-w-[50%]">
             {/* 탭 */}
-            <nav className="flex border-b border-gray-300 mb-4">
+            <nav className="flex border-b border-secondary mb-lg tablet:gap-2xl desktop:gap-4xl justify-around ">
               {TABS.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 -mb-px font-medium border-b-2 ${
+                  className={`px-lg py-sm  font-medium border-b-2  ${
                     activeTab === tab.id
-                      ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-600 hover:text-gray-800'
+                      ? 'border-dark text-dark'
+                      : 'border-transparent text-text-secondary hover:text-text-primary'
                   }`}
                 >
                   {tab.label}
@@ -105,8 +95,8 @@ const MyPage = () => {
             </nav>
 
             {/* 탭 컨텐츠 */}
-            <div className="flex-1 border border-gray-200 rounded-md p-4 shadow-sm">
-              {renderContent()}
+            <div className="flex-1 border border-border rounded-md p-lg shadow-sm">
+              <MyList activeTab={activeTab} />
             </div>
           </section>
         </main>
@@ -116,10 +106,3 @@ const MyPage = () => {
 };
 
 export default MyPage;
-{
-  /* <>
-      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md bg-secondary flex items-center justify-between gap-lg border-border">
-        <div className=" bg-point"></div>
-      </div>
-    </> */
-}
