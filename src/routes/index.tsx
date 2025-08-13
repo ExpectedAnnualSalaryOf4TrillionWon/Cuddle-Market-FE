@@ -33,7 +33,7 @@ const AppRoutes = () => {
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/product-post" element={<ProductPost />} />
-
+        <Route path="/mypage" element={<MyPage />} />
       </Route>
     </Routes>
   );

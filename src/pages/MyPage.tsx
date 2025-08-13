@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '@images/CuddleMarketLogo.png';
 import userDefaultImage from '@images/userDefault.svg';
-import MyList from '@layout/mylist';
+import MyList from '@layout/myList';
 
 type UserInfo = {
   nickname: string;
