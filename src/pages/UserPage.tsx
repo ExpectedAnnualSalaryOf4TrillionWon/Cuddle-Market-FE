@@ -78,7 +78,7 @@ const UserPage = () => {
         {/* 우측: 탭 + 목록 */}
         <div className="tablet:col-span-2">
           <div className="flex flex-col gap-sm w-full">
-            {/* 탭 리스트 (참고 디자인 그대로) */}
+            {/* 탭 리스트 */}
             <div
               role="tablist"
               aria-label="사용자 탭"

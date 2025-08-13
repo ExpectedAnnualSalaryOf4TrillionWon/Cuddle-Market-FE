@@ -8,7 +8,7 @@ import { PiTagThin } from 'react-icons/pi';
 const Signup = () => {
   return (
     <div className="px-lg py-8 bg-primary">
-      <div className="">
+      <div>
         {/* 헤더 영역 */}
         <div className="text-center flex flex-col items-center gap-6 pb-2xl">
           <div className="flex h-20 w-20 items-center justify-center rounded-full">

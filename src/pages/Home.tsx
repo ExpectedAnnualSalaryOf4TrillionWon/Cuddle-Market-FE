@@ -12,8 +12,6 @@ const Home = () => {
   };
   return (
     <div>
-      <CategoryFilter />
-
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 탭 */}
         <CategoryFilter />
