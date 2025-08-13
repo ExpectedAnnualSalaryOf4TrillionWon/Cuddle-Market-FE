@@ -1,5 +1,6 @@
 import Header from '@layout/Header';
 import Home from '@pages/Home';
+import MyPage from '@pages/MyPage';
 import ProductDetail from '@pages/ProductDetail';
 import Signup from '@pages/Signup';
 import UserPage from '@pages/UserPage';
@@ -24,9 +25,10 @@ const AppRoutes = () => {
         <Route path="/user/:id" element={<UserPage />} />
       </Route>
 
-      {/* Header 미포함 구간: Signup */}
+      {/* Header 미포함 구간: Signup, MyPage */}
       <Route element={<NoHeaderLayout />}>
         <Route path="/signin" element={<Signup />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Route>
     </Routes>
   );
