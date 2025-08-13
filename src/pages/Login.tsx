@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import logo from '@images/CuddleMarketLogoImage.png';
+import logo from '@images/CuddleMarketLogoBase.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,15 +23,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center bg-secondary pb-4">
-      <div className="max-w-6xl bg-point">
-        <div className="rounded-3xl p-10 shadow-xl text-center w-full relative transform transition-all duration-500 hover:scale-105">
+    <div className="h-[100vh] items-center flex justify-center bg-secondary pb-4">
+        <div className="bg-point rounded-3xl p-10 shadow-xl text-center w-[500px] relative transform transition-all duration-500 hover:scale-105">
           <div className="mb-12">
             {/* 수정된 부분 - public 폴더의 이미지를 직접 경로로 참조 */}
-            <div className="w-32 h-32 mx-auto mb-6 bg-gray-50 rounded-3xl flex items-center justify-center border-4 border-dashed border-blue-200 overflow-hidden">
+            <div className="w-[15vw] h-[15vw] mx-auto mb-6 bg-gray-50 rounded-3xl flex items-center justify-center border-4 border-dashed border-blue-200 overflow-hidden">
               <img src={logo} alt="Cuddle Market 로고" className="w-full h-full object-contain" />
             </div>
-            <div className="text-2xl font-bold text-blue-200 tracking-wide">CUDDLE MARKET</div>
+          
           </div>
 
           <div className="space-y-4 mb-6">
@@ -63,7 +62,6 @@ const Login = () => {
             회원가입
           </button>
         </div>
-      </div>
     </div>
   );
 };
