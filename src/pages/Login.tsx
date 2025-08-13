@@ -21,7 +21,7 @@ const Login = () => {
   };
 
   const handleSignupClick = () => {
-    alert('회원가입 페이지로 이동합니다.');
+    navigate('/signup');
   };
 
   // 공통 텍스트 브레이크 방지 스타일
