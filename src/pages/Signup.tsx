@@ -2,7 +2,9 @@ import logoImage from '@images/CuddleMarketLogoImage.png';
 import { useState } from 'react';
 import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';
 import { PiTagThin } from 'react-icons/pi';
+
 import { useNavigate } from 'react-router-dom';
+
 //max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
 const CITIES = {
   서울특별시: [
