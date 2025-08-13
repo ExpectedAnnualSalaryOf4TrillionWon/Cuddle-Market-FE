@@ -117,14 +117,16 @@ const PROVINCES = Object.keys(CITIES) as Province[];
 const ProductPost = () => {
   const [activeTab, setActiveTab] = useState<'sales' | 'purchases'>('sales');
 
-  const [pet, setPet] = useState('');
+  const [pet, setPet] = useState<string>('');
   const [showPetSelect, setShowPetSelect] = useState(false);
 
   const [price, setPrice] = useState<number | ''>('');
   const [selectedCondition, setSelectedCondition] = useState<string | null>(null);
 
-  const [petCate, setPetCate] = useState('');
+  const [petCate, setPetCate] = useState<string>('');
   const [showCategorySelect, setShowCategorySelect] = useState(false);
+
+  const [productName, setProductName] = useState<string>('');
 
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
@@ -133,6 +135,8 @@ const ProductPost = () => {
   const [showCitySelect, setShowCitySelect] = useState(false);
 
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
+
+  const [meetingPlace, setMeetingPlace] = useState<string>('');
 
   const handleSelectProvince = (opt: Province) => {
     setSelectedProvince(opt);
@@ -300,7 +304,11 @@ const ProductPost = () => {
                         id="title"
                         placeholder="예: 강아지 사료 10kg 새상품"
                         maxLength={50}
-                        value=""
+                        value={productName}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setProductName(val === '' ? '' : val);
+                        }}
                       />
                       <p className="text-xs text-gray-500">0/50자</p>
                     </div>
@@ -506,7 +514,11 @@ const ProductPost = () => {
                       className="h-9 w-full rounded-md border px-3 py-1 md:text-sm border-border bg-secondary/30"
                       id="meetingPlace"
                       placeholder="예: 지하철역, 카페, 공원 등"
-                      value=""
+                      value={meetingPlace}
+                      onChange={e => {
+                        const val = e.target.value;
+                        setMeetingPlace(val === '' ? '' : val);
+                      }}
                     />
                   </div>
                 </div>
