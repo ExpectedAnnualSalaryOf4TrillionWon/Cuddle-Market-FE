@@ -27,6 +27,7 @@ const AppRoutes = () => {
 
       {/* Header 미포함 구간: Signup */}
       <Route element={<NoHeaderLayout />}>
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/product-post" element={<ProductPost />} />
       </Route>

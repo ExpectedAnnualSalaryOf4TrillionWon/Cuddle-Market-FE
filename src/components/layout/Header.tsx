@@ -1,27 +1,40 @@
-// 모바일 경우에 넣는 로고이미지는 다른 이미지입니다.
 import logoImage from '@images/CuddleMarketLogo.png';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import UserDropdown from './UserDropDown';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const goToSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e);
-    navigate('/signup');
-  };
+  {
+    /* 드롭다운 메뉴 밖에서 마우스 클릭시 드롭다운 비활성화 */
+  }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-1 bg-primary">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md">
         <div className="flex items-center justify-between gap-lg">
-          {/* 로고 */}
-          <div className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-16 object-contain" />
-          </div>
+          {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}
+          <Link to="/" className="flex items-center">
+            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+          </Link>
 
           {/* 검색 영역 */}
           <div className="flex-1 max-w-[42rem] mx-lg">
@@ -43,6 +56,7 @@ const Header = () => {
               </div>
 
               <button
+                type="button"
                 className="items-center justify-center gap-sm
                   h-full px-sm py-sm
                   border border-border rounded-md
@@ -56,32 +70,31 @@ const Header = () => {
             </div>
           </div>
 
-          {/* 로그인/회원가입 */}
-          <div className="flex items-center">
+          {/* 유저 드롭다운 호출 */}
+          <div className="relative flex items-center" ref={dropdownRef}>
             <button
+              type="button"
               className="items-center justify-center gap-sm
                 h-9 px-lg py-sm
-                rounded-md
-                text-text-primary
-                hover:bg-light
                 transition-all"
+              onClick={() => setIsDropdownOpen(prev => !prev)}
             >
-              로그인
+              <RxAvatar size={40} />
             </button>
 
-            <button
-              className="items-center justify-center gap-sm
-                h-9 px-lg py-sm
-                transition-all
-              "
-              onClick={goToSignUp}
-            >
-              <RxAvatar size={22} />
-            </button>
+            {isDropdownOpen && (
+              <UserDropdown
+                isOpen={isDropdownOpen}
+                setIsOpen={setIsDropdownOpen}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            )}
           </div>
         </div>
       </div>
     </header>
   );
 };
+
 export default Header;
