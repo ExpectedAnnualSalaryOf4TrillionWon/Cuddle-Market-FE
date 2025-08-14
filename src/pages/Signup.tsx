@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';
 import { PiTagThin } from 'react-icons/pi';
 
-import { useNavigate } from 'react-router-dom';
-
 //max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
 const CITIES = {
   서울특별시: [
@@ -81,10 +79,6 @@ const Signup = () => {
   const [showCitySelect, setShowCitySelect] = useState(false);
 
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
-  const navigate = useNavigate();
-  const handleToLogin = () => {
-    navigate('/signin');
-  };
   const handleSelectProvince = (opt: Province) => {
     setSelectedProvince(opt);
     setSelectedCity(''); // 시/도 변경 시 구/군 초기화

@@ -15,7 +15,6 @@ export type ProductCardProps = {
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  id,
   title,
   price,
   location,
