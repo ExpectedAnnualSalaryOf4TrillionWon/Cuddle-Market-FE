@@ -482,7 +482,7 @@ const ProductPost = () => {
                                 onClick={() => handleSelectCity(opt)}
                                 className={`w-full px-3 py-xs rounded-md transition
           hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${pet === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+          ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
                               >
                                 {opt}
                               </button>

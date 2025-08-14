@@ -1,6 +1,5 @@
 import Header from '@layout/Header';
 import Home from '@pages/Home';
-
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
 import ProductDetail from '@pages/ProductDetail';
