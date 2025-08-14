@@ -2,38 +2,23 @@ import logo from '@images/CuddleMarketLogoBase.png';
 import kakao from '@images/kakao.svg';
 import { useNavigate } from 'react-router-dom';
 
-interface LoginResponse {
-  token?: string;
-  accessToken?: string;
-  user?: {
-    id: number;
-    kakaoId: string;
-    nickname: string;
-    profileImage?: string;
-  };
-  message?: string;
-}
-
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
-const Login = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  // id 와 url 는 전역상태. TMDB 만들었던거 생각해보면 supabaseClient 파일처럼 상태를 관리해야 할것 같습니다.
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
+
   // 카카오 로그인 시작
   const handleKakaoLogin = (): void => {
     console.log('카카오 로그인 시작');
 
-    // 카카오 OAuth URL 생성
-    const kakaoAuthUrl = new URL('https://kauth.kakao.com/oauth/authorize');
-    kakaoAuthUrl.searchParams.set('client_id', KAKAO_CLIENT_ID);
-    kakaoAuthUrl.searchParams.set('redirect_uri', REDIRECT_URI);
-    kakaoAuthUrl.searchParams.set('response_type', 'code');
-    kakaoAuthUrl.searchParams.set('scope', 'profile_nickname,profile_image');
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+      REDIRECT_URI,
+    )}&response_type=code&scope=profile_nickname,profile_image`;
 
-    console.log('🔗 OAuth URL:', kakaoAuthUrl.toString());
+    console.log(kakaoAuthUrl);
 
     // 카카오 로그인 페이지로 이동
     window.location.href = kakaoAuthUrl.toString();

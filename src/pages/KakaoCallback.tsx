@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface KakaoAuthData {
   code: string;
@@ -10,6 +10,8 @@ interface KakaoAuthData {
 
 const KakaoCallback: React.FC = () => {
   const [authCode, setAuthCode] = useState<string | null>(null);
+  const [searchParams] = useSearchParams(); // React Router Hook 사용
+
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
@@ -17,8 +19,6 @@ const KakaoCallback: React.FC = () => {
 
   const handleAuthCode = async (code: string): Promise<void> => {
     try {
-      console.log('📝 인가코드 처리 시작');
-
       // 디버깅용 데이터 저장
       const authData: KakaoAuthData = {
         code: code,
@@ -38,13 +38,11 @@ const KakaoCallback: React.FC = () => {
   };
 
   useEffect(() => {
-    // 카카오에서 리다이렉트된 경우 처리
-    const urlParams = new URLSearchParams(window.location.search);
-    const code: string | null = urlParams.get('code');
-    const error: string | null = urlParams.get('error');
+    const code: string | null = searchParams.get('code');
+    const error: string | null = searchParams.get('error');
 
     if (error) {
-      console.error('❌ 카카오 로그인 에러:', error);
+      console.error('카카오 로그인 에러:', error);
       let errorMessage: string = '카카오 로그인 중 오류가 발생했습니다.';
 
       switch (error) {
@@ -56,17 +54,18 @@ const KakaoCallback: React.FC = () => {
           break;
       }
 
+      // 에러 처리해야 함
       alert(errorMessage);
       return;
     }
 
     if (code) {
-      console.log('✅ 카카오 인가코드 수신:', code);
+      console.log('카카오 인가코드 수신:', code);
       setAuthCode(code);
       handleAuthCode(code);
       navigate('/');
     }
-  }, []);
+  }, [searchParams, navigate]);
 
   return (
     <div className="flex justify-center items-center h-screen">
