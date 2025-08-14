@@ -98,8 +98,6 @@ const MyList: React.FC<MyListProps> = ({ activeTab }) => {
         ) : (
           <div className="text-heading3">목록이 없습니다.</div>
         );
-      case 'transactions':
-        alert('추가구현될 기능입니다.');
       //백엔드 조교님과의 논의 후 거래내역은 우선순위 낮음으로 결정하여 alert처리.
       case 'wishlist':
         return wishlist.length > 0 ? (
