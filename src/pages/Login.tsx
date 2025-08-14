@@ -24,18 +24,18 @@ const Login: React.FC = () => {
     window.location.href = kakaoAuthUrl.toString();
   };
 
-  const handleEmailLogin = () => {
-    alert('이메일 로그인 페이지로 이동합니다.');
-  };
+  // const handleEmailLogin = () => {
+  //   alert('이메일 로그인 페이지로 이동합니다.');
+  // };
 
-  const handleSignupClick = () => {
-    navigate('/signup');
-  };
+  // const handleSignupClick = () => {
+  //   navigate('/signup');
+  // };
 
   return (
-    <div className="flex items-center justify-center bg-point h-[90vh]">
-      <div className="bg-secondary flex flex-col justify-center items-center gap-md rounded-xl p-2xl shadow-xl w-[40vw] max-w-[500px] min-w-[250px] h-[60vh] min-h-[350px]">
-        <div className="w-[30vw] max-w-[300px] h-auto flex items-center justify-center ">
+    <div className="flex items-center justify-center bg-primary h-[90vh]">
+      <div className="bg-light/90 flex flex-col justify-center items-center gap-md rounded-xl p-2xl shadow-xl w-[40vw] max-w-[500px] min-w-[250px] h-[400px] min-h-[350px]">
+        <div className="w-[20vw] max-w-[300px] h-auto flex items-center justify-center ">
           <img src={logo} alt="Cuddle Market 로고" className="w-full h-full mb-xl object-contain" />
         </div>
 
@@ -48,16 +48,16 @@ const Login: React.FC = () => {
           <span>카카오톡으로 시작하기</span>
         </button>
         {/*이 아래의 버튼들은 일반 로그인 구현 가능성을 염두에 둔 UI로 소셜로그인만 구현시 최종 배포전에 삭제할 예정*/}
-        <button
+        {/* <button
           onClick={handleEmailLogin}
           className="w-full bg-point text-text-primary py-2 px-2  rounded-xl text-bodySmall tablet:text-bodyLarge font-semibold"
         >
           <span>이메일로 시작하기</span>
-        </button>
-
+        </button> */}
+        {/* 
         <button onClick={handleSignupClick} className="text-text-secondary text-sm">
           회원가입
-        </button>
+        </button> */}
       </div>
     </div>
   );
