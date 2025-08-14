@@ -112,7 +112,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab }) => {
     }
   };
 
-  return <div>{renderList()}</div>;
+  return <>{renderList()}</>;
 };
 
 export default MyList;
