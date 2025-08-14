@@ -4,14 +4,15 @@ import { create } from 'zustand';
 type ModalState = {
   isOpen: boolean;
   message: string;
-  resolve: ((value: boolean) => void) | null;
   confirm: (message: string) => Promise<boolean>;
+  resolve: ((value: boolean) => void) | null;
   handleConfirm: (result: boolean) => void;
 };
 // 모달창 활성화 여부 : 불리언
 // 모달창에 띄울 메세지 : 문자열
-// 결과값 반환타입 : 불리언
-//
+// 사용자가 입력할 반환 타입 : 불리언
+// 모달창 닫힐 때 전달될 결과 타입 : 불리언
+// 결과를 저장할 타입 : 불리언
 
 export const useModalStore = create<ModalState>((set, get) => ({
   isOpen: false,

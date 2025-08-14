@@ -14,7 +14,7 @@ function App() {
       <ChatButton />
       <Footer />
       <ConfirmModal />
-      {/* 모달창 최상단에 활성화 */}
+      {/* 모달창 최상단 활성화를 위한 라우트 위치 설정, 상태는 전역으로 관리하여 전달 */}
     </>
   );
 }
