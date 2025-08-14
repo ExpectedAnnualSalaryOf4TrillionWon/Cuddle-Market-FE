@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@store/authStore';
+import { useModalStore } from '@store/modalStore';
 
 // 상태관리 props 전달을 위한 타입설정
 interface UserDropdownProps {
@@ -32,6 +33,16 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
   const goToMyPage = (e: React.MouseEvent<HTMLButtonElement>) => {
     navigate('/mypage');
   };
+  // 로그아웃 확인 모달 설정
+  const confirm = useModalStore(state => state.confirm);
+  const handleLogout = async () => {
+    const result = await confirm('로그아웃 하시겠습니까?');
+    if (result === true) {
+      logout();
+    } else {
+      return;
+    }
+  };
   return (
     <div className="absolute right-5 top-full mt-3 w-30 bg-point shadow-lg rounded-md border border-border z-50 opacity-85">
       {!isLoggedIn /*로그인이 안 되어있을 경우*/ ? (
@@ -48,7 +59,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
           {/*로그인/로그아웃 상태변경 여부 확인용 테스트버튼*/}
           <button
             className="w-full px-md py-xs hover:bg-gray-100 transition"
-            onClick={e => {
+            onClick={() => {
               setIsOpen(false);
               login();
             }}
@@ -69,13 +80,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
             마이페이지
           </button>
 
-          <button
-            className="w-full px-md py-xs hover:bg-dark transition"
-            onClick={() => {
-              setIsOpen(false);
-              logout();
-            }}
-          >
+          <button className="w-full px-md py-xs hover:bg-dark transition" onClick={handleLogout}>
             로그아웃
           </button>
         </>
