@@ -13,7 +13,6 @@ type UserInfo = {
 
 const TABS = [
   { id: 'products', label: '내 상품' },
-  { id: 'transactions', label: '거래내역' },
   { id: 'wishlist', label: '찜한 상품' },
 ] as const;
 
