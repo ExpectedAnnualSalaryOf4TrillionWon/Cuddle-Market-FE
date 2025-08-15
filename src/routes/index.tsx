@@ -1,21 +1,35 @@
+import Footer from '@layout/Footer';
 import Header from '@layout/Header';
 import Home from '@pages/Home';
+
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
 import ProductDetail from '@pages/ProductDetail';
 import ProductPost from '@pages/ProductPost';
 import Signup from '@pages/Signup';
 import UserPage from '@pages/UserPage';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 const WithHeaderLayout = () => (
-  <>
+  <div className="min-h-screen bg-gray-50">
     <Header />
     <Outlet />
-  </>
+    <Footer />
+  </div>
 );
 
-const NoHeaderLayout = () => <Outlet />;
+const NoHeaderLayout = () => {
+  const location = useLocation();
+  const pathName = location.pathname; // "/signin"
+  console.log(pathName);
+
+  return (
+    <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : 'bg-gray-50'}`}>
+      <Outlet />
+      <Footer />
+    </div>
+  );
+};
 
 const AppRoutes = () => {
   return (
@@ -24,15 +38,15 @@ const AppRoutes = () => {
       <Route element={<WithHeaderLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<ProductDetail />} />
-        <Route path="/user/:id" element={<UserPage />} />
       </Route>
 
       {/* Header 미포함 구간: Signup, MyPage */}
       <Route element={<NoHeaderLayout />}>
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/product-post" element={<ProductPost />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/user/:id" element={<UserPage />} />
+        <Route path="/product-post" element={<ProductPost />} />
       </Route>
     </Routes>
   );
