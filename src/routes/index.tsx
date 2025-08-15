@@ -1,4 +1,5 @@
 import Header from '@layout/Header';
+import ChatPage from '@pages/ChatPage';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
@@ -24,7 +25,6 @@ const AppRoutes = () => {
       <Route element={<WithHeaderLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<ProductDetail />} />
-        <Route path="/user/:id" element={<UserPage />} />
       </Route>
 
       {/* Header 미포함 구간: Signup, MyPage */}
@@ -33,6 +33,8 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/product-post" element={<ProductPost />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/user/:id" element={<UserPage />} />
+        <Route path="/chat" element={<ChatPage />} />
       </Route>
     </Routes>
   );
