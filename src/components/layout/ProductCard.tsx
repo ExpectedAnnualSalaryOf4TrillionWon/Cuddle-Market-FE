@@ -1,29 +1,74 @@
 import React from 'react';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { IoIosHeartEmpty } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import type { Product } from '../../types';
 
 export type ProductCardProps = {
-  id: string | number;
-  title: string;
-  price: string;
-  location: string;
-  timeAgo: string;
-  condition: string;
-  petType: string;
-  image: string;
-  goToProductDetail?: React.MouseEventHandler<HTMLDivElement>;
+  product: Product;
+  'data-index'?: number;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  title,
-  price,
-  location,
-  timeAgo,
-  condition,
-  petType,
-  image,
-  goToProductDetail,
-}) => {
+const getConditionText = (condition: Product['condition_status']): string => {
+  const conditionMap = {
+    MINT: '새상품',
+    EXCELLENT: '거의새것',
+    GOOD: '사용감있음',
+    FAIR: '상태나쁨',
+  };
+  return conditionMap[condition] || condition;
+};
+
+const formatPrice = (price: number): string => {
+  return `${price.toLocaleString()}원`;
+};
+
+const getTimeAgo = (createdAt: string): string => {
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diffMs = now.getTime() - created.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMinutes < 60) {
+    return `${diffMinutes}분 전`;
+  } else if (diffHours < 24) {
+    return `${diffHours}시간 전`;
+  } else if (diffDays < 7) {
+    return `${diffDays}일 전`;
+  } else {
+    const diffWeeks = Math.floor(diffDays / 7);
+    return `${diffWeeks}주일 전`;
+  }
+};
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIndex }) => {
+  if (!product) {
+    return null; // 또는 로딩 상태 표시
+  }
+  const {
+    id,
+    title,
+    price,
+    condition_status,
+    created_at,
+    images,
+    state_name,
+    city_name,
+    pet_type_name,
+    transaction_status,
+  } = product;
+
+  const isSold = transaction_status === 'SOLD';
+  const isReserved = transaction_status === 'RESERVED';
+
+  const navigate = useNavigate();
+
+  const goToProductDetail = () => {
+    navigate(`/detail/${id}`);
+  };
+
   return (
     <div
       className="
@@ -35,6 +80,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       "
       onClick={goToProductDetail}
       role="button"
+      data-index={dataIndex} // 이 줄 추가
       tabIndex={0}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -43,36 +89,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         }
       }}
     >
-      <div className="relative overflow-hidden">
-        {/* 상단 좌측 배지 */}
-        <div className="absolute top-sm left-sm flex gap-xs">
-          <span
-            className="
-              inline-flex items-center justify-center
-              rounded-md px-sm py-0.5
-              bg-secondary
-              text-caption font-medium whitespace-nowrap
-            "
-          >
-            {petType}
-          </span>
-          <span
-            className="
-              inline-flex items-center justify-center
-              rounded-md px-sm py-0.5
-              border border-border
-              text-caption font-medium whitespace-nowrap
-            "
-          >
-            {condition}
-          </span>
-        </div>
-
+      {/* 상품 썸네일 영역 */}
+      <div className="relative pb-[75%] overflow-hidden">
         {/* 우측 상단 하트 */}
         <button
           type="button"
           className="
-            absolute top-sm right-sm
+            absolute top-sm right-sm z-1
             flex items-center justify-center
             w-8 h-8
             rounded-md
@@ -88,22 +111,73 @@ const ProductCard: React.FC<ProductCardProps> = ({
         >
           <IoIosHeartEmpty />
         </button>
+        {/* 상단 좌측 배지 */}
+        <div className="absolute top-sm left-sm flex gap-xs z-1">
+          <span
+            className="
+              inline-flex items-center justify-center
+              rounded-md px-sm py-0.5
+              bg-secondary
+              text-caption font-medium whitespace-nowrap
+            "
+          >
+            {pet_type_name}
+          </span>
+          <span
+            className="
+              inline-flex items-center justify-center
+              rounded-md px-sm py-0.5
+              border border-border
+                bg-secondary
+              text-caption font-medium whitespace-nowrap
+            "
+          >
+            {getConditionText(condition_status)}
+          </span>
+        </div>
 
-        <img src={image} alt={title} className="block w-full h-auto" />
+        <span
+          className={`
+            absolute bottom-sm right-sm z-1
+            flex items-center justify-center
+                rounded-md px-sm py-0.5
+                border 
+                text-caption font-bold whitespace-nowrap
+                text-white
+                ${
+                  isSold
+                    ? 'bg-complete border-complete'
+                    : isReserved
+                    ? 'bg-reserved border-reserved'
+                    : 'bg-sale border-sale'
+                }
+                `}
+        >
+          {isSold ? '판매완료' : isReserved ? '예약중' : '판매중'}
+        </span>
+
+        <img
+          src={images || ''}
+          alt={title}
+          className="w-full h-full absolute t-0 l-0 object-cover"
+        />
       </div>
 
+      {/* 상품 정보 영역 */}
       <div className="p-md">
         <h3 className="heading5 text-text-primary mb-xs line-clamp-2">{title}</h3>
-        <p className="heading5 text-primary font-bold mb-sm">{price}</p>
+        <p className="heading5 text-primary font-bold mb-sm">{formatPrice(price)}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-xs text-text-secondary caption">
             <CiLocationOn size={16} />
-            <span>{location}</span>
+            <span>
+              {state_name} {city_name}
+            </span>
           </div>
           <div className="flex items-center gap-xs text-text-secondary caption">
             <CiClock2 size={16} />
-            <span>{timeAgo}</span>
+            <span>{getTimeAgo(created_at)}</span>
           </div>
         </div>
       </div>

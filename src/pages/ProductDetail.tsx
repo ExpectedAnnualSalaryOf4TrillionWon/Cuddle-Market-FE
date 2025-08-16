@@ -1,117 +1,130 @@
-
-import ProductCard from '@layout/ProductCard';
+import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-
-
-const product = {
-  id: '1',
-  title: '로얄캐닌 강아지 사료 15kg (유통기한 6개월 남음)',
-  price: '45,000원',
-  originalPrice: '89,000원',
-  location: '서울 강남구',
-  timeAgo: '2시간 전',
-  condition: '거의새것',
-  petType: '강아지',
-  category: '사료/간식',
-  viewCount: 156,
-  likeCount: 23,
-  isLiked: true,
-  tradeStatus: 'available' as 'available' | 'trading' | 'reserved' | 'sold',
-  images: [
-    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=600&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=600&fit=crop',
-  ],
-  description: `로얄캐닌 골든리트리버 어덜트 사료 15kg 판매합니다.
-
-구매한지 2주 정도 되었고, 포장만 뜯었습니다.
-저희 강아지가 잘 안먹어서 다른 사료로 바꾸게 되어 판매합니다.
-
-유통기한: 2025년 12월까지 (6개월 이상 남음)
-정가: 89,000원
-판매가: 45,000원 (50% 할인)
-
-직거래 우선이며, 택배도 가능합니다.
-궁금한 점 있으시면 채팅 주세요!`,
-  seller: {
-    name: '멍멍이아빠',
-    profileImage:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-    rating: 4.8,
-    reviewCount: 127,
-    responseRate: 98,
-    responseTime: '1시간 이내',
-    joinDate: '2023년 3월',
-  },
-};
-
-const relatedProducts = [
-  {
-    id: '2',
-    title: '힐스 강아지 사료 7.5kg',
-    price: '38,000원',
-    location: '서울 강남구',
-    timeAgo: '1일 전',
-    condition: '새상품',
-    petType: '강아지',
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
-  },
-  {
-    id: '3',
-    title: '오리젠 퍼피 사료 11.4kg',
-    price: '52,000원',
-    location: '서울 서초구',
-    timeAgo: '3일 전',
-    petType: '강아지',
-    condition: '거의새것',
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
-  },
-  {
-    id: '4',
-    title: '아카나 어덜트 독 사료 6kg',
-    price: '28,000원',
-    location: '경기 성남시',
-    timeAgo: '5일 전',
-    condition: '사용감있음',
-    petType: '강아지',
-    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
-  },
-];
+import { fetchProductById } from '../api/products';
+import type { Product } from '../types';
 
 const ProductDetail = () => {
-  const { id } = useParams();
-  console.log(id);
+  const [product, setProduct] = useState<any>(null);
+  const [sellerProducts, setSellerProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const goToUserPage = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e);
-    navigate(`/user/${1}`);
+  const { id } = useParams<{ id: string }>();
+
+  const formatPrice = (price: number): string => {
+    return `${price.toLocaleString()}원`;
   };
 
+  const getTimeAgo = (createdAt: string): string => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffMs = now.getTime() - created.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 60) {
+      return `${diffMinutes}분 전`;
+    } else if (diffHours < 24) {
+      return `${diffHours}시간 전`;
+    } else if (diffDays < 7) {
+      return `${diffDays}일 전`;
+    } else {
+      const diffWeeks = Math.floor(diffDays / 7);
+      return `${diffWeeks}주일 전`;
+    }
+  };
+
+  // 상태 텍스트 변환
+  const getConditionText = (condition: Product['condition_status']): string => {
+    const conditionMap = {
+      MINT: '새상품',
+      EXCELLENT: '거의새것',
+      GOOD: '사용감있음',
+      FAIR: '상태나쁨',
+    };
+    return conditionMap[condition] || condition;
+  };
 
   // 거래 상태별 토큰 매핑
-  const getTradeStatusInfo = (status: 'available' | 'trading' | 'reserved' | 'sold') => {
+  const getTradeStatusInfo = (status: Product['transaction_status']) => {
     switch (status) {
-      case 'available':
+      case 'SELLING':
         return { text: '판매중', className: 'bg-sale text-bg border-sale' };
-      case 'trading':
-        return { text: '거래중', className: 'bg-dark text-bg border-dark' };
-      case 'reserved':
+      case 'RESERVED':
         return { text: '예약중', className: 'bg-reserved text-bg border-reserved' };
-      case 'sold':
+      case 'SOLD':
         return { text: '판매완료', className: 'bg-complete text-bg border-complete' };
       default:
         return { text: '판매중', className: 'bg-sale text-bg border-sale' };
     }
   };
 
-  const tradeStatusInfo = getTradeStatusInfo(product.tradeStatus);
-  const isAvailable = product.tradeStatus === 'available';
+  const loadProductDetail = async () => {
+    if (!id) return;
 
+    try {
+      setLoading(true);
+
+      // 상품 상세 정보 가져오기
+      const productData = await fetchProductById(id);
+      console.log(productData);
+
+      setProduct(productData);
+
+      // 판매자의 다른 상품 가져오기
+      // if (productData.seller) {
+      //   const otherProducts = await fetchSellerProducts(productData.seller.id);
+      //   // 현재 상품 제외
+      //   const filteredProducts = otherProducts.filter(p => p.id !== productData.id);
+      //   setSellerProducts(filteredProducts);
+      // }
+
+      setError(null);
+    } catch (err) {
+      console.error('Error loading product:', err);
+      setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    loadProductDetail();
+  }, [id]);
+
+  const goToUserPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (product?.user_id) {
+      navigate(`/user/${product.user_id}`);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error || '상품을 찾을 수 없습니다.'}</p>
+          <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
+            목록으로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const tradeStatusInfo = getTradeStatusInfo(product.transaction_status);
+  const isAvailable = product.transaction_status === 'SELLING';
   return (
     <div className="min-h-screen">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
@@ -119,7 +132,7 @@ const ProductDetail = () => {
           {/* 이미지 갤러리 */}
           <div className="flex flex-col gap-lg">
             <div className="relative overflow-hidden rounded-xl bg-bg">
-              <img src={product.images[0]} alt={product.title} className="block w-full h-auto" />
+              <img src={product.main_image} alt={product.title} className="block w-full h-auto" />
               {!isAvailable && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                   <span className={`px-md py-xs rounded-xl border ${tradeStatusInfo.className}`}>
@@ -130,9 +143,9 @@ const ProductDetail = () => {
             </div>
 
             <div className="grid grid-cols-4 gap-sm">
-              {product.images.slice(1).map((image, index) => (
+              {product.images.slice(0).map((image: string, id: number) => (
                 <div
-                  key={index}
+                  key={id}
                   className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity"
                 >
                   <img src={image} alt={product.title} className="block w-full h-auto" />
@@ -253,15 +266,19 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* 관련 상품 */}
-        <div className="mt-4xl">
-          <h2 className="heading4 text-text-primary mb-lg">{product.seller.name}님의 다른 상품</h2>
-          <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
-            {relatedProducts.map(rp => (
-              <ProductCard key={rp.id} {...rp} />
-            ))}
+        {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
+        {/* {sellerProducts.length > 0 && (
+          <div className="mt-4xl">
+            <h2 className="heading4 text-text-primary mb-lg">
+              {product.seller.name}님의 다른 상품
+            </h2>
+            <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
+              {sellerProducts.map(item => (
+                <ProductCard key={item.id} product={item} />
+              ))}
+            </div>
           </div>
-        </div>
+        )} */}
       </div>
     </div>
   );
