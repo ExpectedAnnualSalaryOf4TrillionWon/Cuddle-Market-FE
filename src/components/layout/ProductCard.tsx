@@ -91,6 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
             border border-border
             bg-bg/80 hover:bg-bg
             transition-all
+            cursor-pointer
           "
           onClick={e => {
             e.stopPropagation();

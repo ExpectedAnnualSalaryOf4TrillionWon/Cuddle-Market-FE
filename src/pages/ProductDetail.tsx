@@ -12,7 +12,6 @@ type DetailProduct = Product & { sub_images?: string[] };
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<DetailProduct | null>(null);
-  const [sellerProducts, setSellerProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -119,8 +118,12 @@ const ProductDetail = () => {
           {/* 이미지 갤러리 */}
           <div className="flex flex-col gap-lg">
             {/* 메인 이미지 */}
-            <div className="relative overflow-hidden rounded-xl bg-bg">
-              <img src={product.images} alt={product.title} className="block w-full h-auto" />
+            <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
+              <img
+                src={product.images}
+                alt={product.title}
+                className="w-full h-full absolute t-0 l-0 object-cover"
+              />
             </div>
 
             {/* 서브 이미지 */}
@@ -174,7 +177,7 @@ const ProductDetail = () => {
           {/* 상품 정보 */}
           <div className="flex flex-col gap-xl">
             <div className="flex flex-col gap-lg">
-              {/* 카테고리/상태 칩 */}
+              {/* 카테고리/상태 뱃지 */}
               <div className="flex items-center gap-xs">
                 <span
                   className={`inline-flex items-center text-md px-md py-xs rounded-xl border ${tradeStatusInfo.className}`}
@@ -227,7 +230,10 @@ const ProductDetail = () => {
             {/* 상품 설명 */}
             <div>
               <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
-              <div className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line">
+              <div
+                className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
+              min-h-[22vh]"
+              >
                 {product.description}
               </div>
             </div>
@@ -264,16 +270,18 @@ const ProductDetail = () => {
         </div>
 
         {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
-        <div className="mt-4xl">
-          <h2 className="heading4 text-text-primary mb-lg">
-            {product.seller_info?.nickname}님의 다른 상품
-          </h2>
-          <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
-            {product.seller_products?.map(sellerProducts => (
-              <ProductCard key={sellerProducts.id} product={sellerProducts} />
-            ))}
+        {product.seller_products && (
+          <div className="mt-4xl">
+            <h2 className="heading4 text-text-primary mb-lg">
+              {product.seller_info?.nickname}님의 다른 상품
+            </h2>
+            <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
+              {product.seller_products?.map(sellerProducts => (
+                <ProductCard key={sellerProducts.id} product={sellerProducts} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

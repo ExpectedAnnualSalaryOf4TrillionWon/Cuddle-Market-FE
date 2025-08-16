@@ -3,6 +3,7 @@ import { mockProducts } from './data/products';
 // http: HTTP 요청(GET, POST 등)을 처리하는 도구
 // HttpResponse: 응답을 만들어주는 도구
 import { http, HttpResponse } from 'msw';
+import { mockUsers } from './data/users';
 
 export const handlers = [
   // 상품 목록 조회
@@ -62,5 +63,35 @@ export const handlers = [
     };
 
     return HttpResponse.json(productDetail);
+  }),
+
+  // 판매자 프로필 페이지 조회
+  http.get('/api/user/:id', ({ params }) => {
+    const { id } = params;
+    const userId = parseInt(id as string);
+
+    const user = mockUsers.find(user => user.id === userId);
+
+    if (!user) {
+      return HttpResponse.json({ error: '사용자를 찾을 수 없습니다.' }, { status: 404 });
+    }
+
+    const res = { ...user, total_products: user.seller_products.length };
+    return HttpResponse.json(res);
+  }),
+
+  // 마이 페이지 조회
+  http.get('/api/mypage', ({}) => {
+    // const { id } = params;
+    // const userId = parseInt(id as string);
+    const userId = 1;
+
+    const me = mockUsers.find(user => user.id === userId);
+
+    if (!me) {
+      return HttpResponse.json({ error: '로그인 필요' }, { status: 401 });
+    }
+
+    return HttpResponse.json(me);
   }),
 ];

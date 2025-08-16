@@ -2,8 +2,9 @@ export interface User {
   id: number;
   seller_image: string;
   nickname: string;
-  state?: string;
-  city?: string;
+  state: string;
+  city: string;
+  created_at?: string;
 }
 export interface UserProduct {
   id: number;
@@ -14,7 +15,14 @@ export interface UserProduct {
   transaction_status: '판매중' | '예약중' | '판매완료';
   condition_status: '새 상품' | '거의 새것' | '사용감있음';
   elapsed_time: string;
-  like_count: number;
+  like_count?: number;
+  view_count?: number;
+}
+
+export interface SellerProfile extends User {
+  seller_products: UserProduct[];
+  created_at: string;
+  total_products: number;
 }
 
 export interface State {

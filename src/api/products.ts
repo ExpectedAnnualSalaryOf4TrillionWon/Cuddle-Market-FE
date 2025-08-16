@@ -1,4 +1,4 @@
-import type { Product } from '../types';
+import type { Product, SellerProfile } from '../types';
 const API_BASE_URL = '/api';
 
 export const fetchAllProducts = async (filters?: {
@@ -37,7 +37,7 @@ export const fetchAllProducts = async (filters?: {
   return response.json();
 };
 
-// 상품 상세 조회 함수 추가
+// 상품 상세 조회
 export const fetchProductById = async (productId: string): Promise<any> => {
   const url = `${API_BASE_URL}/detail/${productId}`;
 
@@ -54,4 +54,17 @@ export const fetchProductById = async (productId: string): Promise<any> => {
   }
 
   return response.json();
+};
+
+// 판매자 프로필 조회
+export const fetchSellerById = async (sellerId: string): Promise<SellerProfile> => {
+  const res = await fetch(`/api/user/${sellerId}`);
+  if (!res.ok) throw new Error('사용자를 찾을 수 없습니다.');
+  return res.json();
+};
+
+export const fetchMyProfile = async (): Promise<SellerProfile> => {
+  const res = await fetch('/api/me');
+  if (!res.ok) throw new Error('마이페이지 조회 실패');
+  return res.json();
 };
