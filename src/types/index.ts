@@ -1,19 +1,20 @@
 export interface User {
   id: number;
-  email: string;
-  provider?: string;
-  provider_id?: string;
+  seller_image: string;
   nickname: string;
-  name?: string;
-  profile_image?: string;
-  birthday?: string;
-  state_id?: number;
-  city_id?: number;
-  is_active: boolean;
-  is_superuser: boolean;
-  is_staff: boolean;
-  created_at: string;
-  updated_at: string;
+  state?: string;
+  city?: string;
+}
+export interface UserProduct {
+  id: number;
+  title: string;
+  price: number;
+  images: string;
+  pet_type_detail_code: string;
+  transaction_status: '판매중' | '예약중' | '판매완료';
+  condition_status: '새 상품' | '거의 새것' | '사용감있음';
+  elapsed_time: string;
+  like_count: number;
 }
 
 export interface State {
@@ -76,36 +77,22 @@ export interface ProductLike {
 // 상품 관련 타입들
 export interface Product {
   id: number;
-  state_code: string;
-  city_code: string;
-  category_code: string;
-  pet_type_code: string;
-  pet_type_detail_code: string;
   title: string;
   description?: string;
   price: number;
-  transaction_status: 'SELLING' | 'RESERVED' | 'SOLD';
-  condition_status: 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR';
-  view_count: number;
-  created_at: string;
-  updated_at: string;
+  images: string;
+  state_code?: string;
+  city_code?: string;
+  category_code?: string;
+  pet_type_code?: string;
+  pet_type_detail_code: string;
+  transaction_status: '판매중' | '예약중' | '판매완료';
+  condition_status: '새 상품' | '거의 새것' | '사용감있음';
+  view_count?: number;
+  like_count: number;
+  elapsed_time: string;
 
   // 조인된 데이터 (API 응답에서 포함될 수 있는 것들)
-  user?: User;
-  images?: string;
-  is_liked?: boolean;
-  state_name?: string;
-  city_name?: string;
-  category_name?: string;
-  pet_type_name?: string;
-  pet_type_detail_name?: string;
-}
-
-export interface ProductListResponse {
-  products: Product[];
-  total_count: number;
-  current_page: number;
-  total_pages: number;
-  has_next: boolean;
-  has_prev: boolean;
+  seller_info?: User;
+  seller_products?: UserProduct[];
 }

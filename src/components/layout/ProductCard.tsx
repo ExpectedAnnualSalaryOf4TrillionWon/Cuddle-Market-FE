@@ -1,46 +1,16 @@
 import React from 'react';
-import { CiClock2, CiLocationOn } from 'react-icons/ci';
+import { CiClock2 } from 'react-icons/ci';
+import { GoHeart } from 'react-icons/go';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import type { Product } from '../../types';
-
+import type { Product, UserProduct } from '../../types';
 export type ProductCardProps = {
-  product: Product;
+  product: Product | UserProduct;
   'data-index'?: number;
-};
-
-const getConditionText = (condition: Product['condition_status']): string => {
-  const conditionMap = {
-    MINT: '새상품',
-    EXCELLENT: '거의새것',
-    GOOD: '사용감있음',
-    FAIR: '상태나쁨',
-  };
-  return conditionMap[condition] || condition;
 };
 
 const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
-};
-
-const getTimeAgo = (createdAt: string): string => {
-  const now = new Date();
-  const created = new Date(createdAt);
-  const diffMs = now.getTime() - created.getTime();
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffMinutes < 60) {
-    return `${diffMinutes}분 전`;
-  } else if (diffHours < 24) {
-    return `${diffHours}시간 전`;
-  } else if (diffDays < 7) {
-    return `${diffDays}일 전`;
-  } else {
-    const diffWeeks = Math.floor(diffDays / 7);
-    return `${diffWeeks}주일 전`;
-  }
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIndex }) => {
@@ -51,17 +21,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
     id,
     title,
     price,
-    condition_status,
-    created_at,
     images,
-    state_name,
-    city_name,
-    pet_type_name,
+    pet_type_detail_code,
+    condition_status,
+    elapsed_time,
+    like_count,
     transaction_status,
   } = product;
 
-  const isSold = transaction_status === 'SOLD';
-  const isReserved = transaction_status === 'RESERVED';
+  const isSold = transaction_status === '판매완료';
+  const isReserved = transaction_status === '예약중';
 
   const navigate = useNavigate();
 
@@ -69,6 +38,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
     navigate(`/detail/${id}`);
   };
 
+  const getTimeAgo = (createdAt: string): string => {
+    const now = new Date();
+    const created = new Date(createdAt); // ISO 문자열 파싱
+    const diffMs = now.getTime() - created.getTime();
+
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMinutes < 1) {
+      return '방금 전';
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes}분 전`;
+    } else if (diffHours < 24) {
+      return `${diffHours}시간 전`;
+    } else {
+      // 24시간이 넘으면 무조건 'n일 전'
+      return `${diffDays}일 전`;
+    }
+  };
   return (
     <div
       className="
@@ -121,7 +110,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
               text-caption font-medium whitespace-nowrap
             "
           >
-            {pet_type_name}
+            {pet_type_detail_code}
           </span>
           <span
             className="
@@ -132,7 +121,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
               text-caption font-medium whitespace-nowrap
             "
           >
-            {getConditionText(condition_status)}
+            {condition_status}
           </span>
         </div>
 
@@ -165,19 +154,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
 
       {/* 상품 정보 영역 */}
       <div className="p-md">
-        <h3 className="heading5 text-text-primary mb-xs line-clamp-2">{title}</h3>
+        <h3 className="heading5 text-text-primary mb-xs line-clamp-2 nobreakstyle">{title}</h3>
         <p className="heading5 text-primary font-bold mb-sm">{formatPrice(price)}</p>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-xs text-text-secondary caption">
-            <CiLocationOn size={16} />
-            <span>
-              {state_name} {city_name}
-            </span>
-          </div>
-          <div className="flex items-center gap-xs text-text-secondary caption">
-            <CiClock2 size={16} />
-            <span>{getTimeAgo(created_at)}</span>
+          <div className="flex justify-between w-full gap-xs text-text-secondary caption">
+            <div className="flex items-center gap-xs text-text-secondary caption">
+              <CiClock2 size={16} />
+              <span>{getTimeAgo(elapsed_time)}</span>
+            </div>
+            <div className="flex items-center gap-xs text-text-secondary caption">
+              <GoHeart size={16} />
+              <span>{like_count}</span>
+            </div>
           </div>
         </div>
       </div>

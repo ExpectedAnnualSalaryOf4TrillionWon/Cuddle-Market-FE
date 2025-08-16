@@ -53,26 +53,12 @@ export const handlers = [
     // 조회수 증가 시뮬레이션
     const productDetail = {
       ...product,
-      view_count: product.view_count + 1,
-      main_image: product.images,
       // 추가 이미지들
-      images: [
+      sub_images: [
         'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=600&fit=crop',
         'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=600&fit=crop',
         'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=600&fit=crop',
       ].filter(Boolean),
-      // 판매자 정보
-      // seller: {
-      //   id: product.id,
-      //   name: `멍멍이아빠${product.user_id}`,
-      //   profile_image:
-      //     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-      //   rating: 4.5,
-      //   review_count: 127,
-      //   response_rate: 98,
-      //   response_time: '1시간 이내',
-      //   join_date: '2023년 3월',
-      // },
     };
 
     return HttpResponse.json(productDetail);

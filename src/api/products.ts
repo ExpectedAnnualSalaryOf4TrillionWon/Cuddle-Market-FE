@@ -55,16 +55,3 @@ export const fetchProductById = async (productId: string): Promise<any> => {
 
   return response.json();
 };
-
-// 판매자의 다른 상품 조회 함수 추가
-// export const fetchSellerProducts = async (userId: number): Promise<Product[]> => {
-//   const url = `${API_BASE_URL}/users/${userId}/products`;
-
-//   const response = await fetch(url);
-
-//   if (!response.ok) {
-//     throw new Error('판매자의 다른 상품을 불러오는데 실패했습니다.');
-//   }
-
-//   return response.json();
-// };
