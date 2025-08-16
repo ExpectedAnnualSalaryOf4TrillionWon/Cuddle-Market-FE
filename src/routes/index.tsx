@@ -8,6 +8,7 @@ import ProductPost from '@pages/ProductPost';
 import Signup from '@pages/Signup';
 import UserPage from '@pages/UserPage';
 import { Outlet, Route, Routes } from 'react-router-dom';
+import MyPage from '@pages/MyPage';
 
 const WithHeaderLayout = () => (
   <>
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/product-post" element={<ProductPost />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
