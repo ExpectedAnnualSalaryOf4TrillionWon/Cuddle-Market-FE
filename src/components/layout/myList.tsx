@@ -1,111 +1,234 @@
 import exampleImage from '@images/bowl.jpg';
 import defaultImage from '@images/CuddleMarketLogoImage.png';
+import { useEffect } from 'react';
+import { GrView } from 'react-icons/gr';
 
 type TabId = 'products' | 'wishlist';
 
 interface MyListProps {
   activeTab: TabId;
+  onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
 }
+
+const ProductState = {
+  Selling: 'selling',
+  Reserved: 'reserved',
+  Sold: 'sold',
+} as const;
+type ProductState = (typeof ProductState)[keyof typeof ProductState];
+
+/** ✅ 상태 → 라벨/스타일 매핑 유지 (Tailwind v4 변수 기반) 이 부분은 타입관리로 따로 파일 관리를 해도 될듯 합니다.*/
+const stateLabelMap: Record<ProductState, string> = {
+  [ProductState.Selling]: '판매중',
+  [ProductState.Reserved]: '예약중',
+  [ProductState.Sold]: '판매완료',
+};
+const stateStyleMap: Record<ProductState, string> = {
+  [ProductState.Selling]: 'bg-sale border-sale',
+  [ProductState.Reserved]: 'bg-reserved border-reserved',
+  [ProductState.Sold]: 'bg-complete border-complete',
+};
 
 interface Product {
   id: number;
   image: string;
-  description: string;
+  title: string;
   price: number;
+  state: ProductState;
+  view: number;
 }
 
 type ProductList = Product[];
+const wishlist: ProductList = [];
 
 const MyproductList: ProductList = [
-  /* 예시를 위한 상품정보 객체배열 생성 */
   {
     id: 1,
     image: exampleImage,
-    description: '강아지밥그릇',
+    title: '강아지밥그릇',
     price: 20000,
+    state: ProductState.Selling,
+    view: 12,
   },
   {
     id: 2,
     image: defaultImage,
-    description: '고양이장난감',
+    title: '고양이장난감',
     price: 15000,
+    state: ProductState.Selling,
+    view: 12,
   },
   {
     id: 3,
     image: defaultImage,
-    description: '햄스터집',
+    title: '햄스터집',
+    state: ProductState.Selling,
     price: 25000,
+    view: 120,
   },
   {
     id: 4,
     image: defaultImage,
-    description: '새장',
+    title: '새장',
+    state: ProductState.Selling,
     price: 35000,
+    view: 20,
   },
   {
     id: 5,
     image: defaultImage,
-    description: '애착 방석',
+    title: '애착 방석',
+    state: ProductState.Reserved,
     price: 5000,
+    view: 10,
+  },
+  {
+    id: 6,
+    image: defaultImage,
+    title: '애착 방석',
+    price: 5000,
+    state: ProductState.Sold,
+    view: 120,
+  },
+  {
+    id: 7,
+    image: defaultImage,
+    title: '애착 방석',
+    price: 5000,
+    state: ProductState.Reserved,
+    view: 120,
+  },
+  {
+    id: 8,
+    image: defaultImage,
+    title: '애착 방석',
+    price: 5000,
+    state: ProductState.Reserved,
+    view: 120,
+  },
+  {
+    id: 9,
+    image: defaultImage,
+    title: '애착 방석',
+    price: 5000,
+    state: ProductState.Selling,
+    view: 120,
+  },
+  {
+    id: 10,
+    image: defaultImage,
+    title: '애착 방석',
+    price: 5000,
+    state: ProductState.Reserved,
+    view: 120,
   },
 ];
 
-const wishlist: ProductList = [];
-
-const renderContents = (id: number, image: string, description: string, price: number) => {
+const renderContents = (
+  id: number,
+  image: string,
+  title: string,
+  price: number,
+  state: ProductState,
+  view: number,
+) => {
   return (
-    <div className="flex flex-col gap-xs bg-secondary" key={id}>
-      <div className="grid grid-cols-[auto_1fr_auto_auto] gap-xs items-center p-sm border border-border rounded-b-md shadow">
-        <img
-          src={image}
-          alt="사진"
-          className="w-16 h-16 tablet:w-18 tablet:h-18 desktop:w-20 desktop:h-20"
-        />
-        <div className="flex items-center px-sm text-bodyLarge tablet:text-heading5 desktop:text-heading3">
-          {description}
+    <div
+      className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm"
+      key={id}
+    >
+      {/* 상품 이미지 */}
+      <div className="w-16 h-16 rounded-full overflow-hidden bg-light">
+        <img src={image} alt="사진" className="w-full h-full object-cover" />
+      </div>
+
+      {/* 상품 정보 */}
+      <div className="flex-1">
+        <h3 className="bodySmall text-text-primary">{title}</h3>
+        <p className="heading5 text-text-primary font-bold">{price}원</p>
+        <div className="flex items-center gap-xs caption text-text-secondary">
+          <GrView />
+          <span>조회 {view}</span>
         </div>
-        <div className="flex items-center px-sm text-bodyLarge tablet:text-heading5 desktop:text-heading3">
-          {price}원
-        </div>
-        <div className="flex justify-evenly gap-xs">
-          <button
-            onClick={() => alert('상품등록/수정 페이지로 이동')}
-            className="w-2xl bg-primary hover:bg-dark text-point py-sm rounded-sm "
-          >
-            수정
-          </button>
-          {/*alert,confirm 등은 추후에 대체될 예정*/}
-          <button
-            onClick={() => confirm('삭제하시겠습니까?')}
-            className=" w-2xl  bg-primary hover:bg-dark text-point py-sm rounded-sm "
-          >
-            삭제
-          </button>
-        </div>
+      </div>
+
+      {/* 상품 상태 및 액션 */}
+      <div className="grid grid-cols-2 gap-xs">
+        <p
+          className={`col-start-1 row-start-1   
+                          rounded-md px-3 py-1
+                          border text-bg
+                          text-xs font-medium whitespace-nowrap min-w-[70px] 
+                          flex items-center justify-center
+                          ${stateStyleMap[state]}
+                        `}
+        >
+          {stateLabelMap[state]}
+        </p>
+        <button
+          onClick={() => alert('상품등록/수정 페이지로 이동')}
+          className="col-start-1 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
+        >
+          수정
+        </button>
+        {/*alert,confirm 등은 추후에 대체될 예정*/}
+        <button
+          onClick={() => confirm('삭제하시겠습니까?')}
+          className="col-start-2 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
+        >
+          삭제
+        </button>
       </div>
     </div>
   );
 };
+const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
+  useEffect(() => {
+    onCountsUpdate?.({
+      products: MyproductList.length,
+      wishlist: wishlist.length,
+    });
+  }, [onCountsUpdate]);
 
-const MyList: React.FC<MyListProps> = ({ activeTab }) => {
   const renderList = () => {
     switch (activeTab) {
       case 'products':
         return MyproductList.length > 0 ? (
           MyproductList.map(product =>
-            renderContents(product.id, product.image, product.description, product.price),
+            renderContents(
+              product.id,
+              product.image,
+              product.title,
+              product.price,
+              product.state,
+              product.view,
+            ),
           )
         ) : (
           <div className="text-heading3">목록이 없습니다.</div>
         );
-      //백엔드 조교님과의 논의 후 거래내역은 우선순위 낮음으로 결정하여 alert처리.
       case 'wishlist':
         return wishlist.length > 0 ? (
           wishlist.map(product =>
-            renderContents(product.id, product.image, product.description, product.price),
+            renderContents(
+              product.id,
+              product.image,
+              product.title,
+              product.price,
+              product.state,
+              product.view,
+            ),
           )
         ) : (
-          <div className="text-heading3">목록이 없습니다.</div>
+          <div className="flex flex-col items-center justify-center">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">아직 찜한 상품이 없어요</h3>
+            <div className="text-gray-500 text-sm">
+              <p className="w-full text-center">
+                마음에 드는 상품을 찜하시면 여기에서 쉽게 확인하실 수 있어요.
+              </p>
+              <p className="w-full text-center">다양한 반려동물 용품을 둘러보세요!</p>
+            </div>
+          </div>
         );
     }
   };

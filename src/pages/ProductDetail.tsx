@@ -1,10 +1,8 @@
-
 import ProductCard from '@layout/ProductCard';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-
 
 const product = {
   id: '1',
@@ -92,7 +90,6 @@ const ProductDetail = () => {
     navigate(`/user/${1}`);
   };
 
-
   // 거래 상태별 토큰 매핑
   const getTradeStatusInfo = (status: 'available' | 'trading' | 'reserved' | 'sold') => {
     switch (status) {
@@ -113,12 +110,12 @@ const ProductDetail = () => {
   const isAvailable = product.tradeStatus === 'available';
 
   return (
-    <div className="min-h-screen">
+    <div className="bg-bg">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
           {/* 이미지 갤러리 */}
           <div className="flex flex-col gap-lg">
-            <div className="relative overflow-hidden rounded-xl bg-bg">
+            <div className="relative overflow-hidden rounded-xl bg-bg min-w-[300px] min-h-[300px] md:min-w-[400px] md:min-h-[400px]">
               <img src={product.images[0]} alt={product.title} className="block w-full h-auto" />
               {!isAvailable && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -133,7 +130,7 @@ const ProductDetail = () => {
               {product.images.slice(1).map((image, index) => (
                 <div
                   key={index}
-                  className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity"
+                  className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity min-w-[70px] min-h-[70px] md:min-w-[90px] md:min-h-[90px]"
                 >
                   <img src={image} alt={product.title} className="block w-full h-auto" />
                 </div>
@@ -217,7 +214,7 @@ const ProductDetail = () => {
             {/* 상품 설명 */}
             <div>
               <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
-              <div className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line">
+              <div className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line min-h-[300px] md:min-h-[90px]">
                 {product.description}
               </div>
             </div>
