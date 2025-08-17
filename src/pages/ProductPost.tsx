@@ -723,7 +723,7 @@ const ProductPost = () => {
                               setShowPetTypeSelect(prev => !prev);
                               setShowPetCategorySelect(false);
                             }}
-                            className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
+                            className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
                           >
                             <span className="text-gray-500">
                               {selectedPetType ||
