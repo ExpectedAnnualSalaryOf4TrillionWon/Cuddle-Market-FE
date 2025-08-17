@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -93,9 +92,8 @@ const UserPage = () => {
                     {' '}
                     {seller.created_at ? formatJoinDate(seller.created_at) : ''}
                   </span>
-
                 </div>
-
+              </div>
 
               <div className="mt-lg flex flex-col gap-sm">
                 <button
@@ -217,13 +215,12 @@ const UserPage = () => {
                     </div>
                   </div>
                 ))}
-
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
