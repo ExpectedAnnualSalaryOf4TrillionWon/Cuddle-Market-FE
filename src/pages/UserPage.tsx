@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { GrView } from 'react-icons/gr';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import type { User, UserProduct } from 'src/types';
 import { fetchSellerById } from '../api/products';
 
@@ -18,14 +18,13 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const formatJoinDate = (dateString: string): string => {
     const date = new Date(dateString);
 
     const year = date.getFullYear();
-    const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+    const month = date.getMonth() + 1;
 
     return `${year}년 ${month}월 가입`;
   };
