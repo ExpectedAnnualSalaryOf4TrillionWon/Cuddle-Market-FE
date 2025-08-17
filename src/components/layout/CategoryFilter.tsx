@@ -250,6 +250,7 @@ export function CategoryFilter() {
     };
   }, [showProvinceSelect, showCitySelect]);
   return (
+
     <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-xl flex flex-col gap-xl">
       {/* 반려동물 종류 */}
       <div>
@@ -262,6 +263,7 @@ export function CategoryFilter() {
           role="tablist"
           aria-label="반려동물 상위 분류"
           className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-6 gap-sm px-sm py-sm rounded-3xl bg-dark/25"
+
         >
           {Object.entries(petCategories).map(([key, category]) => (
             <button
@@ -269,6 +271,7 @@ export function CategoryFilter() {
               role="tab"
               type="button"
               aria-selected={category.selected}
+
               className={`w-full px-md py-sm rounded-3xl
                     ${
                       category.selected ? 'bg-dark' : 'bg-transparent'
@@ -280,6 +283,7 @@ export function CategoryFilter() {
             </button>
           ))}
         </div>
+
       </div>
       <div>
         <h3 id="category-heading" className="mb-md tablet:mb-lg heading5 text-text-primary">
@@ -460,7 +464,9 @@ export function CategoryFilter() {
             </div>
           </div>
         </div>
+
       </div>
+
     </div>
   );
 }
