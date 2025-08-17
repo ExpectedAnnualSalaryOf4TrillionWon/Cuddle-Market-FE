@@ -99,8 +99,8 @@ const userProductList: ProductList = [
 const UserPage = () => {
   return (
     <>
-      <header className="flex items-center justify-between gap-lg sticky top-0 z-1 bg-primary min-h-[112px]">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-lg">
+      <header className="sticky top-0 z-1 bg-primary min-h-[112px]">
+        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
           {/* 로고 */}
           <Link to="/">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />

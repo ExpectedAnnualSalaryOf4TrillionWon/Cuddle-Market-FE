@@ -32,8 +32,8 @@ const MyPage = () => {
   return (
     <>
       {/* 홈버튼 */}
-      <header className="flex items-center justify-between gap-lg sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-lg">
+      <header className="sticky top-0 z-1 bg-primary">
+        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
           {/* 로고 */}
           <Link to="/">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />

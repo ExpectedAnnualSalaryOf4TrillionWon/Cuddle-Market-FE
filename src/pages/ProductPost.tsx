@@ -227,8 +227,8 @@ const ProductPost = () => {
   return (
     <div className="bg-bg">
       {/* 헤더 영역 */}
-      <header className="flex items-center justify-between gap-lg sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-lg">
+      <header className="sticky top-0 z-1 bg-primary">
+        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
           {/* 로고 */}
           <Link to="/">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
@@ -665,7 +665,7 @@ const ProductPost = () => {
                     <h4>판매요청 정보</h4>
                     <p>찾고 있는 상품 정보를 입력해주세요. *는 필수 항목입니다.</p>
                   </div>
-                  <div className="flex flex-col gap-xl">
+                  <div className="flex flex-col gap-md">
                     <div className="flex flex-col gap-sm">
                       <label className="text-sm">반려동물 종류 *</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -698,8 +698,12 @@ const ProductPost = () => {
                                   type="button"
                                   onClick={() => handleSelectPetCategory(opt)}
                                   className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedPetCategory === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                  ${
+                                    selectedPetCategory === opt
+                                      ? 'bg-gray-100 ring-1 ring-gray-300'
+                                      : ''
+                                  }`}
                                 >
                                   {opt}
                                 </button>
@@ -743,8 +747,12 @@ const ProductPost = () => {
                                   type="button"
                                   onClick={() => handleSelectPetType(opt)}
                                   className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedPetType === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                  ${
+                                    selectedPetType === opt
+                                      ? 'bg-gray-100 ring-1 ring-gray-300'
+                                      : ''
+                                  }`}
                                 >
                                   {opt}
                                 </button>

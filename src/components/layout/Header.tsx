@@ -56,12 +56,11 @@ const Header = () => {
 
               <button
                 type="button"
-                className="items-center justify-center gap-sm
+                className="
                   h-full px-sm py-sm
                   border border-border rounded-md
                   bg-bg/20 hover:bg-bg/30
                   text-text-primary
-                  transition-all
                 "
               >
                 <IoIosSearch />
