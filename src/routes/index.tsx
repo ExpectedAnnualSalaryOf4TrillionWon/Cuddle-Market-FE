@@ -2,6 +2,8 @@ import Footer from '@layout/Footer';
 import Header from '@layout/Header';
 import Home from '@pages/Home';
 
+import KakaoCallback from '@pages/KakaoCallback';
+
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
 import ProductDetail from '@pages/ProductDetail';
@@ -48,6 +50,7 @@ const AppRoutes = () => {
         <Route path="/user/:id" element={<UserPage />} />
         <Route path="/product-post" element={<ProductPost />} />
       </Route>
+      <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
   );
 };

@@ -8,7 +8,6 @@ import UserDropdown from './UserDropDown';
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   {
@@ -83,12 +82,7 @@ const Header = () => {
             </button>
 
             {isDropdownOpen && (
-              <UserDropdown
-                isOpen={isDropdownOpen}
-                setIsOpen={setIsDropdownOpen}
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-              />
+              <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
             )}
           </div>
         </div>
