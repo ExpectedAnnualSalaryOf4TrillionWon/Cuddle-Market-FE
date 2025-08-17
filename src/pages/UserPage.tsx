@@ -110,28 +110,7 @@ const UserPage = () => {
           <h2 className="text-xl font-bold">판매자 프로필</h2>
         </div>
       </header>
-<<<<<<< HEAD
-      <div className="px-lg py-3xl bg-bg">
-        <div className="max-w-[var(--container-max-width)]  mx-auto  grid grid-cols-1 tablet:grid-cols-3 gap-xl">
-          {/* 좌측: 사용자 카드 */}
-          <div className="tablet:col-span-1 ">
-            <div className="sticky top-24 flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary p-xl">
-              <div className="flex flex-col items-center">
-                <div className="w-auto h-22 mx-auto mb-lg rounded-full overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop"
-                    alt="멍멍이아빠"
-                    className="block w-full h-full object-cover"
-                  />
-                </div>
-                <h2 className="heading4 text-text-primary mb-sm">멍멍이아빠</h2>
-              </div>
 
-              <div className="flex flex-col gap-sm">
-                <div className="flex items-center gap-sm">
-                  <CiLocationOn />
-                  <span className="bodySmall text-text-primary">서울 강남구</span>
-=======
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-xl">
           {/* 사용자 카드 */}
@@ -150,14 +129,9 @@ const UserPage = () => {
                   <p className="bodySmall text-text-secondary mb-lg">
                     반려동물을 사랑하는 아빠입니다.
                   </p>
->>>>>>> 157430f (fix: 리뷰 피드백 반영)
                 </div>
 
                 <div className="flex flex-col gap-sm">
-                  <div className="flex items-center gap-sm">
-                    <CiMail />
-                    <span className="bodySmall text-text-primary">dogdad@example.com</span>
-                  </div>
                   <div className="flex items-center gap-sm">
                     <CiLocationOn />
                     <span className="bodySmall text-text-primary">서울 강남구</span>
@@ -168,20 +142,20 @@ const UserPage = () => {
                   </div>
                 </div>
 
-
-              <div className="flex flex-col gap-sm">
-                <button
-                  className="
-                    flex items-center justify-center gap-sm
-                    h-10 rounded-md px-xl
-                    bg-primary hover:bg-primary/90
-                    text-bg text-sm font-medium
-                    transition-all
-                  "
-                >
-                  <BsChat />
-                  <span>채팅하기</span>
-                </button>
+                <div className="flex flex-col gap-sm">
+                  <button
+                    className="
+                      flex items-center justify-center gap-sm
+                      h-10 rounded-md px-xl
+                      bg-primary hover:bg-primary/90
+                      text-bg text-sm font-medium
+                      transition-all
+                    "
+                  >
+                    <BsChat />
+                    <span>채팅하기</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -213,7 +187,6 @@ const UserPage = () => {
               </div>
             </div>
           </div>
-          {/* 우측 끝 */}
         </div>
       </div>
     </>
