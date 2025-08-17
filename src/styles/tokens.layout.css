@@ -9,4 +9,5 @@
    */
   --breakpoint-tablet: 768px; /* tablet ≥768px */
   --breakpoint-desktop: 1024px; /* desktop ≥1024px */
+  --breakpoint-ultrawide: 1920px; /* desktop ≥1024px */
 }

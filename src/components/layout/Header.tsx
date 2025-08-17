@@ -1,5 +1,5 @@
 import logoImage from '@images/CuddleMarketLogo.png';
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,6 @@ import UserDropdown from './UserDropDown';
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   {
@@ -57,12 +56,11 @@ const Header = () => {
 
               <button
                 type="button"
-                className="items-center justify-center gap-sm
+                className="
                   h-full px-sm py-sm
                   border border-border rounded-md
                   bg-bg/20 hover:bg-bg/30
                   text-text-primary
-                  transition-all
                 "
               >
                 <IoIosSearch />
@@ -75,7 +73,7 @@ const Header = () => {
             <button
               type="button"
               className="items-center justify-center gap-sm
-                h-9 px-lg py-sm
+                h-9 
                 transition-all"
               onClick={() => setIsDropdownOpen(prev => !prev)}
             >
@@ -83,12 +81,7 @@ const Header = () => {
             </button>
 
             {isDropdownOpen && (
-              <UserDropdown
-                isOpen={isDropdownOpen}
-                setIsOpen={setIsDropdownOpen}
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-              />
+              <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
             )}
           </div>
         </div>

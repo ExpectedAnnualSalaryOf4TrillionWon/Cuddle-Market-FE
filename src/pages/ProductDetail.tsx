@@ -10,6 +10,7 @@ import { fetchProductById } from '../api/products';
 import type { Product } from '../types';
 type DetailProduct = Product & { sub_images?: string[] };
 
+
 const ProductDetail = () => {
   const [product, setProduct] = useState<DetailProduct | null>(null);
   const [loading, setLoading] = useState(true);
@@ -17,6 +18,7 @@ const ProductDetail = () => {
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
 
   const formatPrice = (price: number): string => {
     return `${price.toLocaleString()}원`;
@@ -112,11 +114,12 @@ const ProductDetail = () => {
   const tradeStatusInfo = getTradeStatusInfo(product.transaction_status);
 
   return (
-    <div className="min-h-screen">
+    <div className="bg-bg">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
           {/* 이미지 갤러리 */}
           <div className="flex flex-col gap-lg">
+
             {/* 메인 이미지 */}
             <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
               <img
@@ -143,6 +146,7 @@ const ProductDetail = () => {
                 ))}
               </div>
             )}
+
 
             {/* 판매자 정보 */}
             <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
@@ -230,10 +234,12 @@ const ProductDetail = () => {
             {/* 상품 설명 */}
             <div>
               <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
+
               <div
                 className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
               min-h-[22vh]"
               >
+
                 {product.description}
               </div>
             </div>

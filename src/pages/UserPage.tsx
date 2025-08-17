@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -93,8 +94,9 @@ const UserPage = () => {
                     {' '}
                     {seller.created_at ? formatJoinDate(seller.created_at) : ''}
                   </span>
+
                 </div>
-              </div>
+
 
               <div className="mt-lg flex flex-col gap-sm">
                 <button
@@ -216,24 +218,13 @@ const UserPage = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
 
-            {/* 탭 패널: 구매내역 (placeholder) */}
-            <div
-              role="tabpanel"
-              id="panel-purchases"
-              aria-labelledby="tab-purchases"
-              className={`${activeTab !== 'purchases' ? 'hidden' : ''} flex-1 outline-none`}
-            >
-              {/* TODO: 구매내역 콘텐츠 */}
-              <p className="bodySmall text-text-secondary">구매내역이 없습니다.</p>
+              </div>
             </div>
           </div>
         </div>
-        {/* 우측 끝 */}
       </div>
-    </div>
+    </>
   );
 };
 

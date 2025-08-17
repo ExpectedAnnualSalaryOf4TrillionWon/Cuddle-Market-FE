@@ -86,7 +86,7 @@ const Home = () => {
   const visibleProducts = allProducts.slice(0, visibleItems); // 수정
 
   return (
-    <div>
+    <div className="bg-bg">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 탭 */}
         <CategoryFilter />
