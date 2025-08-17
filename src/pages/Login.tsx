@@ -1,11 +1,8 @@
 import logo from '@images/CuddleMarketLogoBase.png';
 import kakao from '@images/kakao.svg';
-import { useNavigate } from 'react-router-dom';
 
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
 const Login: React.FC = () => {
-  const navigate = useNavigate();
-
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;

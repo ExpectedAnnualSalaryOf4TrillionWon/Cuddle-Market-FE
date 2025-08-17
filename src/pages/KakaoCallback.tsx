@@ -9,7 +9,7 @@ interface KakaoAuthData {
 }
 
 const KakaoCallback: React.FC = () => {
-  const [authCode, setAuthCode] = useState<string | null>(null);
+  const [_, setAuthCode] = useState<string | null>(null);
   const [searchParams] = useSearchParams(); // React Router Hook 사용
 
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';

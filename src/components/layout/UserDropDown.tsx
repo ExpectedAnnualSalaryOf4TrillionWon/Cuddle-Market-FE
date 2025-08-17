@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@store/authStore';
 import { useModalStore } from '@store/modalStore';
+import { useNavigate } from 'react-router-dom';
 
 // 상태관리 props 전달을 위한 타입설정
 interface UserDropdownProps {
@@ -27,10 +27,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
   const navigate = useNavigate();
-  const goToSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const goToSignIn = () => {
     navigate('/signin');
   };
-  const goToMyPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const goToMyPage = () => {
     navigate('/mypage');
   };
   // 로그아웃 확인 모달 설정
