@@ -49,9 +49,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
         <>
           <button
             className="w-full px-md py-xs hover:bg-gray-100 transition"
-            onClick={e => {
+            onClick={() => {
               setIsOpen(false);
-              goToSignIn(e);
+              goToSignIn();
             }}
           >
             로그인
@@ -72,9 +72,9 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
         <>
           <button
             className="w-full px-md py-xs hover:bg-dark transition"
-            onClick={e => {
+            onClick={() => {
               setIsOpen(false);
-              goToMyPage(e);
+              goToMyPage();
             }}
           >
             마이페이지
