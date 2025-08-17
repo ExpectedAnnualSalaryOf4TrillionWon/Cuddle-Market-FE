@@ -1,6 +1,8 @@
 import Header from '@layout/Header';
 import ChatPage from '@pages/ChatPage';
 import Home from '@pages/Home';
+
+import KakaoCallback from '@pages/KakaoCallback';
 import Login from '@pages/Login';
 import MyPage from '@pages/MyPage';
 import ProductDetail from '@pages/ProductDetail';
@@ -36,6 +38,7 @@ const AppRoutes = () => {
         <Route path="/user/:id" element={<UserPage />} />
         <Route path="/chat" element={<ChatPage />} />
       </Route>
+      <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
   );
 };
