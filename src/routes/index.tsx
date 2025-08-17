@@ -21,13 +21,15 @@ const NoHeaderLayout = () => <Outlet />;
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Header 포함 구간: Home, ProductDetail */}
-      <Route element={<WithHeaderLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/detail/:id" element={<ProductDetail />} />
-        <Route path="/user/:id" element={<UserPage />} />
-      </Route>
+    <>
+      <Routes>
+        {/* Header 포함 구간: Home, ProductDetail */}
+        <Route element={<WithHeaderLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/detail/:id" element={<ProductDetail />} />
+          <Route path="/user/:id" element={<UserPage />} />
+        </Route>
+
 
       {/* Header 미포함 구간: Signup, MyPage */}
       <Route element={<NoHeaderLayout />}>
@@ -38,6 +40,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
+
   );
 };
 
