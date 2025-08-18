@@ -146,6 +146,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
   useEffect(() => {
     loadUserInfo();
   }, []);
+
   useEffect(() => {
     if (onCountsUpdate && !loading) {
       onCountsUpdate({

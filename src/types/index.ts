@@ -112,10 +112,15 @@ export interface MyPageData {
   liked_product_list: Product[];
 }
 
-export interface LikeStatusResponse {
-  product_id: number;
+export interface LikesResponse {
+  product_ids: number[];
 }
 
-export interface LikeActionResponse {
-  product_id: number;
+export interface UseLikeReturn {
+  likedProductIds: number[];
+  isProductLiked: (productId: number) => boolean;
+  toggleLike: (productId: number) => Promise<void>;
+  isLoading: boolean;
+  totalLikedCount: number;
+  refreshLikes: () => Promise<void>;
 }
