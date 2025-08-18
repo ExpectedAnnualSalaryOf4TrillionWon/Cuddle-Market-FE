@@ -1,16 +1,11 @@
 import logoImage from '@images/CuddleMarketLogo.png';
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
-
-type UserInfo = {
-  nickname: string;
-  email: string;
-  location: string;
-  createdAt: string;
-};
+import type { User } from 'src/types';
+import { fetchMyInfo } from '../api/products';
 
 const TABS = [
   { id: 'products', label: '내 상품' },
@@ -21,17 +16,41 @@ type TabId = (typeof TABS)[number]['id'];
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState<TabId>('products');
+  const [loading, setLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
   const [counts, setCounts] = useState({ products: 0, wishlist: 0 });
-  const userInfo: UserInfo = {
-    nickname: '유저닉네임',
-    email: 'user@example.com',
-    location: '서울',
-    createdAt: '2023-01-01',
+
+  const formatJoinDate = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+
+    return `${year}년 ${month}월 가입`;
   };
+  const loadUserInfo = async () => {
+    try {
+      const data = await fetchMyInfo();
+      console.log(data);
+      setUserInfo(data);
+    } catch (error) {
+      console.error('사용자 정보 로드 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUserInfo();
+  }, []);
+
+  if (loading || !userInfo) {
+    return <div>로딩중...</div>;
+  }
 
   return (
     <>
-      {/* 홈버튼 */}
+      {/* 헤더영역 */}
       <header className="sticky top-0 z-1 bg-primary">
         <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
           {/* 로고 */}
@@ -59,12 +78,16 @@ const MyPage = () => {
               <div className="flex flex-col gap-sm">
                 <div className="flex items-center gap-sm">
                   <CiLocationOn />
-                  <span className="bodySmall text-text-primary">{userInfo.location}</span>
+                  <span className="bodySmall text-text-primary">
+                    {userInfo.state} {userInfo.city}
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-sm">
                   <CiCalendar />
-                  <span className="bodySmall text-text-primary">{userInfo.createdAt}</span>
+                  <span className="bodySmall text-text-primary">
+                    {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''}
+                  </span>
                 </div>
               </div>
 

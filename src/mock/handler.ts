@@ -40,12 +40,13 @@ export const handlers = [
   }),
 
   //  상품 상세 조회 핸들러 추가
-  http.get('/api/detail/:id', ({ params }) => {
+  http.get('/api/products/:id', ({ params }) => {
     const { id } = params;
     const productId = parseInt(id as string);
 
     // mockProducts에서 해당 상품 찾기
     const product = mockProducts.find(product => product.id === productId);
+    console.log(product);
 
     if (!product) {
       return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
@@ -84,14 +85,45 @@ export const handlers = [
   http.get('/api/mypage', ({}) => {
     // const { id } = params;
     // const userId = parseInt(id as string);
-    const userId = 1;
+    // console.log(userId);
 
-    const me = mockUsers.find(user => user.id === userId);
+    // 임시로 mockProducts에서 일부 상품만 반환
+    const myInfo = {
+      id: 999,
+      nickname: '테스트유저',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+      email: 'test@example.com',
+      state: '서울특별시',
+      city: '강남구',
+      created_at: '2024-01-15T00:00:00Z',
+    };
+    return HttpResponse.json(myInfo);
+  }),
+  http.get('/api/users/mypage', () => {
+    const myPageData = {
+      my_product_list: mockProducts.slice(0, 3),
+      liked_product_list: mockProducts.slice(3, 6),
+    };
 
-    if (!me) {
-      return HttpResponse.json({ error: '로그인 필요' }, { status: 401 });
+    return HttpResponse.json(myPageData);
+  }),
+  http.post('/api/v1/likes', async ({ request }) => {
+    const body = (await request.json()) as { product_id: number };
+    const productId = body.product_id;
+
+    console.log(`[MSW] 찜하기 추가 요청 - 상품 ID: ${productId}`);
+
+    // 상품이 존재하는지 확인
+    const product = mockProducts.find(p => p.id === productId);
+    if (!product) {
+      return HttpResponse.json(
+        {
+          error: '상품을 찾을 수 없습니다.',
+          product_id: productId,
+        },
+        { status: 404 },
+      );
     }
-
-    return HttpResponse.json(me);
   }),
 ];

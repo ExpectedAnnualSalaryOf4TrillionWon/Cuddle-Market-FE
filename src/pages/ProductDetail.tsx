@@ -7,18 +7,15 @@ import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
-import type { Product } from '../types';
-type DetailProduct = Product & { sub_images?: string[] };
-
+import type { ProductDetailItem } from '../types';
 
 const ProductDetail = () => {
-  const [product, setProduct] = useState<DetailProduct | null>(null);
+  const [product, setProduct] = useState<ProductDetailItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-
 
   const formatPrice = (price: number): string => {
     return `${price.toLocaleString()}원`;
@@ -46,18 +43,18 @@ const ProductDetail = () => {
   };
 
   // 거래 상태별 토큰 매핑
-  const getTradeStatusInfo = (status: Product['transaction_status']) => {
-    switch (status) {
-      case '판매중':
-        return { className: 'bg-sale text-bg border-sale' };
-      case '예약중':
-        return { className: 'bg-reserved text-bg border-reserved' };
-      case '판매완료':
-        return { className: 'bg-complete text-bg border-complete' };
-      default:
-        return { className: 'bg-sale text-bg border-sale' };
-    }
-  };
+  // const getTradeStatusInfo = (status: Product['transaction_status']) => {
+  //   switch (status) {
+  //     case '판매중':
+  //       return { className: 'bg-sale text-bg border-sale' };
+  //     case '예약중':
+  //       return { className: 'bg-reserved text-bg border-reserved' };
+  //     case '판매완료':
+  //       return { className: 'bg-complete text-bg border-complete' };
+  //     default:
+  //       return { className: 'bg-sale text-bg border-sale' };
+  //   }
+  // };
 
   const loadProductDetail = async () => {
     if (!id) return;
@@ -79,6 +76,7 @@ const ProductDetail = () => {
     }
   };
   useEffect(() => {
+    console.log(id);
     loadProductDetail();
   }, [id]);
 
@@ -111,7 +109,7 @@ const ProductDetail = () => {
     );
   }
 
-  const tradeStatusInfo = getTradeStatusInfo(product.transaction_status);
+  // const tradeStatusInfo = getTradeStatusInfo(product.transaction_status);
 
   return (
     <div className="bg-bg">
@@ -119,7 +117,6 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
           {/* 이미지 갤러리 */}
           <div className="flex flex-col gap-lg">
-
             {/* 메인 이미지 */}
             <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
               <img
@@ -147,13 +144,12 @@ const ProductDetail = () => {
               </div>
             )}
 
-
             {/* 판매자 정보 */}
             <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
               <div className="flex items-center gap-sm mb-sm">
                 <div className="w-12 h-12 overflow-hidden rounded-full">
                   <img
-                    src={product.seller_info?.seller_image ?? ''}
+                    src={product.seller_info?.profile_image ?? ''}
                     alt={product.seller_info?.nickname}
                     className="block w-full h-full object-cover"
                   />
@@ -183,9 +179,7 @@ const ProductDetail = () => {
             <div className="flex flex-col gap-lg">
               {/* 카테고리/상태 뱃지 */}
               <div className="flex items-center gap-xs">
-                <span
-                  className={`inline-flex items-center text-md px-md py-xs rounded-xl border ${tradeStatusInfo.className}`}
-                >
+                <span className={`inline-flex items-center text-md px-md py-xs rounded-xl border`}>
                   {product.transaction_status}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
@@ -239,7 +233,6 @@ const ProductDetail = () => {
                 className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
               min-h-[22vh]"
               >
-
                 {product.description}
               </div>
             </div>

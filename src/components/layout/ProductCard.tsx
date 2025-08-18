@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
   const navigate = useNavigate();
 
   const goToProductDetail = () => {
-    navigate(`/detail/${id}`);
+    navigate(`/products/${id}`);
   };
 
   const getTimeAgo = (createdAt: string): string => {
