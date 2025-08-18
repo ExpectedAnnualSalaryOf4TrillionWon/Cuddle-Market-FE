@@ -5,10 +5,12 @@ import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropDown';
+import AlarmDropdown from './AlarmDropDown';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   {
@@ -17,7 +19,8 @@ const Header = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+        setIsAlarmDropdownOpen(false);
+        setIsUserDropdownOpen(false);
       }
     };
 
@@ -36,7 +39,7 @@ const Header = () => {
             <img
               src={logoImage}
               alt="커들마켓"
-              className="w-auto h-13 tablet:h-22 object-contain"
+              className="w-auto h-15 tablet:h-22 object-contain"
             />
           </Link>
 
@@ -72,26 +75,38 @@ const Header = () => {
               </button>
             </div>
           </div>
-          <div className="flex gap-md tablet:gap-xl">
+          <div className="flex gap-md tablet:gap-xl relative">
             {/* 알람 드롭다운 호출 */}
-            <div className="flex items-center">
-              <button type="button" onClick={() => setIsDropdownOpen(prev => !prev)}>
+            <div className="flex itmes-center" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAlarmDropdownOpen(prev => !prev);
+                  setIsUserDropdownOpen(false);
+                }}
+              >
                 <HiOutlineBellAlert className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isDropdownOpen && (
-                <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
+              {isAlarmDropdownOpen && (
+                <AlarmDropdown isOpen={isAlarmDropdownOpen} setIsOpen={setIsAlarmDropdownOpen} />
               )}
             </div>
 
             {/* 유저 드롭다운 호출 */}
-            <div className="flex items-center" ref={dropdownRef}>
-              <button type="button" onClick={() => setIsDropdownOpen(prev => !prev)}>
+            <div className="flex itmes-center" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsUserDropdownOpen(prev => !prev);
+                  setIsAlarmDropdownOpen(false);
+                }}
+              >
                 <RxAvatar className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isDropdownOpen && (
-                <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
+              {isUserDropdownOpen && (
+                <UserDropdown isOpen={isUserDropdownOpen} setIsOpen={setIsUserDropdownOpen} />
               )}
             </div>
           </div>

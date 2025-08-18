@@ -7,18 +7,18 @@ const ConfirmModal = () => {
 
   return (
     <div className="fixed inset-0 bg-black/10 flex justify-center items-center z-[9999]">
-      <div className="bg-secondary p-2xl rounded-md">
+      <div className="bg-dark p-2xl rounded-md">
         <p className="mb-4 text-heading5">{message}</p>
-        <div className="flex justify-around">
+        <div className="flex justify-evenly">
           <button
             onClick={() => handleConfirm(true)}
-            className="px-md py-xs bg-dark text-text-secondary rounded-md"
+            className="px-md py-xs bg-point text-text-primary rounded-md"
           >
             확인
           </button>
           <button
             onClick={() => handleConfirm(false)}
-            className="px-md py-xs bg-dark text-text-secondary rounded-md"
+            className="px-md py-xs bg-point text-text-primary rounded-md"
           >
             취소
           </button>
