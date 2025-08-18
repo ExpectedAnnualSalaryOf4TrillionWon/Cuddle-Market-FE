@@ -535,7 +535,7 @@ const ProductPost = () => {
                     <h4 className="flex items-center gap-2">상품 이미지 *</h4>
                     <p>
                       상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
-                      10장)
+                      4장)
                     </p>
                   </div>
                   <div>
@@ -551,9 +551,7 @@ const ProductPost = () => {
                     >
                       <PiUploadSimpleLight size={40} className="pb-md" />
                       <p className="text-sm text-gray-600">클릭하거나 파일을 드래그해서 업로드</p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG, GIF 파일 (각 파일 최대 10MB)
-                      </p>
+                      <p className="text-xs text-gray-500">PNG, JPG, GIF 파일 (각 파일 최대 5MB)</p>
                     </label>
                   </div>
                 </div>
@@ -669,7 +667,8 @@ const ProductPost = () => {
               aria-labelledby="tab-sales-request"
               className="flex-1 outline-none"
             >
-              <form className="flex flex-col gap-xl">
+              판매요청 기능은 추후에 개발 예정입니다.
+              {/* <form className="flex flex-col gap-xl">
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <div className="flex flex-col items-start gap-xs">
                     <h4>판매요청 정보</h4>
@@ -722,7 +721,6 @@ const ProductPost = () => {
                           )}
                         </div>
 
-                        {/* 세부 종류 */}
                         <div className="relative" ref={petTypeBoxRef}>
                           <button
                             type="button"
@@ -876,7 +874,7 @@ const ProductPost = () => {
                     <h4 className="flex items-center gap-2">상품 이미지</h4>
                     <p>
                       상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
-                      10장)
+                      4장)
                     </p>
                   </div>
                   <div>
@@ -1023,7 +1021,7 @@ const ProductPost = () => {
                 >
                   상품 등록하기
                 </button>
-              </form>
+              </form> */}
             </div>
           )}
         </div>
