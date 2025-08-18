@@ -33,5 +33,3 @@ export const useModalStore = create<ModalState>((set, get) => ({
     }
   },
 }));
-
-export const modalConfirm = useModalStore(state => state.confirm);

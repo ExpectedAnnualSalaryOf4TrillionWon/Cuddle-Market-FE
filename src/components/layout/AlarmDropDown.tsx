@@ -1,6 +1,6 @@
 import { useAuthStore } from '@store/authStore';
 import type { DropdownProps } from 'src/types/DropDownType';
-import { gotoAlarmPage } from '@routes/navigate';
+import { useNavigate } from 'react-router-dom';
 
 interface AlarmDivProps {
   message: string;
@@ -21,11 +21,15 @@ const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
   // 로그인 상태에 따른 알람 기능 활성화 여부를 설정하기 위한 전역상태 호출.
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
+  const navigate = useNavigate();
 
+  const gotoAlarmPage = () => {
+    navigate('/alarm');
+  };
   return (
-    <div className="absolute right-12 top-full w-auto min-h-[15rem] bg-point shadow-lg flex flex-col  rounded-xl border border-border z-50 opacity-65 whitespace-nowrap  min-w-[10rem]">
+    <div className="absolute right-12 top-full w-auto bg-point shadow-lg flex flex-col  rounded-xl border border-border z-50 opacity-65 whitespace-nowrap  min-w-[10rem]">
       {!isLoggedIn /*로그인이 안 되어있을 경우*/ ? (
-        <p className="px-md ">로그인이 필요합니다.</p>
+        <AlarmDiv message="로그인이 필요합니다" />
       ) : (
         /*로그인이 되어있을 경우*/
         <>

@@ -1,8 +1,8 @@
 import { useAuthStore } from '@store/authStore';
 import type { DropdownProps } from 'src/types/DropDownType';
 import { DropdownButton } from '@common/DropdownButton';
-import { modalConfirm } from '@store/modalStore';
-import { goToMyPage, goToSignIn } from '@routes/navigate';
+import { useModalStore } from '@store/modalStore';
+import { useNavigate } from 'react-router-dom';
 
 // 상태관리 props 전달을 위한 타입설정은 재사용을 위해 types 폴더로 이동.
 // 로그인 관련 Props는 전역상태관리로 바뀌었으므로 삭제
@@ -15,14 +15,24 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
   // navigate 관련 함수도 한 파일에 정렬하여 호출하기 위해 routes 폴더로 이동.
-  // 로그아웃 확인 모달 설정 => 재사용성 향상을 위해 전역상태를 활용한 함수선언도 modalStore.ts로 이동.
+
+  // 로그아웃 확인 모달 설정 => 재사용성 향상을 위해 전역상태를 활용한 함수선언도 modalStore.ts로 이동. => 리액트 Hook 사용 규칙(hook의 호출 시점은 컴포넌트 내부여야 한다.)에 위배되어 오류발생으로 대대적인 수정이 필요하다 하여 기존 상태로 복구.
+  const logoutconfirm = useModalStore(state => state.confirm);
   const handleLogout = async () => {
-    const result = await modalConfirm('로그아웃 하시겠습니까?');
+    const result = await logoutconfirm('로그아웃 하시겠습니까?');
     if (result === true) {
       logout();
     } else {
       return;
     }
+  };
+  const navigate = useNavigate();
+
+  const goToSignIn = () => {
+    navigate('/signin');
+  };
+  const goToMyPage = () => {
+    navigate('/mypage');
   };
   return (
     <div className="absolute right-2 top-full bg-point rounded-xl z-50 opacity-65 flex flex-col whitespace-nowrap min-w-[5rem]">
