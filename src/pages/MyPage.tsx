@@ -70,7 +70,7 @@ const MyPage = () => {
               {/* 유저 이미지 */}
               <div className="flex flex-col items-center">
                 <div className="w-auto h-22 mx-auto mb-lg rounded-full overflow-hidden">
-                  <img src={userDefaultImage} />
+                  <img src={userDefaultImage} alt="유저이미지" className="w-auto h-22" />
                 </div>
                 <h3 className="heading4 text-text-primary mb-sm">{userInfo.nickname}</h3>
               </div>
