@@ -50,6 +50,7 @@ const AppRoutes = () => {
         <Route path="/user/:id" element={<UserPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/product-post" element={<ProductPost />} />
+        <Route path="/products/:id/edit" element={<ProductPost />} />
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>

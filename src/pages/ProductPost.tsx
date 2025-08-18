@@ -2,159 +2,77 @@ import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { PiUploadSimpleLight } from 'react-icons/pi';
-import { Link } from 'react-router-dom';
-
-const PETS = {
-  포유류: ['강아지', '고양이', '토끼', '햄스터', '기니피그', '페럿', '친칠라', '고슴도치'],
-  조류: ['잉꼬', '앵무새', '카나리아', '모란앵무'],
-  파충류: ['도마뱀', '뱀', '거북이', '게코'],
-  수생동물: ['금붕어', '열대어', '체리새우', '달팽이'],
-  '곤충/절지동물': ['귀뚜라미', '사마귀', '딱정벌레', '거미'],
-} as const;
-type PetCategory = keyof typeof PETS;
-const PET_CATEGORIES = Object.keys(PETS) as PetCategory[];
-
-const categoryOptions = [
-  { value: 'food', label: '사료/간식' },
-  { value: 'toys', label: '장난감' },
-  { value: 'housing', label: '사육장/하우스' },
-  { value: 'health', label: '건강/위생' },
-  { value: 'accessories', label: '의류/악세사리' },
-  { value: 'equipment', label: '사육장비' },
-  { value: 'carrier', label: '이동장/목줄' },
-  { value: 'cleaning', label: '청소용품' },
-  { value: 'training', label: '훈련용품' },
-  { value: 'etc', label: '기타' },
-];
-
-type ConditionValue = 'new' | 'nearly' | 'used' | 'defect' | 'repair';
-interface ConditionItem {
-  value: ConditionValue;
-  title: string;
-  subtitle: string;
-}
-const conditionItems: ReadonlyArray<ConditionItem> = [
-  { value: 'new', title: '새상품', subtitle: '미사용 상품' },
-  { value: 'nearly', title: '거의새것', subtitle: '사용감 거의 없음' },
-  { value: 'used', title: '사용감있음', subtitle: '일반적인 사용흔적' },
-  { value: 'defect', title: '하자있음', subtitle: '기능에 이상 없음' },
-  { value: 'repair', title: '수리필요', subtitle: '수리 후 사용가능' },
-];
-
-// as const : 값을 고정합니다. “서울특별시” 같은 문자열과 배열 안의 항목들까지 바뀌지 않는 상수 값으로 취급됩니다.
-// 타입도 리터럴 그대로 잡힙니다. 즉 "서울특별시"는 그냥 string이 아니라 "서울특별시"라는 정확한 값 타입이 됩니다.
-const CITIES = {
-  서울특별시: [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-    '노원구',
-    '도봉구',
-    '동대문구',
-    '동작구',
-    '마포구',
-    '서대문구',
-    '서초구',
-    '성동구',
-    '성북구',
-    '송파구',
-    '양천구',
-    '영등포구',
-    '용산구',
-    '은평구',
-    '종로구',
-    '중구',
-    '중랑구',
-  ],
-  부산광역시: [
-    '강서구',
-    '금정구',
-    '기장군',
-    '남구',
-    '동구',
-    '동래구',
-    '부산진구',
-    '북구',
-    '사상구',
-    '사하구',
-    '서구',
-    '수영구',
-    '연제구',
-    '영도구',
-    '중구',
-    '해운대구',
-  ],
-  대구광역시: ['남구', '달서구', '달성군', '동구', '북구', '서구', '수성구', '중구'],
-  인천광역시: [
-    '강화군',
-    '계양구',
-    '남동구',
-    '동구',
-    '미추홀구',
-    '부평구',
-    '서구',
-    '연수구',
-    '옹진군',
-    '중구',
-  ],
-  광주광역시: ['광산구', '남구', '동구', '북구', '서구'],
-  대전광역시: ['대덕구', '동구', '서구', '유성구', '중구'],
-  울산광역시: ['남구', '동구', '북구', '울주군', '중구'],
-  세종특별자치시: ['세종시'],
-} as const;
-type Province = keyof typeof CITIES;
-const PROVINCES = Object.keys(CITIES) as Province[];
-
-const TABS = [
-  { id: 'sales', label: '판매' },
-  { id: 'purchases', label: '판매요청' },
-] as const;
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import type { CreateProductRequest } from 'src/types';
+import { createProduct, fetchProductById, updateProduct } from '../api/products';
+import {
+  CATEGORY_OPTIONS,
+  CITIES,
+  CONDITION_ITEMS,
+  PET_CATEGORIES,
+  PETS,
+  PRODUCT_POST_TABS,
+  PROVINCES,
+  type ConditionValue,
+  type PetCategory,
+  type ProductPostTabId,
+  type Province,
+} from '../constants/constants';
 
 const ProductPost = () => {
-  const [activeTab, setActiveTab] = useState<'sales' | 'purchases'>('sales');
+  const [activeTab, setActiveTab] = useState<ProductPostTabId>('sales');
 
-  // const [pet, setPet] = useState<string>('');
-  // const [showPetSelect, setShowPetSelect] = useState(false);
-
+  /**반려동물 종류 */
+  // 대분류
   const [selectedPetCategory, setSelectedPetCategory] = useState<PetCategory | null>(null);
-  const [selectedPetType, setSelectedPetType] = useState<string>('');
   const [showPetCategorySelect, setShowPetCategorySelect] = useState(false);
+  // 소분류(세부 분류)
+  const [selectedPetType, setSelectedPetType] = useState<string>('');
   const [showPetTypeSelect, setShowPetTypeSelect] = useState(false);
 
+  // 반려동물 종류 선택
+  const petTypeOptions = selectedPetCategory ? PETS[selectedPetCategory] : [];
+  // 반려동물 종류 선택창
   const petCategoryBoxRef = useRef<HTMLDivElement | null>(null);
   const petTypeBoxRef = useRef<HTMLDivElement | null>(null);
 
-  const petTypeOptions = selectedPetCategory ? PETS[selectedPetCategory] : [];
-  // 가격
+  /**가격 */
   const [price, setPrice] = useState<number | ''>('');
 
-  // 상품 상태
-  const [selectedCondition, setSelectedCondition] = useState<string | null>(null);
+  /**상품 상태 */
+  const [selectedCondition, setSelectedCondition] = useState<ConditionValue | null>(null);
 
-  // 상품 카테고리
+  /**상품 카테고리 */
   const [petCate, setPetCate] = useState<string>('');
   const [showCategorySelect, setShowCategorySelect] = useState(false);
 
-  // 상품명
+  /**상품명 */
   const [productName, setProductName] = useState<string>('');
 
-  // 거주지
+  /**상품 설명 */
+  const [description, setDescription] = useState<string>('');
+
+  /**거주지 */
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showCitySelect, setShowCitySelect] = useState(false);
-
-  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
-
-  const [meetingPlace, setMeetingPlace] = useState<string>('');
-
   const provinceBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
+
+  /**이미지 */
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  /**거주지 선택창 */
+  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const isEditMode = location.pathname.includes('/edit');
 
   const handleSelectProvince = (opt: Province) => {
     setSelectedProvince(opt);
@@ -170,7 +88,7 @@ const ProductPost = () => {
 
   const handleSelectPetCategory = (opt: PetCategory) => {
     setSelectedPetCategory(opt);
-    setSelectedPetType(''); // 카테고리 변경 시 세부종 초기화
+    setSelectedPetType('');
     setShowPetCategorySelect(false);
     setShowPetTypeSelect(false);
   };
@@ -178,6 +96,97 @@ const ProductPost = () => {
   const handleSelectPetType = (opt: string) => {
     setSelectedPetType(opt);
     setShowPetTypeSelect(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('상품등록 버튼 클릭');
+
+    // 유효성 검사
+    if (!selectedPetCategory || !selectedPetType) {
+      setError('반려동물 종류를 선택해주세요.');
+      return;
+    }
+
+    if (!petCate) {
+      setError('상품 카테고리를 선택해주세요.');
+      return;
+    }
+
+    if (!productName || !description) {
+      setError('상품명과 설명을 입력해주세요.');
+      return;
+    }
+
+    if (!price || price <= 0) {
+      setError('올바른 가격을 입력해주세요.');
+      return;
+    }
+
+    if (!selectedCondition) {
+      setError('상품 상태를 선택해주세요.');
+      return;
+    }
+
+    if (!selectedProvince || !selectedCity) {
+      setError('거래 희망 지역을 선택해주세요.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const productData: CreateProductRequest = {
+        title: productName,
+        description: description,
+        price: typeof price === 'number' ? price : 0,
+        images: imageFiles,
+        state_code: selectedProvince,
+        city_code: selectedCity,
+        category_code: petCate,
+        pet_type_code: selectedPetCategory,
+        pet_type_detail_code: selectedPetType,
+        condition_status: selectedCondition,
+      };
+
+      const response =
+        isEditMode && id ? await updateProduct(id, productData) : await createProduct(productData);
+
+      console.log(isEditMode ? '상품 수정 성공:' : '상품 등록 성공:', response);
+
+      // 성공 시 상품 상세 페이지로 이동
+      if (response.id) {
+        navigate(`/products/${response.id}`);
+      }
+    } catch (error) {
+      console.error('상품 등록 실패:', error);
+      setError(error instanceof Error ? error.message : '상품 등록에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const loadProductData = async () => {
+    if (!id) return;
+
+    try {
+      const product = await fetchProductById(id);
+
+      // 폼 필드에 데이터 설정
+      setProductName(product.title);
+      setDescription(product.description || '');
+      setPrice(product.price);
+      setSelectedPetCategory(product.pet_type_code as PetCategory);
+      setSelectedPetType(product.pet_type_detail_code);
+      setPetCate(product.category_code || '');
+      setSelectedCondition(product.condition_status as ConditionValue);
+      setSelectedProvince(product.state_code as Province);
+      setSelectedCity(product.city_code || '');
+    } catch (error) {
+      console.error('상품 정보 로드 실패:', error);
+      setError('상품 정보를 불러오는데 실패했습니다.');
+    }
   };
 
   useEffect(() => {
@@ -224,6 +233,14 @@ const ProductPost = () => {
       document.removeEventListener('keydown', handleEsc);
     };
   }, [showProvinceSelect, showCitySelect, showPetCategorySelect, showPetTypeSelect]);
+
+  // 수정 모드일 때 기존 데이터 로드
+  useEffect(() => {
+    if (isEditMode && id) {
+      loadProductData();
+    }
+  }, [isEditMode, id]);
+
   return (
     <div className="bg-bg">
       {/* 헤더 영역 */}
@@ -245,7 +262,7 @@ const ProductPost = () => {
             role="tablist"
             className="grid grid-cols-2 gap-sm px-sm py-sm rounded-3xl bg-dark/25"
           >
-            {TABS.map(tab => (
+            {PRODUCT_POST_TABS.map(tab => (
               <button
                 key={tab.id}
                 type="button"
@@ -271,7 +288,7 @@ const ProductPost = () => {
               aria-labelledby="tab-sales"
               className="flex-1 outline-none"
             >
-              <form className="flex flex-col gap-xl">
+              <form className="flex flex-col gap-xl" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <div className="flex flex-col items-start gap-xs">
                     <h4>기본 정보</h4>
@@ -311,8 +328,12 @@ const ProductPost = () => {
                                   type="button"
                                   onClick={() => handleSelectPetCategory(opt)}
                                   className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedPetCategory === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                  ${
+                                    selectedPetCategory === opt
+                                      ? 'bg-gray-100 ring-1 ring-gray-300'
+                                      : ''
+                                  }`}
                                 >
                                   {opt}
                                 </button>
@@ -356,8 +377,12 @@ const ProductPost = () => {
                                   type="button"
                                   onClick={() => handleSelectPetType(opt)}
                                   className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedPetType === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                  ${
+                                    selectedPetType === opt
+                                      ? 'bg-gray-100 ring-1 ring-gray-300'
+                                      : ''
+                                  }`}
                                 >
                                   {opt}
                                 </button>
@@ -377,9 +402,10 @@ const ProductPost = () => {
                           className="flex w-full rounded-md px-3 py-2 text-sm bg-secondary/30 mb-sm"
                         >
                           <span className="w-full text-left">
-                            {petCate
-                              ? categoryOptions.find(option => option.value === petCate)?.label
-                              : '카테고리를 선택해주세요'}
+                            {/* {petCate
+                              ? CATEGORY_OPTIONS.find(option => option.value === petCate)?.label
+                              : '카테고리를 선택해주세요'} */}
+                            {petCate || '카테고리를 선택해주세요'}
                           </span>
                         </button>
                         {showCategorySelect && (
@@ -388,14 +414,14 @@ const ProductPost = () => {
                             aria-label="카테고리 선택"
                             className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md"
                           >
-                            {categoryOptions.map(opt => (
+                            {CATEGORY_OPTIONS.map(opt => (
                               <button
                                 key={opt.value}
                                 role="option"
                                 aria-selected={petCate === opt.value}
                                 type="button"
                                 onClick={() => {
-                                  setPetCate(opt.value);
+                                  setPetCate(opt.label);
                                   setShowCategorySelect(false);
                                 }}
                                 className={`w-full px-3 py-xs rounded-md transition
@@ -439,6 +465,11 @@ const ProductPost = () => {
                         placeholder="상품의 상태, 구매 시기, 사용 빈도, 특징 등을 자세히 적어주세요."
                         rows={5}
                         maxLength={1000}
+                        value={description}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setDescription(val === '' ? '' : val);
+                        }}
                       ></textarea>
                       <p className="text-xs text-gray-500">0/1000자</p>
                     </div>
@@ -472,19 +503,27 @@ const ProductPost = () => {
 
                     <div className="flex flex-col gap-sm">
                       <label className="text-sm ">상품 상태 *</label>
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-                        {conditionItems.map(item => (
-                          <div
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+                        {CONDITION_ITEMS.map(item => (
+                          <label
                             key={item.value}
-                            onClick={() => setSelectedCondition(item.value)}
+                            // onClick={() => setSelectedCondition(item.value)}
                             className={`rounded-lg p-3 cursor-pointer transition-colors border border-border hover:border-primary 
                             ${
                               selectedCondition === item.value ? 'bg-secondary' : 'bg-secondary/30'
                             }  hover:border-primary`}
                           >
-                            <div className="font-medium">{item.title}</div>
+                            <input
+                              type="radio"
+                              name="condition_status"
+                              value={item.value}
+                              checked={selectedCondition === item.value}
+                              onChange={e => setSelectedCondition(e.target.value as ConditionValue)}
+                              className="blind" // 화면에서 숨김
+                            />
+                            <div className="font-medium">{item.value}</div>
                             <div className="text-xs text-gray-500">{item.subtitle}</div>
-                          </div>
+                          </label>
                         ))}
                       </div>
                     </div>
@@ -610,42 +649,13 @@ const ProductPost = () => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-sm">
-                    <input
-                      type="checkbox"
-                      aria-hidden="true"
-                      className="w-[14px] h-[14px]"
-                      id="delivery"
-                    />
-                    <label className="flex items-center gap-2 text-sm" htmlFor="delivery">
-                      택배 거래 가능
-                    </label>
-                  </div>
-
-                  <div className="flex flex-col gap-sm">
-                    <label className="text-sm" htmlFor="meetingPlace">
-                      선호하는 만남 장소
-                    </label>
-                    <input
-                      data-slot="input"
-                      className="h-9 w-full rounded-md border px-3 py-1 md:text-sm border-border bg-secondary/30"
-                      id="meetingPlace"
-                      placeholder="예: 지하철역, 카페, 공원 등"
-                      value={meetingPlace}
-                      onChange={e => {
-                        const val = e.target.value;
-                        setMeetingPlace(val === '' ? '' : val);
-                      }}
-                    />
-                  </div>
                 </div>
                 <button
                   data-slot="button"
                   className="items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-primary hover:bg-primary/90 h-9 px-4 py-2 flex-1"
                   type="submit"
                 >
-                  상품 등록하기
+                  {isEditMode ? '상품 수정하기' : '상품 등록하기'}
                 </button>
               </form>
             </div>
@@ -773,7 +783,7 @@ const ProductPost = () => {
                         >
                           <span className="w-full text-left">
                             {petCate
-                              ? categoryOptions.find(option => option.value === petCate)?.label
+                              ? CATEGORY_OPTIONS.find(option => option.value === petCate)?.label
                               : '카테고리를 선택해주세요'}
                           </span>
                         </button>
@@ -783,7 +793,7 @@ const ProductPost = () => {
                             aria-label="카테고리 선택"
                             className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md"
                           >
-                            {categoryOptions.map(opt => (
+                            {CATEGORY_OPTIONS.map(opt => (
                               <button
                                 key={opt.value}
                                 role="option"

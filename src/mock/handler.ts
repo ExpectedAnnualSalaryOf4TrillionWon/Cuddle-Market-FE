@@ -3,6 +3,7 @@ import { mockProducts } from './data/products';
 // http: HTTP 요청(GET, POST 등)을 처리하는 도구
 // HttpResponse: 응답을 만들어주는 도구
 import { http, HttpResponse } from 'msw';
+import type { ProductDetailItem } from 'src/types';
 import { mockUsers } from './data/users';
 
 export const handlers = [
@@ -100,6 +101,8 @@ export const handlers = [
     };
     return HttpResponse.json(myInfo);
   }),
+
+  // 판매 페이지 조회
   http.get('/api/users/mypage', () => {
     const myPageData = {
       my_product_list: mockProducts.slice(0, 3),
@@ -108,22 +111,120 @@ export const handlers = [
 
     return HttpResponse.json(myPageData);
   }),
-  http.post('/api/v1/likes', async ({ request }) => {
-    const body = (await request.json()) as { product_id: number };
-    const productId = body.product_id;
 
-    console.log(`[MSW] 찜하기 추가 요청 - 상품 ID: ${productId}`);
+  // 상품 등록
+  http.post('/api/products', async ({ request }) => {
+    const formData = await request.formData();
 
-    // 상품이 존재하는지 확인
-    const product = mockProducts.find(p => p.id === productId);
-    if (!product) {
-      return HttpResponse.json(
-        {
-          error: '상품을 찾을 수 없습니다.',
-          product_id: productId,
-        },
-        { status: 404 },
-      );
+    // FormData에서 데이터 추출
+    const newProduct = {
+      id: mockProducts.length + 1, // 임시 ID 생성
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      price: parseInt(formData.get('price') as string),
+      // 이미지 처리 (실제로는 파일 업로드 처리 필요)
+      images: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=600&fit=crop',
+      state_code: formData.get('state_code') as string,
+      city_code: formData.get('city_code') as string,
+      category_code: formData.get('category_code') as string,
+      pet_type_code: formData.get('pet_type_code') as string,
+      pet_type_detail_code: formData.get('pet_type_detail_code') as string,
+
+      condition_status: formData.get('condition_status') as
+        | '새 상품'
+        | '거의 새것'
+        | '사용감 있음'
+        | '수리 필요',
+
+      // 기본값 설정
+      transaction_status: '판매중' as const,
+      view_count: 0,
+      like_count: 0,
+      elapsed_time: '2025-08-16T08:00:00Z',
+      is_liked: false,
+      seller_info: {
+        id: 999,
+        nickname: '테스트유저',
+        profile_image:
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+        state: formData.get('state_code') as string,
+        city: formData.get('city_code') as string,
+        created_at: new Date().toISOString(),
+      },
+    };
+
+    // 유효성 검사
+    if (!newProduct.title || !newProduct.description || !newProduct.price) {
+      return HttpResponse.json({ error: '필수 항목을 모두 입력해주세요.' }, { status: 400 });
     }
+
+    // 실제로는 DB에 저장
+    // 여기서는 mockProducts 배열에 추가 (실제로는 서버 메모리에만 존재)
+    mockProducts.push(newProduct);
+
+    console.log('[MSW] 새 상품 등록:', newProduct);
+
+    return HttpResponse.json(
+      {
+        id: newProduct.id,
+        message: '상품이 성공적으로 등록되었습니다.',
+        product: newProduct,
+      },
+      { status: 201 },
+    );
+  }),
+
+  // 상품 수정 핸들러
+  http.patch('/api/products/:id', async ({ params, request }) => {
+    const { id } = params;
+    const productId = parseInt(id as string);
+    const formData = await request.formData();
+
+    // 기존 상품 찾기
+    const existingProductIndex = mockProducts.findIndex(p => p.id === productId);
+
+    if (existingProductIndex === -1) {
+      return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
+    }
+
+    // 수정된 데이터로 업데이트 (PATCH이므로 부분 업데이트)
+    const updatedProduct: ProductDetailItem = {
+      ...mockProducts[existingProductIndex],
+      title: (formData.get('title') as string) || mockProducts[existingProductIndex].title,
+      description:
+        (formData.get('description') as string) || mockProducts[existingProductIndex].description,
+      price: formData.has('price')
+        ? parseInt(formData.get('price') as string)
+        : mockProducts[existingProductIndex].price,
+      pet_type_code:
+        (formData.get('pet_type_code') as string) ||
+        mockProducts[existingProductIndex].pet_type_code,
+      pet_type_detail_code:
+        (formData.get('pet_type_detail_code') as string) ||
+        mockProducts[existingProductIndex].pet_type_detail_code,
+      category_code:
+        (formData.get('category_code') as string) ||
+        mockProducts[existingProductIndex].category_code,
+      condition_status:
+        (formData.get('condition_status') as '새 상품' | '거의 새것' | '사용감 있음') ||
+        mockProducts[existingProductIndex].condition_status,
+      state_code:
+        (formData.get('state_code') as string) || mockProducts[existingProductIndex].state_code,
+      city_code:
+        (formData.get('city_code') as string) || mockProducts[existingProductIndex].city_code,
+      // 수정 시간 업데이트
+      elapsed_time: new Date().toISOString(),
+    };
+
+    // 배열에서 업데이트
+    mockProducts[existingProductIndex] = updatedProduct;
+
+    console.log('[MSW] 상품 수정:', updatedProduct);
+
+    return HttpResponse.json({
+      id: productId,
+      message: '상품이 성공적으로 수정되었습니다.',
+      product: updatedProduct,
+    });
   }),
 ];

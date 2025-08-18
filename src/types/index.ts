@@ -26,7 +26,7 @@ export interface ProductBase {
   pet_type_code?: string;
   pet_type_detail_code: string;
   transaction_status: '판매중' | '예약중' | '판매완료';
-  condition_status: '새 상품' | '거의 새것' | '사용감있음';
+  condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
   view_count?: number;
   like_count: number;
   elapsed_time: string;
@@ -48,7 +48,7 @@ export interface UserProduct {
   images: string;
   pet_type_detail_code: string;
   transaction_status: '판매중' | '예약중' | '판매완료';
-  condition_status: '새 상품' | '거의 새것' | '사용감있음';
+  condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
   elapsed_time: string;
   like_count?: number;
   view_count?: number;
@@ -118,4 +118,33 @@ export interface LikeStatusResponse {
 
 export interface LikeActionResponse {
   product_id: number;
+}
+
+// ========== 상품 등록 요청 타입 ==========
+export interface CreateProductRequest {
+  pet_type_code: string; // 반려동물 카테고리 (포유류, 조류 등)
+  pet_type_detail_code: string; // 반려동물 세부종 (강아지, 고양이 등)
+  category_code: string; // 상품 카테고리 (food, toys 등)
+  title: string; // 상품명
+  description: string; // 상품 설명
+
+  // 가격 및 상태
+  price: number; // 판매 가격
+  condition_status: string; // 상품 상태 (new, nearly, used 등)
+
+  // 거래 정보
+  state_code: string; // 시/도
+  city_code: string; // 구/군
+
+  // 이미지
+  images?: File[]; // 상품 이미지 파일들
+
+  // 판매 타입
+  transaction_type?: 'sales' | 'purchases'; // 판매 or 판매요청
+}
+
+export interface CreateProductResponse {
+  id: number;
+  message: string;
+  product?: Product;
 }

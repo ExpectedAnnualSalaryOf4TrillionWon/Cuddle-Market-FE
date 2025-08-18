@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GrView } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
 import { fetchMyPageData } from '../../api/products';
 import { ProductState, stateLabelMap, stateStyleMap } from '../../constants/constants';
@@ -124,6 +125,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
   const loadUserInfo = async () => {
     try {
       const data = await fetchMyPageData();
@@ -143,6 +145,16 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
     }
   };
 
+  const handleEdit = (productId: number) => {
+    navigate(`/products/${productId}/edit`);
+  };
+
+  const handleDelete = async (productId: number) => {
+    if (confirm('삭제하시겠습니까?')) {
+      // 삭제 로직 구현 (추후 API 연동)
+      console.log('삭제:', productId);
+    }
+  };
   useEffect(() => {
     loadUserInfo();
   }, []);
@@ -190,16 +202,27 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
           >
             {stateLabelMap[state]}
           </p>
+
+          {activeTab === 'products' && (
+            <button
+              onClick={e => {
+                e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+                handleEdit(product.id);
+              }}
+              className={`text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+            >
+              수정
+            </button>
+          )}
+
           <button
-            onClick={() => alert('상품등록/수정 페이지로 이동')}
-            className="col-start-1 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
-          >
-            수정
-          </button>
-          {/*alert,confirm 등은 추후에 대체될 예정*/}
-          <button
-            onClick={() => confirm('삭제하시겠습니까?')}
-            className="col-start-2 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
+            onClick={e => {
+              e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+              handleDelete(product.id);
+            }}
+            className={`${
+              activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
+            }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
           >
             삭제
           </button>
