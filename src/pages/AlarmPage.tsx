@@ -1,5 +1,5 @@
 import logoImage from '@images/CuddleMarketLogo.png';
-import userDefaultImage from '@images/userDefaultImage.svg';
+import userDefaultImage from '@images/userDefault.svg';
 
 interface AlarmPageProps {
   image: string;

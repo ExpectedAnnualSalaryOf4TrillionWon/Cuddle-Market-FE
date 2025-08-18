@@ -1,5 +1,5 @@
 import logoImage from '@images/CuddleMarketLogo.png';
-import userDefaultImage from '@images/userDefaultImage.svg';
+import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
