@@ -101,7 +101,7 @@ const Header = () => {
             </div>
 
             {/* 유저 드롭다운 호출 */}
-            <div className="flex itmes-center" ref={userRef}>
+            <div className="flex items-center" ref={userRef}>
               <button
                 type="button"
                 onClick={() => {
