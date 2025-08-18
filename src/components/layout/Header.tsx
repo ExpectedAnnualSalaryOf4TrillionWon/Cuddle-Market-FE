@@ -1,6 +1,7 @@
 import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useRef, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
+import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropDown';
@@ -32,7 +33,11 @@ const Header = () => {
         <div className="flex items-center justify-between gap-lg">
           {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}
           <Link to="/" className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+            <img
+              src={logoImage}
+              alt="커들마켓"
+              className="w-auto h-13 tablet:h-22 object-contain"
+            />
           </Link>
 
           {/* 검색 영역 */}
@@ -63,26 +68,32 @@ const Header = () => {
                   text-text-primary
                 "
               >
-                <IoIosSearch />
+                <IoIosSearch className="text-xl tablet:text-2xl" />
               </button>
             </div>
           </div>
+          <div className="flex gap-md tablet:gap-xl">
+            {/* 알람 드롭다운 호출 */}
+            <div className="flex items-center">
+              <button type="button" onClick={() => setIsDropdownOpen(prev => !prev)}>
+                <HiOutlineBellAlert className="text-3xl tablet:text-4xl" />
+              </button>
 
-          {/* 유저 드롭다운 호출 */}
-          <div className="relative flex items-center" ref={dropdownRef}>
-            <button
-              type="button"
-              className="items-center justify-center gap-sm
-                h-9 
-                transition-all"
-              onClick={() => setIsDropdownOpen(prev => !prev)}
-            >
-              <RxAvatar size={40} />
-            </button>
+              {isDropdownOpen && (
+                <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
+              )}
+            </div>
 
-            {isDropdownOpen && (
-              <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
-            )}
+            {/* 유저 드롭다운 호출 */}
+            <div className="flex items-center" ref={dropdownRef}>
+              <button type="button" onClick={() => setIsDropdownOpen(prev => !prev)}>
+                <RxAvatar className="text-3xl tablet:text-4xl" />
+              </button>
+
+              {isDropdownOpen && (
+                <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
+              )}
+            </div>
           </div>
         </div>
       </div>
