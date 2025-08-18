@@ -32,7 +32,11 @@ const Header = () => {
         <div className="flex items-center justify-between gap-lg">
           {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}
           <Link to="/" className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+            <img
+              src={logoImage}
+              alt="커들마켓"
+              className="w-auto h-15 tablet:h-22 object-contain"
+            />
           </Link>
 
           {/* 검색 영역 */}

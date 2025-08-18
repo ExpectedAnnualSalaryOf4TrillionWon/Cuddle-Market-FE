@@ -1,3 +1,4 @@
+import { SimpleHeader } from '@layout/SimpleHeader';
 import { useState } from 'react';
 
 interface ProfileUpdateProps {
@@ -32,6 +33,8 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({
   };
   return (
     <>
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'프로필 수정'} />
       <div className="">
         <h2 className="text-xl font-bold mb-4">내 정보 수정</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

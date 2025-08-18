@@ -6,6 +6,7 @@ import { GrView } from 'react-icons/gr';
 import { Link, useParams } from 'react-router-dom';
 import type { UserWithProducts } from 'src/types';
 import { fetchSellerById } from '../api/products';
+import { SimpleHeader } from '@layout/SimpleHeader';
 
 const UserPage = () => {
   const [activeTab, setActiveTab] = useState<'products' | 'purchases'>('products');
@@ -60,18 +61,9 @@ const UserPage = () => {
 
   return (
     <>
-      {/* 헤더영역 */}
-      <header className="sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          {/* 로고 */}
-          <Link to="/">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </Link>
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'판매자 프로필 페이지'} />
 
-          {/* 페이지 타이틀 */}
-          <h2 className="text-xl">판매자 프로필 페이지</h2>
-        </div>
-      </header>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-xl">
           {/* 좌측: 사용자 카드 */}

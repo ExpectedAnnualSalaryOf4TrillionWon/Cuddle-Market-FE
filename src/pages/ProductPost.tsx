@@ -1,4 +1,5 @@
 import logoImage from '@images/CuddleMarketLogo.png';
+import { SimpleHeader } from '@layout/SimpleHeader';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { PiUploadSimpleLight } from 'react-icons/pi';
@@ -226,18 +227,9 @@ const ProductPost = () => {
   }, [showProvinceSelect, showCitySelect, showPetCategorySelect, showPetTypeSelect]);
   return (
     <div className="bg-bg">
-      {/* 헤더 영역 */}
-      <header className="sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          {/* 로고 */}
-          <Link to="/">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </Link>
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'상품 등록'} />
 
-          {/* 페이지 타이틀 */}
-          <h2 className="text-xl font-bold">상품 등록</h2>
-        </div>
-      </header>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-3xl flex items-center">
         <div className="flex flex-col gap-2xl w-full">
           {/* 탭 리스트 */}
