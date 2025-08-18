@@ -24,6 +24,7 @@ const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
   const navigate = useNavigate();
 
   const gotoAlarmPage = () => {
+    console.log('클릭');
     navigate('/alarm');
   };
   return (

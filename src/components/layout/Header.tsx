@@ -11,14 +11,21 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const alarmRef = useRef<HTMLDivElement>(null);
+  const userRef = useRef<HTMLDivElement>(null);
 
   {
     /* 드롭다운 메뉴 밖에서 마우스 클릭시 드롭다운 비활성화 */
+    /* 알람 드롭다운 메뉴의 더보기버튼 활성화를 위해 ref 중복문제 해결 필요*/
   }
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        alarmRef.current &&
+        !alarmRef.current.contains(event.target as Node) &&
+        userRef.current &&
+        !userRef.current.contains(event.target as Node)
+      ) {
         setIsAlarmDropdownOpen(false);
         setIsUserDropdownOpen(false);
       }
@@ -77,7 +84,7 @@ const Header = () => {
           </div>
           <div className="flex gap-md tablet:gap-xl relative">
             {/* 알람 드롭다운 호출 */}
-            <div className="flex itmes-center" ref={dropdownRef}>
+            <div className="flex itmes-center" ref={alarmRef}>
               <button
                 type="button"
                 onClick={() => {
@@ -94,7 +101,7 @@ const Header = () => {
             </div>
 
             {/* 유저 드롭다운 호출 */}
-            <div className="flex itmes-center" ref={dropdownRef}>
+            <div className="flex itmes-center" ref={userRef}>
               <button
                 type="button"
                 onClick={() => {
