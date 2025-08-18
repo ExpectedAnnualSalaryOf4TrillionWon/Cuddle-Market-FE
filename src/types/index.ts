@@ -1,89 +1,20 @@
+// ========== 기본 유저 관련 타입 ==========
 export interface User {
   id: number;
-  seller_image: string;
   nickname: string;
+  profile_image: string;
   state: string;
   city: string;
-  created_at?: string;
-}
-export interface UserProduct {
-  id: number;
-  title: string;
-  price: number;
-  images: string;
-  pet_type_detail_code: string;
-  transaction_status: '판매중' | '예약중' | '판매완료';
-  condition_status: '새 상품' | '거의 새것' | '사용감있음';
-  elapsed_time: string;
-  like_count?: number;
-  view_count?: number;
+  created_at: string;
 }
 
-export interface SellerProfile extends User {
+export interface UserWithProducts extends User {
   seller_products: UserProduct[];
-  created_at: string;
   total_products: number;
 }
 
-export interface State {
-  id: number;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface City {
-  id: number;
-  state_id: number;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PetType {
-  id: number;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface PetTypeDetail {
-  id: number;
-  pet_type_id: number;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Category {
-  id: number;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ProductImage {
-  id: number;
-  product_id: number;
-  url: string;
-  is_main: boolean;
-  uploaded_by_id: number;
-  uploaded_at: string;
-}
-
-export interface ProductLike {
-  user_id: number;
-  product_id: number;
-  created_at: string;
-}
-
-// 상품 관련 타입들
-export interface Product {
+// ========== 상품 관련 타입 ==========
+export interface ProductBase {
   id: number;
   title: string;
   description?: string;
@@ -99,8 +30,92 @@ export interface Product {
   view_count?: number;
   like_count: number;
   elapsed_time: string;
+  is_liked?: boolean;
+}
+export type Product = ProductBase;
 
-  // 조인된 데이터 (API 응답에서 포함될 수 있는 것들)
-  seller_info?: User;
+/** 상세용: 판매자/다른상품/서브이미지 포함 */
+export interface ProductDetailItem extends ProductBase {
+  seller_info: User;
   seller_products?: UserProduct[];
+  sub_images?: string[];
+}
+
+export interface UserProduct {
+  id: number;
+  title: string;
+  price: number;
+  images: string;
+  pet_type_detail_code: string;
+  transaction_status: '판매중' | '예약중' | '판매완료';
+  condition_status: '새 상품' | '거의 새것' | '사용감있음';
+  elapsed_time: string;
+  like_count?: number;
+  view_count?: number;
+}
+
+export interface State {
+  id: number;
+  name: string;
+}
+
+export interface City {
+  id: number;
+  name: string;
+}
+
+export interface PetType {
+  id: number;
+  name: string;
+}
+
+export interface PetTypeDetail {
+  id: number;
+  name: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+// ========== 인증 관련 타입 ==========
+
+export interface KakaoLoginRequest {
+  code: string;
+  redirect_uri: string;
+}
+
+export interface KakaoLoginResponse {
+  status: 'existing_user' | 'new_user';
+  access_token?: string;
+  refresh_token?: string;
+  user?: User;
+}
+
+export interface SignupRequest {
+  registration_token?: string; // 백엔드가 발급한 임시 토큰 (선택사항)
+  nickname: string;
+  state: string;
+  city: string;
+  birth_date?: string;
+}
+
+export interface SignupResponse {
+  access_token?: string;
+  refresh_token?: string;
+  user?: User;
+}
+
+export interface MyPageData {
+  my_product_list: Product[];
+  liked_product_list: Product[];
+}
+
+export interface LikeStatusResponse {
+  product_id: number;
+}
+
+export interface LikeActionResponse {
+  product_id: number;
 }

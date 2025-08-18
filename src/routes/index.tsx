@@ -23,8 +23,7 @@ const WithHeaderLayout = () => (
 
 const NoHeaderLayout = () => {
   const location = useLocation();
-  const pathName = location.pathname; // "/signin"
-  console.log(pathName);
+  const pathName = location.pathname;
 
   return (
     <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : 'bg-gray-50'}`}>
@@ -40,7 +39,7 @@ const AppRoutes = () => {
       {/* Header 포함 구간: Home, ProductDetail */}
       <Route element={<WithHeaderLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/detail/:id" element={<ProductDetail />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
       </Route>
 
       {/* Header 미포함 구간: Signup, MyPage */}

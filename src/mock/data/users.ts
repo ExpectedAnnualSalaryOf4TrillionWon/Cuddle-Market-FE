@@ -1,10 +1,10 @@
-// msw/data/users.ts
-import type { SellerProfile } from '../../types';
+import type { UserWithProducts } from 'src/types';
 
-export const mockUsers: SellerProfile[] = [
+// 판매자 페이지용 데이터
+export const mockUsers: UserWithProducts[] = [
   {
     id: 1,
-    seller_image:
+    profile_image:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     nickname: '멍멍이 아빠',
     state: '서울특별시',
@@ -39,7 +39,7 @@ export const mockUsers: SellerProfile[] = [
   },
   {
     id: 2,
-    seller_image:
+    profile_image:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     nickname: '냥냥이 엄마',
     state: '경기도',
@@ -70,6 +70,6 @@ export const mockUsers: SellerProfile[] = [
       },
       // ...더미 추가
     ],
-    total_products: 1, // seller_products.length 로 맞추세요
+    total_products: 1,
   },
 ];
