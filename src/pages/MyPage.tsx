@@ -3,9 +3,10 @@ import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
+import { SimpleHeader } from '@layout/SimpleHeader';
 
 const TABS = [
   { id: 'products', label: '내 상품' },
@@ -50,18 +51,8 @@ const MyPage = () => {
 
   return (
     <>
-      {/* 헤더영역 */}
-      <header className="sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          {/* 로고 */}
-          <Link to="/">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </Link>
-
-          {/* 페이지 타이틀 */}
-          <h2 className="text-xl font-bold">마이 페이지</h2>
-        </div>
-      </header>
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'마이 페이지'} />
       <div className="px-lg py-3xl bg-bg">
         <main className="max-w-[var(--container-max-width)]  mx-auto  grid grid-cols-1 tablet:grid-cols-3 gap-xl ">
           {/* 좌측 내 정보 영역 */}
