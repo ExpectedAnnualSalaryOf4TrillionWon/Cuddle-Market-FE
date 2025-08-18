@@ -3,7 +3,7 @@ import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
 
@@ -92,7 +92,8 @@ const MyPage = () => {
               </div>
 
               <div className="flex flex-col gap-sm">
-                <button
+                <Link
+                  to="/profile-update"
                   className="
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
@@ -101,8 +102,8 @@ const MyPage = () => {
                     transition-all
                   "
                 >
-                  <span> 내 정보 수정</span>
-                </button>
+                  내 정보 수정
+                </Link>
               </div>
             </div>
             <div className="mt-6 text-xs text-red-500 cursor-pointer hover:underline self-start">
