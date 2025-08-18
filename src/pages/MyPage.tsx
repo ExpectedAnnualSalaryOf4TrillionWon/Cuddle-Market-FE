@@ -1,5 +1,5 @@
 import logoImage from '@images/CuddleMarketLogo.png';
-import userDefaultImage from '@images/userDefault.svg';
+import userDefaultImage from '@images/userDefaultImage.png';
 import MyList from '@layout/myList';
 import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -70,7 +70,7 @@ const MyPage = () => {
               {/* 유저 이미지 */}
               <div className="flex flex-col items-center">
                 <div className="w-auto h-22 mx-auto mb-lg rounded-full overflow-hidden">
-                  <img src={userDefaultImage} alt="유저이미지" className="w-auto h-22" />
+                  <img src={userDefaultImage} />
                 </div>
                 <h3 className="heading4 text-text-primary mb-sm">{userInfo.nickname}</h3>
               </div>
