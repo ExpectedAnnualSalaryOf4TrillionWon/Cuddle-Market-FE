@@ -106,7 +106,6 @@ export const handlers = [
     return HttpResponse.json(myInfo);
   }),
 
-
   // 내가 찜한 상품과, 내가 등록한 상품 조회
   http.get('/api/users/mypage', () => {
     const myPageData = {
@@ -231,7 +230,7 @@ export const handlers = [
       message: '상품이 성공적으로 수정되었습니다.',
       product: updatedProduct,
     });
-
+  }),
   // 찜하기 목록 조회
   http.get('/api/likes', () => {
     const product_ids = mockProducts.filter(p => p.is_liked === true).map(p => p.id);
@@ -293,6 +292,5 @@ export const handlers = [
     }
     console.log('삭제한 찜한 상품', producted);
     return new HttpResponse(null, { status: 204 });
-
   }),
 ];
