@@ -1,9 +1,11 @@
 import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { IoCloseCircle } from 'react-icons/io5';
 import { PiUploadSimpleLight } from 'react-icons/pi';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import type { CreateProductRequest } from 'src/types';
+import type { CreateProductRequest, FormErrors } from 'src/types';
 import { createProduct, fetchProductById, updateProduct } from '../api/products';
 import {
   CATEGORY_OPTIONS,
@@ -62,12 +64,14 @@ const ProductPost = () => {
 
   /**이미지 */
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /**거주지 선택창 */
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -96,58 +100,128 @@ const ProductPost = () => {
   const handleSelectPetType = (opt: string) => {
     setSelectedPetType(opt);
     setShowPetTypeSelect(false);
+    if (selectedPetCategory && opt) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.petType;
+        return newErrors;
+      });
+    }
   };
 
+  const handleSelectCategory = (opt: { value: string; label: string }) => {
+    setPetCate(opt.value);
+    setShowCategorySelect(false);
+    if (petCate && opt) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.category;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleProductName = (val: string) => {
+    setProductName(val === '' ? '' : val);
+    if (productName && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.productName;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleProductDescription = (val: string) => {
+    setDescription(val === '' ? '' : val);
+    if (description && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.description;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleProductPrice = (val: string) => {
+    setPrice(val === '' ? '' : Number(val));
+    if (price && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.price;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleSelectCondition = (val: ConditionValue) => {
+    setSelectedCondition(val);
+    if (price && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.price;
+        return newErrors;
+      });
+    }
+  };
+
+  // 상품 등록
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('상품등록 버튼 클릭');
 
+    if (isSubmitting) return; // 중복 제출 방지
+
+    const newErrors: FormErrors = {};
     // 유효성 검사
     if (!selectedPetCategory || !selectedPetType) {
-      setError('반려동물 종류를 선택해주세요.');
-      return;
+      newErrors.petType = '반려동물 종류를 선택해주세요.';
     }
 
     if (!petCate) {
-      setError('상품 카테고리를 선택해주세요.');
-      return;
+      newErrors.category = '상품 카테고리를 선택해주세요.';
     }
 
-    if (!productName || !description) {
-      setError('상품명과 설명을 입력해주세요.');
-      return;
+    if (!productName) {
+      newErrors.productName = '상품명을 입력해주세요.';
+    }
+
+    if (!description) {
+      newErrors.description = '상품 설명을 입력해주세요.';
     }
 
     if (!price || price <= 0) {
-      setError('올바른 가격을 입력해주세요.');
-      return;
+      newErrors.price = '올바른 가격을 입력해주세요.';
     }
 
     if (!selectedCondition) {
-      setError('상품 상태를 선택해주세요.');
-      return;
+      newErrors.condition = '상품 상태를 선택해주세요.';
     }
 
     if (!selectedProvince || !selectedCity) {
-      setError('거래 희망 지역을 선택해주세요.');
-      return;
+      newErrors.location = '거래 희망 지역을 선택해주세요.';
     }
 
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // 첫 번째 에러가 있는 위치로 스크롤
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    setErrors({});
     setIsSubmitting(true);
-    setError(null);
-
     try {
       const productData: CreateProductRequest = {
         title: productName,
         description: description,
         price: typeof price === 'number' ? price : 0,
         images: imageFiles,
-        state_code: selectedProvince,
+        state_code: selectedProvince!,
         city_code: selectedCity,
         category_code: petCate,
-        pet_type_code: selectedPetCategory,
+        pet_type_code: selectedPetCategory!,
         pet_type_detail_code: selectedPetType,
-        condition_status: selectedCondition,
+        condition_status: selectedCondition!,
       };
 
       const response =
@@ -161,12 +235,16 @@ const ProductPost = () => {
       }
     } catch (error) {
       console.error('상품 등록 실패:', error);
-      setError(error instanceof Error ? error.message : '상품 등록에 실패했습니다.');
+      setErrors({
+        general: error instanceof Error ? error.message : '상품 등록에 실패했습니다.',
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // 상품 수정
   const loadProductData = async () => {
     if (!id) return;
 
@@ -185,8 +263,81 @@ const ProductPost = () => {
       setSelectedCity(product.city_code || '');
     } catch (error) {
       console.error('상품 정보 로드 실패:', error);
-      setError('상품 정보를 불러오는데 실패했습니다.');
+      setErrors({
+        general: '상품 정보를 불러오는데 실패했습니다.',
+      });
     }
+  };
+
+  // 이미지 파일 선택 처리
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const remainingSlots = 4 - imageFiles.length;
+    const filesToAdd = Array.from(files).slice(0, remainingSlots);
+
+    if (filesToAdd.length === 0) {
+      setErrors({ images: '최대 4장까지만 업로드 가능합니다.' });
+      return;
+    }
+
+    // 파일 크기 체크 (5MB)
+    const oversizedFiles = filesToAdd.filter(file => file.size > 5 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      setErrors({ images: '파일 크기는 5MB 이하여야 합니다.' });
+      return;
+    }
+
+    // 이미지 파일 타입 체크
+    const invalidFiles = filesToAdd.filter(file => !file.type.startsWith('image/'));
+    if (invalidFiles.length > 0) {
+      setErrors({ images: '이미지 파일만 업로드 가능합니다.' });
+      return;
+    }
+
+    if (errors.images) {
+      setErrors(prev => ({ ...prev, images: '이미지를 등록해주세요' }));
+    }
+
+    // 미리보기 생성
+    filesToAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviews(prev => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setImageFiles(prev => [...prev, ...filesToAdd]);
+
+    // input 초기화
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // 이미지 삭제
+  const handleRemoveImage = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // 이미지 순서 변경 (드래그 앤 드롭 대신 간단한 버튼으로 구현)
+  const moveImage = (fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= imageFiles.length) return;
+
+    const newFiles = [...imageFiles];
+    const newPreviews = [...imagePreviews];
+
+    const [movedFile] = newFiles.splice(fromIndex, 1);
+    const [movedPreview] = newPreviews.splice(fromIndex, 1);
+
+    newFiles.splice(toIndex, 0, movedFile);
+    newPreviews.splice(toIndex, 0, movedPreview);
+
+    setImageFiles(newFiles);
+    setImagePreviews(newPreviews);
   };
 
   useEffect(() => {
@@ -223,6 +374,8 @@ const ProductPost = () => {
       if (e.key === 'Escape') {
         if (showProvinceSelect) setShowProvinceSelect(false);
         if (showCitySelect) setShowCitySelect(false);
+        if (showPetCategorySelect) setShowPetCategorySelect(false);
+        if (showPetTypeSelect) setShowPetTypeSelect(false);
       }
     };
 
@@ -267,6 +420,7 @@ const ProductPost = () => {
                 key={tab.id}
                 type="button"
                 role="tab"
+                aria-selected={activeTab === tab.id}
                 id={`tab-${tab.id}`}
                 aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
@@ -294,184 +448,203 @@ const ProductPost = () => {
                     <h4>기본 정보</h4>
                     <p>상품의 기본 정보를 입력해주세요. *는 필수 항목입니다.</p>
                   </div>
-                  <div className="flex flex-col gap-md">
-                    <div className="flex flex-col gap-sm">
-                      <label className="text-sm">반려동물 종류 *</label>
+                  <div className="flex flex-col">
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-xs">
+                        <div className="flex flex-col gap-sm">
+                          <label className="text-sm">반려동물 종류 *</label>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* 대분류 */}
+                            <div className="relative" ref={petCategoryBoxRef}>
+                              <button
+                                type="button"
+                                role="combobox"
+                                aria-expanded={showPetCategorySelect}
+                                onClick={() => {
+                                  setShowPetCategorySelect(prev => !prev);
+                                  setShowPetTypeSelect(false);
+                                }}
+                                className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
+                              >
+                                <span className="text-gray-500">
+                                  {selectedPetCategory || '대분류를 선택해주세요 (예: 포유류)'}
+                                </span>
+                              </button>
+                              {showPetCategorySelect && (
+                                <div
+                                  role="listbox"
+                                  aria-label="반려동물 대분류 선택"
+                                  className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
+                                >
+                                  {PET_CATEGORIES.map(opt => (
+                                    <button
+                                      key={opt}
+                                      role="option"
+                                      aria-selected={selectedPetCategory === opt}
+                                      type="button"
+                                      onClick={() => handleSelectPetCategory(opt)}
+                                      className={`w-full px-3 py-xs rounded-md transition
+                                      hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                      ${
+                                        selectedPetCategory === opt
+                                          ? 'bg-gray-100 ring-1 ring-gray-300'
+                                          : ''
+                                      }`}
+                                    >
+                                      {opt}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <div className="relative" ref={petTypeBoxRef}>
+                              <button
+                                type="button"
+                                role="combobox"
+                                aria-expanded={showPetTypeSelect}
+                                onClick={() => {
+                                  if (!selectedPetCategory) return;
+                                  setShowPetTypeSelect(prev => !prev);
+                                  setShowPetCategorySelect(false);
+                                }}
+                                className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
+                              >
+                                <span className="text-gray-500">
+                                  {selectedPetType ||
+                                    (selectedPetCategory
+                                      ? '세부 종류를 선택해주세요'
+                                      : '먼저 대분류를 선택해주세요')}
+                                </span>
+                              </button>
+                              {showPetTypeSelect && selectedPetCategory && (
+                                <div
+                                  role="listbox"
+                                  aria-label="반려동물 세부종 선택"
+                                  className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
+                                mt-sm"
+                                >
+                                  {petTypeOptions.map(opt => (
+                                    <button
+                                      key={opt}
+                                      role="option"
+                                      aria-selected={selectedPetType === opt}
+                                      type="button"
+                                      onClick={() => handleSelectPetType(opt)}
+                                      className={`w-full px-3 py-xs rounded-md transition
+                                      hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                      ${
+                                        selectedPetType === opt
+                                          ? 'bg-gray-100 ring-1 ring-gray-300'
+                                          : ''
+                                      }`}
+                                    >
+                                      {opt}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {errors.petType && <p className="text-xs text-red-600">{errors.petType}</p>}
+                      </div>
+                    </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="relative" ref={petCategoryBoxRef}>
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-sm">
+                        <label className="flex items-center gap-2 text-sm">상품 카테고리 *</label>
+                        <div className="relative">
                           <button
                             type="button"
                             role="combobox"
-                            aria-expanded={showPetCategorySelect}
-                            onClick={() => {
-                              setShowPetCategorySelect(prev => !prev);
-                              setShowPetTypeSelect(false);
-                            }}
-                            className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
+                            onClick={() => setShowCategorySelect(!showCategorySelect)}
+                            className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
                           >
-                            <span className="text-gray-500">
-                              {selectedPetCategory || '대분류를 선택해주세요 (예: 포유류)'}
+                            <span className="w-full text-left">
+                              {petCate
+                                ? CATEGORY_OPTIONS.find(option => option.value === petCate)?.label
+                                : '카테고리를 선택해주세요'}
                             </span>
                           </button>
-                          {showPetCategorySelect && (
+                          {showCategorySelect && (
                             <div
                               role="listbox"
-                              aria-label="반려동물 대분류 선택"
+                              aria-label="카테고리 선택"
                               className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                             >
-                              {PET_CATEGORIES.map(opt => (
+                              {CATEGORY_OPTIONS.map(opt => (
                                 <button
-                                  key={opt}
+                                  key={opt.value}
                                   role="option"
-                                  aria-selected={selectedPetCategory === opt}
+                                  aria-selected={petCate === opt.value}
                                   type="button"
-                                  onClick={() => handleSelectPetCategory(opt)}
+                                  onClick={() => {
+                                    handleSelectCategory(opt);
+                                  }}
                                   className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    selectedPetCategory === opt
-                                      ? 'bg-gray-100 ring-1 ring-gray-300'
-                                      : ''
-                                  }`}
+                                    hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                    ${
+                                      petCate === opt.value
+                                        ? 'bg-gray-100 ring-1 ring-gray-300'
+                                        : ''
+                                    }`}
                                 >
-                                  {opt}
+                                  {opt.label}
                                 </button>
                               ))}
                             </div>
                           )}
                         </div>
+                      </div>
+                      {errors.category && <p className="text-xs text-red-600">{errors.category}</p>}
+                    </div>
 
-                        {/* 세부 종류 */}
-                        <div className="relative" ref={petTypeBoxRef}>
-                          <button
-                            type="button"
-                            role="combobox"
-                            aria-expanded={showPetTypeSelect}
-                            onClick={() => {
-                              if (!selectedPetCategory) return;
-                              setShowPetTypeSelect(prev => !prev);
-                              setShowPetCategorySelect(false);
-                            }}
-                            className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
-                          >
-                            <span className="text-gray-500">
-                              {selectedPetType ||
-                                (selectedPetCategory
-                                  ? '세부 종류를 선택해주세요'
-                                  : '먼저 대분류를 선택해주세요')}
-                            </span>
-                          </button>
-                          {showPetTypeSelect && selectedPetCategory && (
-                            <div
-                              role="listbox"
-                              aria-label="반려동물 세부종 선택"
-                              className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
-                            mt-sm"
-                            >
-                              {petTypeOptions.map(opt => (
-                                <button
-                                  key={opt}
-                                  role="option"
-                                  aria-selected={selectedPetType === opt}
-                                  type="button"
-                                  onClick={() => handleSelectPetType(opt)}
-                                  className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    selectedPetType === opt
-                                      ? 'bg-gray-100 ring-1 ring-gray-300'
-                                      : ''
-                                  }`}
-                                >
-                                  {opt}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-sm">
+                        <label className="flex items-center gap-2 text-sm" htmlFor="title">
+                          상품명 *
+                        </label>
+                        <input
+                          className="flex h-9 w-full rounded-md py-2 pl-3 bg-secondary/30"
+                          id="title"
+                          placeholder="예: 강아지 사료 10kg 새상품"
+                          maxLength={50}
+                          value={productName}
+                          onChange={e => {
+                            const val = e.target.value;
+                            handleProductName(val);
+                          }}
+                        />
+                        <p className="text-xs text-gray-500">{productName.length}/50자</p>
                       </div>
+                      {errors.productName && (
+                        <p className="text-xs text-red-600">{errors.productName}</p>
+                      )}
                     </div>
-                    <div className="flex flex-col gap-sm">
-                      <label className="flex items-center gap-2 text-sm">상품 카테고리 *</label>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          role="combobox"
-                          onClick={() => setShowCategorySelect(!showCategorySelect)}
-                          className="flex w-full rounded-md px-3 py-2 text-sm bg-secondary/30 mb-sm"
-                        >
-                          <span className="w-full text-left">
-                            {/* {petCate
-                              ? CATEGORY_OPTIONS.find(option => option.value === petCate)?.label
-                              : '카테고리를 선택해주세요'} */}
-                            {petCate || '카테고리를 선택해주세요'}
-                          </span>
-                        </button>
-                        {showCategorySelect && (
-                          <div
-                            role="listbox"
-                            aria-label="카테고리 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md"
-                          >
-                            {CATEGORY_OPTIONS.map(opt => (
-                              <button
-                                key={opt.value}
-                                role="option"
-                                aria-selected={petCate === opt.value}
-                                type="button"
-                                onClick={() => {
-                                  setPetCate(opt.label);
-                                  setShowCategorySelect(false);
-                                }}
-                                className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    petCate === opt.value ? 'bg-gray-100 ring-1 ring-gray-300' : ''
-                                  }`}
-                              >
-                                {opt.label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
+
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-sm">
+                        <label className="flex items-center gap-2 text-sm " htmlFor="description">
+                          상품 설명 *
+                        </label>
+                        <textarea
+                          data-slot="textarea"
+                          className="resize-none flex min-h-16 w-full rounded-md py-2 pl-3 bg-secondary/30"
+                          id="description"
+                          placeholder="상품의 상태, 구매 시기, 사용 빈도, 특징 등을 자세히 적어주세요."
+                          rows={5}
+                          maxLength={1000}
+                          value={description}
+                          onChange={e => {
+                            const val = e.target.value;
+                            handleProductDescription(val);
+                          }}
+                        />
+                        <p className="text-xs text-gray-500">{description.length}/1000자</p>
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-sm">
-                      <label className="flex items-center gap-2 text-sm" htmlFor="title">
-                        상품명 *
-                      </label>
-                      <input
-                        className="flex h-9 w-full rounded-md px-3 py-1 bg-secondary/30"
-                        id="title"
-                        placeholder="예: 강아지 사료 10kg 새상품"
-                        maxLength={50}
-                        value={productName}
-                        onChange={e => {
-                          const val = e.target.value;
-                          setProductName(val === '' ? '' : val);
-                        }}
-                      />
-                      <p className="text-xs text-gray-500">0/50자</p>
-                    </div>
-                    <div>
-                      <label className="flex items-center gap-2 text-sm " htmlFor="description">
-                        상품 설명 *
-                      </label>
-                      <textarea
-                        data-slot="textarea"
-                        className="resize-none flex min-h-16 w-full rounded-md px-3 py-2 bg-secondary/30"
-                        id="description"
-                        placeholder="상품의 상태, 구매 시기, 사용 빈도, 특징 등을 자세히 적어주세요."
-                        rows={5}
-                        maxLength={1000}
-                        value={description}
-                        onChange={e => {
-                          const val = e.target.value;
-                          setDescription(val === '' ? '' : val);
-                        }}
-                      ></textarea>
-                      <p className="text-xs text-gray-500">0/1000자</p>
+                      {errors.description && (
+                        <p className="text-xs text-red-600">{errors.description}</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -479,173 +652,256 @@ const ProductPost = () => {
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <h4>가격 및 상태</h4>
                   <div className="flex flex-col gap-xl">
-                    <div className="flex flex-col gap-sm">
-                      <label className="text-sm" htmlFor="price">
-                        판매 가격 *
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          className="flex h-9 w-full border border-border rounded-md px-3 py-1 bg-secondary/30 pr-8"
-                          id="price"
-                          placeholder="0"
-                          value={price}
-                          onChange={e => {
-                            const val = e.target.value;
-                            setPrice(val === '' ? '' : Number(val));
-                          }}
-                        />
-                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                          원
-                        </span>
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-sm">
+                        <label className="text-sm" htmlFor="price">
+                          판매 가격 *
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            className="flex h-9 w-full border border-border rounded-md px-3 py-1 bg-secondary/30 pr-8"
+                            id="price"
+                            placeholder="0"
+                            value={price}
+                            onChange={e => {
+                              const val = e.target.value;
+                              handleProductPrice(val);
+                            }}
+                          />
+                          <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            원
+                          </span>
+                        </div>
                       </div>
+                      {errors.price && <p className="text-xs text-red-600">{errors.price}</p>}
                     </div>
 
-                    <div className="flex flex-col gap-sm">
-                      <label className="text-sm ">상품 상태 *</label>
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-                        {CONDITION_ITEMS.map(item => (
-                          <label
-                            key={item.value}
-                            // onClick={() => setSelectedCondition(item.value)}
-                            className={`rounded-lg p-3 cursor-pointer transition-colors border border-border hover:border-primary 
-                            ${
-                              selectedCondition === item.value ? 'bg-secondary' : 'bg-secondary/30'
-                            }  hover:border-primary`}
-                          >
-                            <input
-                              type="radio"
-                              name="condition_status"
-                              value={item.value}
-                              checked={selectedCondition === item.value}
-                              onChange={e => setSelectedCondition(e.target.value as ConditionValue)}
-                              className="blind" // 화면에서 숨김
-                            />
-                            <div className="font-medium">{item.value}</div>
-                            <div className="text-xs text-gray-500">{item.subtitle}</div>
-                          </label>
-                        ))}
+                    <div className="flex flex-col gap-xs">
+                      <div className="flex flex-col gap-sm">
+                        <label className="text-sm ">상품 상태 *</label>
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+                          {CONDITION_ITEMS.map(item => (
+                            <label
+                              key={item.value}
+                              className={`rounded-lg p-3 cursor-pointer transition-colors border border-border hover:border-primary
+                              ${
+                                selectedCondition === item.value
+                                  ? 'bg-secondary'
+                                  : 'bg-secondary/30'
+                              }  hover:border-primary`}
+                            >
+                              <input
+                                type="radio"
+                                name="condition_status"
+                                value={item.value}
+                                checked={selectedCondition === item.value}
+                                onChange={e => {
+                                  const val = e.target.value as ConditionValue;
+                                  handleSelectCondition(val);
+                                }}
+                                className="blind" // 화면에서 숨김
+                              />
+                              <div className="font-medium">{item.value}</div>
+                              <div className="text-xs text-gray-500">{item.subtitle}</div>
+                            </label>
+                          ))}
+                        </div>
                       </div>
+                      {errors.condition && (
+                        <p className="text-xs text-red-600">{errors.condition}</p>
+                      )}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
-                  <div className="flex flex-col items-start gap-xs">
-                    <h4 className="flex items-center gap-2">상품 이미지 *</h4>
-                    <p>
-                      상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
-                      4장)
-                    </p>
-                  </div>
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id="product-post-image"
-                    />
-                    <label
-                      htmlFor="product-post-image"
-                      className="flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30"
-                    >
-                      <PiUploadSimpleLight size={40} className="pb-md" />
-                      <p className="text-sm text-gray-600">클릭하거나 파일을 드래그해서 업로드</p>
-                      <p className="text-xs text-gray-500">PNG, JPG, GIF 파일 (각 파일 최대 5MB)</p>
-                    </label>
+                  <h4>상품 이미지 *</h4>
+                  <div className="flex flex-col gap-xs">
+                    <div className="flex flex-col gap-sm">
+                      <div className="flex flex-col items-start gap-xs">
+                        <p>
+                          상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
+                          4장)
+                        </p>
+                      </div>
+                      {imageFiles.length < 4 && (
+                        <div className="flex flex-col gap-5">
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            className="hidden"
+                            id="product-post-image"
+                            onChange={handleImageChange}
+                          />
+                          <label
+                            htmlFor="product-post-image"
+                            className="flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30"
+                          >
+                            <PiUploadSimpleLight size={40} className="pb-md" />
+                            <p className="text-sm text-gray-600">클릭해서 업로드</p>
+                            <p className="text-xs text-gray-500">
+                              PNG, JPG, GIF 파일 (각 파일 최대 5MB)
+                            </p>
+                            <p className="text-xs text-blue-600 mt-2">
+                              {4 - imageFiles.length}장 더 업로드 가능
+                            </p>
+                          </label>
+                          {/* 이미지 미리보기 영역 */}
+                          {imagePreviews.length > 0 && (
+                            <div className="flex gap-4">
+                              {imagePreviews.map((preview, index) => (
+                                <div key={index} className="relative group w-[7vw]">
+                                  <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-gray-200 pb-[100%] relative w-full h-full">
+                                    <img
+                                      src={preview}
+                                      alt={`상품 이미지 ${index + 1}`}
+                                      className="w-full h-full object-cover absolute t-0 l-0"
+                                    />
+                                    {index === 0 && (
+                                      <div className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs rounded">
+                                        대표 이미지
+                                      </div>
+                                    )}
+                                  </div>
+                                  {/* 순서 변경 및 삭제 버튼 */}
+                                  <div className="absolute top-2 right-2 flex gap-1">
+                                    {index > 0 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => moveImage(index, index - 1)}
+                                        className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                                        title="앞으로 이동"
+                                      >
+                                        <IoIosArrowBack />
+                                      </button>
+                                    )}
+                                    {index < imagePreviews.length - 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => moveImage(index, index + 1)}
+                                        className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                                        title="뒤로 이동"
+                                      >
+                                        <IoIosArrowForward />
+                                      </button>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveImage(index)}
+                                      title="삭제"
+                                    >
+                                      <IoCloseCircle size={25} color="white" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <h4>거래 정보</h4>
-
-                  <div className="flex flex-col gap-sm">
-                    <label className="text-sm">거래 희망 지역 *</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="relative" ref={provinceBoxRef}>
-                        <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <button
-                          type="button"
-                          role="combobox"
-                          aria-expanded={showProvinceSelect}
-                          onClick={() => {
-                            setShowProvinceSelect(prev => !prev);
-                            setShowCitySelect(false);
-                          }}
-                          className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-                        >
-                          <span className="text-gray-500">
-                            {selectedProvince || '시/도를 선택해주세요'}
-                          </span>
-                        </button>
-                        {showProvinceSelect && (
-                          <div
-                            role="listbox"
-                            aria-label="시/도 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
+                  <div className="flex flex-col gap-xs">
+                    <div className="flex flex-col gap-sm">
+                      <label className="text-sm">거래 희망 지역 *</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="relative" ref={provinceBoxRef}>
+                          <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
+                          <button
+                            type="button"
+                            role="combobox"
+                            aria-expanded={showProvinceSelect}
+                            onClick={() => {
+                              setShowProvinceSelect(prev => !prev);
+                              setShowCitySelect(false);
+                            }}
+                            className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
-                            {PROVINCES.map(opt => (
-                              <button
-                                key={opt}
-                                role="option"
-                                aria-selected={selectedProvince === opt}
-                                type="button"
-                                onClick={() => handleSelectProvince(opt)}
-                                className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <div className="relative" ref={cityBoxRef}>
-                        <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <button
-                          type="button"
-                          role="combobox"
-                          aria-expanded={showCitySelect}
-                          onClick={() => {
-                            if (!selectedProvince) return;
-                            setShowCitySelect(prev => !prev);
-                            setShowProvinceSelect(false);
-                          }}
-                          className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-                        >
-                          <span className="text-gray-500">
-                            {selectedCity ||
-                              (selectedProvince
-                                ? '구/군을 선택해주세요'
-                                : '먼저 시/도를 선택해주세요')}
-                          </span>
-                        </button>
-                        {showCitySelect && selectedProvince && (
-                          <div
-                            role="listbox"
-                            aria-label="구/군 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
-                            mt-sm"
+                            <span className="text-gray-500">
+                              {selectedProvince || '시/도를 선택해주세요'}
+                            </span>
+                          </button>
+                          {showProvinceSelect && (
+                            <div
+                              role="listbox"
+                              aria-label="시/도 선택"
+                              className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
+                            >
+                              {PROVINCES.map(opt => (
+                                <button
+                                  key={opt}
+                                  role="option"
+                                  aria-selected={selectedProvince === opt}
+                                  type="button"
+                                  onClick={() => handleSelectProvince(opt)}
+                                  className={`w-full px-3 py-xs rounded-md transition
+                                hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                ${
+                                  selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''
+                                }`}
+                                >
+                                  {opt}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="relative" ref={cityBoxRef}>
+                          <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
+                          <button
+                            type="button"
+                            role="combobox"
+                            aria-expanded={showCitySelect}
+                            onClick={() => {
+                              if (!selectedProvince) return;
+                              setShowCitySelect(prev => !prev);
+                              setShowProvinceSelect(false);
+                            }}
+                            className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
-                            {cityOptions.map(opt => (
-                              <button
-                                key={opt}
-                                role="option"
-                                aria-selected={selectedCity === opt}
-                                type="button"
-                                onClick={() => handleSelectCity(opt)}
-                                className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        )}
+                            <span className="text-gray-500">
+                              {selectedCity ||
+                                (selectedProvince
+                                  ? '구/군을 선택해주세요'
+                                  : '먼저 시/도를 선택해주세요')}
+                            </span>
+                          </button>
+                          {showCitySelect && selectedProvince && (
+                            <div
+                              role="listbox"
+                              aria-label="구/군 선택"
+                              className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
+                              mt-sm"
+                            >
+                              {cityOptions.map(opt => (
+                                <button
+                                  key={opt}
+                                  role="option"
+                                  aria-selected={selectedCity === opt}
+                                  type="button"
+                                  onClick={() => handleSelectCity(opt)}
+                                  className={`w-full px-3 py-xs rounded-md transition
+                                    hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                                    ${
+                                      selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''
+                                    }`}
+                                >
+                                  {opt}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    {errors.location && <p className="text-xs text-red-600">{errors.location}</p>}
                   </div>
                 </div>
                 <button
@@ -668,360 +924,6 @@ const ProductPost = () => {
               className="flex-1 outline-none"
             >
               판매요청 기능은 추후에 개발 예정입니다.
-              {/* <form className="flex flex-col gap-xl">
-                <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
-                  <div className="flex flex-col items-start gap-xs">
-                    <h4>판매요청 정보</h4>
-                    <p>찾고 있는 상품 정보를 입력해주세요. *는 필수 항목입니다.</p>
-                  </div>
-                  <div className="flex flex-col gap-md">
-                    <div className="flex flex-col gap-sm">
-                      <label className="text-sm">반려동물 종류 *</label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="relative" ref={petCategoryBoxRef}>
-                          <button
-                            type="button"
-                            role="combobox"
-                            aria-expanded={showPetCategorySelect}
-                            onClick={() => {
-                              setShowPetCategorySelect(prev => !prev);
-                              setShowPetTypeSelect(false);
-                            }}
-                            className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
-                          >
-                            <span className="text-gray-500">
-                              {selectedPetCategory || '대분류를 선택해주세요 (예: 포유류)'}
-                            </span>
-                          </button>
-                          {showPetCategorySelect && (
-                            <div
-                              role="listbox"
-                              aria-label="반려동물 대분류 선택"
-                              className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
-                            >
-                              {PET_CATEGORIES.map(opt => (
-                                <button
-                                  key={opt}
-                                  role="option"
-                                  aria-selected={selectedPetCategory === opt}
-                                  type="button"
-                                  onClick={() => handleSelectPetCategory(opt)}
-                                  className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    selectedPetCategory === opt
-                                      ? 'bg-gray-100 ring-1 ring-gray-300'
-                                      : ''
-                                  }`}
-                                >
-                                  {opt}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="relative" ref={petTypeBoxRef}>
-                          <button
-                            type="button"
-                            role="combobox"
-                            aria-expanded={showPetTypeSelect}
-                            onClick={() => {
-                              if (!selectedPetCategory) return;
-                              setShowPetTypeSelect(prev => !prev);
-                              setShowPetCategorySelect(false);
-                            }}
-                            className={`flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30`}
-                          >
-                            <span className="text-gray-500">
-                              {selectedPetType ||
-                                (selectedPetCategory
-                                  ? '세부 종류를 선택해주세요'
-                                  : '먼저 대분류를 선택해주세요')}
-                            </span>
-                          </button>
-                          {showPetTypeSelect && selectedPetCategory && (
-                            <div
-                              role="listbox"
-                              aria-label="반려동물 세부종 선택"
-                              className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
-                            mt-sm"
-                            >
-                              {petTypeOptions.map(opt => (
-                                <button
-                                  key={opt}
-                                  role="option"
-                                  aria-selected={selectedPetType === opt}
-                                  type="button"
-                                  onClick={() => handleSelectPetType(opt)}
-                                  className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    selectedPetType === opt
-                                      ? 'bg-gray-100 ring-1 ring-gray-300'
-                                      : ''
-                                  }`}
-                                >
-                                  {opt}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-sm">
-                      <label className="flex items-center gap-2 text-sm">상품 카테고리 *</label>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          role="combobox"
-                          onClick={() => setShowCategorySelect(!showCategorySelect)}
-                          className="flex w-full rounded-md px-3 py-2 text-sm bg-secondary/30 mb-sm"
-                        >
-                          <span className="w-full text-left">
-                            {petCate
-                              ? CATEGORY_OPTIONS.find(option => option.value === petCate)?.label
-                              : '카테고리를 선택해주세요'}
-                          </span>
-                        </button>
-                        {showCategorySelect && (
-                          <div
-                            role="listbox"
-                            aria-label="카테고리 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md"
-                          >
-                            {CATEGORY_OPTIONS.map(opt => (
-                              <button
-                                key={opt.value}
-                                role="option"
-                                aria-selected={petCate === opt.value}
-                                type="button"
-                                onClick={() => {
-                                  setPetCate(opt.value);
-                                  setShowCategorySelect(false);
-                                }}
-                                className={`w-full px-3 py-xs rounded-md transition
-                                  hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                                  ${
-                                    petCate === opt.value ? 'bg-gray-100 ring-1 ring-gray-300' : ''
-                                  }`}
-                              >
-                                {opt.label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <label className="flex items-center gap-2 text-sm" htmlFor="title">
-                        찾고 있는 상품명 *
-                      </label>
-                      <input
-                        className="flex h-9 w-full rounded-md px-3 py-1 bg-secondary/30"
-                        id="title"
-                        placeholder="고양이 자동 급식기 구해요"
-                        maxLength={50}
-                        value=""
-                      />
-                      <p className="text-xs text-gray-500">0/50자</p>
-                    </div>
-                    <div>
-                      <label className="flex items-center gap-2 text-sm " htmlFor="description">
-                        상세 요청사항 *
-                      </label>
-                      <textarea
-                        data-slot="textarea"
-                        className="resize-none flex min-h-16 w-full rounded-md px-3 py-2 bg-secondary/30"
-                        id="description"
-                        placeholder="어떤 상품을 찾고 있는지, 원하는 조건(가격대, 상태 등)을 자세히 적어주세요"
-                        rows={5}
-                        maxLength={1000}
-                      ></textarea>
-                      <p className="text-xs text-gray-500">0/1000자</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
-                  <h4>가격 및 상태</h4>
-                  <div className="flex flex-col gap-xl">
-                    <div className="flex flex-col gap-sm">
-                      <label className="text-sm" htmlFor="price">
-                        희망 가격대 *
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          className="flex h-9 w-full border border-border rounded-md px-3 py-1 bg-secondary/30 pr-8"
-                          id="price"
-                          placeholder="0"
-                          value={price}
-                          onChange={e => {
-                            const val = e.target.value;
-                            setPrice(val === '' ? '' : Number(val));
-                          }}
-                        />
-                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                          원
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
-                  <div className="flex flex-col items-start gap-xs">
-                    <h4 className="flex items-center gap-2">상품 이미지</h4>
-                    <p>
-                      상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
-                      4장)
-                    </p>
-                  </div>
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      id="product-post-image"
-                    />
-                    <label
-                      htmlFor="product-post-image"
-                      className="flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30"
-                    >
-                      <PiUploadSimpleLight size={40} className="pb-md" />
-                      <p className="text-sm text-gray-600">클릭하거나 파일을 드래그해서 업로드</p>
-                      <p className="text-xs text-gray-500">
-                        PNG, JPG, GIF 파일 (각 파일 최대 10MB)
-                      </p>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
-                  <h4>거래 정보</h4>
-
-                  <div className="flex flex-col gap-sm">
-                    <label className="text-sm">거래 희망 지역 *</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="relative" ref={provinceBoxRef}>
-                        <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <button
-                          type="button"
-                          role="combobox"
-                          aria-expanded={showProvinceSelect}
-                          onClick={() => {
-                            setShowProvinceSelect(prev => !prev);
-                            setShowCitySelect(false);
-                          }}
-                          className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-                        >
-                          <span className="text-gray-500">
-                            {selectedProvince || '시/도를 선택해주세요'}
-                          </span>
-                        </button>
-                        {showProvinceSelect && (
-                          <div
-                            role="listbox"
-                            aria-label="시/도 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
-                          >
-                            {PROVINCES.map(opt => (
-                              <button
-                                key={opt}
-                                role="option"
-                                aria-selected={selectedProvince === opt}
-                                type="button"
-                                onClick={() => handleSelectProvince(opt)}
-                                className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <div className="relative" ref={cityBoxRef}>
-                        <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <button
-                          type="button"
-                          role="combobox"
-                          aria-expanded={showCitySelect}
-                          onClick={() => {
-                            if (!selectedProvince) return;
-                            setShowCitySelect(prev => !prev);
-                            setShowProvinceSelect(false);
-                          }}
-                          className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-                        >
-                          <span className="text-gray-500">
-                            {selectedCity ||
-                              (selectedProvince
-                                ? '구/군을 선택해주세요'
-                                : '먼저 시/도를 선택해주세요')}
-                          </span>
-                        </button>
-                        {showCitySelect && selectedProvince && (
-                          <div
-                            role="listbox"
-                            aria-label="구/군 선택"
-                            className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
-                            mt-sm"
-                          >
-                            {cityOptions.map(opt => (
-                              <button
-                                key={opt}
-                                role="option"
-                                aria-selected={selectedCity === opt}
-                                type="button"
-                                onClick={() => handleSelectCity(opt)}
-                                className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-sm">
-                    <input
-                      type="checkbox"
-                      aria-hidden="true"
-                      className="w-[14px] h-[14px]"
-                      id="delivery"
-                    />
-                    <label className="flex items-center gap-2 text-sm" htmlFor="delivery">
-                      택배 거래 가능
-                    </label>
-                  </div>
-
-                  <div className="flex flex-col gap-sm">
-                    <label className="text-sm" htmlFor="meetingPlace">
-                      선호하는 만남 장소
-                    </label>
-                    <input
-                      data-slot="input"
-                      className="h-9 w-full rounded-md border px-3 py-1 md:text-sm border-border bg-secondary/30"
-                      id="meetingPlace"
-                      placeholder="예: 지하철역, 카페, 공원 등"
-                      value=""
-                    />
-                  </div>
-                </div>
-                <button
-                  data-slot="button"
-                  className="items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-primary hover:bg-primary/90 h-9 px-4 py-2 flex-1"
-                  type="submit"
-                >
-                  상품 등록하기
-                </button>
-              </form> */}
             </div>
           )}
         </div>

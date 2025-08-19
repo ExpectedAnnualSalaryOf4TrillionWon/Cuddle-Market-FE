@@ -148,3 +148,15 @@ export interface CreateProductResponse {
   message: string;
   product?: Product;
 }
+
+export interface FormErrors {
+  petType?: string;
+  category?: string;
+  productName?: string;
+  description?: string;
+  price?: string;
+  condition?: string;
+  location?: string;
+  images?: string;
+  general?: string;
+}
