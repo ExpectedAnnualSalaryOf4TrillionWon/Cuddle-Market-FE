@@ -9,7 +9,21 @@ type TabId = 'products' | 'wishlist';
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
+  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
 }
+
+const getProductState = (status: string): ProductState => {
+  switch (status) {
+    case '판매중':
+      return 'selling';
+    case '예약중':
+      return 'reserved';
+    case '판매완료':
+      return 'sold';
+    default:
+      return 'selling';
+  }
+};
 
 // interface Product {
 //   id: number;
@@ -106,20 +120,7 @@ interface MyListProps {
 //   },
 // ];
 
-const getProductState = (status: string): ProductState => {
-  switch (status) {
-    case '판매중':
-      return 'selling';
-    case '예약중':
-      return 'reserved';
-    case '판매완료':
-      return 'sold';
-    default:
-      return 'selling';
-  }
-};
-
-const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
+const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -146,6 +147,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
   useEffect(() => {
     loadUserInfo();
   }, []);
+  
   useEffect(() => {
     if (onCountsUpdate && !loading) {
       onCountsUpdate({
@@ -198,7 +200,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
           </button>
           {/*alert,confirm 등은 추후에 대체될 예정*/}
           <button
-            onClick={() => confirm('삭제하시겠습니까?')}
+            onClick={() => onDelete(product.id)}
             className="col-start-2 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
           >
             삭제
@@ -207,6 +209,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
       </div>
     );
   };
+  
   const renderList = () => {
     switch (activeTab) {
       case 'products':

@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import logoImage from '@images/CuddleMarketLogo.png';
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
-import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
-import { Link } from 'react-router-dom';
+import { useModalStore } from '@store/modalStore';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
 
@@ -14,24 +15,48 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]['id'];
 
-const MyPage = () => {
+const MyPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('products');
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [counts, setCounts] = useState({ products: 0, wishlist: 0 });
 
+  // 확인 모달 설정 (22번째 줄 근처)
+  const exitConfirm = useModalStore(state => state.confirm);
+  const deleteConfirm = useModalStore(state => state.confirm);
+
+  // 회원탈퇴 핸들러
+  const handleExit = async (): Promise<void> => {
+    const result = await exitConfirm('회원탈퇴 하시겠습니까?');
+    if (result === true) {
+      // TODO: 회원탈퇴 로직 구현
+      console.log('회원탈퇴 진행');
+      return;
+    } else {
+      return;
+    }
+  };
+
+  // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
+  const handleDelete = async (itemId?: number): Promise<void> => {
+    const result = await deleteConfirm('게시물을 삭제하시겠습니까?');
+    if (result === true) {
+      // TODO: 상품삭제 로직 구현
+      console.log(`게시물 ${itemId} 삭제 진행`);
+      return;
+    } else {
+      return;
+    }
+  };
+
   const formatJoinDate = (dateString: string): string => {
     const date = new Date(dateString);
-
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-
-    return `${year}년 ${month}월 가입`;
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
   };
+
   const loadUserInfo = async () => {
     try {
       const data = await fetchMyInfo();
-      console.log(data);
       setUserInfo(data);
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
@@ -44,26 +69,22 @@ const MyPage = () => {
     loadUserInfo();
   }, []);
 
-  if (loading || !userInfo) {
-    return <div>로딩중...</div>;
-  }
+  if (loading || !userInfo) return <div>로딩중...</div>;
 
   return (
     <>
       {/* 헤더영역 */}
       <header className="sticky top-0 z-1 bg-primary">
         <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          {/* 로고 */}
           <Link to="/">
             <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
           </Link>
-
-          {/* 페이지 타이틀 */}
           <h2 className="text-xl font-bold">마이 페이지</h2>
         </div>
       </header>
+      
       <div className="px-lg py-3xl bg-bg">
-        <main className="max-w-[var(--container-max-width)]  mx-auto  grid grid-cols-1 tablet:grid-cols-3 gap-xl ">
+        <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">
           {/* 좌측 내 정보 영역 */}
           <aside className="tablet:col-span-1">
             <div className="sticky top-24 flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary p-xl">
@@ -101,12 +122,14 @@ const MyPage = () => {
                     transition-all
                   "
                 >
-                  <span> 내 정보 수정</span>
+                  <span>내 정보 수정</span>
                 </button>
               </div>
             </div>
+            
+            {/* 회원탈퇴 버튼을 div에서 button으로 변경하고 핸들러 연결 */}
             <div className="mt-6 text-xs text-red-500 cursor-pointer hover:underline self-start">
-              회원탈퇴
+              <button onClick={handleExit}>회원탈퇴</button>
             </div>
           </aside>
 
@@ -115,7 +138,7 @@ const MyPage = () => {
             {/* 탭 리스트*/}
             <div
               role="tablist"
-              className="grid grid-cols-2 gap-sm px-sm py-2.5 rounded-3xl bg-dark/25 "
+              className="grid grid-cols-2 gap-sm px-sm py-2.5 rounded-3xl bg-dark/25"
             >
               {TABS.map(tab => (
                 <button
@@ -125,10 +148,9 @@ const MyPage = () => {
                   id={`tab-${tab.id}`}
                   aria-controls={`panel-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full px-md py-xs rounded-3xl  
-                     ${
-                       activeTab === tab.id ? 'border-dark' : 'border-transparent'
-                     } bodySmall  text-text-primary text-center transition hover:bg-dark`}
+                  className={`w-full px-md py-xs rounded-3xl ${
+                    activeTab === tab.id ? 'border-dark' : 'border-transparent'
+                  } bodySmall text-text-primary text-center transition hover:bg-dark`}
                 >
                   {tab.label}
                 </button>
@@ -156,8 +178,13 @@ const MyPage = () => {
               )}
 
               {/* 탭 목록 */}
-              <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg ">
-                <MyList activeTab={activeTab} onCountsUpdate={setCounts} />
+              <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
+                {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
+                <MyList 
+                  activeTab={activeTab} 
+                  onCountsUpdate={setCounts}
+                  onDelete={handleDelete}
+                />
 
                 {/* 목록이 있을 때만 더보기 버튼 표시 */}
                 {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (
