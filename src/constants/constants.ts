@@ -135,3 +135,13 @@ export const stateStyleMap: Record<ProductState, string> = {
   [ProductState.Reserved]: 'bg-reserved border-reserved',
   [ProductState.Sold]: 'bg-complete border-complete',
 };
+
+export const ALLOWED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/bmp',
+];

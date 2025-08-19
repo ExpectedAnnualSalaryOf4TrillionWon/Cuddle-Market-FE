@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { CreateProductRequest, FormErrors } from 'src/types';
 import { createProduct, fetchProductById, updateProduct } from '../api/products';
 import {
+  ALLOWED_IMAGE_TYPES,
   CATEGORY_OPTIONS,
   CITIES,
   CONDITION_ITEMS,
@@ -38,15 +39,15 @@ const ProductPost = () => {
   const petCategoryBoxRef = useRef<HTMLDivElement | null>(null);
   const petTypeBoxRef = useRef<HTMLDivElement | null>(null);
 
+  /**상품 카테고리 */
+  const [petCate, setPetCate] = useState<string>('');
+  const [showCategorySelect, setShowCategorySelect] = useState(false);
+
   /**가격 */
   const [price, setPrice] = useState<number | ''>('');
 
   /**상품 상태 */
   const [selectedCondition, setSelectedCondition] = useState<ConditionValue | null>(null);
-
-  /**상품 카테고리 */
-  const [petCate, setPetCate] = useState<string>('');
-  const [showCategorySelect, setShowCategorySelect] = useState(false);
 
   /**상품명 */
   const [productName, setProductName] = useState<string>('');
@@ -78,18 +79,7 @@ const ProductPost = () => {
   const location = useLocation();
   const isEditMode = location.pathname.includes('/edit');
 
-  const handleSelectProvince = (opt: Province) => {
-    setSelectedProvince(opt);
-    setSelectedCity(''); // 시/도 변경 시 구/군 초기화
-    setShowProvinceSelect(false); // 시/도 목록 닫기
-    setShowCitySelect(false);
-  };
-
-  const handleSelectCity = (opt: string) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
-  };
-
+  // 대분류
   const handleSelectPetCategory = (opt: PetCategory) => {
     setSelectedPetCategory(opt);
     setSelectedPetType('');
@@ -97,6 +87,7 @@ const ProductPost = () => {
     setShowPetTypeSelect(false);
   };
 
+  // 소분류
   const handleSelectPetType = (opt: string) => {
     setSelectedPetType(opt);
     setShowPetTypeSelect(false);
@@ -109,10 +100,11 @@ const ProductPost = () => {
     }
   };
 
+  // 카테고리
   const handleSelectCategory = (opt: { value: string; label: string }) => {
     setPetCate(opt.value);
     setShowCategorySelect(false);
-    if (petCate && opt) {
+    if (opt.value) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.category;
@@ -121,6 +113,7 @@ const ProductPost = () => {
     }
   };
 
+  // 상품명
   const handleProductName = (val: string) => {
     setProductName(val === '' ? '' : val);
     if (productName && val) {
@@ -132,6 +125,7 @@ const ProductPost = () => {
     }
   };
 
+  // 상품 설명
   const handleProductDescription = (val: string) => {
     setDescription(val === '' ? '' : val);
     if (description && val) {
@@ -143,6 +137,7 @@ const ProductPost = () => {
     }
   };
 
+  // 상품 가격
   const handleProductPrice = (val: string) => {
     setPrice(val === '' ? '' : Number(val));
     if (price && val) {
@@ -154,12 +149,33 @@ const ProductPost = () => {
     }
   };
 
+  // 상품 상태
   const handleSelectCondition = (val: ConditionValue) => {
     setSelectedCondition(val);
-    if (price && val) {
+    if (val) {
       setErrors(prev => {
         const newErrors = { ...prev };
-        delete newErrors.price;
+        delete newErrors.condition;
+        return newErrors;
+      });
+    }
+  };
+
+  // 거주지
+  const handleSelectProvince = (opt: Province) => {
+    setSelectedProvince(opt);
+    setSelectedCity('');
+    setShowProvinceSelect(false);
+    setShowCitySelect(false);
+  };
+
+  const handleSelectCity = (opt: string) => {
+    setSelectedCity(opt);
+    setShowCitySelect(false);
+    if (selectedProvince && opt) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.location;
         return newErrors;
       });
     }
@@ -277,27 +293,39 @@ const ProductPost = () => {
     const files = e.target.files;
     if (!files) return;
 
-    const remainingSlots = 5 - imageFiles.length;
+    if (imageFiles.length >= 4) {
+      setErrors(prev => ({ ...prev, images: '최대 4장까지만 업로드 가능합니다.' }));
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
+    const remainingSlots = 4 - imageFiles.length;
     const filesToAdd = Array.from(files).slice(0, remainingSlots);
 
-    if (filesToAdd.length > 4) {
-      setErrors(prev => ({ ...prev, images: '최대 4장까지만 업로드 가능합니다.' }));
+    // 이미지 파일 타입 체크
+    const invalidFiles = filesToAdd.filter(file => !ALLOWED_IMAGE_TYPES.includes(file.type));
+    if (invalidFiles.length > 0) {
+      setErrors(prev => ({ ...prev, images: '이미지 파일만 업로드 가능합니다.' }));
       return;
     }
 
     // 파일 크기 체크 (5MB)
     const oversizedFiles = filesToAdd.filter(file => file.size > 5 * 1024 * 1024);
     if (oversizedFiles.length > 0) {
-      setErrors({ images: '파일 크기는 5MB 이하여야 합니다.' });
+      setErrors(prev => ({ ...prev, images: '파일 크기는 5MB 이하여야 합니다.' }));
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       return;
     }
 
-    // 이미지 파일 타입 체크
-    const invalidFiles = filesToAdd.filter(file => !file.type.startsWith('image/'));
-    if (invalidFiles.length > 0) {
-      setErrors(prev => ({ ...prev, images: '이미지 파일만 업로드 가능합니다.' }));
-      return;
-    }
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.images;
+      return newErrors;
+    });
 
     // 미리보기 생성
     filesToAdd.forEach(file => {
@@ -320,6 +348,11 @@ const ProductPost = () => {
   const handleRemoveImage = (index: number) => {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors.images;
+      return newErrors;
+    });
   };
 
   // 이미지 순서 변경 (드래그 앤 드롭 대신 간단한 버튼으로 구현)
@@ -423,10 +456,9 @@ const ProductPost = () => {
                 id={`tab-${tab.id}`}
                 aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full px-md py-sm rounded-3xl  
-                     ${
-                       activeTab === tab.id ? 'border-dark' : 'border-transparent'
-                     } bodySmall text-text-primary text-center transition hover:bg-dark`}
+                className={`w-full px-md py-sm rounded-3xl ${
+                  activeTab === tab.id ? 'border-dark' : 'border-transparent'
+                } bodySmall text-text-primary text-center transition hover:bg-dark`}
               >
                 {tab.label}
               </button>
@@ -442,12 +474,14 @@ const ProductPost = () => {
               className="flex-1 outline-none"
             >
               <form className="flex flex-col gap-xl" onSubmit={handleSubmit}>
+                {/* 기본정보 */}
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <div className="flex flex-col items-start gap-xs">
                     <h4>기본 정보</h4>
                     <p>상품의 기본 정보를 입력해주세요. *는 필수 항목입니다.</p>
                   </div>
                   <div className="flex flex-col">
+                    {/* 반려동물 종류 */}
                     <div className="flex flex-col gap-xs">
                       <div className="flex flex-col gap-xs">
                         <div className="flex flex-col gap-sm">
@@ -549,6 +583,7 @@ const ProductPost = () => {
                       </div>
                     </div>
 
+                    {/* 상품 카테고리 */}
                     <div className="flex flex-col gap-xs">
                       <div className="flex flex-col gap-sm">
                         <label className="flex items-center gap-2 text-sm">상품 카테고리 *</label>
@@ -556,7 +591,9 @@ const ProductPost = () => {
                           <button
                             type="button"
                             role="combobox"
-                            onClick={() => setShowCategorySelect(!showCategorySelect)}
+                            onClick={() => {
+                              setShowCategorySelect(prev => !prev);
+                            }}
                             className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
                           >
                             <span className="w-full text-left">
@@ -598,6 +635,7 @@ const ProductPost = () => {
                       {errors.category && <p className="text-xs text-red-600">{errors.category}</p>}
                     </div>
 
+                    {/* 상품명 */}
                     <div className="flex flex-col gap-xs">
                       <div className="flex flex-col gap-sm">
                         <label className="flex items-center gap-2 text-sm" htmlFor="title">
@@ -621,6 +659,7 @@ const ProductPost = () => {
                       )}
                     </div>
 
+                    {/* 상품 설명 */}
                     <div className="flex flex-col gap-xs">
                       <div className="flex flex-col gap-sm">
                         <label className="flex items-center gap-2 text-sm " htmlFor="description">
@@ -648,6 +687,7 @@ const ProductPost = () => {
                   </div>
                 </div>
 
+                {/* 가격 및 상태 */}
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <h4>가격 및 상태</h4>
                   <div className="flex flex-col gap-xl">
@@ -714,6 +754,7 @@ const ProductPost = () => {
                   </div>
                 </div>
 
+                {/* 상품 이미지 */}
                 <div className="flex flex-col gap-6 rounded-xl border border-border p-xl shadow-xl">
                   <h4>상품 이미지 *</h4>
                   <div className="flex flex-col gap-xs">
@@ -745,11 +786,11 @@ const ProductPost = () => {
                             PNG, JPG, GIF 파일 (각 파일 최대 5MB)
                           </p>
                           <p className="text-xs text-blue-600 mt-2">
-                            {4 - imageFiles.length}장 더 업로드 가능
+                            {Math.max(0, 4 - imageFiles.length)}장 더 업로드 가능
                           </p>
                         </label>
                         {/* 이미지 미리보기 영역 */}
-                        {imagePreviews.length < 5 && (
+                        {imagePreviews.length > 0 && (
                           <div className="flex gap-4">
                             {imagePreviews.map((preview, index) => (
                               <div key={index} className="relative group w-[7vw]">
