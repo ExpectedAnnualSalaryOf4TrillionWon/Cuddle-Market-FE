@@ -1,22 +1,33 @@
 import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useRef, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
+import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
 import UserDropdown from './UserDropDown';
+import AlarmDropdown from './AlarmDropDown';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const alarmRef = useRef<HTMLDivElement>(null);
+  const userRef = useRef<HTMLDivElement>(null);
 
   {
     /* 드롭다운 메뉴 밖에서 마우스 클릭시 드롭다운 비활성화 */
+    /* 알람 드롭다운 메뉴의 더보기버튼 활성화를 위해 ref 중복문제 해결 필요*/
   }
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+      if (
+        alarmRef.current &&
+        !alarmRef.current.contains(event.target as Node) &&
+        userRef.current &&
+        !userRef.current.contains(event.target as Node)
+      ) {
+        setIsAlarmDropdownOpen(false);
+        setIsUserDropdownOpen(false);
       }
     };
 
@@ -32,7 +43,11 @@ const Header = () => {
         <div className="flex items-center justify-between gap-lg">
           {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}
           <Link to="/" className="flex items-center">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
+            <img
+              src={logoImage}
+              alt="커들마켓"
+              className="w-auto h-15 tablet:h-22 object-contain"
+            />
           </Link>
 
           {/* 검색 영역 */}
@@ -63,26 +78,44 @@ const Header = () => {
                   text-text-primary
                 "
               >
-                <IoIosSearch />
+                <IoIosSearch className="text-xl tablet:text-2xl" />
               </button>
             </div>
           </div>
+          <div className="flex gap-md tablet:gap-xl relative">
+            {/* 알람 드롭다운 호출 */}
+            <div className="flex itmes-center" ref={alarmRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAlarmDropdownOpen(prev => !prev);
+                  setIsUserDropdownOpen(false);
+                }}
+              >
+                <HiOutlineBellAlert className="text-3xl tablet:text-4xl" />
+              </button>
 
-          {/* 유저 드롭다운 호출 */}
-          <div className="relative flex items-center" ref={dropdownRef}>
-            <button
-              type="button"
-              className="items-center justify-center gap-sm
-                h-9 
-                transition-all"
-              onClick={() => setIsDropdownOpen(prev => !prev)}
-            >
-              <RxAvatar size={40} />
-            </button>
+              {isAlarmDropdownOpen && (
+                <AlarmDropdown isOpen={isAlarmDropdownOpen} setIsOpen={setIsAlarmDropdownOpen} />
+              )}
+            </div>
 
-            {isDropdownOpen && (
-              <UserDropdown isOpen={isDropdownOpen} setIsOpen={setIsDropdownOpen} />
-            )}
+            {/* 유저 드롭다운 호출 */}
+            <div className="flex items-center" ref={userRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsUserDropdownOpen(prev => !prev);
+                  setIsAlarmDropdownOpen(false);
+                }}
+              >
+                <RxAvatar className="text-3xl tablet:text-4xl" />
+              </button>
+
+              {isUserDropdownOpen && (
+                <UserDropdown isOpen={isUserDropdownOpen} setIsOpen={setIsUserDropdownOpen} />
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ export default defineConfig({
       { find: '@common', replacement: '/src/components/common' },
       { find: '@images', replacement: '/public/assets/images' },
       { find: '@store', replacement: '/src/store' },
+      { find: '@routes', replacement: '/src/routes' },
     ],
   },
 });
