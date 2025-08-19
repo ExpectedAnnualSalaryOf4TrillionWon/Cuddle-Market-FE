@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -111,12 +113,13 @@ const MyPage: React.FC = () => {
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90
                     text-bg text-sm font-medium
-                    transition-all">
+                    transition-all"
+                >
                   내 정보 수정
                 </Link>
               </div>
             </div>
-            
+
             {/* 회원탈퇴 버튼을 div에서 button으로 변경하고 핸들러 연결 */}
             <div className="mt-6 text-xs text-red-500 cursor-pointer hover:underline self-start">
               <button onClick={handleExit}>회원탈퇴</button>
@@ -170,11 +173,7 @@ const MyPage: React.FC = () => {
               {/* 탭 목록 */}
               <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
                 {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
-                <MyList 
-                  activeTab={activeTab} 
-                  onCountsUpdate={setCounts}
-                  onDelete={handleDelete}
-                />
+                <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
 
                 {/* 목록이 있을 때만 더보기 버튼 표시 */}
                 {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (
