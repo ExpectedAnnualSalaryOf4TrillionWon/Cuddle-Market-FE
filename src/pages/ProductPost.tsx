@@ -202,14 +202,17 @@ const ProductPost = () => {
       newErrors.location = '거래 희망 지역을 선택해주세요.';
     }
 
+    // 이미지 필수 검증 추가 : qa
+    if (imageFiles.length === 0) {
+      newErrors.images = '상품 이미지를 최소 1장 이상 등록해주세요.';
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       // 첫 번째 에러가 있는 위치로 스크롤
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    setErrors({});
-    setIsSubmitting(true);
     try {
       const productData: CreateProductRequest = {
         title: productName,
@@ -274,11 +277,11 @@ const ProductPost = () => {
     const files = e.target.files;
     if (!files) return;
 
-    const remainingSlots = 4 - imageFiles.length;
+    const remainingSlots = 5 - imageFiles.length;
     const filesToAdd = Array.from(files).slice(0, remainingSlots);
 
-    if (filesToAdd.length === 0) {
-      setErrors({ images: '최대 4장까지만 업로드 가능합니다.' });
+    if (filesToAdd.length > 4) {
+      setErrors(prev => ({ ...prev, images: '최대 4장까지만 업로드 가능합니다.' }));
       return;
     }
 
@@ -292,12 +295,8 @@ const ProductPost = () => {
     // 이미지 파일 타입 체크
     const invalidFiles = filesToAdd.filter(file => !file.type.startsWith('image/'));
     if (invalidFiles.length > 0) {
-      setErrors({ images: '이미지 파일만 업로드 가능합니다.' });
+      setErrors(prev => ({ ...prev, images: '이미지 파일만 업로드 가능합니다.' }));
       return;
-    }
-
-    if (errors.images) {
-      setErrors(prev => ({ ...prev, images: '이미지를 등록해주세요' }));
     }
 
     // 미리보기 생성
@@ -725,83 +724,84 @@ const ProductPost = () => {
                           4장)
                         </p>
                       </div>
-                      {imageFiles.length < 4 && (
-                        <div className="flex flex-col gap-5">
-                          <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            className="hidden"
-                            id="product-post-image"
-                            onChange={handleImageChange}
-                          />
-                          <label
-                            htmlFor="product-post-image"
-                            className="flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30"
-                          >
-                            <PiUploadSimpleLight size={40} className="pb-md" />
-                            <p className="text-sm text-gray-600">클릭해서 업로드</p>
-                            <p className="text-xs text-gray-500">
-                              PNG, JPG, GIF 파일 (각 파일 최대 5MB)
-                            </p>
-                            <p className="text-xs text-blue-600 mt-2">
-                              {4 - imageFiles.length}장 더 업로드 가능
-                            </p>
-                          </label>
-                          {/* 이미지 미리보기 영역 */}
-                          {imagePreviews.length > 0 && (
-                            <div className="flex gap-4">
-                              {imagePreviews.map((preview, index) => (
-                                <div key={index} className="relative group w-[7vw]">
-                                  <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-gray-200 pb-[100%] relative w-full h-full">
-                                    <img
-                                      src={preview}
-                                      alt={`상품 이미지 ${index + 1}`}
-                                      className="w-full h-full object-cover absolute t-0 l-0"
-                                    />
-                                    {index === 0 && (
-                                      <div className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs rounded">
-                                        대표 이미지
-                                      </div>
-                                    )}
-                                  </div>
-                                  {/* 순서 변경 및 삭제 버튼 */}
-                                  <div className="absolute top-2 right-2 flex gap-1">
-                                    {index > 0 && (
-                                      <button
-                                        type="button"
-                                        onClick={() => moveImage(index, index - 1)}
-                                        className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
-                                        title="앞으로 이동"
-                                      >
-                                        <IoIosArrowBack />
-                                      </button>
-                                    )}
-                                    {index < imagePreviews.length - 1 && (
-                                      <button
-                                        type="button"
-                                        onClick={() => moveImage(index, index + 1)}
-                                        className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
-                                        title="뒤로 이동"
-                                      >
-                                        <IoIosArrowForward />
-                                      </button>
-                                    )}
+                      {/* {imageFiles.length < 5 && ( */}
+                      <div className="flex flex-col gap-5">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="hidden"
+                          id="product-post-image"
+                          onChange={handleImageChange}
+                        />
+                        <label
+                          htmlFor="product-post-image"
+                          className="flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30"
+                        >
+                          <PiUploadSimpleLight size={40} className="pb-md" />
+                          <p className="text-sm text-gray-600">클릭해서 업로드</p>
+                          <p className="text-xs text-gray-500">
+                            PNG, JPG, GIF 파일 (각 파일 최대 5MB)
+                          </p>
+                          <p className="text-xs text-blue-600 mt-2">
+                            {4 - imageFiles.length}장 더 업로드 가능
+                          </p>
+                        </label>
+                        {/* 이미지 미리보기 영역 */}
+                        {imagePreviews.length < 5 && (
+                          <div className="flex gap-4">
+                            {imagePreviews.map((preview, index) => (
+                              <div key={index} className="relative group w-[7vw]">
+                                <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-gray-200 pb-[100%] relative w-full h-full">
+                                  <img
+                                    src={preview}
+                                    alt={`상품 이미지 ${index + 1}`}
+                                    className="w-full h-full object-cover absolute t-0 l-0"
+                                  />
+                                  {index === 0 && (
+                                    <div className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs rounded">
+                                      대표 이미지
+                                    </div>
+                                  )}
+                                </div>
+                                {/* 순서 변경 및 삭제 버튼 */}
+                                <div className="absolute top-2 right-2 flex gap-1">
+                                  {index > 0 && (
                                     <button
                                       type="button"
-                                      onClick={() => handleRemoveImage(index)}
-                                      title="삭제"
+                                      onClick={() => moveImage(index, index - 1)}
+                                      className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                                      title="앞으로 이동"
                                     >
-                                      <IoCloseCircle size={25} color="white" />
+                                      <IoIosArrowBack />
                                     </button>
-                                  </div>
+                                  )}
+                                  {index < imagePreviews.length - 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => moveImage(index, index + 1)}
+                                      className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
+                                      title="뒤로 이동"
+                                    >
+                                      <IoIosArrowForward />
+                                    </button>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveImage(index)}
+                                    title="삭제"
+                                  >
+                                    <IoCloseCircle size={25} color="white" />
+                                  </button>
                                 </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* )} */}
+                      {errors.images && <p className="text-xs text-red-600">{errors.images}</p>}
                     </div>
                   </div>
                 </div>
