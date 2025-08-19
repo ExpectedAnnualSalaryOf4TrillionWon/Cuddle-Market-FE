@@ -10,6 +10,7 @@ type TabId = 'products' | 'wishlist';
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
+  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
 }
 
 const getProductState = (status: string): ProductState => {
@@ -120,7 +121,7 @@ const getProductState = (status: string): ProductState => {
 //   },
 // ];
 
-const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
+const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -219,7 +220,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
           <button
             onClick={e => {
               e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-              handleDelete(product.id);
+              onDelete(product.id);
             }}
             className={`${
               activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'

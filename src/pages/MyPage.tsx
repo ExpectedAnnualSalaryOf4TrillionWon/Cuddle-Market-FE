@@ -180,7 +180,7 @@ const MyPage: React.FC = () => {
               {/* 탭 목록 */}
               <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
                 {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
-                <MyList activeTab={activeTab} onCountsUpdate={setCounts} />
+                <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
 
                 {/* 목록이 있을 때만 더보기 버튼 표시 */}
                 {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (
