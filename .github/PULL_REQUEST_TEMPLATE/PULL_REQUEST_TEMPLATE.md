@@ -7,7 +7,7 @@
 
 ### 반영 브랜치
 
-ex) feature/... -> develop
+feature/... -> develop
 
 ### 변경 사항
 
