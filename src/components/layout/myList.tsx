@@ -10,7 +10,6 @@ type TabId = 'products' | 'wishlist';
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
-  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
 }
 
 const getProductState = (status: string): ProductState => {
@@ -121,7 +120,7 @@ const getProductState = (status: string): ProductState => {
 //   },
 // ];
 
-const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
+const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -218,7 +217,6 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
           )}
 
           <button
-
             onClick={e => {
               e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
               handleDelete(product.id);
@@ -226,7 +224,6 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
             className={`${
               activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
             }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
-
           >
             삭제
           </button>
@@ -234,7 +231,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
       </div>
     );
   };
-  
+
   const renderList = () => {
     switch (activeTab) {
       case 'products':
