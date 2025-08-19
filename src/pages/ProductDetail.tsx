@@ -7,7 +7,22 @@ import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
+import { useLike } from '../components/hook/useLike';
+import { ProductState, stateLabelMap, stateStyleMap } from '../constants/constants';
+
 import type { ProductDetailItem } from '../types';
+const getProductState = (status: string): ProductState => {
+  switch (status) {
+    case '판매중':
+      return 'selling';
+    case '예약중':
+      return 'reserved';
+    case '판매완료':
+      return 'sold';
+    default:
+      return 'selling';
+  }
+};
 
 const ProductDetail = () => {
   const [product, setProduct] = useState<ProductDetailItem | null>(null);
@@ -16,6 +31,9 @@ const ProductDetail = () => {
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
+  const { isProductLiked, toggleLike } = useLike();
+  const isLiked = product ? isProductLiked(product.id) : false;
 
   const formatPrice = (price: number): string => {
     return `${price.toLocaleString()}원`;
@@ -87,7 +105,7 @@ const ProductDetail = () => {
       navigate(`/user/${sellerId}`);
     }
   };
-
+  // const state = getProductState(product.transaction_status);
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -109,7 +127,7 @@ const ProductDetail = () => {
     );
   }
 
-  // const tradeStatusInfo = getTradeStatusInfo(product.transaction_status);
+  const state = getProductState(product.transaction_status);
 
   return (
     <div className="bg-bg">
@@ -179,8 +197,13 @@ const ProductDetail = () => {
             <div className="flex flex-col gap-lg">
               {/* 카테고리/상태 뱃지 */}
               <div className="flex items-center gap-xs">
-                <span className={`inline-flex items-center text-md px-md py-xs rounded-xl border`}>
-                  {product.transaction_status}
+                <span
+                  className={`inline-flex items-center text-md px-md py-xs rounded-xl border
+                    ${stateStyleMap[state]}
+                    text-bg
+                `}
+                >
+                  {stateLabelMap[state]}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
                   {product.pet_type_detail_code}
@@ -218,7 +241,6 @@ const ProductDetail = () => {
                   </div>
 
                   <div className="flex items-center gap-1">
-                    <GoHeart />
                     <span>찜 {product.like_count}</span>
                   </div>
                 </div>
@@ -260,9 +282,15 @@ const ProductDetail = () => {
                   text-text-primary
                   transition-colors
                 "
+                onClick={() => {
+                  if (product) {
+                    console.log('상세페이지 찜하기 클릭, productId:', product.id);
+                    toggleLike(product.id);
+                  }
+                }}
               >
-                <FaHeart size={16} className="text-alert" />
-                <span>찜하기</span>
+                {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />}
+                <span>{isLiked ? '찜 취소' : '찜하기'}</span>
               </button>
             </div>
           </div>
@@ -276,7 +304,12 @@ const ProductDetail = () => {
             </h2>
             <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
               {product.seller_products?.map(sellerProducts => (
-                <ProductCard key={sellerProducts.id} product={sellerProducts} />
+                <ProductCard
+                  key={sellerProducts.id}
+                  product={sellerProducts}
+                  isLiked={isProductLiked(product.id)}
+                  onToggleLike={() => toggleLike(product.id)}
+                />
               ))}
             </div>
           </div>
