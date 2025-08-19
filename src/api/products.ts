@@ -90,7 +90,6 @@ export const fetchMyPageData = async (): Promise<MyPageData> => {
   return response.json();
 };
 
-
 // 상품 등록
 export const createProduct = async (
   productData: CreateProductRequest,
@@ -175,7 +174,7 @@ export const updateProduct = async (
   }
 
   return response.json();
-
+};
 export const fetchMyLikes = async (): Promise<LikesResponse> => {
   const response = await fetch(`${API_BASE_URL}/likes`);
   if (!response.ok) {
@@ -197,5 +196,4 @@ export const addLike = async (productId: number): Promise<void> => {
 export const removeLike = async (productId: number): Promise<void> => {
   const res = await fetch(`${API_BASE_URL}/likes/${productId}`, { method: 'DELETE' });
   if (!res.ok) throw new Error('찜 취소 실패');
-
 };
