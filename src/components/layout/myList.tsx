@@ -10,7 +10,21 @@ type TabId = 'products' | 'wishlist';
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
+  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
 }
+
+const getProductState = (status: string): ProductState => {
+  switch (status) {
+    case '판매중':
+      return 'selling';
+    case '예약중':
+      return 'reserved';
+    case '판매완료':
+      return 'sold';
+    default:
+      return 'selling';
+  }
+};
 
 // interface Product {
 //   id: number;
@@ -107,20 +121,7 @@ interface MyListProps {
 //   },
 // ];
 
-const getProductState = (status: string): ProductState => {
-  switch (status) {
-    case '판매중':
-      return 'selling';
-    case '예약중':
-      return 'reserved';
-    case '판매완료':
-      return 'sold';
-    default:
-      return 'selling';
-  }
-};
-
-const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
+const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,6 +159,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
   useEffect(() => {
     loadUserInfo();
   }, []);
+
   useEffect(() => {
     if (onCountsUpdate && !loading) {
       onCountsUpdate({
@@ -216,6 +218,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
           )}
 
           <button
+
             onClick={e => {
               e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
               handleDelete(product.id);
@@ -223,6 +226,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
             className={`${
               activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
             }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+
           >
             삭제
           </button>
@@ -230,6 +234,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate }) => {
       </div>
     );
   };
+  
   const renderList = () => {
     switch (activeTab) {
       case 'products':

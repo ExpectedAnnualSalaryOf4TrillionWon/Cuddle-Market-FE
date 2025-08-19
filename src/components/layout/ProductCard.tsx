@@ -1,5 +1,6 @@
 import React from 'react';
 import { CiClock2 } from 'react-icons/ci';
+import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
@@ -7,13 +8,20 @@ import type { Product, UserProduct } from '../../types';
 export type ProductCardProps = {
   product: Product | UserProduct;
   'data-index'?: number;
+  isLiked: boolean;
+  onToggleLike: () => void;
 };
 
 const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIndex }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  'data-index': dataIndex,
+  isLiked,
+  onToggleLike,
+}) => {
   if (!product) {
     return null; // 또는 로딩 상태 표시
   }
@@ -94,12 +102,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, 'data-index': dataIn
             cursor-pointer
           "
           onClick={e => {
+            console.log('하트 버튼 클릭됨');
             e.stopPropagation();
             // TODO: 찜 상태 토글 핸들러 연결
+            onToggleLike();
           }}
           aria-label="찜하기"
         >
-          <IoIosHeartEmpty />
+          {isLiked ? <FaHeart color="red" /> : <IoIosHeartEmpty />}
         </button>
         {/* 상단 좌측 배지 */}
         <div className="absolute top-sm left-sm flex gap-xs z-1">

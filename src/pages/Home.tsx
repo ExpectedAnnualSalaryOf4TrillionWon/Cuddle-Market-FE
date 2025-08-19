@@ -2,13 +2,19 @@ import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
 import { useEffect, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
+import { useLike } from '../components/hook/useLike';
 import type { Product } from '../types'; // 타입 변경
-
 const Home = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [visibleItems, setVisibleItems] = useState(12);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  /**
+   * 하트 번호 클릭 -> toggleLike 함수 실행(useLike 안의 toggleLike) ->
+   * toggleLike 함수 안의 addLike 함수 실행 -> 핸들러 안의 http.post('/api/likes') 실행
+   */
+  const { isProductLiked, toggleLike } = useLike();
 
   const loadProducts = async () => {
     try {
@@ -57,11 +63,13 @@ const Home = () => {
     loadProducts();
   }, []);
 
+
   console.log(allProducts);
 
   // const handlePetTypeChange = (petTypeCode: string) => {
   //   setSelectedPetType(petTypeCode);
   // };
+
   if (loading) {
     return (
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
@@ -99,7 +107,13 @@ const Home = () => {
 
         <ul className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-4 gap-md tablet:gap-lg desktop:gap-xl">
           {visibleProducts.map((product, index) => (
-            <ProductCard key={product.id} data-index={index} product={product} />
+            <ProductCard
+              key={product.id}
+              data-index={index}
+              product={product}
+              isLiked={isProductLiked(product.id)}
+              onToggleLike={() => toggleLike(product.id)}
+            />
           ))}
         </ul>
       </div>
