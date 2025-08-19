@@ -1,4 +1,11 @@
-import type { MyPageData, Product, ProductDetailItem, User, UserWithProducts } from '../types';
+import type {
+  LikesResponse,
+  MyPageData,
+  Product,
+  ProductDetailItem,
+  User,
+  UserWithProducts,
+} from '../types';
 const API_BASE_URL = '/api';
 
 export const fetchAllProducts = async (filters?: {
@@ -79,4 +86,27 @@ export const fetchMyPageData = async (): Promise<MyPageData> => {
     throw new Error('마이페이지 데이터를 불러오는데 실패했습니다.');
   }
   return response.json();
+};
+
+export const fetchMyLikes = async (): Promise<LikesResponse> => {
+  const response = await fetch(`${API_BASE_URL}/likes`);
+  if (!response.ok) {
+    throw new Error('마이페이지 데이터를 불러오는데 실패했습니다.');
+  }
+  return response.json();
+};
+
+export const addLike = async (productId: number): Promise<void> => {
+  console.log('addLike 호출, productId:', productId);
+  const res = await fetch(`${API_BASE_URL}/likes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ product_id: productId }),
+  });
+  if (!res.ok) throw new Error('찜 추가 실패');
+};
+
+export const removeLike = async (productId: number): Promise<void> => {
+  const res = await fetch(`${API_BASE_URL}/likes/${productId}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('찜 취소 실패');
 };
