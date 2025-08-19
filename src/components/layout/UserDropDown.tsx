@@ -22,11 +22,17 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
   // isLoggedIn,
   // setIsLoggedIn,
 }) => {
+  const navigate = useNavigate();
   const { isLoggedIn, login, logout } = useAuthStore();
+  const confirm = useModalStore(state => state.confirm);
+  //react 훅의 사용규칙 중에는 훅의 호출이 반드시 컴포넌트 상단에 위치하여야 한다(런타임 에러의 원인이 될 수 있다)라는 룰이 있고 이를 ESlint가 지적하여 코드상에 경고가 발생함.
+  // 때문에 상단으로 이동하는 것을 수정.
+  // 오히려 eslint가 제대로 작동하면서 나온 안내성 경고였음.
+
   // 전역상태관리로 바꾼 로그인여부 호출, 기존 로그인상태관리 주석처리.
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
-  const navigate = useNavigate();
+
   const goToSignIn = () => {
     navigate('/signin');
   };
@@ -34,7 +40,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
     navigate('/mypage');
   };
   // 로그아웃 확인 모달 설정
-  const confirm = useModalStore(state => state.confirm);
+
   const handleLogout = async () => {
     const result = await confirm('로그아웃 하시겠습니까?');
     if (result === true) {
