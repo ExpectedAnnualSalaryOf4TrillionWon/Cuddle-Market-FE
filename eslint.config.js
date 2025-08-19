@@ -4,6 +4,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import { globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -14,9 +15,11 @@ export default tseslint.config([
       tseslint.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
-      'prettier',
+      // 'prettier',
+      // TypeScript ESLint에서 지원하지 않는 방식이라며 OUTPUT에서 에러 발생.
     ],
-    plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
+    // reactHooks도 중복선언으로 인한 에러 발생으로 삭제
+    // reactRefresh도 중복이라 삭제. extends와 plugin은 중복되면 안된다.
     languageOptions: {
       ecmaVersion: 'latest',
       globals: globals.browser,
@@ -29,7 +32,9 @@ export default tseslint.config([
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
+      // 여기도 중복이라 불필요하여 삭제.
+      // rules 항목은 중복으로 에러가 발생하진 않으나 덮어씌워진다고 함.
+      // 덮어씌움이 필요한 속성들은 유지.
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',
@@ -38,4 +43,5 @@ export default tseslint.config([
       ],
     },
   },
+  prettier,
 ]);

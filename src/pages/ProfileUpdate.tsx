@@ -7,13 +7,8 @@ interface ProfileUpdateProps {
   state?: string;
   city?: string;
 }
-const ProfileUpdate: React.FC<ProfileUpdateProps> = ({
-  nickname,
 
-  state,
-  city,
-  profile_image,
-}) => {
+const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ nickname, state, city, profile_image }) => {
   const [formData, setFormData] = useState({
     nickname,
     state,
@@ -31,13 +26,13 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({
     // TODO: API 호출 로직
     alert('프로필 수정 완료');
   };
+
   return (
     <>
       {/* 헤더영역 => 컴포넌트화 */}
-      <SimpleHeader title={'프로필 수정'} />
-      <div className="">
-        <h2 className="text-xl font-bold mb-4">내 정보 수정</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <SimpleHeader title={'내 정보 수정'} />
+      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-3xl flex justify-center  bg-bg">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-lg m-xs text-heading5">
           {/* 닉네임 */}
           <label>
             닉네임
@@ -84,10 +79,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({
             />
           </label>
 
-          <button
-            type="submit"
-            className="bg-primary text-white py-2 px-4 rounded hover:bg-primary/90"
-          >
+          <button type="submit" className="bg-primary text-white py-md px-lg rounded hover:bg-dark">
             저장
           </button>
         </form>

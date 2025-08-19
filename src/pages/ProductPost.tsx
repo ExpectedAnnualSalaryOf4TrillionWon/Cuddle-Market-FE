@@ -1,9 +1,7 @@
-import logoImage from '@images/CuddleMarketLogo.png';
 import { SimpleHeader } from '@layout/SimpleHeader';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { PiUploadSimpleLight } from 'react-icons/pi';
-import { Link } from 'react-router-dom';
 
 const PETS = {
   포유류: ['강아지', '고양이', '토끼', '햄스터', '기니피그', '페럿', '친칠라', '고슴도치'],

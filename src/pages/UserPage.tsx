@@ -1,9 +1,8 @@
-import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { GrView } from 'react-icons/gr';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import type { UserWithProducts } from 'src/types';
 import { fetchSellerById } from '../api/products';
 import { SimpleHeader } from '@layout/SimpleHeader';

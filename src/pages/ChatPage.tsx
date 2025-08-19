@@ -1,4 +1,3 @@
-import logoImage from '@images/CuddleMarketLogo.png';
 import { SimpleHeader } from '@layout/SimpleHeader';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
