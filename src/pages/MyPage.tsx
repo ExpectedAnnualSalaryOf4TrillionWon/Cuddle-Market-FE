@@ -39,7 +39,7 @@ const MyPage: React.FC = () => {
 
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = async (itemId?: number): Promise<void> => {
-    const result = await deleteConfirm('게시물을 삭제하시겠습니까?');
+    const result = await deleteConfirm('삭제하시겠습니까?');
     if (result === true) {
       // TODO: 상품삭제 로직 구현
       console.log(`게시물 ${itemId} 삭제 진행`);

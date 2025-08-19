@@ -150,12 +150,6 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
     navigate(`/products/${productId}/edit`);
   };
 
-  const handleDelete = async (productId: number) => {
-    if (confirm('삭제하시겠습니까?')) {
-      // 삭제 로직 구현 (추후 API 연동)
-      console.log('삭제:', productId);
-    }
-  };
   useEffect(() => {
     loadUserInfo();
   }, []);
