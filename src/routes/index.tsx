@@ -1,6 +1,5 @@
 import Header from '@layout/Header';
 import AlarmPage from '@pages/AlarmPage';
-import ChatPage from '@pages/ChatPage';
 import Home from '@pages/Home';
 
 import KakaoCallback from '@pages/KakaoCallback';
@@ -47,14 +46,12 @@ const AppRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/user/:id" element={<UserPage />} />
-        <Route path="/chat" element={<ChatPage />} />
         <Route path="/alarm" element={<AlarmPage />} />
         <Route path="/product-post" element={<ProductPost />} />
 
         <Route path="/profile-update" element={<ProfileUpdate />} />
 
         <Route path="/products/:id/edit" element={<ProductPost />} />
-
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
