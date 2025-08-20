@@ -1,5 +1,5 @@
-import Footer from '@layout/Footer';
 import Header from '@layout/Header';
+import AlarmPage from '@pages/AlarmPage';
 import ChatPage from '@pages/ChatPage';
 import Home from '@pages/Home';
 
@@ -18,7 +18,6 @@ const WithHeaderLayout = () => (
   <div className="min-h-screen bg-gray-50">
     <Header />
     <Outlet />
-    <Footer />
   </div>
 );
 
@@ -29,7 +28,6 @@ const NoHeaderLayout = () => {
   return (
     <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : 'bg-gray-50'}`}>
       <Outlet />
-      <Footer />
     </div>
   );
 };
@@ -50,6 +48,7 @@ const AppRoutes = () => {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/user/:id" element={<UserPage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/alarm" element={<AlarmPage />} />
         <Route path="/product-post" element={<ProductPost />} />
         <Route path="/profile-update" element={<ProfileUpdate />} />
       </Route>
