@@ -4,6 +4,7 @@ import { CITIES, PROVINCES } from '@constants/Cities';
 import type { Province } from '@constants/Cities';
 import { CiLocationOn } from 'react-icons/ci';
 import UserDefaultImage from '@images/userDefault.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileUpdateProps {
   profile_image_url?: string;
@@ -14,6 +15,11 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showCitySelect, setShowCitySelect] = useState(false);
+  const navigate = useNavigate();
+
+  const goToMyPage = () => {
+    navigate('/mypage');
+  };
 
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
 
@@ -53,7 +59,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   };
 
   const handleSave = () => {
-    // TODO: 저장 API 호출
+    // TODO: 저장 API 호출 후 handlechange 삭제.
     handleChange;
     setEditField(null); // 변동사항 적용 후 편집 종료
   };
@@ -202,7 +208,14 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </div>
             )}
           </div>
-          <button type="submit" className="bg-primary hover:bg-dark">
+          <button
+            type="submit"
+            className="bg-primary hover:bg-dark"
+            onClick={() => {
+              alert('저장 완료 후 마이페이지로 이동');
+              goToMyPage();
+            }}
+          >
             저장하기
           </button>
         </div>
