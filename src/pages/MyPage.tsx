@@ -1,4 +1,4 @@
-import logoImage from '@images/CuddleMarketLogo.png';
+
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { useModalStore } from '@store/modalStore';
@@ -7,6 +7,7 @@ import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
+import { SimpleHeader } from '@layout/SimpleHeader';
 
 const TABS = [
   { id: 'products', label: '내 상품' },
@@ -73,15 +74,10 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-      {/* 헤더영역 */}
-      <header className="sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          <Link to="/">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </Link>
-          <h2 className="text-xl font-bold">마이 페이지</h2>
-        </div>
-      </header>
+
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'마이 페이지'} />
+
 
       <div className="px-lg py-3xl bg-bg">
         <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">
@@ -113,17 +109,17 @@ const MyPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col gap-sm">
-                <button
+                <Link
+                  to="/profile-update"
                   className="
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90
                     text-bg text-sm font-medium
-                    transition-all
-                  "
+                    transition-all"
                 >
-                  <span>내 정보 수정</span>
-                </button>
+                  내 정보 수정
+                </Link>
               </div>
             </div>
 

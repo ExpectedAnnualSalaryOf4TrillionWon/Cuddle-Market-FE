@@ -10,14 +10,25 @@ import { useNavigate } from 'react-router-dom';
 /* 유저 드롭다운 기능*/
 /* 타입은 리액트 함수형 컴포넌트(React.FC)이고, 위에 상태관리 타입설정도 props로 전달한다.*/
 const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
+  const navigate = useNavigate();
   const { isLoggedIn, login, logout } = useAuthStore();
-  // 전역상태관리로 바꾼 로그인여부 호출, 기존 로그인상태관리 props 삭제.
+  const logoutconfirm = useModalStore(state => state.confirm);
+  //react 훅의 사용규칙 중에는 훅의 호출이 반드시 컴포넌트 상단에 위치하여야 한다(런타임 에러의 원인이 될 수 있다)라는 룰이 있고 이를 ESlint가 지적하여 코드상에 경고가 발생함.
+  // 때문에 상단으로 이동하는 것을 수정.
+  // 오히려 eslint가 제대로 작동하면서 나온 안내성 경고였음.
+
+  // 전역상태관리로 바꾼 로그인여부 호출, 기존 로그인상태관리 주석처리.
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
-  // navigate 관련 함수도 한 파일에 정렬하여 호출하기 위해 routes 폴더로 이동.
 
-  // 로그아웃 확인 모달 설정 => 재사용성 향상을 위해 전역상태를 활용한 함수선언도 modalStore.ts로 이동. => 리액트 Hook 사용 규칙(hook의 호출 시점은 컴포넌트 내부여야 한다.)에 위배되어 오류발생으로 대대적인 수정이 필요하다 하여 기존 상태로 복구.
-  const logoutconfirm = useModalStore(state => state.confirm);
+  const goToSignIn = () => {
+    navigate('/signin');
+  };
+  const goToMyPage = () => {
+    navigate('/mypage');
+  };
+  // 로그아웃 확인 모달 설정
+
   const handleLogout = async () => {
     const result = await logoutconfirm('로그아웃 하시겠습니까?');
     if (result === true) {
@@ -26,14 +37,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
       return;
     }
   };
-  const navigate = useNavigate();
 
-  const goToSignIn = () => {
-    navigate('/signin');
-  };
-  const goToMyPage = () => {
-    navigate('/mypage');
-  };
   return (
     <div className="absolute right-2 top-full bg-point rounded-xl z-50 opacity-65 flex flex-col whitespace-nowrap min-w-[5rem]">
       {!isLoggedIn /*로그인이 안 되어있을 경우*/ ? (

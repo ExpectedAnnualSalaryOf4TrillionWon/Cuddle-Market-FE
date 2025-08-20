@@ -1,10 +1,10 @@
-import logoImage from '@images/CuddleMarketLogo.png';
+import { SimpleHeader } from '@layout/SimpleHeader';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoCloseCircle } from 'react-icons/io5';
 import { PiUploadSimpleLight } from 'react-icons/pi';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { CreateProductRequest, FormErrors } from 'src/types';
 import { createProduct, fetchProductById, updateProduct } from '../api/products';
 import {
@@ -263,31 +263,6 @@ const ProductPost = () => {
     }
   };
 
-  // 상품 수정
-  const loadProductData = async () => {
-    if (!id) return;
-
-    try {
-      const product = await fetchProductById(id);
-
-      // 폼 필드에 데이터 설정
-      setProductName(product.title);
-      setDescription(product.description || '');
-      setPrice(product.price);
-      setSelectedPetCategory(product.pet_type_code as PetCategory);
-      setSelectedPetType(product.pet_type_detail_code);
-      setPetCate(product.category_code || '');
-      setSelectedCondition(product.condition_status as ConditionValue);
-      setSelectedProvince(product.state_code as Province);
-      setSelectedCity(product.city_code || '');
-    } catch (error) {
-      console.error('상품 정보 로드 실패:', error);
-      setErrors({
-        general: '상품 정보를 불러오는데 실패했습니다.',
-      });
-    }
-  };
-
   // 이미지 파일 선택 처리
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -421,6 +396,30 @@ const ProductPost = () => {
 
   // 수정 모드일 때 기존 데이터 로드
   useEffect(() => {
+    // 상품 수정
+    const loadProductData = async () => {
+      if (!id) return;
+
+      try {
+        const product = await fetchProductById(id);
+
+        // 폼 필드에 데이터 설정
+        setProductName(product.title);
+        setDescription(product.description || '');
+        setPrice(product.price);
+        setSelectedPetCategory(product.pet_type_code as PetCategory);
+        setSelectedPetType(product.pet_type_detail_code);
+        setPetCate(product.category_code || '');
+        setSelectedCondition(product.condition_status as ConditionValue);
+        setSelectedProvince(product.state_code as Province);
+        setSelectedCity(product.city_code || '');
+      } catch (error) {
+        console.error('상품 정보 로드 실패:', error);
+        setErrors({
+          general: '상품 정보를 불러오는데 실패했습니다.',
+        });
+      }
+    };
     if (isEditMode && id) {
       loadProductData();
     }
@@ -428,18 +427,9 @@ const ProductPost = () => {
 
   return (
     <div className="bg-bg">
-      {/* 헤더 영역 */}
-      <header className="sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
-          {/* 로고 */}
-          <Link to="/">
-            <img src={logoImage} alt="커들마켓" className="w-auto h-22 object-contain" />
-          </Link>
+      {/* 헤더 영역 - 컴포넌트화 */}
+      <SimpleHeader title="상품 등록" />
 
-          {/* 페이지 타이틀 */}
-          <h2 className="text-xl font-bold">상품 등록</h2>
-        </div>
-      </header>
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-3xl flex items-center">
         <div className="flex flex-col gap-2xl w-full">
           {/* 탭 리스트 */}

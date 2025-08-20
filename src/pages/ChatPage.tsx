@@ -1,4 +1,4 @@
-import logoImage from '@images/CuddleMarketLogo.png';
+import { SimpleHeader } from '@layout/SimpleHeader';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
 import { FaRegPaperPlane } from 'react-icons/fa';
@@ -67,17 +67,8 @@ const ChatPage = () => {
   };
   return (
     <>
-      {/* 헤더 영역 */}
-      <header className="flex items-center justify-between gap-lg sticky top-0 z-1 bg-primary">
-        <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-lg">
-          {/* 로고 */}
-          <div>
-            <img src={logoImage} alt="커들마켓" className="w-auto h-16 object-contain" />
-          </div>
-          {/* 페이지 타이틀 */}
-          <h2 className="text-xl font-bold">채팅</h2>
-        </div>
-      </header>
+      {/* 헤더영역 => 컴포넌트화 */}
+      <SimpleHeader title={'채팅'} />
       <div className="max-w-[var(--container-max-width)] h-[calc(100vh-80px)] flex mx-auto px-lg py-xl">
         <div className="w-1/3 border-r border-gray-200 bg-bg">
           <h2 className="heading3 p-4 border-b border-gray-200">채팅 목록</h2>
