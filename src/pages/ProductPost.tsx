@@ -1,7 +1,6 @@
 import { SimpleHeader } from '@layout/SimpleHeader';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoCloseCircle } from 'react-icons/io5';
 import { PiUploadSimpleLight } from 'react-icons/pi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -67,6 +66,10 @@ const ProductPost = () => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // 드래그 앤 드롭 상태
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   /**거주지 선택창 */
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
@@ -268,7 +271,7 @@ const ProductPost = () => {
     const files = e.target.files;
     if (!files) return;
 
-    if (imageFiles.length >= 4) {
+    if (imagePreviews.length >= 4) {
       setErrors(prev => ({ ...prev, images: '최대 4장까지만 업로드 가능합니다.' }));
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -329,23 +332,65 @@ const ProductPost = () => {
       return newErrors;
     });
   };
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
 
-  // 이미지 순서 변경 (드래그 앤 드롭 대신 간단한 버튼으로 구현)
-  const moveImage = (fromIndex: number, toIndex: number) => {
-    if (toIndex < 0 || toIndex >= imageFiles.length) return;
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+    e.preventDefault();
+
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
 
     const newFiles = [...imageFiles];
     const newPreviews = [...imagePreviews];
 
-    const [movedFile] = newFiles.splice(fromIndex, 1);
-    const [movedPreview] = newPreviews.splice(fromIndex, 1);
+    // 드래그한 아이템 제거
+    const [draggedFile] = newFiles.splice(draggedIndex, 1);
+    const [draggedPreview] = newPreviews.splice(draggedIndex, 1);
 
-    newFiles.splice(toIndex, 0, movedFile);
-    newPreviews.splice(toIndex, 0, movedPreview);
+    // 새 위치에 삽입
+    newFiles.splice(dropIndex, 0, draggedFile);
+    newPreviews.splice(dropIndex, 0, draggedPreview);
 
     setImageFiles(newFiles);
     setImagePreviews(newPreviews);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
   };
+
+  // 이미지 순서 변경 (드래그 앤 드롭 대신 간단한 버튼으로 구현)
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+  // const moveImage = (fromIndex: number, toIndex: number) => {
+  //   if (toIndex < 0 || toIndex >= imageFiles.length) return;
+
+  //   const newFiles = [...imageFiles];
+  //   const newPreviews = [...imagePreviews];
+
+  //   const [movedFile] = newFiles.splice(fromIndex, 1);
+  //   const [movedPreview] = newPreviews.splice(fromIndex, 1);
+
+  //   newFiles.splice(toIndex, 0, movedFile);
+  //   newPreviews.splice(toIndex, 0, movedPreview);
+
+  //   setImageFiles(newFiles);
+  //   setImagePreviews(newPreviews);
+  // };
 
   useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
@@ -413,6 +458,26 @@ const ProductPost = () => {
         setSelectedCondition(product.condition_status as ConditionValue);
         setSelectedProvince(product.state_code as Province);
         setSelectedCity(product.city_code || '');
+
+        // ✅ 이미지 처리 추가
+        // 기존 이미지 URL을 미리보기로 설정
+        if (product.images) {
+          // 메인 이미지를 배열로 변환
+          const imageUrls = [product.images];
+
+          // sub_images가 있으면 추가
+          if (product.sub_images && product.sub_images.length > 0) {
+            imageUrls.push(...product.sub_images);
+          }
+
+          // 최대 4장까지만 설정
+          const previewImages = imageUrls.slice(0, 4);
+          setImagePreviews(previewImages);
+
+          // 수정 모드에서는 기존 이미지를 File 객체로 변환할 수 없으므로
+          // imageFiles는 비워둡니다. 새로운 이미지를 추가하면 그때 설정됩니다.
+          // 서버에서는 이미지가 변경되지 않았다면 기존 이미지를 유지하도록 처리해야 합니다.
+        }
       } catch (error) {
         console.error('상품 정보 로드 실패:', error);
         setErrors({
@@ -688,7 +753,7 @@ const ProductPost = () => {
                         </label>
                         <div className="relative">
                           <input
-                            type="number"
+                            type="text"
                             className="flex h-9 w-full border border-border rounded-md px-3 py-1 bg-secondary/30 pr-8"
                             id="price"
                             placeholder="0"
@@ -750,9 +815,12 @@ const ProductPost = () => {
                   <div className="flex flex-col gap-xs">
                     <div className="flex flex-col gap-sm">
                       <div className="flex flex-col items-start gap-xs">
-                        <p>
-                          상품 이미지를 업로드해주세요. 첫 번째 이미지가 대표 이미지가 됩니다. (최대
-                          4장)
+                        <p>상품 이미지를 업로드해주세요. (최대 4장)</p>
+                        <p className="text-xs text-gray-600">
+                          첫 번째 이미지가 대표 이미지가 됩니다.
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          이미지를 드래그하여 순서를 변경할 수 있습니다.
                         </p>
                       </div>
                       {/* {imageFiles.length < 5 && ( */}
@@ -776,28 +844,53 @@ const ProductPost = () => {
                             PNG, JPG, GIF 파일 (각 파일 최대 5MB)
                           </p>
                           <p className="text-xs text-blue-600 mt-2">
-                            {Math.max(0, 4 - imageFiles.length)}장 더 업로드 가능
+                            {Math.max(0, 4 - imagePreviews.length)}장 더 업로드 가능
                           </p>
                         </label>
                         {/* 이미지 미리보기 영역 */}
                         {imagePreviews.length > 0 && (
-                          <div className="flex gap-4">
+                          <div className="flex">
                             {imagePreviews.map((preview, index) => (
-                              <div key={index} className="relative group w-[7vw]">
-                                <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-gray-200 pb-[100%] relative w-full h-full">
+                              <div
+                                key={index}
+                                draggable
+                                onDragStart={() => handleDragStart(index)}
+                                onDragOver={e => handleDragOver(e, index)}
+                                onDragLeave={handleDragLeave}
+                                onDrop={e => handleDrop(e, index)}
+                                onDragEnd={handleDragEnd}
+                                className={`relative group w-1/4 tablet:w-1/6 cursor-move transition-all ${
+                                  draggedIndex === index ? 'opacity-50' : ''
+                                } ${dragOverIndex === index ? 'scale-105' : ''}`}
+                              >
+                                <div className="rounded-xl overflow-hidden bg-gray-100 border-2 border-gray-200 pb-[100%] relative w-full h-full">
                                   <img
                                     src={preview}
                                     alt={`상품 이미지 ${index + 1}`}
                                     className="w-full h-full object-cover absolute t-0 l-0"
                                   />
-                                  {index === 0 && (
-                                    <div className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs rounded">
-                                      대표 이미지
-                                    </div>
-                                  )}
+                                  <div
+                                    className={`absolute top-2 px-1 flex w-full items-start ${
+                                      index === 0 ? 'justify-between' : 'justify-end'
+                                    }`}
+                                  >
+                                    {index === 0 && (
+                                      <div className="bg-primary text-white text-xs rounded-lg p-1 flex items-center ml-1">
+                                        대표
+                                      </div>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveImage(index)}
+                                      title="삭제"
+                                      className="w-[25px] h-[25px] cursor-pointer"
+                                    >
+                                      <IoCloseCircle color="white" className="w-full h-full" />
+                                    </button>
+                                  </div>
                                 </div>
                                 {/* 순서 변경 및 삭제 버튼 */}
-                                <div className="absolute top-2 right-2 flex gap-1">
+                                {/* <div className="absolute top-2 right-2 flex gap-1">
                                   {index > 0 && (
                                     <button
                                       type="button"
@@ -825,7 +918,7 @@ const ProductPost = () => {
                                   >
                                     <IoCloseCircle size={25} color="white" />
                                   </button>
-                                </div>
+                                </div> */}
                               </div>
                             ))}
                           </div>

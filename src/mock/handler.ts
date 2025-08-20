@@ -21,7 +21,7 @@ export const handlers = [
       url: 'http://localhost:5173/api/products?page=1&limit=12', 
       headers: Headers, 
       destination: '',
-      referrer: 'http://localhost:5173/', …} */
+      referrer: 'http://localhost:5173/',…} */
 
     // new URL(): 주소를 분석하기 쉽게 만듦
     // 예: http://localhost:3000/api/products?page=2&limit=10를 객체로 만듦
@@ -87,7 +87,7 @@ export const handlers = [
   }),
 
   // 마이 페이지 조회
-  http.get('/api/mypage', ({}) => {
+  http.get('/api/mypage', () => {
     // const { id } = params;
     // const userId = parseInt(id as string);
     // console.log(userId);

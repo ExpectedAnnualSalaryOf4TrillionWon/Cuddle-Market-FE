@@ -395,7 +395,7 @@ export function CategoryFilter() {
                     <div
                       role="listbox"
                       aria-label="시/도 선택"
-                      className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
+                      className="absolute left-0 top-full z-2 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                     >
                       {PROVINCES.map(opt => (
                         <button
@@ -435,8 +435,7 @@ export function CategoryFilter() {
                     <div
                       role="listbox"
                       aria-label="구/군 선택"
-                      className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md
-                                              mt-sm"
+                      className="absolute left-0 top-full z-2 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                     >
                       {cityOptions.map(opt => (
                         <button
