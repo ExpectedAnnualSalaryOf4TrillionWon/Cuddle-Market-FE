@@ -4,7 +4,7 @@ import { CiLocationOn } from 'react-icons/ci';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoCloseCircle } from 'react-icons/io5';
 import { PiUploadSimpleLight } from 'react-icons/pi';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { CreateProductRequest, FormErrors } from 'src/types';
 import { createProduct, fetchProductById, updateProduct } from '../api/products';
 import {
