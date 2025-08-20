@@ -1,4 +1,6 @@
 import type {
+  CreateProductRequest,
+  CreateProductResponse,
   LikesResponse,
   MyPageData,
   Product,
@@ -88,6 +90,91 @@ export const fetchMyPageData = async (): Promise<MyPageData> => {
   return response.json();
 };
 
+// 상품 등록
+export const createProduct = async (
+  productData: CreateProductRequest,
+): Promise<CreateProductResponse> => {
+  // FormData 생성 (파일 업로드를 위해)
+  const formData = new FormData();
+
+  // 텍스트 데이터 추가
+  formData.append('title', productData.title);
+  formData.append('description', productData.description);
+  formData.append('price', productData.price.toString());
+  formData.append('pet_type_code', productData.pet_type_code);
+  formData.append('pet_type_detail_code', productData.pet_type_detail_code);
+  formData.append('category_code', productData.category_code);
+  formData.append('condition_status', productData.condition_status);
+  formData.append('state_code', productData.state_code);
+  formData.append('city_code', productData.city_code);
+
+  // 이미지 파일 추가
+  if (productData.images && productData.images.length > 0) {
+    productData.images.forEach((image, index) => {
+      formData.append(`images[${index}]`, image);
+    });
+  }
+
+  const response = await fetch(`${API_BASE_URL}/products`, {
+    method: 'POST',
+    body: formData,
+    // FormData를 사용할 때는 Content-Type을 설정하지 않음 (자동 설정됨)
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const error = await response.json();
+      throw new Error(error.error || '입력 정보를 확인해주세요.');
+    }
+    throw new Error('상품 등록에 실패했습니다.');
+  }
+
+  return response.json();
+};
+
+// 상품 수정
+export const updateProduct = async (
+  productId: string,
+  productData: CreateProductRequest,
+): Promise<CreateProductResponse> => {
+  const formData = new FormData();
+
+  // 텍스트 데이터 추가
+  formData.append('title', productData.title);
+  formData.append('description', productData.description);
+  formData.append('price', productData.price.toString());
+  formData.append('pet_type_code', productData.pet_type_code);
+  formData.append('pet_type_detail_code', productData.pet_type_detail_code);
+  formData.append('category_code', productData.category_code);
+  formData.append('condition_status', productData.condition_status);
+  formData.append('state_code', productData.state_code);
+  formData.append('city_code', productData.city_code);
+
+  // 이미지 파일 추가
+  if (productData.images && productData.images.length > 0) {
+    productData.images.forEach((image, index) => {
+      formData.append(`images[${index}]`, image);
+    });
+  }
+
+  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+    method: 'PATCH',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('상품을 찾을 수 없습니다.');
+    }
+    if (response.status === 400) {
+      const error = await response.json();
+      throw new Error(error.error || '입력 정보를 확인해주세요.');
+    }
+    throw new Error('상품 수정에 실패했습니다.');
+  }
+
+  return response.json();
+};
 export const fetchMyLikes = async (): Promise<LikesResponse> => {
   const response = await fetch(`${API_BASE_URL}/likes`);
   if (!response.ok) {

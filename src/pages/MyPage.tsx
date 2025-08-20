@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
-import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { useModalStore } from '@store/modalStore';
+import React, { useEffect, useState } from 'react';
+import { CiCalendar, CiLocationOn } from 'react-icons/ci';
+import { Link } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
 import { SimpleHeader } from '@layout/SimpleHeader';
@@ -39,7 +40,7 @@ const MyPage: React.FC = () => {
 
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = async (itemId?: number): Promise<void> => {
-    const result = await deleteConfirm('게시물을 삭제하시겠습니까?');
+    const result = await deleteConfirm('삭제하시겠습니까?');
     if (result === true) {
       // TODO: 상품삭제 로직 구현
       console.log(`게시물 ${itemId} 삭제 진행`);
@@ -73,8 +74,10 @@ const MyPage: React.FC = () => {
 
   return (
     <>
+
       {/* 헤더영역 => 컴포넌트화 */}
       <SimpleHeader title={'마이 페이지'} />
+
 
       <div className="px-lg py-3xl bg-bg">
         <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">

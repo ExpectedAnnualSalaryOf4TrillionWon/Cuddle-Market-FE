@@ -63,6 +63,13 @@ const Home = () => {
     loadProducts();
   }, []);
 
+
+  console.log(allProducts);
+
+  // const handlePetTypeChange = (petTypeCode: string) => {
+  //   setSelectedPetType(petTypeCode);
+  // };
+
   if (loading) {
     return (
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
