@@ -3,13 +3,14 @@ export interface User {
   id: number;
   name: string;
   nickname: string;
-  birthday?: string;
-  profile_image?: string;
   state: string;
   city: string;
+  birthday?: string;
+  profile_image?: string;
   created_at?: string;
-  profile_completed: boolean;
+  profile_completed?: boolean;
   last_login?: string;
+  seller_info?: User;
 }
 
 export interface UserWithProducts extends User {
