@@ -8,8 +8,6 @@ import type { UserWithProducts } from 'src/types';
 import { fetchSellerById } from '../api/products';
 
 const UserPage = () => {
-  const [activeTab, setActiveTab] = useState<'products' | 'purchases'>('products');
-
   const [seller, setSeller] = useState<UserWithProducts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -129,41 +127,11 @@ const UserPage = () => {
               <div
                 role="tablist"
                 aria-label="사용자 탭"
-                className="grid grid-cols-2 gap-sm mb-lg px-sm py-sm rounded-3xl bg-dark/25"
+                className="mb-lg px-sm py-sm border-b border-gray-200"
               >
-                <button
-                  type="button"
-                  role="tab"
-                  id="tab-products"
-                  aria-controls="panel-products"
-                  aria-selected={activeTab === 'products'}
-                  onClick={() => setActiveTab('products')}
-                  className={`
-                  w-full px-md py-sm rounded-3xl
-                  ${activeTab === 'products' ? 'bg-dark' : 'bg-transparent'}
-                  bodySmall text-text-primary text-center
-                  transition hover:bg-primary/10
-                `}
-                >
-                  {seller.nickname}님 상품
-                </button>
-
-                <button
-                  type="button"
-                  role="tab"
-                  id="tab-purchases"
-                  aria-controls="panel-purchases"
-                  aria-selected={activeTab === 'purchases'}
-                  onClick={() => setActiveTab('purchases')}
-                  className={`
-                  w-full px-md py-sm rounded-3xl
-                  ${activeTab === 'purchases' ? 'bg-dark' : 'bg-transparent'}
-                  bodySmall text-text-primary text-center
-                  transition hover:bg-primary/10
-                `}
-                >
-                  구매내역
-                </button>
+                <h3 className="heading4 text-text-primary">
+                  {seller.nickname}님 상품 ({seller.total_products}개)
+                </h3>
               </div>
 
               {/* 탭 패널: 상품 */}
@@ -171,12 +139,8 @@ const UserPage = () => {
                 role="tabpanel"
                 id="panel-products"
                 aria-labelledby="tab-products"
-                className={`${activeTab !== 'products' ? 'hidden' : ''} flex-1 outline-none`}
+                className={`flex-1 outline-none`}
               >
-                <h3 className="heading5 text-text-primary mb-md">
-                  {seller.nickname}님 상품 ({seller.total_products}개)
-                </h3>
-
                 <div className="flex flex-col gap-md">
                   {seller.seller_products.map(item => (
                     <div

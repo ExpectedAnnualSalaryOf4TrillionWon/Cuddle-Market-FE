@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import logoImage from '@images/CuddleMarketLogo.png';
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
-import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { useModalStore } from '@store/modalStore';
+import React, { useEffect, useState } from 'react';
+import { CiCalendar, CiLocationOn } from 'react-icons/ci';
+import { Link } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
 
@@ -39,7 +39,7 @@ const MyPage: React.FC = () => {
 
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = async (itemId?: number): Promise<void> => {
-    const result = await deleteConfirm('게시물을 삭제하시겠습니까?');
+    const result = await deleteConfirm('삭제하시겠습니까?');
     if (result === true) {
       // TODO: 상품삭제 로직 구현
       console.log(`게시물 ${itemId} 삭제 진행`);
@@ -82,7 +82,7 @@ const MyPage: React.FC = () => {
           <h2 className="text-xl font-bold">마이 페이지</h2>
         </div>
       </header>
-      
+
       <div className="px-lg py-3xl bg-bg">
         <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">
           {/* 좌측 내 정보 영역 */}
@@ -126,7 +126,7 @@ const MyPage: React.FC = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* 회원탈퇴 버튼을 div에서 button으로 변경하고 핸들러 연결 */}
             <div className="mt-6 text-xs text-red-500 cursor-pointer hover:underline self-start">
               <button onClick={handleExit}>회원탈퇴</button>
@@ -180,11 +180,7 @@ const MyPage: React.FC = () => {
               {/* 탭 목록 */}
               <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
                 {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
-                <MyList 
-                  activeTab={activeTab} 
-                  onCountsUpdate={setCounts}
-                  onDelete={handleDelete}
-                />
+                <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
 
                 {/* 목록이 있을 때만 더보기 버튼 표시 */}
                 {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (

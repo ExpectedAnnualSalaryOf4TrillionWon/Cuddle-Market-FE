@@ -38,7 +38,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-1 bg-primary">
+    <header className="sticky top-0 z-2 bg-primary">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md">
         <div className="flex items-center justify-between gap-lg">
           {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GrView } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
 import { fetchMyPageData } from '../../api/products';
 import { ProductState, stateLabelMap, stateStyleMap } from '../../constants/constants';
@@ -125,6 +126,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
   const loadUserInfo = async () => {
     try {
       const data = await fetchMyPageData();
@@ -142,6 +144,10 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (productId: number) => {
+    navigate(`/products/${productId}/edit`);
   };
 
   useEffect(() => {
@@ -192,16 +198,27 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
           >
             {stateLabelMap[state]}
           </p>
+
+          {activeTab === 'products' && (
+            <button
+              onClick={e => {
+                e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+                handleEdit(product.id);
+              }}
+              className={`text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+            >
+              수정
+            </button>
+          )}
+
           <button
-            onClick={() => alert('상품등록/수정 페이지로 이동')}
-            className="col-start-1 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
-          >
-            수정
-          </button>
-          {/*alert,confirm 등은 추후에 대체될 예정*/}
-          <button
-            onClick={() => onDelete(product.id)}
-            className="col-start-2 row-start-2 text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm "
+            onClick={e => {
+              e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+              onDelete(product.id);
+            }}
+            className={`${
+              activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
+            }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
           >
             삭제
           </button>
@@ -209,7 +226,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
       </div>
     );
   };
-  
+
   const renderList = () => {
     switch (activeTab) {
       case 'products':
