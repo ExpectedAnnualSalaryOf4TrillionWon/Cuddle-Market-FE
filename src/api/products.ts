@@ -14,7 +14,7 @@ export const fetchAllProducts = async (filters?: {
   pet_type_code?: string;
 }): Promise<Product[]> => {
   const params = new URLSearchParams();
-  // console.log(params); // 실행순서2️⃣ :URLSearchParams {size: 2}
+  // console.log(params); // 실행순서2️⃣ :URLSearchParams{size: 2}
 
   if (filters?.pet_type_code && filters.pet_type_code !== 'ALL') {
     params.append('pet_type_code', filters.pet_type_code);

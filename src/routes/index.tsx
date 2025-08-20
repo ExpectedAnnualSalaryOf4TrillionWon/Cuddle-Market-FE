@@ -54,7 +54,6 @@ const AppRoutes = () => {
         <Route path="/profile-update" element={<ProfileUpdate />} />
 
         <Route path="/products/:id/edit" element={<ProductPost />} />
-
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
