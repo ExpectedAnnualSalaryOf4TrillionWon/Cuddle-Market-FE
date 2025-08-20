@@ -1,41 +1,70 @@
 import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import parser from '@typescript-eslint/parser';
+import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import { globalIgnores } from 'eslint/config';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
 
-export default tseslint.config([
-  globalIgnores(['dist']),
+export default tseslint.config(
+  // 0) .eslintignore 대체
+  { ignores: ['dist/', 'build/', 'nodemodules/'] },
+
+  // 1) JS 파일(설정 파일 포함)도 기본 파싱
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-      'prettier',
-    ],
-    plugins: { 'react-hooks': reactHooks, 'react-refresh': reactRefresh },
+    files: ['/.{js,cjs,mjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
-      globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        sourceType: 'module',
-      },
+      sourceType: 'module',
+      globals: { ...globals.node },
     },
+  },
+
+  // 2) ESLint/TS 권장 설정
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+
+  // 3) TS/TSX + React 규칙
+  {
+    files: ['*/.{ts,tsx}'], // <-- 기존의 '/.{ts,tsx}' 는 매칭이 안 됨!
+    languageOptions: {
+      parser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+      globals: { ...globals.browser },
+    },
+    plugins: {
+      react: reactPlugin,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    settings: { react: { version: 'detect' } },
     rules: {
-      ...js.configs.recommended.rules,
+      // React & Hooks 권장 규칙
+      ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-        // type export시 경고발생으로 불편할 수 있으나 실사용에는 괜찮다. type.ts 한 파일에 export할 type을 모아서 경고창이 한 파일에만 나오게끔 하면 덜 불편할 거라고 지피티가 추천함.
+      // React Refresh 권장 규칙 (있으면 적용)
+      ...(reactRefresh.configs?.recommended?.rules ?? {}),
+
+      // TS 프로젝트 기본 튜닝
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^', varsIgnorePattern: '^[A-Z]' },
+      ],
+      '@typescript-eslint/no-unused-expressions': [
+        'error',
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+          allowTaggedTemplates: true,
+        },
       ],
     },
   },
-]);
+
+  // 4) 항상 마지막: Prettier (충돌 규칙 끔)
+  prettier,
+);
