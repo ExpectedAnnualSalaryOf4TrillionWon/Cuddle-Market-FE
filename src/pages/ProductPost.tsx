@@ -4,123 +4,23 @@ import { CiLocationOn } from 'react-icons/ci';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { IoCloseCircle } from 'react-icons/io5';
 import { PiUploadSimpleLight } from 'react-icons/pi';
-
-
-const PETS = {
-  포유류: ['강아지', '고양이', '토끼', '햄스터', '기니피그', '페럿', '친칠라', '고슴도치'],
-  조류: ['잉꼬', '앵무새', '카나리아', '모란앵무'],
-  파충류: ['도마뱀', '뱀', '거북이', '게코'],
-  수생동물: ['금붕어', '열대어', '체리새우', '달팽이'],
-  '곤충/절지동물': ['귀뚜라미', '사마귀', '딱정벌레', '거미'],
-} as const;
-type PetCategory = keyof typeof PETS;
-const PET_CATEGORIES = Object.keys(PETS) as PetCategory[];
-
-const categoryOptions = [
-  { value: 'food', label: '사료/간식' },
-  { value: 'toys', label: '장난감' },
-  { value: 'housing', label: '사육장/하우스' },
-  { value: 'health', label: '건강/위생' },
-  { value: 'accessories', label: '의류/악세사리' },
-  { value: 'equipment', label: '사육장비' },
-  { value: 'carrier', label: '이동장/목줄' },
-  { value: 'cleaning', label: '청소용품' },
-  { value: 'training', label: '훈련용품' },
-  { value: 'etc', label: '기타' },
-];
-
-type ConditionValue = 'new' | 'nearly' | 'used' | 'defect' | 'repair';
-interface ConditionItem {
-  value: ConditionValue;
-  title: string;
-  subtitle: string;
-}
-const conditionItems: ReadonlyArray<ConditionItem> = [
-  { value: 'new', title: '새상품', subtitle: '미사용 상품' },
-  { value: 'nearly', title: '거의새것', subtitle: '사용감 거의 없음' },
-  { value: 'used', title: '사용감있음', subtitle: '일반적인 사용흔적' },
-  { value: 'defect', title: '하자있음', subtitle: '기능에 이상 없음' },
-  { value: 'repair', title: '수리필요', subtitle: '수리 후 사용가능' },
-];
-
-// as const : 값을 고정합니다. “서울특별시” 같은 문자열과 배열 안의 항목들까지 바뀌지 않는 상수 값으로 취급됩니다.
-// 타입도 리터럴 그대로 잡힙니다. 즉 "서울특별시"는 그냥 string이 아니라 "서울특별시"라는 정확한 값 타입이 됩니다.
-const CITIES = {
-  서울특별시: [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-    '노원구',
-    '도봉구',
-    '동대문구',
-    '동작구',
-    '마포구',
-    '서대문구',
-    '서초구',
-    '성동구',
-    '성북구',
-    '송파구',
-    '양천구',
-    '영등포구',
-    '용산구',
-    '은평구',
-    '종로구',
-    '중구',
-    '중랑구',
-  ],
-  부산광역시: [
-    '강서구',
-    '금정구',
-    '기장군',
-    '남구',
-    '동구',
-    '동래구',
-    '부산진구',
-    '북구',
-    '사상구',
-    '사하구',
-    '서구',
-    '수영구',
-    '연제구',
-    '영도구',
-    '중구',
-    '해운대구',
-  ],
-  대구광역시: ['남구', '달서구', '달성군', '동구', '북구', '서구', '수성구', '중구'],
-  인천광역시: [
-    '강화군',
-    '계양구',
-    '남동구',
-    '동구',
-    '미추홀구',
-    '부평구',
-    '서구',
-    '연수구',
-    '옹진군',
-    '중구',
-  ],
-  광주광역시: ['광산구', '남구', '동구', '북구', '서구'],
-  대전광역시: ['대덕구', '동구', '서구', '유성구', '중구'],
-  울산광역시: ['남구', '동구', '북구', '울주군', '중구'],
-  세종특별자치시: ['세종시'],
-} as const;
-type Province = keyof typeof CITIES;
-const PROVINCES = Object.keys(CITIES) as Province[];
-
-const TABS = [
-  { id: 'sales', label: '판매' },
-  { id: 'purchases', label: '판매요청' },
-] as const;
-=======
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { CreateProductRequest, FormErrors } from 'src/types';
 import { createProduct, fetchProductById, updateProduct } from '../api/products';
-
+import {
+  ALLOWED_IMAGE_TYPES,
+  CATEGORY_OPTIONS,
+  CITIES,
+  CONDITION_ITEMS,
+  PET_CATEGORIES,
+  PETS,
+  PRODUCT_POST_TABS,
+  PROVINCES,
+  type ConditionValue,
+  type PetCategory,
+  type ProductPostTabId,
+  type Province,
+} from '../constants/constants';
 
 const ProductPost = () => {
   const [activeTab, setActiveTab] = useState<ProductPostTabId>('sales');
@@ -363,31 +263,6 @@ const ProductPost = () => {
     }
   };
 
-  // 상품 수정
-  const loadProductData = async () => {
-    if (!id) return;
-
-    try {
-      const product = await fetchProductById(id);
-
-      // 폼 필드에 데이터 설정
-      setProductName(product.title);
-      setDescription(product.description || '');
-      setPrice(product.price);
-      setSelectedPetCategory(product.pet_type_code as PetCategory);
-      setSelectedPetType(product.pet_type_detail_code);
-      setPetCate(product.category_code || '');
-      setSelectedCondition(product.condition_status as ConditionValue);
-      setSelectedProvince(product.state_code as Province);
-      setSelectedCity(product.city_code || '');
-    } catch (error) {
-      console.error('상품 정보 로드 실패:', error);
-      setErrors({
-        general: '상품 정보를 불러오는데 실패했습니다.',
-      });
-    }
-  };
-
   // 이미지 파일 선택 처리
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -521,6 +396,30 @@ const ProductPost = () => {
 
   // 수정 모드일 때 기존 데이터 로드
   useEffect(() => {
+    // 상품 수정
+    const loadProductData = async () => {
+      if (!id) return;
+
+      try {
+        const product = await fetchProductById(id);
+
+        // 폼 필드에 데이터 설정
+        setProductName(product.title);
+        setDescription(product.description || '');
+        setPrice(product.price);
+        setSelectedPetCategory(product.pet_type_code as PetCategory);
+        setSelectedPetType(product.pet_type_detail_code);
+        setPetCate(product.category_code || '');
+        setSelectedCondition(product.condition_status as ConditionValue);
+        setSelectedProvince(product.state_code as Province);
+        setSelectedCity(product.city_code || '');
+      } catch (error) {
+        console.error('상품 정보 로드 실패:', error);
+        setErrors({
+          general: '상품 정보를 불러오는데 실패했습니다.',
+        });
+      }
+    };
     if (isEditMode && id) {
       loadProductData();
     }
@@ -528,8 +427,8 @@ const ProductPost = () => {
 
   return (
     <div className="bg-bg">
-      {/* 헤더영역 => 컴포넌트화 */}
-      <SimpleHeader title={'상품 등록'} />
+      {/* 헤더 영역 - 컴포넌트화 */}
+      <SimpleHeader title="상품 등록" />
 
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-3xl flex items-center">
         <div className="flex flex-col gap-2xl w-full">
