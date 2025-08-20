@@ -21,7 +21,7 @@ export default tseslint.config(
     },
   },
 
-  // 2) ESLint/TS 권장 설정
+  // 2) ESLint/TS 권장 설정s
   js.configs.recommended,
   ...tseslint.configs.recommended,
 
