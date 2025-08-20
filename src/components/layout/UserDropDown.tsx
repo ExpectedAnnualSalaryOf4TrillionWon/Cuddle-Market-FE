@@ -9,10 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 /* 유저 드롭다운 기능*/
 /* 타입은 리액트 함수형 컴포넌트(React.FC)이고, 위에 상태관리 타입설정도 props로 전달한다.*/
-const UserDropdown: React.FC<UserDropdownProps> = ({
-  isOpen,
-  setIsOpen,
-}) => {
+const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const { isLoggedIn, login, logout } = useAuthStore();
   const logoutconfirm = useModalStore(state => state.confirm);
@@ -40,8 +37,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
       return;
     }
   };
-  
-  };
+
   return (
     <div className="absolute right-2 top-full bg-point rounded-xl z-50 opacity-65 flex flex-col whitespace-nowrap min-w-[5rem]">
       {!isLoggedIn /*로그인이 안 되어있을 경우*/ ? (
