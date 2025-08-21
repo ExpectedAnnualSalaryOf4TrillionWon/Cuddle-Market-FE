@@ -21,13 +21,13 @@ export default tseslint.config(
     },
   },
 
-  // 2) ESLint/TS 권장 설정s
+  // 2) ESLint/TS 권장 설정
   js.configs.recommended,
   ...tseslint.configs.recommended,
 
   // 3) TS/TSX + React 규칙
   {
-    files: ['**/.{ts,tsx}'], // <-- 기존의 '*/.{ts,tsx}' 는 매칭이 안 됨!
+    files: ['*/.{ts,tsx}'], // <-- 기존의 '/.{ts,tsx}' 는 매칭이 안 됨!
     languageOptions: {
       parser,
       parserOptions: { ecmaFeatures: { jsx: true } },

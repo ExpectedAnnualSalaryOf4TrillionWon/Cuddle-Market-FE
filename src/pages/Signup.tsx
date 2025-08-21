@@ -1,7 +1,9 @@
 import logoImage from '@images/CuddleMarketLogoImage.png';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';
 import { PiTagThin } from 'react-icons/pi';
+import { useNavigate } from 'react-router-dom';
+import type { CreateUserRequest, CreateUserResponse, FormErrors } from 'src/types';
 
 //max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
 const CITIES = {
@@ -72,6 +74,10 @@ type Province = keyof typeof CITIES;
 const PROVINCES = Object.keys(CITIES) as Province[];
 
 const Signup = () => {
+  const [userName, setUserName] = useState<string>('');
+  const [userNickName, setUserNickName] = useState<string>('');
+  const [userBirth, setUserBirth] = useState<string>('');
+
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
 
@@ -79,19 +85,173 @@ const Signup = () => {
   const [showCitySelect, setShowCitySelect] = useState(false);
 
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
+  const provinceBoxRef = useRef<HTMLDivElement | null>(null);
+  const cityBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const navigate = useNavigate();
+  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+  // 이름
+  const handleUserName = (val: string) => {
+    setUserName(val === '' ? '' : val);
+    if (userName && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.userName;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleUserNickName = (val: string) => {
+    setUserNickName(val === '' ? '' : val);
+    if (userNickName && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.userNickName;
+        return newErrors;
+      });
+    }
+  };
+
+  const handleUserBirth = (val: string) => {
+    setUserBirth(val === '' ? '' : val);
+    if (userNickName && val) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.userBirth;
+        return newErrors;
+      });
+    }
+  };
+
   const handleSelectProvince = (opt: Province) => {
     setSelectedProvince(opt);
-    setSelectedCity(''); // 시/도 변경 시 구/군 초기화
-    setShowProvinceSelect(false); // 시/도 목록 닫기
+    setSelectedCity('');
+    setShowProvinceSelect(false);
     setShowCitySelect(false);
   };
 
   const handleSelectCity = (opt: string) => {
     setSelectedCity(opt);
     setShowCitySelect(false);
+    if (selectedProvince && opt) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.location;
+        return newErrors;
+      });
+    }
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('상품등록 버튼 클릭');
+
+    if (isSubmitting) return; // 중복 제출 방지
+
+    const newErrors: FormErrors = {};
+    // 유효성 검사
+
+    if (!userName) {
+      newErrors.userName = '이름을 입력해주세요.';
+    }
+
+    if (!userNickName) {
+      newErrors.userNickName = '닉네임을 입력해주세요.';
+    }
+
+    if (!userBirth) {
+      newErrors.userBirth = '생년월일을 선택해주세요.';
+    }
+
+    if (!selectedProvince || !selectedCity) {
+      newErrors.location = '거래 희망 지역을 선택해주세요.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // 첫 번째 에러가 있는 위치로 스크롤
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    try {
+      const requestBody: CreateUserRequest = {
+        nickname: userName,
+        name: userNickName,
+        birthday: userBirth,
+        state: selectedProvince!,
+        city: selectedCity,
+      };
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch(`${API_BASE_URL}/users/profile-complete/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data: CreateUserResponse = await response.json();
+      console.log('📍 응답 데이터:', data);
+
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      if (redirectUrl) {
+        console.log('📍 저장된 페이지로 이동:', redirectUrl);
+        localStorage.removeItem('redirectUrl'); // 사용 후 삭제
+        navigate(redirectUrl, { replace: true });
+      } else {
+        console.log('📍 홈으로 이동');
+        navigate('/', { replace: true });
+      }
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+      setErrors({
+        general: error instanceof Error ? error.message : '회원가입에 실패했습니다.',
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  useEffect(() => {
+    const handleOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+
+      // 시/도 드롭다운 바깥 클릭
+      if (
+        showProvinceSelect &&
+        provinceBoxRef.current &&
+        !provinceBoxRef.current.contains(target)
+      ) {
+        setShowProvinceSelect(false);
+      }
+      // 구/군 드롭다운 바깥 클릭
+      if (showCitySelect && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
+        setShowCitySelect(false);
+      }
+    };
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showProvinceSelect) setShowProvinceSelect(false);
+        if (showCitySelect) setShowCitySelect(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [showProvinceSelect, showCitySelect]);
+
   return (
-    <div className="px-lg py-8 bg-primary h-[80%] flex items-center justify-center">
+    <div className="px-lg py-8 bg-primary min-h-[100vh] flex items-center justify-center">
       <div>
         {/* 헤더 영역 */}
         <div className="text-center flex flex-col items-center gap-6 pb-2xl">
@@ -119,7 +279,7 @@ const Signup = () => {
             {/* 카드 콘텐츠: 내부 섹션 간격을 gap으로 관리 */}
             <div className="flex flex-col gap-8 pb-8 ">
               {/* 폼 */}
-              <form className="flex flex-col gap-5">
+              <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                 {/* 이름 */}
                 <div className="flex flex-col gap-2">
                   <label htmlFor="signup-name" className="bodySmall font-medium text-text-primary">
@@ -130,17 +290,22 @@ const Signup = () => {
                     <input
                       id="signup-name"
                       placeholder="실제 이름을 입력해주세요"
-                      required
                       maxLength={15}
+                      value={userName}
+                      onChange={e => {
+                        const val = e.target.value;
+                        handleUserName(val);
+                      }}
                       className="flex h-12 w-full rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
-                  <p className="text-sm font-medium text-[#000]">
+                  {/* <p className="text-sm font-medium text-[#000]">
                     이름은 2글자 이상 15자 이하입니다.
                   </p>
                   <p id="signup-name-error" className="text-sm font-medium text-[#f87171]">
                     이름을 입력해주세요.
-                  </p>
+                  </p> */}
+                  {errors.userName && <p className="text-xs text-red-600">{errors.userName}</p>}
                 </div>
 
                 {/* 닉네임 */}
@@ -156,17 +321,24 @@ const Signup = () => {
                     <input
                       id="signup-nickname"
                       placeholder="사용할 닉네임을 입력해주세요"
-                      required
                       maxLength={12}
+                      value={userNickName}
+                      onChange={e => {
+                        const val = e.target.value;
+                        handleUserNickName(val);
+                      }}
                       className="flex h-12 w-full min-w-0 rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
-                  <p className="text-sm font-medium text-[#000]">
+                  {/* <p className="text-sm font-medium text-[#000]">
                     닉네임은 2글자 이상 12자 이하입니다.
-                  </p>
-                  <p id="signup-name-error" className="text-sm font-medium text-[#f87171]">
+                  </p> */}
+                  {/* <p id="signup-name-error" className="text-sm font-medium text-[#f87171]">
                     닉네임을 입력해주세요.
-                  </p>
+                  </p> */}
+                  {errors.userNickName && (
+                    <p className="text-xs text-red-600">{errors.userNickName}</p>
+                  )}
                 </div>
 
                 {/* 생년월일 */}
@@ -182,13 +354,18 @@ const Signup = () => {
                     <input
                       id="signup-birth-date"
                       type="date"
-                      required
+                      value={userBirth}
+                      onChange={e => {
+                        const val = e.target.value;
+                        handleUserBirth(val);
+                      }}
                       className="flex h-12 w-full rounded-xl border border-border bg-light px-3 py-1 pl-12 transition-[color,box-shadow]"
                     />
                   </div>
-                  <p id="signup-birth-date-error" className="text-sm font-medium text-[#f87171]">
+                  {/* <p id="signup-birth-date-error" className="text-sm font-medium text-[#f87171]">
                     생년월일을 선택해주세요.
-                  </p>
+                  </p> */}
+                  {errors.userBirth && <p className="text-xs text-red-600">{errors.userBirth}</p>}
                 </div>
 
                 {/* 거주지 */}
@@ -196,7 +373,7 @@ const Signup = () => {
                   <label className="bodySmall font-medium text-text-primary">거주지 *</label>
 
                   <div className="flex flex-col gap-3">
-                    <div className="relative">
+                    <div className="relative" ref={provinceBoxRef}>
                       <CiLocationOn
                         className="absolute left-4 top-1/2 translate-y-[-50%]"
                         size={18}
@@ -239,7 +416,7 @@ const Signup = () => {
                         </div>
                       )}
                     </div>
-                    <div className="relative">
+                    <div className="relative" ref={cityBoxRef}>
                       <CiLocationOn
                         className="absolute left-4 top-1/2 translate-y-[-50%]"
                         size={18}
@@ -247,6 +424,7 @@ const Signup = () => {
                       <button
                         type="button"
                         role="combobox"
+                        aria-expanded={showCitySelect}
                         onClick={() => {
                           if (!selectedProvince) return;
                           setShowCitySelect(prev => !prev);
@@ -285,26 +463,15 @@ const Signup = () => {
                         </div>
                       )}
                     </div>
-                    <p id="signup-district-error" className="text-sm font-medium text-[#f87171]">
+                    {/* <p id="signup-district-error" className="text-sm font-medium text-[#f87171]">
                       시/도 와 군/구를 선택해주세요.
-                    </p>
+                    </p> */}
                   </div>
+                  {errors.location && <p className="text-xs text-red-600">{errors.location}</p>}
                 </div>
 
-                {/* 제출 */}
-                {/* <button
-                  type="submit"
-                  disabled
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#fee500] px-4 py-2 text-base font-semibold text-[#000]/85 shadow-lg cursor-pointer"
-                >
-                  <div className="h-1/2">
-                    <img src={kakao} alt="" className="h-full object-cover" />
-                  </div>
-                  <span>카카오톡으로 시작하기</span>
-                </button> */}
                 <button
                   type="submit"
-                  disabled
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-base font-semibold shadow-lg cursor-pointer"
                 >
                   <span>회원가입 하기</span>

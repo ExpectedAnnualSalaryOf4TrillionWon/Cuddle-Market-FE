@@ -1,8 +1,11 @@
 import logo from '@images/CuddleMarketLogoBase.png';
 import kakao from '@images/kakao.svg';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
 const Login: React.FC = () => {
+  const location = useLocation();
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
@@ -11,23 +14,47 @@ const Login: React.FC = () => {
   const handleKakaoLogin = (): void => {
     console.log('카카오 로그인 시작');
 
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI,
-    )}&response_type=code&scope=profile_nickname,profile_image`;
+    )}`;
 
     console.log(kakaoAuthUrl);
 
     // 카카오 로그인 페이지로 이동
     window.location.href = kakaoAuthUrl.toString();
   };
+  // 로그인 페이지 접근 시 이전 페이지 저장
+  useEffect(() => {
+    // state로 전달된 from이 있으면 사용, 없으면 document.referrer 사용
+    const from = location.state?.from || document.referrer;
 
-  // const handleEmailLogin = () => {
-  //   alert('이메일 로그인 페이지로 이동합니다.');
-  // };
+    if (from) {
+      // 로그인 관련 페이지가 아닌 경우만 저장
+      const isAuthPage =
+        from.includes('/signin') ||
+        from.includes('/signup') ||
+        from.includes('/oauth') ||
+        from.includes('/kakao');
 
-  // const handleSignupClick = () => {
-  //   navigate('/signup');
-  // };
+      if (!isAuthPage) {
+        // URL 객체로 파싱하여 pathname만 저장
+        try {
+          const url = new URL(from);
+          // 같은 도메인인 경우만 저장
+          if (url.origin === window.location.origin) {
+            localStorage.setItem('redirectUrl', url.pathname);
+            console.log('📍 이전 페이지 저장:', url.pathname);
+          }
+        } catch {
+          // from이 상대 경로인 경우
+          if (from.startsWith('/')) {
+            localStorage.setItem('redirectUrl', from);
+            console.log('📍 이전 페이지 저장:', from);
+          }
+        }
+      }
+    }
+  }, [location]);
 
   return (
     <div className="flex items-center justify-center bg-primary h-[90vh]">

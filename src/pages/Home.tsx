@@ -63,7 +63,6 @@ const Home = () => {
     loadProducts();
   }, []);
 
-
   console.log(allProducts);
 
   // const handlePetTypeChange = (petTypeCode: string) => {

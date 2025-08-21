@@ -30,12 +30,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2025-08-16T08:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
     seller_products: [
       {
@@ -80,12 +81,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -107,12 +109,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -134,12 +137,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -161,12 +165,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -187,12 +192,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -213,12 +219,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -239,12 +246,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -265,12 +273,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -291,12 +300,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -317,12 +327,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -343,12 +354,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -369,12 +381,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -395,12 +408,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -421,12 +435,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -447,12 +462,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -473,12 +489,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -499,12 +516,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -525,12 +543,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -551,12 +570,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
 ];
