@@ -1,22 +1,45 @@
-import type { ChangeEvent } from 'react';
-import { useState } from 'react';
+// import type { ChangeEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaRegPaperPlane } from 'react-icons/fa';
 import { RiMore2Line } from 'react-icons/ri';
 import { ChatLog } from './ChatLog';
 import { ChatList } from './ChatList';
 import { mockChatList } from './MockChatList';
 import { ChatOpponentInfo } from './ChatOpponentInfo';
+import { useChatSocketStore } from '@store/ChatSocketStore';
 
-type ChatModalProps = {
-  onClose: () => void;
-};
+const ChatModal = ({ onClose }: { onClose: () => void }) => {
+  const [input, setInput] = useState('');
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const { connect, disconnect, sendMessage, currentRoomId } = useChatSocketStore();
+  // const [message, setMessage] = useState<string>('');
+  const selectedChat = mockChatList.find(chat => chat.roomId === currentRoomId) ?? {
+    roomId: 'default',
+    userName: '',
+    userAvatar: '',
+    product: { title: '', price: '', image: '' },
+    lastMessage: '',
+    time: '',
+    messages: [],
+  };
+  // const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setMessage(e.target.value);
+  // };
 
-const ChatModal: React.FC<ChatModalProps> = ({ onClose }) => {
-  const [message, setMessage] = useState<string>('');
-  const selectedChat = mockChatList[0];
+  useEffect(() => {
+    connect('ws://localhost:8080/chat');
+    return () => disconnect(); // 모달 닫힐 때 연결 종료
+  }, [connect, disconnect]);
 
-  const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedChat?.messages]);
+
+  const handleSend = () => {
+    if (input.trim() && currentRoomId) {
+      sendMessage(currentRoomId, input);
+      setInput('');
+    }
   };
 
   return (
@@ -34,7 +57,7 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose }) => {
         <ChatList onClose={onClose} />
 
         {/* 우측 대화창 */}
-        <div className="flex-1 flex flex-col max-w-[375px]">
+        <div className="flex-1 flex flex-col w-[375px]">
           {/* 상대 프로필 */}
           <div className="border-b border-border w-full p-xs flex justify-between">
             <ChatOpponentInfo
@@ -56,18 +79,18 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose }) => {
           <div className="p-3 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <img
-                src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&h=300&fit=crop"
-                alt="강아지 사료 10kg 새상품"
+                src={selectedChat.product.image || 'https://via.placeholder.com/64'}
+                alt={selectedChat.product.title || '상품 이미지'}
                 className="w-16 h-16 rounded-lg object-cover"
               />
               <div className="flex-1">
-                <h4 className="text-sm">강아지 사료 10kg 새상품</h4>
-                <p className="text-sm font-bold">45,000원</p>
+                <h4 className="text-sm">{selectedChat.product.title || '상품 제목 없음'}</h4>
+                <p className="text-sm font-bold">{selectedChat.product.price || ''}</p>
               </div>
               <button
                 className="text-sm border border-border h-8 rounded-md px-3"
                 onClick={() => {
-                  alert('해당 상품 상세페이지 이동 버튼 구현예정');
+                  alert(`${selectedChat.product.title} 상세페이지 이동 구현 예정`);
                 }}
               >
                 상품보기
@@ -77,37 +100,10 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose }) => {
 
           {/* 메시지 영역 */}
           <div className="flex-1 p-3 flex flex-col gap-2 overflow-y-auto">
-            <ChatLog
-              message="안녕하세요! 강아지 사료 구매하고 싶은데요"
-              time="오후 1:30"
-              position="left"
-            />
-            <ChatLog
-              message="안녕하세요! 관심 가져주셔서 감사합니다"
-              time="오후 1:32"
-              position="right"
-            />
-            <ChatLog
-              message="유통기한이나 상태 궁금한 점 있으시면 언제든 물어보세요"
-              time="오후 1:33"
-              position="right"
-            />
-            <ChatLog
-              message="직거래 가능한가요? 서울 강남쪽에서요"
-              time="오후 2:15"
-              position="left"
-            />
-            <ChatLog
-              message="네 가능합니다! 강남역 근처 어떠세요?"
-              time="오후 2:18"
-              position="right"
-            />
-            <ChatLog
-              message="좋아요! 그럼 내일 오후 3시에 강남역 2번 출구에서 만날까요?"
-              time="오후 2:28"
-              position="left"
-            />
-            <ChatLog message="네, 내일 오후 3시에 만나요!" time="오후 2:30" position="right" />
+            {selectedChat?.messages.map((msg, idx) => (
+              <ChatLog key={idx} message={msg.message} time={msg.time} position={msg.position} />
+            ))}
+            <div ref={messageEndRef} />
           </div>
 
           {/* 입력창 */}
@@ -116,10 +112,13 @@ const ChatModal: React.FC<ChatModalProps> = ({ onClose }) => {
               <input
                 className="flex-1 h-9 rounded-md border px-3 py-1 border-gray-300 text-sm"
                 placeholder="메시지를 입력하세요..."
-                value={message}
-                onChange={handleChangeMessage}
+                value={input}
+                onChange={e => setInput(e.target.value)}
               />
-              <button className="flex items-center justify-center rounded-md bg-primary h-9 px-3">
+              <button
+                className="flex items-center justify-center rounded-md bg-primary h-9 px-3"
+                onClick={handleSend}
+              >
                 <FaRegPaperPlane color="#fff" />
               </button>
             </div>

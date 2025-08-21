@@ -1,19 +1,40 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ChatModal from './ChatModal';
 
 const ChatWidget: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
 
-  const toggleChatModal = () => {
-    setIsChatOpen(prev => !prev);
+  // 버튼 클릭 시 항상 열기만 함
+  const openChatModal = () => {
+    setIsChatOpen(true);
   };
+
+  // ✅ 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (chatRef.current && !chatRef.current.contains(event.target as Node)) {
+        setIsChatOpen(false);
+      }
+    };
+
+    if (isChatOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isChatOpen]);
 
   return (
     <>
       <div className="fixed bottom-5 right-2 z-50">
         <div className="relative flex items-end justify-end">
           <button
-            onClick={toggleChatModal}
+            onClick={openChatModal}
             className="bg-[#7BA5D6] text-white rounded-full px-2 py-2 shadow-md relative"
           >
             💬 채팅
@@ -24,7 +45,11 @@ const ChatWidget: React.FC = () => {
         </div>
       </div>
 
-      {isChatOpen && <ChatModal onClose={toggleChatModal} />}
+      {isChatOpen && (
+        <div ref={chatRef}>
+          <ChatModal onClose={() => setIsChatOpen(false)} />
+        </div>
+      )}
     </>
   );
 };
