@@ -76,58 +76,52 @@ const MyPage: React.FC = () => {
       {/* 헤더영역 => 컴포넌트화 */}
       <SimpleHeader title={'마이 페이지'} />
 
-      <div className="px-lg py-3xl bg-bg">
-        <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">
-          {/* 좌측 내 정보 영역 */}
-          <aside className="tablet:col-span-1">
-            <div className=" flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary p-xl">
-              {/* 유저 이미지 */}
-              <div className="flex flex-col items-center">
-                <div className="w-auto h-22 mx-auto mb-lg rounded-full overflow-hidden">
-                  <img src={userDefaultImage} alt="유저이미지" className="w-auto h-22" />
-                </div>
-                <h3 className="heading4 text-text-primary mb-sm">{userInfo.nickname}</h3>
-              </div>
+      <div className="max-w-[var(--container-max-width)] mx-auto">
+        <main className="mx-auto flex flex-col tablet:flex-row gap-xl px-lg py-xl bg-bg max-w-[var(--container-max-width)]">
+          {/* 좌측 내 정보 영역 / 너비,높이 고정값 부여가 차라리 나은듯 함 */}
+          <aside className="mx-auto w-[300px] h-[375px] flex-shrink-0 flex flex-col gap-xl rounded-xl border border-border p-xl">
+            {/* 유저 이미지와 닉네임 */}
+            <div className="flex flex-col items-center">
+              <img
+                src={userDefaultImage}
+                alt="유저이미지"
+                className="w-auto h-15 tablet:h-22 mx-auto mb-sm"
+              />
+              <h3 className="heading5 tablet:text-heading4 text-text-primary ">
+                {userInfo.nickname}
+              </h3>
+            </div>
+            {/* 거주지 주소 */}
+            <div className="flex items-center gap-sm">
+              <CiLocationOn />
+              {userInfo.state} {userInfo.city}
+            </div>
+            {/* 가입일 */}
+            <div className="flex items-center gap-sm">
+              <CiCalendar />
+              {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''}
+            </div>
 
-              <div className="flex flex-col gap-sm">
-                <div className="flex items-center gap-sm">
-                  <CiLocationOn />
-                  <span className="bodySmall text-text-primary">
-                    {userInfo.state} {userInfo.city}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-sm">
-                  <CiCalendar />
-                  <span className="bodySmall text-text-primary">
-                    {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-sm">
-                <Link
-                  to="/profile-update"
-                  className="
+            <Link
+              to="/profile-update"
+              className="
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90
                     text-bg text-sm font-medium
                     transition-all"
-                >
-                  내 정보 수정
-                </Link>
-              </div>
-            </div>
+            >
+              내 정보 수정
+            </Link>
 
             {/* 회원탈퇴 버튼을 div에서 button으로 변경하고 핸들러 연결 */}
-            <div className="mt-6 text-xs text-red-500 cursor-pointer hover:underline self-start">
+            <div className=" text-xs text-red-500 cursor-pointer hover:underline self-start">
               <button onClick={handleExit}>회원탈퇴</button>
             </div>
           </aside>
 
           {/* 우측 탭 및 컨텐츠 영역 */}
-          <section className="tablet:col-span-2 flex flex-col gap-[23px]">
+          <section className="flex-1 flex flex-col gap-[23px]">
             {/* 탭 리스트*/}
             <div
               role="tablist"
@@ -157,7 +151,7 @@ const MyPage: React.FC = () => {
               aria-labelledby={`tab-${activeTab}`}
               className="flex flex-col gap-md border border-border p-xl rounded-xl"
             >
-              {/* 헤더 영역 */}
+              {/* 탭 선택시 컨텐츠 헤더 */}
               {activeTab === 'products' ? (
                 <div>
                   <h4 className="flex items-center gap-2">내가 등록한 상품</h4>
@@ -170,7 +164,7 @@ const MyPage: React.FC = () => {
                 </div>
               )}
 
-              {/* 탭 목록 */}
+              {/* 컨텐츠 목록 */}
               <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
                 {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
                 <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
