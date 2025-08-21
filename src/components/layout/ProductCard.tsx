@@ -1,3 +1,4 @@
+import { PETS } from '@constants/constants';
 import React from 'react';
 import { CiClock2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
@@ -30,6 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     title,
     price,
     images,
+    pet_type_code,
     pet_type_detail_code,
     condition_status,
     elapsed_time,
@@ -66,6 +68,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
       return `${diffDays}일 전`;
     }
   };
+  const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
+    console.log(petDetailCode);
+
+    const petType = PETS.find(pet => pet.code === petTypeCode);
+    if (!petType) return petDetailCode;
+
+    const detail = petType.details.find(d => d.code === petDetailCode);
+    console.log(detail);
+
+    return detail?.name || petDetailCode;
+  };
+  const petTypeName = getPetTypeName(pet_type_code || '', pet_type_detail_code);
   return (
     <div
       className="
@@ -121,7 +135,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               text-caption font-medium whitespace-nowrap
             "
           >
-            {pet_type_detail_code}
+            {petTypeName}
           </span>
           <span
             className="

@@ -1,17 +1,17 @@
+import { SimpleHeader } from '@layout/SimpleHeader';
 import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { GrView } from 'react-icons/gr';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { UserWithProducts } from 'src/types';
 import { fetchSellerById } from '../api/products';
-import { SimpleHeader } from '@layout/SimpleHeader';
 
 const UserPage = () => {
   const [seller, setSeller] = useState<UserWithProducts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const formatJoinDate = (dateString: string): string => {
@@ -22,6 +22,11 @@ const UserPage = () => {
 
     return `${year}년 ${month}월 가입`;
   };
+
+  const goToProductDetail = () => {
+    navigate(`/products/${id}`);
+  };
+
   const loadSellerData = async () => {
     if (!id) return;
 
@@ -135,13 +140,14 @@ const UserPage = () => {
                 <div className="flex flex-col gap-md">
                   {seller.seller_products.map(item => (
                     <div
+                      key={item.id}
                       className="
                     cursor-pointer
                     rounded-lg p-lg
                     border border-border
                     bg-bg
-                    transition-shadow hover:shadow-sm
-                  "
+                    transition-shadow hover:shadow-sm"
+                      onClick={goToProductDetail}
                     >
                       <div className="flex items-center gap-lg">
                         <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-light">

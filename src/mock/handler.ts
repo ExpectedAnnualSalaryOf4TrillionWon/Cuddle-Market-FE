@@ -3,7 +3,7 @@ import { mockProducts } from './data/products';
 // http: HTTP 요청(GET, POST 등)을 처리하는 도구
 // HttpResponse: 응답을 만들어주는 도구
 import { http, HttpResponse, passthrough } from 'msw';
-import type { ProductDetailItem } from 'src/types';
+import type { ProductDetailItem, User } from 'src/types';
 import { mockUsers } from './data/users';
 
 // mockProducts 원소 타입을 그대로 가져오기
@@ -11,12 +11,15 @@ type MockProduct = (typeof mockProducts)[number];
 const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
 
 export const handlers = [
-  http.post('*/api/users/kakao-auth/', () => {
+  http.post('*/api/v1/users/kakao-auth/', () => {
     return passthrough(); // 실제 서버로 요청 전달
   }),
 
   // 프로필 완성 API도 실제 서버로 통과
-  http.post('*/api/users/profile-complete/', () => {
+  http.post('*/api/v1/users/profile-complete/', () => {
+    return passthrough();
+  }),
+  http.get('*/api/v1/categories/all-get/', () => {
     return passthrough();
   }),
 
@@ -129,6 +132,22 @@ export const handlers = [
   http.post('/api/products', async ({ request }) => {
     const formData = await request.formData();
 
+    const currentUser: User = {
+      id: 999,
+      name: '강주현',
+      nickname: '테스트유저',
+      birthday: '1990-01-01',
+      is_active: true,
+      is_staff: false,
+      is_superuser: false,
+      profile_completed: true,
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+      last_login: new Date().toISOString(),
+      state: '서울특별시',
+      city: '강남구',
+    };
+
     // FormData에서 데이터 추출
     const newProduct = {
       id: mockProducts.length + 1, // 임시 ID 생성
@@ -155,16 +174,7 @@ export const handlers = [
       like_count: 0,
       elapsed_time: '2025-08-16T08:00:00Z',
       is_liked: false,
-      seller_info: {
-        id: 999,
-        name: '강주현',
-        nickname: '테스트유저',
-        profile_image:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-        state: formData.get('state_code') as string,
-        city: formData.get('city_code') as string,
-        created_at: new Date().toISOString(),
-      },
+      seller_info: currentUser,
     };
 
     // 유효성 검사
