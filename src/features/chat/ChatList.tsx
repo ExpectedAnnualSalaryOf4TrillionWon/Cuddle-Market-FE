@@ -1,4 +1,4 @@
-import { mockChatList, type ChatItem } from './MockChatList';
+import { mockChatList, type ChatItem } from './MockChatData';
 import { useEffect } from 'react';
 import { useChatSocketStore } from '@store/ChatSocketStore';
 

@@ -4,7 +4,7 @@ import { FaRegPaperPlane } from 'react-icons/fa';
 import { RiMore2Line } from 'react-icons/ri';
 import { ChatLog } from './ChatLog';
 import { ChatList } from './ChatList';
-import { mockChatList } from './MockChatList';
+import { mockChatList } from './MockChatData';
 import { ChatOpponentInfo } from './ChatOpponentInfo';
 import { useChatSocketStore } from '@store/ChatSocketStore';
 
