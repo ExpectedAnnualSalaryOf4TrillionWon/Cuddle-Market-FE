@@ -1,4 +1,3 @@
-
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { useModalStore } from '@store/modalStore';
@@ -74,16 +73,14 @@ const MyPage: React.FC = () => {
 
   return (
     <>
-
       {/* 헤더영역 => 컴포넌트화 */}
       <SimpleHeader title={'마이 페이지'} />
-
 
       <div className="px-lg py-3xl bg-bg">
         <main className="max-w-[var(--container-max-width)] mx-auto grid grid-cols-1 tablet:grid-cols-3 gap-xl">
           {/* 좌측 내 정보 영역 */}
           <aside className="tablet:col-span-1">
-            <div className="sticky top-24 flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary p-xl">
+            <div className=" flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary p-xl">
               {/* 유저 이미지 */}
               <div className="flex flex-col items-center">
                 <div className="w-auto h-22 mx-auto mb-lg rounded-full overflow-hidden">

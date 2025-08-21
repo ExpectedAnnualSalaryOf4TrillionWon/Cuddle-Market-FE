@@ -27,6 +27,10 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
   const goToMyPage = () => {
     navigate('/mypage');
   };
+
+  const goToProductPost = () => {
+    navigate('/product-post');
+  };
   // 로그아웃 확인 모달 설정
 
   const handleLogout = async () => {
@@ -48,7 +52,8 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
           <DropdownButton
             label={'테스트'}
             onClick={() => {
-              login(), setIsOpen(false);
+              login();
+              setIsOpen(false);
             }}
           />
         </>
@@ -57,6 +62,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
         <>
           <DropdownButton label={'마이페이지'} onClick={goToMyPage} />
           <DropdownButton label={'로그아웃'} onClick={handleLogout} />
+          <DropdownButton label={'상품 등록'} onClick={goToProductPost} />
         </>
       )}
     </div>
