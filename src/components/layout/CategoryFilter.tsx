@@ -284,7 +284,7 @@ export function CategoryFilter() {
       {/* 하위 분류(개체) */}
       <div>
         {Object.entries(petCategories)
-          .filter(([_, category]) => category.selected)
+          .filter(entry => entry[1].selected)
           .map(([key, category]) => (
             <div key={key} aria-labelledby={`pet-sub-${key}`}>
               <h4 id={`pet-sub-${key}`} className="mb-sm heading5 text-text-primary">

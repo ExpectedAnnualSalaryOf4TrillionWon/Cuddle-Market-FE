@@ -1,10 +1,9 @@
-import { SimpleHeader } from '@layout/SimpleHeader';
-import { useState, useRef } from 'react';
-import { CITIES, PROVINCES } from '@constants/Cities';
-import type { Province } from '@constants/Cities';
-import { CiLocationOn } from 'react-icons/ci';
 import UserDefaultImage from '@images/userDefault.svg';
-import { useNavigate } from 'react-router-dom';
+import { MdPhotoCamera } from 'react-icons/md';
+import { CITIES, PROVINCES, type Province } from '@constants/Cities';
+import { SimpleHeader } from '@layout/SimpleHeader';
+import { useRef, useState } from 'react';
+
 
 interface ProfileUpdateProps {
   profile_image_url?: string;
@@ -15,16 +14,12 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showCitySelect, setShowCitySelect] = useState(false);
-  const navigate = useNavigate();
-
-  const goToMyPage = () => {
-    navigate('/mypage');
-  };
-
-  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
 
   const provinceBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
+  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
+
+  const [editField, setEditField] = useState<string | null>(null);
 
   //TODO 전역상태로 현재 유저가 전에 설정한 정보 불러와서 디폴트로 연결하기.
   //디폴트값 대체. 연동되면 지우기.
@@ -32,17 +27,6 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   const currentSelectedProvince: null = null;
   const currentSelectedcity: null = null;
 
-  const handleSelectProvince = (opt: Province) => {
-    setSelectedProvince(opt);
-    setSelectedCity(''); // 시/도 변경 시 구/군 초기화
-    setShowProvinceSelect(false); // 시/도 목록 닫기
-    setShowCitySelect(false);
-  };
-
-  const handleSelectCity = (opt: string) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
-  };
   const [formData, setFormData] = useState({
     nickname: currentNickname,
     selectedProvince: currentSelectedProvince,
@@ -50,7 +34,17 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
     profile_image_url,
   });
 
-  const [editField, setEditField] = useState<string | null>(null);
+  const handleSelectProvince = (opt: Province) => {
+    setSelectedProvince(opt);
+    setSelectedCity('');
+    setShowProvinceSelect(false);
+    setShowCitySelect(false);
+  };
+
+  const handleSelectCity = (opt: string) => {
+    setSelectedCity(opt);
+    setShowCitySelect(false);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,39 +66,43 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
     const value = formData[fieldName] || '';
 
     return (
-      <div className="flex flex-col gap-xs p-sm text-heading5 bg-bg rounded-2xl">
-        <label className="text-heading5 font-bold">{label}</label>
+      <div className="flex flex-col gap-1">
+        <label className="flex items-center gap-2 text-sm" htmlFor="nickname">
+          {label}
+        </label>
         {editField === fieldName ? (
-          <div className="grid grid-cols-[1fr_auto_auto] gap-xs">
+          <div className="grid grid-cols-[1fr_auto_auto] gap-xs border border-border pr-2 py-2 rounded-md bg-secondary/30">
             <input
               type="text"
               name={fieldName}
               value={value}
               onChange={handleChange}
-              className="border p-xs rounded w-full bg-point"
+              className="flex w-full rounded-md px-3 py-1 text-sm "
             />
-            <button
-              type="button"
-              onClick={handleSave}
-              className="bg-primary text-text-primary p-xs rounded hover:bg-dark text-xs"
-            >
-              저장
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="bg-primary text-text-primary p-xs rounded hover:bg-dark text-xs"
-            >
-              취소
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleSave}
+                className="text-xs bg-primary rounded-md py-xs px-sm hover:bg-dark"
+              >
+                저장
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="text-xs bg-primary rounded-md py-xs px-sm hover:bg-dark"
+              >
+                취소
+              </button>
+            </div>
           </div>
         ) : (
-          <div className="flex justify-between items-center gap-sm">
-            <span>{value || '-'}</span>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-xs border border-border pr-2 py-2 rounded-md bg-secondary/30">
+            <p className="flex w-full rounded-md text-sm px-3 py-1">{value || '-'}</p>
             <button
               type="button"
               onClick={() => setEditField(fieldName)}
-              className="text-xs bg-primary rounded-md p-xs hover:bg-dark"
+              className="text-xs bg-primary rounded-md py-xs px-sm hover:bg-dark"
             >
               수정
             </button>
@@ -117,109 +115,171 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   return (
     <>
       <SimpleHeader title="내 정보 수정" />
-      <form className="max-w-[30rem] h-[80vh] mx-auto px-lg py-lg flex justify-center items-center bg-secondary gap-lg">
-        <button
-          type="button"
-          className="p-xs"
-          onClick={() => {
-            alert('프로필 이미지 업로드창 출력');
-          }}
-        >
-          <img src={UserDefaultImage} alt="유저 프로필 이미지" />
-        </button>
-        <div className="flex flex-col gap-sm my-auto w-full bg-bg p-md rounded-md ">
-          {renderField('닉네임', 'nickname')}
-          <div className="relative" ref={provinceBoxRef}>
-            <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-            <button
-              type="button"
-              role="combobox"
-              aria-expanded={showProvinceSelect}
-              onClick={() => {
-                setShowProvinceSelect(prev => !prev);
-                setShowCitySelect(false);
-              }}
-              className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-            >
-              <span className="text-gray-500">{selectedProvince || '시/도를 선택해주세요'}</span>
-            </button>
-            {showProvinceSelect && (
-              <div
-                role="listbox"
-                aria-label="시/도 선택"
-                className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
-              >
-                {PROVINCES.map(opt => (
-                  <button
-                    key={opt}
-                    role="option"
-                    aria-selected={selectedProvince === opt}
-                    type="button"
-                    onClick={() => handleSelectProvince(opt)}
-                    className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
+        <div className="flex flex-col gap-[20px]">
+          <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
+            <div className="flex flex-col items-start gap-1">
+              <h4 className="flex items-center gap-2">기본 정보</h4>
+              <p className="text-sm">프로필 이미지, 닉네임, 거주지를 수정할 수 있습니다</p>
+            </div>
+            <div className="flex flex-col gap-4xl">
+              <div className="flex items-start gap-2xl">
+                {/* 프로필 사진 */}
+                <div className="relative">
+                  <div className="relative flex overflow-hidden rounded-full h-24 w-24">
+                    <img
+                      className="aspect-square size-full"
+                      alt="멍멍이아빠"
+                      src={UserDefaultImage}
+                    />
+                  </div>
+                  <label
+                    htmlFor="profile-image"
+                    className="absolute bottom-0 -right-2 bg-primary text-white rounded-full p-2 cursor-pointer"
                   >
-                    {opt}
-                  </button>
-                ))}
+                    <MdPhotoCamera />
+                  </label>
+                  <input id="profile-image" type="file" accept="image/*" className="hidden" />
+                </div>
+
+                {/* 프로필 정보 */}
+                <div className="flex-1 flex flex-col gap-2.5">
+                  {/* 닉네임 */}
+                  {renderField('닉네임', 'nickname')}
+
+                  {/* 거주지 */}
+                  <div className="flex flex-col gap-1">
+                    <label className="flex items-center gap-2 text-sm">거주지</label>
+                    <div className="flex gap-2">
+                      <div
+                        className="relative border border-border rounded-md w-1/2"
+                        ref={provinceBoxRef}
+                      >
+                        <button
+                          type="button"
+                          role="combobox"
+                          aria-expanded={showProvinceSelect}
+                          onClick={() => {
+                            setShowProvinceSelect(prev => !prev);
+                            setShowCitySelect(false);
+                          }}
+                          className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
+                        >
+                          <span className="text-gray-500">
+                            {selectedProvince || '시/도를 선택해주세요'}
+                          </span>
+                        </button>
+                        {showProvinceSelect && (
+                          <div
+                            role="listbox"
+                            aria-label="시/도 선택"
+                            className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
+                          >
+                            {PROVINCES.map(opt => (
+                              <button
+                                key={opt}
+                                role="option"
+                                aria-selected={selectedProvince === opt}
+                                type="button"
+                                onClick={() => handleSelectProvince(opt)}
+                                className={`w-full px-3 py-xs rounded-md transition
+                            hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                            ${selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className="relative border border-border rounded-md w-1/2"
+                        ref={cityBoxRef}
+                      >
+                        <button
+                          type="button"
+                          role="combobox"
+                          aria-expanded={showCitySelect}
+                          onClick={() => {
+                            if (!selectedProvince) return;
+                            setShowCitySelect(prev => !prev);
+                            setShowProvinceSelect(false);
+                          }}
+                          className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
+                        >
+                          <span className="text-gray-500">
+                            {selectedCity ||
+                              (selectedProvince
+                                ? '구/군을 선택해주세요'
+                                : '먼저 시/도를 선택해주세요')}
+                          </span>
+                        </button>
+                        {showCitySelect && selectedProvince && (
+                          <div
+                            role="listbox"
+                            aria-label="구/군 선택"
+                            className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md
+                                              mt-sm"
+                          >
+                            {cityOptions.map(opt => (
+                              <button
+                                key={opt}
+                                role="option"
+                                aria-selected={selectedCity === opt}
+                                type="button"
+                                onClick={() => handleSelectCity(opt)}
+                                className={`w-full px-3 py-xs rounded-md transition
+                            hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                            ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-          <div className="relative" ref={cityBoxRef}>
-            <CiLocationOn className="absolute left-3 top-1/2 transform -translate-y-1/2" />
-            <button
-              type="button"
-              role="combobox"
-              aria-expanded={showCitySelect}
-              onClick={() => {
-                if (!selectedProvince) return;
-                setShowCitySelect(prev => !prev);
-                setShowProvinceSelect(false);
-              }}
-              className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
-            >
-              <span className="text-gray-500">
-                {selectedCity ||
-                  (selectedProvince ? '구/군을 선택해주세요' : '먼저 시/도를 선택해주세요')}
-              </span>
-            </button>
-            {showCitySelect && selectedProvince && (
-              <div
-                role="listbox"
-                aria-label="구/군 선택"
-                className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
-                            mt-sm"
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary"
               >
-                {cityOptions.map(opt => (
-                  <button
-                    key={opt}
-                    role="option"
-                    aria-selected={selectedCity === opt}
-                    type="button"
-                    onClick={() => handleSelectCity(opt)}
-                    className={`w-full px-3 py-xs rounded-md transition
-          hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-          ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
-                  >
-                    {opt}
-                  </button>
-                ))}
+                프로필 저장
+              </button>
+            </div>
+          </form>
+
+          <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
+            <div className="flex flex-col items-start gap-1">
+              <h4 className="flex items-center gap-2">비밀번호 변경</h4>
+              <p className="text-sm">보안을 위해 주기적으로 비밀번호를 변경해주세요</p>
+            </div>
+            <div className="flex-1 flex flex-col gap-4xl">
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-2 text-sm" htmlFor="new-password">
+                  이메일
+                </label>
+                <input
+                  type="password"
+                  className="flex h-9 w-full rounded-md border border-border px-3 py-1 text-sm bg-secondary/30"
+                  id="new-password"
+                  placeholder="이메일 주소를 입력하세요"
+                  value=""
+                />
               </div>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="bg-primary hover:bg-dark"
-            onClick={() => {
-              alert('저장 완료 후 마이페이지로 이동');
-              goToMyPage();
-            }}
-          >
-            저장하기
-          </button>
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 rounded-md text-sm border border-border px-4 py-2 w-full bg-secondary"
+              >
+                비밀번호 변경
+              </button>
+            </div>
+          </form>
+
         </div>
-      </form>
+      </div>
     </>
   );
 };
