@@ -116,8 +116,8 @@ const MyPage: React.FC = () => {
         </aside>
 
         {/* 우측 탭 및 컨텐츠 영역 */}
-        <section className="flex-1 flex flex-col gap-[23px]">
-          {/* 탭 리스트*/}
+        <section className="flex-1 flex flex-col gap-xs">
+          {/* 탭 목록*/}
           <div
             role="tablist"
             className="grid grid-cols-2 gap-sm px-sm py-2.5 rounded-3xl bg-dark/25"
@@ -144,7 +144,7 @@ const MyPage: React.FC = () => {
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="flex flex-col gap-md border border-border p-xl rounded-xl"
+            className="flex flex-col gap-md border border-border p-md rounded-xl"
           >
             {/* 탭 선택시 컨텐츠 헤더 */}
             {activeTab === 'products' ? (
@@ -160,7 +160,7 @@ const MyPage: React.FC = () => {
             )}
 
             {/* 컨텐츠 목록 */}
-            <div className="overflow-y-auto max-h-[40vh] flex flex-col gap-lg">
+            <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-lg">
               {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
               <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
 
