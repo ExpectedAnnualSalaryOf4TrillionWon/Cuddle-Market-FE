@@ -1,10 +1,6 @@
-interface ChatLogProps {
-  message: string;
-  time: string;
-  position: 'left' | 'right';
-}
+import type { ChatMessage } from 'src/types/ChatType';
 
-export const ChatLog: React.FC<ChatLogProps> = ({ message, time, position }) => {
+export const ChatLog: React.FC<ChatMessage> = ({ message, time, position }) => {
   const isRight = position === 'right';
 
   return (

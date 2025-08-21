@@ -1,12 +1,9 @@
-import { mockChatList, type ChatItem } from './MockChatData';
+import { mockChatList } from './MockChatData';
+import type { ChatItem } from 'src/types/ChatType';
 import { useEffect } from 'react';
 import { useChatSocketStore } from '@store/ChatSocketStore';
 
-type ChatModalProps = {
-  onClose: () => void;
-};
-
-export const ChatList: React.FC<ChatModalProps> = ({ onClose }) => {
+export const ChatList = ({ onClose }: { onClose: () => void }) => {
   const { joinRoom } = useChatSocketStore();
 
   // 예: 첫 채팅방 입장
