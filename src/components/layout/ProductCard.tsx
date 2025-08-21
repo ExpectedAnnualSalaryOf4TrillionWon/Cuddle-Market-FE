@@ -69,6 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
   const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
+    console.log(petTypeCode);
     console.log(petDetailCode);
 
     const petType = PETS.find(pet => pet.code === petTypeCode);
