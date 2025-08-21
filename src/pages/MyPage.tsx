@@ -81,11 +81,7 @@ const MyPage: React.FC = () => {
         <aside className="mx-auto w-[300px] h-[375px] flex-shrink-0 flex flex-col gap-xl rounded-xl border border-border p-xl">
           {/* 유저 이미지와 닉네임 */}
           <div className="flex flex-col items-center">
-            <img
-              src={userDefaultImage}
-              alt="유저이미지"
-              className="w-auto h-15 tablet:h-22 mx-auto mb-sm"
-            />
+            <img src={userDefaultImage} alt="유저이미지" className="w-auto h-22 mx-auto mb-sm" />
             <h3 className="heading5 tablet:text-heading4 text-text-primary ">
               {userInfo.nickname}
             </h3>
