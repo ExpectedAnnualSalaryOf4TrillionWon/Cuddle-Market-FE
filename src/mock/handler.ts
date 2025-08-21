@@ -2,7 +2,7 @@ import { mockProducts } from './data/products';
 
 // http: HTTP 요청(GET, POST 등)을 처리하는 도구
 // HttpResponse: 응답을 만들어주는 도구
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, passthrough } from 'msw';
 import type { ProductDetailItem } from 'src/types';
 import { mockUsers } from './data/users';
 
@@ -11,6 +11,15 @@ type MockProduct = (typeof mockProducts)[number];
 const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
 
 export const handlers = [
+  http.post('*/api/users/kakao-auth/', () => {
+    return passthrough(); // 실제 서버로 요청 전달
+  }),
+
+  // 프로필 완성 API도 실제 서버로 통과
+  http.post('*/api/users/profile-complete/', () => {
+    return passthrough();
+  }),
+
   // 상품 목록 조회
   http.get('/api/products', ({ request }) => {
     // ({ request }): 요청 정보를 request라는 이름으로 받아옵니다
@@ -148,6 +157,7 @@ export const handlers = [
       is_liked: false,
       seller_info: {
         id: 999,
+        name: '강주현',
         nickname: '테스트유저',
         profile_image:
           'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',

@@ -1,11 +1,16 @@
 // ========== 기본 유저 관련 타입 ==========
 export interface User {
   id: number;
+  name: string;
   nickname: string;
-  profile_image: string;
   state: string;
   city: string;
-  created_at: string;
+  birthday?: string;
+  profile_image?: string;
+  created_at?: string;
+  profile_completed?: boolean;
+  last_login?: string;
+  seller_info?: User;
 }
 
 export interface UserWithProducts extends User {
@@ -164,4 +169,23 @@ export interface FormErrors {
   location?: string;
   images?: string;
   general?: string;
+  userName?: string;
+  userNickName?: string;
+  userBirth?: string;
+}
+
+export interface CreateUserRequest {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state: string;
+  city: string;
+}
+
+export interface CreateUserResponse {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state: string;
+  city: string;
 }

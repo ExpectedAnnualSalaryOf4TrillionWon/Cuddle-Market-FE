@@ -4,6 +4,7 @@ import type { UserWithProducts } from 'src/types';
 export const mockUsers: UserWithProducts[] = [
   {
     id: 1,
+    name: 'ddd',
     profile_image:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     nickname: '멍멍이 아빠',
@@ -39,6 +40,7 @@ export const mockUsers: UserWithProducts[] = [
   },
   {
     id: 2,
+    name: 'ddd',
     profile_image:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     nickname: '냥냥이 엄마',

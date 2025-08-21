@@ -1,10 +1,9 @@
 import UserDefaultImage from '@images/userDefault.svg';
-// import { CiLocationOn } from 'react-icons/ci';
 import { MdPhotoCamera } from 'react-icons/md';
-
 import { CITIES, PROVINCES, type Province } from '@constants/Cities';
 import { SimpleHeader } from '@layout/SimpleHeader';
 import { useRef, useState } from 'react';
+
 
 interface ProfileUpdateProps {
   profile_image_url?: string;
@@ -15,6 +14,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   const [showProvinceSelect, setShowProvinceSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showCitySelect, setShowCitySelect] = useState(false);
+
   const provinceBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
   const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
@@ -53,8 +53,8 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   };
 
   const handleSave = () => {
-    // TODO: 저장 API 호출
-    // handleChange;
+    // TODO: 저장 API 호출 후 handlechange 삭제.
+    handleChange;
     setEditField(null); // 변동사항 적용 후 편집 종료
   };
 
@@ -277,6 +277,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </button>
             </div>
           </form>
+
         </div>
       </div>
     </>

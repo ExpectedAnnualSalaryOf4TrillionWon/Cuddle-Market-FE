@@ -20,7 +20,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '강남구',
-    category_code: '사료/간식',
+    category_code: 'food',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매중',
@@ -30,12 +30,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2025-08-16T08:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
     seller_products: [
       {
@@ -70,7 +71,7 @@ export const mockProducts: ProductDetailItem[] = [
     state_code: '경기도',
     images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
     city_code: '성남시',
-    category_code: '건강/위생',
+    category_code: 'health',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '판매중',
@@ -80,12 +81,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -97,7 +99,7 @@ export const mockProducts: ProductDetailItem[] = [
       'https://images.unsplash.com/photo-1667716705760-233650f8f3fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb2clMjBsZWFzaCUyMGNvbGxhciUyMHNldHxlbnwxfHx8fDE3NTUzMzEzNDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     state_code: '서울특별시',
     city_code: '마포구',
-    category_code: '이동장/목줄',
+    category_code: 'transport',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매완료',
@@ -107,12 +109,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -124,7 +127,7 @@ export const mockProducts: ProductDetailItem[] = [
       'https://images.unsplash.com/photo-1599907370087-e0955afcb920?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXQlMjB0b3dlciUyMHNjcmF0Y2hpbmclMjBwb3N0fGVufDF8fHx8MTc1NTMzMTM1MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     state_code: '인천광역시',
     city_code: '연수구',
-    category_code: '장난감',
+    category_code: 'toy',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '예약중',
@@ -134,12 +137,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -161,12 +165,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -177,7 +182,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '종로구',
-    category_code: '사육장/하우스',
+    category_code: 'house',
     pet_type_code: '곤충/절지동물',
     pet_type_detail_code: '햄스터',
     transaction_status: '판매중',
@@ -187,12 +192,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -203,7 +209,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
     state_code: '부산광역시',
     city_code: '해운대구',
-    category_code: '사료/간식',
+    category_code: 'food',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '판매완료',
@@ -213,12 +219,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -229,7 +236,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop',
     state_code: '대구광역시',
     city_code: '동구',
-    category_code: '장난감',
+    category_code: 'toy',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매중',
@@ -239,12 +246,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -255,7 +263,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '고양시',
-    category_code: '건강/위생',
+    category_code: 'health',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '판매중',
@@ -265,12 +273,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -281,7 +290,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '영등포구',
-    category_code: '건강/위생',
+    category_code: 'health',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매완료',
@@ -291,12 +300,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -307,7 +317,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop',
     state_code: '인천광역시',
     city_code: '연수구',
-    category_code: '사료/간식',
+    category_code: 'food',
     pet_type_code: '곤충/절지동물',
     pet_type_detail_code: 'RABBIT',
     transaction_status: '판매중',
@@ -317,12 +327,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -343,12 +354,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -359,7 +371,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '부산광역시',
     city_code: '해운대구',
-    category_code: '건강/위생',
+    category_code: 'health',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '예약중',
@@ -369,12 +381,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -385,7 +398,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '성남시',
-    category_code: '사육장/하우스',
+    category_code: 'house',
     pet_type_code: '곤충/절지동물',
     pet_type_detail_code: '기니피그',
     transaction_status: '판매중',
@@ -395,12 +408,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -421,12 +435,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -437,7 +452,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1599907370087-e0955afcb920?w=400&h=400&fit=crop',
     state_code: '대구광역시',
     city_code: '동구',
-    category_code: '장난감',
+    category_code: 'toy',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '판매중',
@@ -447,12 +462,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -463,7 +479,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1667716705760-233650f8f3fe?w=400&h=400&fit=crop',
     state_code: '인천광역시',
     city_code: '연수구',
-    category_code: '이동장/목줄',
+    category_code: 'transport',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매중',
@@ -473,12 +489,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -489,7 +506,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '송파구',
-    category_code: '사료/간식',
+    category_code: 'food',
     pet_type_code: '포유류',
     pet_type_detail_code: '강아지',
     transaction_status: '판매중',
@@ -499,12 +516,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -515,7 +533,7 @@ export const mockProducts: ProductDetailItem[] = [
     images: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '고양시',
-    category_code: '건강/위생',
+    category_code: 'health',
     pet_type_code: '포유류',
     pet_type_detail_code: '고양이',
     transaction_status: '판매중',
@@ -525,12 +543,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
@@ -551,12 +570,13 @@ export const mockProducts: ProductDetailItem[] = [
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
       nickname: '멍멍이 아빠',
+      name: '강주현',
       state: '서울특별시',
       city: '서초구',
       created_at: '2025-01-01T00:00:00',
+      profile_image:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
 ];

@@ -17,7 +17,7 @@ export const CATEGORY_OPTIONS = [
   { value: 'health', label: '건강/위생' },
   { value: 'accessories', label: '의류/악세사리' },
   { value: 'equipment', label: '사육장비' },
-  { value: 'carrier', label: '이동장/목줄' },
+  { value: 'transport', label: '이동장/목줄' },
   { value: 'cleaning', label: '청소용품' },
   { value: 'training', label: '훈련용품' },
   { value: 'etc', label: '기타' },
