@@ -24,20 +24,20 @@ export const useLike = (): UseLikeReturn => {
   // 찜하기 토글
   const toggleLike = useCallback(
     async (productId: number) => {
-      const wasLiked = likedProductIds.includes(productId);
+      const isLiked = likedProductIds.includes(productId);
 
       setLikedProductIds(prev =>
-        wasLiked ? prev.filter(id => id !== productId) : [...prev, productId],
+        isLiked ? prev.filter(id => id !== productId) : [...prev, productId],
       );
 
       try {
-        if (wasLiked) await removeLike(productId);
+        if (isLiked) await removeLike(productId);
         else await addLike(productId);
       } catch (e) {
         console.error('[useLike] 토글 실패, 롤백:', e);
         // 롤백
         setLikedProductIds(prev =>
-          wasLiked ? [...prev, productId] : prev.filter(id => id !== productId),
+          isLiked ? [...prev, productId] : prev.filter(id => id !== productId),
         );
         alert('찜하기 처리 중 오류가 발생했습니다.');
       }

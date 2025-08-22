@@ -1,7 +1,8 @@
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { SimpleHeader } from '@layout/SimpleHeader';
-import { useModalStore } from '@store/modalStore';
+// import { useModalStore } from '@store/modalStore';
+import ConfirmModal from '@common/confirmModal';
 import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -22,37 +23,61 @@ const MyPage: React.FC = () => {
   const [counts, setCounts] = useState({ products: 0, wishlist: 0 });
 
   // 확인 모달 설정 (22번째 줄 근처)
-  const exitConfirm = useModalStore(state => state.confirm);
-  const deleteConfirm = useModalStore(state => state.confirm);
+  // const exitConfirm = useModalStore(state => state.confirm);
+  // const deleteConfirm = useModalStore(state => state.confirm);
+
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null);
+  const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
 
   // 회원탈퇴 핸들러
-  const handleExit = async (): Promise<void> => {
-    const result = await exitConfirm('회원탈퇴 하시겠습니까?');
-    if (result === true) {
-      // TODO: 회원탈퇴 로직 구현
-      console.log('회원탈퇴 진행');
-      return;
-    } else {
-      return;
-    }
+  const handleExit = () => {
+    setModalMessage('정말로 회원탈퇴 하시겠습니까?\n탈퇴 후에는 복구할 수 없습니다.');
+    setModalAction('exit');
+    setIsModalOpen(true);
   };
 
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
-  const handleDelete = async (itemId?: number): Promise<void> => {
-    const result = await deleteConfirm('삭제하시겠습니까?');
-    if (result === true) {
-      // TODO: 상품삭제 로직 구현
-      console.log(`게시물 ${itemId} 삭제 진행`);
-      return;
-    } else {
-      return;
-    }
+  const handleDelete = (itemId?: number) => {
+    setModalMessage('정말로 삭제하시겠습니까?');
+    setModalAction('delete');
+    setDeleteItemId(itemId);
+    setIsModalOpen(true);
   };
 
   // const formatJoinDate = (dateString: string): string => {
   //   const date = new Date(dateString);
   //   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
   // };
+
+  const handleModalConfirm = () => {
+    setIsModalOpen(false);
+
+    if (modalAction === 'exit') {
+      // TODO: 회원탈퇴 API 호출
+      console.log('회원탈퇴 진행');
+      // 예: await deleteAccount();
+      // navigate('/');
+    } else if (modalAction === 'delete') {
+      // TODO: 상품삭제 API 호출
+      console.log(`게시물 ${deleteItemId} 삭제 진행`);
+      // 예: await deleteProduct(deleteItemId);
+      // 삭제 후 목록 새로고침
+      loadUserInfo();
+    }
+
+    // 상태 초기화
+    setModalAction(null);
+    setDeleteItemId(undefined);
+  };
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false);
+    setModalAction(null);
+    setDeleteItemId(undefined);
+  };
 
   const loadUserInfo = async () => {
     try {
@@ -94,7 +119,7 @@ const MyPage: React.FC = () => {
           {/* 가입일 */}
           <div className="flex items-center gap-sm">
             <CiCalendar />
-           가입일 :{/* {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''} */}
+            가입일 :{/* {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''} */}
           </div>
 
           <Link
@@ -178,6 +203,12 @@ const MyPage: React.FC = () => {
           </div>
         </section>
       </main>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onConfirm={handleModalConfirm}
+        onCancel={handleModalCancel}
+      />
     </>
   );
 };

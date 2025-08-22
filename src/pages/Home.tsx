@@ -26,7 +26,7 @@ const Home = () => {
    * 하트 번호 클릭 -> toggleLike 함수 실행(useLike 안의 toggleLike) ->
    * toggleLike 함수 안의 addLike 함수 실행 -> 핸들러 안의 http.post('/api/likes') 실행
    */
-  const { isProductLiked, toggleLike } = useLike();
+  const { isProductLiked } = useLike();
 
   const loadProducts = async () => {
     try {
@@ -189,7 +189,7 @@ const Home = () => {
               data-index={index}
               product={product}
               isLiked={isProductLiked(product.id)}
-              onToggleLike={() => toggleLike(product.id)}
+              // onToggleLike={() => toggleLike(product.id)}
             />
           ))}
         </ul>

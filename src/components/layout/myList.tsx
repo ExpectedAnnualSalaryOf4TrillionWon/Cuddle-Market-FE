@@ -10,7 +10,7 @@ type TabId = 'products' | 'wishlist';
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
-  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
+  onDelete: (itemId?: number) => void;
 }
 
 const getProductState = (status: string): ProductState => {
@@ -25,101 +25,6 @@ const getProductState = (status: string): ProductState => {
       return 'selling';
   }
 };
-
-// interface Product {
-//   id: number;
-//   image: string;
-//   title: string;
-//   price: number;
-//   state: ProductState;
-//   view: number;
-// }
-
-// type ProductList = Product[];
-// const wishlist: ProductList = [];
-
-// const MyproductList: ProductList = [
-//   {
-//     id: 1,
-//     image: exampleImage,
-//     title: '강아지밥그릇',
-//     price: 20000,
-//     state: ProductState.Selling,
-//     view: 12,
-//   },
-//   {
-//     id: 2,
-//     image: defaultImage,
-//     title: '고양이장난감',
-//     price: 15000,
-//     state: ProductState.Selling,
-//     view: 12,
-//   },
-//   {
-//     id: 3,
-//     image: defaultImage,
-//     title: '햄스터집',
-//     state: ProductState.Selling,
-//     price: 25000,
-//     view: 120,
-//   },
-//   {
-//     id: 4,
-//     image: defaultImage,
-//     title: '새장',
-//     state: ProductState.Selling,
-//     price: 35000,
-//     view: 20,
-//   },
-//   {
-//     id: 5,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     state: ProductState.Reserved,
-//     price: 5000,
-//     view: 10,
-//   },
-//   {
-//     id: 6,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Sold,
-//     view: 120,
-//   },
-//   {
-//     id: 7,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-//   {
-//     id: 8,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-//   {
-//     id: 9,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Selling,
-//     view: 120,
-//   },
-//   {
-//     id: 10,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-// ];
 
 const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);

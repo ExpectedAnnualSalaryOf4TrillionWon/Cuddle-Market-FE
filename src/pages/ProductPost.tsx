@@ -66,9 +66,9 @@ const ProductPost = () => {
 
   /**거주지 */
   const [selectedState, setSelectedState] = useState<StateCode | string>('');
-  const [showStateSelect, setShowStateSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<CityCode | string>('');
-  const [showCitySelect, setShowCitySelect] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const cityOptions = selectedState
     ? LOCATIONS.find(location => location.code === selectedState)?.cities || []
@@ -178,17 +178,16 @@ const ProductPost = () => {
   };
 
   // 거주지
-  const handleSelectState = (opt: StateCode) => {
-    setSelectedState(opt);
+  const handleStateSelect = (stateCode: string) => {
+    setSelectedState(stateCode);
     setSelectedCity('');
-    setShowStateSelect(false);
-    setShowCitySelect(false);
+    setShowStateDropdown(false);
   };
 
-  const handleSelectCity = (opt: CityCode) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
-    if (selectedState && opt) {
+  const handleCitySelect = (cityCode: string) => {
+    setSelectedCity(cityCode);
+    setShowCityDropdown(false);
+    if (selectedState && cityCode) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.location;
@@ -395,12 +394,12 @@ const ProductPost = () => {
       const target = e.target as Node;
 
       // 시/도 드롭다운 바깥 클릭
-      if (showStateSelect && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
-        setShowStateSelect(false);
+      if (showStateDropdown && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
+        setShowStateDropdown(false);
       }
       // 구/군 드롭다운 바깥 클릭
-      if (showCitySelect && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
-        setShowCitySelect(false);
+      if (showCityDropdown && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
+        setShowCityDropdown(false);
       }
       // 반려동물 카테고리 드롭다운
       if (showPetTypeSelect && petTypeBoxRef.current && !petTypeBoxRef.current.contains(target)) {
@@ -418,8 +417,8 @@ const ProductPost = () => {
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (showStateSelect) setShowStateSelect(false);
-        if (showCitySelect) setShowCitySelect(false);
+        if (showStateDropdown) setShowStateDropdown(false);
+        if (showCityDropdown) setShowCityDropdown(false);
         if (showPetTypeSelect) setShowPetTypeSelect(false);
         if (showPetTypeDetailSelect) setShowPetTypeDetailSelect(false);
       }
@@ -431,7 +430,7 @@ const ProductPost = () => {
       document.removeEventListener('mousedown', handleOutside);
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [showStateSelect, showCitySelect, showPetTypeSelect, showPetTypeDetailSelect]);
+  }, [showStateDropdown, showCityDropdown, showPetTypeSelect, showPetTypeDetailSelect]);
 
   // 수정 모드일 때 기존 데이터 로드
   useEffect(() => {
@@ -939,10 +938,10 @@ const ProductPost = () => {
                           <button
                             type="button"
                             role="combobox"
-                            aria-expanded={showStateSelect}
+                            aria-expanded={showStateDropdown}
                             onClick={() => {
-                              setShowStateSelect(prev => !prev);
-                              setShowCitySelect(false);
+                              setShowStateDropdown(prev => !prev);
+                              setShowCityDropdown(false);
                             }}
                             className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
@@ -952,7 +951,7 @@ const ProductPost = () => {
                                 : '시/도를 선택해주세요'}
                             </span>
                           </button>
-                          {showStateSelect && (
+                          {showStateDropdown && (
                             <div
                               role="listbox"
                               aria-label="시/도 선택"
@@ -962,9 +961,9 @@ const ProductPost = () => {
                                 <button
                                   key={location.code}
                                   role="option"
-                                  aria-selected={selectedState === location.code}
                                   type="button"
-                                  onClick={() => handleSelectState(location.code)}
+                                  aria-selected={selectedState === location.code}
+                                  onClick={() => handleStateSelect(location.code)}
                                   className={`w-full px-3 py-xs rounded-md transition
                                 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
                                 ${
@@ -984,11 +983,11 @@ const ProductPost = () => {
                           <button
                             type="button"
                             role="combobox"
-                            aria-expanded={showCitySelect}
+                            aria-expanded={showCityDropdown}
                             onClick={() => {
                               if (!selectedState) return;
-                              setShowCitySelect(prev => !prev);
-                              setShowStateSelect(false);
+                              setShowCityDropdown(prev => !prev);
+                              setShowStateDropdown(false);
                             }}
                             className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
@@ -1000,7 +999,7 @@ const ProductPost = () => {
                                 : '먼저 시/도를 선택해주세요'}
                             </span>
                           </button>
-                          {showCitySelect && selectedState && (
+                          {showCityDropdown && selectedState && (
                             <div
                               role="listbox"
                               aria-label="구/군 선택"
@@ -1013,7 +1012,7 @@ const ProductPost = () => {
                                   type="button"
                                   role="option"
                                   aria-selected={selectedCity === city.code}
-                                  onClick={() => handleSelectCity(city.code)}
+                                  onClick={() => handleCitySelect(city.code)}
                                   className={`w-full px-3 py-xs rounded-md transition
                                     hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
                                     ${

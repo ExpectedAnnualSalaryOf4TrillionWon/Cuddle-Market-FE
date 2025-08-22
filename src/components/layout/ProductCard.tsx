@@ -1,5 +1,7 @@
+import ConfirmModal from '@common/confirmModal';
 import { PETS } from '@constants/constants';
-import React from 'react';
+import { useUserStore } from '@store/userStore';
+import React, { useState } from 'react';
 import { CiClock2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
@@ -10,7 +12,7 @@ export type ProductCardProps = {
   product: Product | UserProduct;
   'data-index'?: number;
   isLiked: boolean;
-  onToggleLike: () => void;
+  // onToggleLike: () => void;
 };
 
 const formatPrice = (price: number): string => {
@@ -21,8 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   product,
   'data-index': dataIndex,
   isLiked,
-  onToggleLike,
+  // onToggleLike,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
   if (!product) {
     return null; // 또는 로딩 상태 표시
   }
@@ -43,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isReserved = transaction_status === '예약중';
 
   const navigate = useNavigate();
-
+  const { user } = useUserStore();
   const goToProductDetail = () => {
     navigate(`/products/${id}`);
   };
@@ -68,6 +73,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
       return `${diffDays}일 전`;
     }
   };
+  const handleModalConfirm = () => {
+    setIsModalOpen(false);
+    // 로그인 페이지로 이동
+    navigate('/login');
+  };
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false);
+  };
+  const toggleLike = () => {
+    if (!user) {
+      setModalMessage('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?');
+      setIsModalOpen(true);
+    } else {
+      // 로그인한 경우 찜하기 처리
+      console.log('찜하기 토글');
+      // TODO: 실제 찜하기 API 호출
+    }
+  };
   const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
     console.log(petTypeCode);
     console.log(petDetailCode);
@@ -82,31 +106,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
   const petTypeName = getPetTypeName(pet_type_code || '', pet_type_detail_code);
   return (
-    <div
-      className="
+    <>
+      <div
+        className="
         flex flex-col overflow-hidden
         border border-border rounded-xl
         bg-bg
         text-text-primary
         cursor-pointer transition-shadow duration-200 hover:shadow-lg
       "
-      onClick={goToProductDetail}
-      role="button"
-      data-index={dataIndex} // 이 줄 추가
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          (e.currentTarget as HTMLDivElement).click();
-        }
-      }}
-    >
-      {/* 상품 썸네일 영역 */}
-      <div className="relative pb-[75%] overflow-hidden">
-        {/* 우측 상단 하트 */}
-        <button
-          type="button"
-          className="
+        onClick={goToProductDetail}
+        role="button"
+        data-index={dataIndex} // 이 줄 추가
+        tabIndex={0}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            (e.currentTarget as HTMLDivElement).click();
+          }
+        }}
+      >
+        {/* 상품 썸네일 영역 */}
+        <div className="relative pb-[75%] overflow-hidden">
+          {/* 우측 상단 하트 */}
+          <button
+            type="button"
+            className="
             absolute top-sm right-sm z-1
             flex items-center justify-center
             w-8 h-8
@@ -116,43 +141,42 @@ const ProductCard: React.FC<ProductCardProps> = ({
             transition-all
             cursor-pointer
           "
-          onClick={e => {
-            console.log('하트 버튼 클릭됨');
-            e.stopPropagation();
-            // TODO: 찜 상태 토글 핸들러 연결
-            onToggleLike();
-          }}
-          aria-label="찜하기"
-        >
-          {isLiked ? <FaHeart color="red" /> : <IoIosHeartEmpty />}
-        </button>
-        {/* 상단 좌측 배지 */}
-        <div className="absolute top-sm left-sm flex gap-xs z-1">
-          <span
-            className="
+            onClick={e => {
+              e.stopPropagation();
+              // TODO: 찜 상태 토글 핸들러 연결
+              toggleLike();
+            }}
+            aria-label="찜하기"
+          >
+            {isLiked ? <FaHeart color="red" /> : <IoIosHeartEmpty />}
+          </button>
+          {/* 상단 좌측 배지 */}
+          <div className="absolute top-sm left-sm flex gap-xs z-1">
+            <span
+              className="
               inline-flex items-center justify-center
               rounded-md px-sm py-0.5
               bg-secondary
               text-caption font-medium whitespace-nowrap
             "
-          >
-            {petTypeName}
-          </span>
-          <span
-            className="
+            >
+              {petTypeName}
+            </span>
+            <span
+              className="
               inline-flex items-center justify-center
               rounded-md px-sm py-0.5
               border border-border
                 bg-secondary
               text-caption font-medium whitespace-nowrap
             "
-          >
-            {condition_status}
-          </span>
-        </div>
+            >
+              {condition_status}
+            </span>
+          </div>
 
-        <span
-          className={`
+          <span
+            className={`
             absolute bottom-sm right-sm z-1
             flex items-center justify-center
                 rounded-md px-sm py-0.5
@@ -167,36 +191,43 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     : 'bg-sale border-sale'
                 }
                 `}
-        >
-          {isSold ? '판매완료' : isReserved ? '예약중' : '판매중'}
-        </span>
+          >
+            {isSold ? '판매완료' : isReserved ? '예약중' : '판매중'}
+          </span>
 
-        <img
-          src={images || ''}
-          alt={title}
-          className="w-full h-full absolute t-0 l-0 object-cover"
-        />
-      </div>
+          <img
+            src={images || ''}
+            alt={title}
+            className="w-full h-full absolute t-0 l-0 object-cover"
+          />
+        </div>
 
-      {/* 상품 정보 영역 */}
-      <div className="p-md">
-        <h3 className="heading5 text-text-primary mb-xs line-clamp-2 nobreakstyle">{title}</h3>
-        <p className="heading5 text-primary font-bold mb-sm">{formatPrice(price)}</p>
+        {/* 상품 정보 영역 */}
+        <div className="p-md">
+          <h3 className="heading5 text-text-primary mb-xs line-clamp-2 nobreakstyle">{title}</h3>
+          <p className="heading5 text-primary font-bold mb-sm">{formatPrice(price)}</p>
 
-        <div className="flex items-center justify-between">
-          <div className="flex justify-between w-full gap-xs text-text-secondary caption">
-            <div className="flex items-center gap-xs text-text-secondary caption">
-              <CiClock2 size={16} />
-              <span>{getTimeAgo(elapsed_time)}</span>
-            </div>
-            <div className="flex items-center gap-xs text-text-secondary caption">
-              <GoHeart size={16} />
-              <span>{like_count}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex justify-between w-full gap-xs text-text-secondary caption">
+              <div className="flex items-center gap-xs text-text-secondary caption">
+                <CiClock2 size={16} />
+                <span>{getTimeAgo(elapsed_time)}</span>
+              </div>
+              <div className="flex items-center gap-xs text-text-secondary caption">
+                <GoHeart size={16} />
+                <span>{like_count}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onConfirm={handleModalConfirm}
+        onCancel={handleModalCancel}
+      />
+    </>
   );
 };
 

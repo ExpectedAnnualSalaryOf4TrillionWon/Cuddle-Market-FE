@@ -1,3 +1,4 @@
+import { LOCATIONS, type CityCode, type StateCode } from '@constants/constants';
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import type { FilterApiResponse, FilterState } from 'src/types';
@@ -25,23 +26,36 @@ export function CategoryFilter({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 필터 선택 상태
+  /**반려동물 종류 */
+  // 대분류
   const [selectedPetType, setSelectedPetType] = useState<string>('ALL');
+  // 소분류(세부 분류)
   const [selectedPetDetails, setSelectedPetDetails] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
-  const [selectedState, setSelectedState] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
-  // 드롭다운 표시 상태
+  /**상품 카테고리 */
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  /**가격 */
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+
+  /**상품 상태 */
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+
+  /**거주지 */
+  const [selectedState, setSelectedState] = useState<StateCode | string>('');
+  const [selectedCity, setSelectedCity] = useState<CityCode | string>('');
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
-  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+  const cityOptions = selectedState
+    ? LOCATIONS.find(location => location.code === selectedState)?.cities || []
+    : [];
 
-  const provinceBoxRef = useRef<HTMLDivElement | null>(null);
+  /** 거주지 선택창 */
+  const stateBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
   // 반려동물 종류 대분류 선택
   const handlePetTypeChange = (typeCode: string) => {
@@ -85,7 +99,7 @@ export function CategoryFilter({
 
   const handleStateSelect = (stateCode: string) => {
     setSelectedState(stateCode);
-    setSelectedCity(null);
+    setSelectedCity('');
     setShowStateDropdown(false);
   };
 
@@ -155,7 +169,7 @@ export function CategoryFilter({
       const target = e.target as Node;
 
       // 시/도 드롭다운 바깥 클릭
-      if (showStateDropdown && provinceBoxRef.current && !provinceBoxRef.current.contains(target)) {
+      if (showStateDropdown && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
         setShowStateDropdown(false);
       }
       // 구/군 드롭다운 바깥 클릭
@@ -397,7 +411,7 @@ export function CategoryFilter({
             <div>
               <h3 className="mb-md font-medium text-text-primary">지역</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative" ref={provinceBoxRef}>
+                <div className="relative" ref={stateBoxRef}>
                   <button
                     type="button"
                     role="combobox"
@@ -410,8 +424,7 @@ export function CategoryFilter({
                   >
                     <span className="text-gray-500">
                       {selectedState
-                        ? filterData?.locations.find(location => location.code === selectedState)
-                            ?.name
+                        ? LOCATIONS.find(location => location.code === selectedState)?.name
                         : '시/도를 선택해주세요'}
                     </span>
                   </button>
@@ -446,6 +459,7 @@ export function CategoryFilter({
                   <button
                     type="button"
                     role="combobox"
+                    aria-expanded={showCityDropdown}
                     onClick={() => {
                       if (!selectedState) return;
                       setShowCityDropdown(prev => !prev);
@@ -455,9 +469,7 @@ export function CategoryFilter({
                   >
                     <span className="text-gray-500">
                       {selectedCity
-                        ? filterData?.locations
-                            .find(loc => loc.code === selectedState)
-                            ?.cities.find(city => city.code === selectedCity)?.name
+                        ? cityOptions.find(city => city.code === selectedCity)?.name
                         : selectedState
                         ? '구/군을 선택해주세요'
                         : '먼저 시/도를 선택해주세요'}
@@ -469,24 +481,22 @@ export function CategoryFilter({
                       aria-label="구/군 선택"
                       className="absolute left-0 top-full z-2 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                     >
-                      {filterData?.locations
-                        .find(loc => loc.code === selectedState)
-                        ?.cities.map(city => (
-                          <button
-                            key={city.code}
-                            role="option"
-                            aria-selected={selectedCity === city.code}
-                            type="button"
-                            onClick={() => handleCitySelect(city.code)}
-                            className={`w-full px-3 py-xs rounded-md transition
+                      {cityOptions.map(city => (
+                        <button
+                          key={city.code}
+                          role="option"
+                          aria-selected={selectedCity === city.code}
+                          type="button"
+                          onClick={() => handleCitySelect(city.code)}
+                          className={`w-full px-3 py-xs rounded-md transition
                             hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
                             ${
                               selectedCity === city.code ? 'bg-gray-100 ring-1 ring-gray-300' : ''
                             }`}
-                          >
-                            {city.name}
-                          </button>
-                        ))}
+                        >
+                          {city.name}
+                        </button>
+                      ))}
                     </div>
                   )}
                 </div>
