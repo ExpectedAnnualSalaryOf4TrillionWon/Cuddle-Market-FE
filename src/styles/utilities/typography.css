@@ -46,4 +46,27 @@
   .nobreakstyle {
     @apply whitespace-nowrap break-keep overflow-hidden text-ellipsis;
   }
+
+  /* 기본 line-clamp 유틸리티 */
+  .line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: var(--lines, 2); /* 표준 속성 */
+    -webkit-line-clamp: var(--lines, 2); /* 벤더 프리픽스 */
+    overflow: hidden;
+  }
+
+  /* 줄 수 지정 */
+  .line-1 {
+    --lines: 1;
+  }
+  .line-2 {
+    --lines: 2;
+  }
+  .line-3 {
+    --lines: 3;
+  }
+  .line-4 {
+    --lines: 4;
+  }
 }

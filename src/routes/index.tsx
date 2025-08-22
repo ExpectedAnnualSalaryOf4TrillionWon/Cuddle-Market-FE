@@ -47,12 +47,14 @@ const AppRoutes = () => {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/user/:id" element={<UserPage />} />
         <Route path="/alarm" element={<AlarmPage />} />
-        <Route path="/product-post" element={<ProductPost />} />
-
         <Route path="/profile-update" element={<ProfileUpdate />} />
-
-        <Route path="/products/:id/edit" element={<ProductPost />} />
+        <Route element={<ProductPost />}>
+          <Route path="/product-post" />
+          <Route path="/products/:id/edit" />
+        </Route>
+        {/* 같은 element를 갖는 라우트를 묶자는 멘토링 내용 반영 */}
       </Route>
+
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
   );
