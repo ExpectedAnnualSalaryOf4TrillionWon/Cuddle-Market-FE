@@ -1,12 +1,12 @@
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
+import { SimpleHeader } from '@layout/SimpleHeader';
 import { useModalStore } from '@store/modalStore';
 import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import type { User } from 'src/types';
 import { fetchMyInfo } from '../api/products';
-import { SimpleHeader } from '@layout/SimpleHeader';
 
 const TABS = [
   { id: 'products', label: '내 상품' },
@@ -49,10 +49,10 @@ const MyPage: React.FC = () => {
     }
   };
 
-  const formatJoinDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
-  };
+  // const formatJoinDate = (dateString: string): string => {
+  //   const date = new Date(dateString);
+  //   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
+  // };
 
   const loadUserInfo = async () => {
     try {
@@ -94,12 +94,13 @@ const MyPage: React.FC = () => {
           {/* 가입일 */}
           <div className="flex items-center gap-sm">
             <CiCalendar />
-            {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''}
+           가입일 :{/* {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''} */}
           </div>
 
           <Link
             to="/profile-update"
             className="
+
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90

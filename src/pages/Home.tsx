@@ -1,14 +1,26 @@
 import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
+// import { useLike } from '../components/hook/useLike';
 import { useLike } from '../components/hook/useLike';
-import type { Product } from '../types'; // 타입 변경
+import type { FilterState, Product } from '../types'; // 타입 변경
 const Home = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [visibleItems, setVisibleItems] = useState(12);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<FilterState>({
+    selectedPetType: null,
+    selectedPetDetails: [],
+    selectedCategories: [],
+    selectedConditions: [],
+    selectedPriceRanges: [],
+    selectedLocation: {
+      state: null,
+      city: null,
+    },
+  });
 
   /**
    * 하트 번호 클릭 -> toggleLike 함수 실행(useLike 안의 toggleLike) ->
@@ -19,11 +31,6 @@ const Home = () => {
   const loadProducts = async () => {
     try {
       setLoading(true);
-      // console.log('Loading products with petType:', petTypeCode); // 디버깅용
-
-      // const filters = {
-      //   ...(petTypeCode && petTypeCode !== 'ALL' && { pet_type_code: petTypeCode }),
-      // };
 
       const result = await fetchAllProducts();
       // console.log('API response:', result); // 실행순서6️⃣
@@ -39,8 +46,86 @@ const Home = () => {
     }
   };
 
+  // 필터링된 제품 목록 계산
+  const filteredProducts = useMemo(() => {
+    let filtered = [...allProducts];
+
+    // 반려동물 종류 필터링 (대분류)
+    if (filters.selectedPetType && filters.selectedPetType !== 'ALL') {
+      filtered = filtered.filter(product => product.pet_type_code === filters.selectedPetType);
+    }
+
+    // 반려동물 세부 종류 필터링 (소분류)
+    if (filters.selectedPetDetails.length > 0) {
+      filtered = filtered.filter(product =>
+        filters.selectedPetDetails.includes(product.pet_type_detail_code),
+      );
+    }
+
+    // 카테고리 필터링
+    if (filters.selectedCategories.length > 0) {
+      filtered = filtered.filter(
+        product =>
+          product.category_code && filters.selectedCategories.includes(product.category_code),
+      );
+    }
+
+    // 상품 상태 필터링
+    if (filters.selectedConditions.length > 0) {
+      filtered = filtered.filter(product => {
+        const conditionMap: Record<string, string> = {
+          new: '새 상품',
+          nearly: '거의 새것',
+          used: '사용감 있음',
+          repair: '수리 필요',
+        };
+
+        return filters.selectedConditions.some(
+          condition => conditionMap[condition] === product.condition_status,
+        );
+      });
+    }
+
+    // 가격대 필터링
+    if (filters.selectedPriceRanges.length > 0) {
+      filtered = filtered.filter(product => {
+        const price = product.price;
+        return filters.selectedPriceRanges.some(range => {
+          switch (range) {
+            case 'under10k':
+              return price <= 10000;
+            case 'over10k':
+              return price >= 10000 && price < 50000;
+            case 'over50k':
+              return price >= 50000 && price < 100000;
+            case 'over100k':
+              return price >= 100000;
+            default:
+              return false;
+          }
+        });
+      });
+    }
+
+    // 지역 필터링
+    if (filters.selectedLocation.state) {
+      filtered = filtered.filter(product => product.state_code === filters.selectedLocation.state);
+    }
+
+    if (filters.selectedLocation.city) {
+      filtered = filtered.filter(product => product.city_code === filters.selectedLocation.city);
+    }
+
+    return filtered;
+  }, [allProducts, filters]);
+
+  // 필터가 변경되면 visibleItems 초기화
   useEffect(() => {
-    if (visibleItems >= allProducts.length || allProducts.length === 0) return;
+    setVisibleItems(12);
+  }, [filters]);
+
+  useEffect(() => {
+    if (visibleItems >= filteredProducts.length || filteredProducts.length === 0) return;
 
     const handleScroll = () => {
       const scrollPercent =
@@ -50,24 +135,18 @@ const Home = () => {
 
       if (scrollPercent > 30 && visibleItems === 12) {
         console.log('조건 만족! 아이템 추가');
-        setVisibleItems(Math.min(20, allProducts.length));
+        setVisibleItems(Math.min(20, filteredProducts.length));
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [visibleItems, allProducts.length]);
+  }, [visibleItems, filteredProducts.length]);
 
   useEffect(() => {
     // 실행순서1️⃣
     loadProducts();
   }, []);
-
-  console.log(allProducts);
-
-  // const handlePetTypeChange = (petTypeCode: string) => {
-  //   setSelectedPetType(petTypeCode);
-  // };
 
   if (loading) {
     return (
@@ -91,17 +170,16 @@ const Home = () => {
     );
   }
 
-  const visibleProducts = allProducts.slice(0, visibleItems); // 수정
+  const visibleProducts = filteredProducts.slice(0, visibleItems); // 수정
 
   return (
     <div className="bg-bg">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
-        {/* 탭 */}
-        <CategoryFilter />
-        {/* 섹션 타이틀 */}
+        {/* 필터링 */}
+        <CategoryFilter onFilterChange={setFilters} />
         <div>
           <h2 className="heading4 text-text-primary">전체 상품</h2>
-          <p className="mt-xs bodySmall text-text-secondary">{`총 ${allProducts.length}개의 상품 (현재 ${visibleItems}개 표시)`}</p>
+          <p className="mt-xs bodySmall text-text-secondary">{`총 ${filteredProducts.length}개의 상품`}</p>
         </div>
 
         <ul className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-4 gap-md tablet:gap-lg desktop:gap-xl">
