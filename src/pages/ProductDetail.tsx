@@ -330,7 +330,7 @@ const ProductDetail = () => {
                   key={sellerProducts.id}
                   product={sellerProducts}
                   isLiked={isProductLiked(product.id)}
-                  onToggleLike={() => toggleLike(product.id)}
+                  // onToggleLike={() => toggleLike(product.id)}
                 />
               ))}
             </div>
