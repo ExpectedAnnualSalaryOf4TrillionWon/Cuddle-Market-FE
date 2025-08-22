@@ -1,19 +1,80 @@
-// ========== 기본 유저 관련 타입 ==========
+// ========== 유저 관련 타입 ==========
 export interface User {
   id: number;
+  provider?: string;
+  email?: string;
   name: string;
+  nickname: string;
+  profile_image?: string;
+  birthday: string;
+  is_active: boolean;
+  is_staff: boolean;
+  is_superuser: boolean;
+  profile_completed: boolean;
+  last_login: string;
+
+  state?: string; // 시/도
+  city?: string;
+}
+
+// ========== 인증 관련 타입 ==========
+export interface KakaoLoginRequest {
+  code: string;
+}
+
+export interface SignupRequest {
+  registration_token?: string;
   nickname: string;
   state: string;
   city: string;
-  birthday?: string;
-  profile_image?: string;
-  created_at?: string;
-  profile_completed?: boolean;
-  last_login?: string;
-  seller_info?: User;
+  birth_date?: string;
 }
 
+export interface FilterApiResponse {
+  categories: CategoryData[];
+  petTypes: PetTypeData[];
+  locations: LocationData[];
+}
+export interface CategoryData {
+  code: string;
+  name: string;
+}
+export interface PetTypeData {
+  code: string;
+  name: string;
+  details: PetTypeDetail[];
+}
+export interface PetTypeDetail {
+  code: string;
+  name: string;
+}
+export interface LocationData {
+  code: string;
+  name: string;
+  cities: CityData[];
+}
+export interface CityData {
+  code: string;
+  name: string;
+}
+
+// 필터 선택 상태 타입
+export interface FilterState {
+  selectedPetType: string | null; // 대분류 (MAMMAL, BIRD 등)
+  selectedPetDetails: string[]; // 세부 동물 (DOG, CAT 등) - 복수 선택
+  selectedCategories: string[]; // 상품 카테고리 - 복수 선택
+  selectedConditions: string[]; // 상품 상태 - 복수 선택
+  selectedPriceRanges: string[]; // 가격대 - 복수 선택
+  selectedLocation: {
+    state: string | null; // 시/도 코드
+    city: string | null; // 구/군 코드
+  };
+}
+//!!!!!!!!!!!!!!!!!!!!
 export interface UserWithProducts extends User {
+  state: string;
+  city: string;
+  created_at?: string;
   seller_products: UserProduct[];
   total_products: number;
 }
@@ -51,6 +112,7 @@ export interface UserProduct {
   title: string;
   price: number;
   images: string;
+  pet_type_code: string;
   pet_type_detail_code: string;
   transaction_status: '판매중' | '예약중' | '판매완료';
   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
@@ -69,47 +131,9 @@ export interface City {
   name: string;
 }
 
-export interface PetType {
-  id: number;
-  name: string;
-}
-
-export interface PetTypeDetail {
-  id: number;
-  name: string;
-}
-
 export interface Category {
   id: number;
   name: string;
-}
-
-// ========== 인증 관련 타입 ==========
-
-export interface KakaoLoginRequest {
-  code: string;
-  redirect_uri: string;
-}
-
-export interface KakaoLoginResponse {
-  status: 'existing_user' | 'new_user';
-  access_token?: string;
-  refresh_token?: string;
-  user?: User;
-}
-
-export interface SignupRequest {
-  registration_token?: string; // 백엔드가 발급한 임시 토큰 (선택사항)
-  nickname: string;
-  state: string;
-  city: string;
-  birth_date?: string;
-}
-
-export interface SignupResponse {
-  access_token?: string;
-  refresh_token?: string;
-  user?: User;
 }
 
 export interface MyPageData {

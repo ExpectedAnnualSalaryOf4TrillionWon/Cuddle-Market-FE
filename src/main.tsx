@@ -10,7 +10,19 @@ const enableMocking = async () => {
   }
   // MSW 를 실행하기 위한 import
   const { worker } = await import('./mock/browser.ts');
-  return worker.start(); // MSW 실행
+  return worker.start({
+    onUnhandledRequest(request, print) {
+      if (
+        request.url.includes('/users/kakao-auth/') ||
+        request.url.includes('/users/profile-complete/') ||
+        request.url.includes('/categories/all-get/')
+      ) {
+        return;
+      }
+      // 다른 unhandled 요청은 경고 출력
+      print.warning();
+    },
+  });
 };
 
 // MSW 연결후 React

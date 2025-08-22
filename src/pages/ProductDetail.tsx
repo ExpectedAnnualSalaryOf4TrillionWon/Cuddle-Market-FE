@@ -8,7 +8,14 @@ import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
 import { useLike } from '../components/hook/useLike';
-import { ProductState, stateLabelMap, stateStyleMap } from '../constants/constants';
+import {
+  LOCATIONS,
+  PETS,
+  PRODUCT_CATEGORIES,
+  ProductState,
+  stateLabelMap,
+  stateStyleMap,
+} from '../constants/constants';
 
 import type { ProductDetailItem } from '../types';
 const getProductState = (status: string): ProductState => {
@@ -60,20 +67,32 @@ const ProductDetail = () => {
     }
   };
 
-  // 거래 상태별 토큰 매핑
-  // const getTradeStatusInfo = (status: Product['transaction_status']) => {
-  //   switch (status) {
-  //     case '판매중':
-  //       return { className: 'bg-sale text-bg border-sale' };
-  //     case '예약중':
-  //       return { className: 'bg-reserved text-bg border-reserved' };
-  //     case '판매완료':
-  //       return { className: 'bg-complete text-bg border-complete' };
-  //     default:
-  //       return { className: 'bg-sale text-bg border-sale' };
-  //   }
-  // };
+  const getLocationName = (stateCode: string, cityCode?: string) => {
+    const state = LOCATIONS.find(loc => loc.code === stateCode);
+    if (!state) return { stateName: stateCode, cityName: cityCode };
 
+    const stateName = state.name;
+    const cityName = cityCode
+      ? state.cities.find(city => city.code === cityCode)?.name || cityCode
+      : '';
+
+    return { stateName, cityName };
+  };
+
+  // 펫 타입 세부 코드를 한글로 변환
+  const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
+    const petType = PETS.find(pet => pet.code === petTypeCode);
+    if (!petType) return petDetailCode;
+
+    const detail = petType.details.find(d => d.code === petDetailCode);
+    return detail?.name || petDetailCode;
+  };
+
+  // 카테고리 코드를 한글로 변환
+  const getCategoryName = (categoryCode: string) => {
+    const category = PRODUCT_CATEGORIES.find(cat => cat.code === categoryCode);
+    return category?.name || categoryCode;
+  };
   const loadProductDetail = async () => {
     if (!id) return;
 
@@ -105,7 +124,7 @@ const ProductDetail = () => {
       navigate(`/user/${sellerId}`);
     }
   };
-  // const state = getProductState(product.transaction_status);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -128,6 +147,9 @@ const ProductDetail = () => {
   }
 
   const state = getProductState(product.transaction_status);
+  const productLocation = getLocationName(product.state_code || '', product.city_code || '');
+  const petTypeName = getPetTypeName(product.pet_type_code || '', product.pet_type_detail_code);
+  const categoryName = getCategoryName(product.category_code || '');
 
   return (
     <div className="bg-bg">
@@ -206,10 +228,10 @@ const ProductDetail = () => {
                   {stateLabelMap[state]}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
-                  {product.pet_type_detail_code}
+                  {petTypeName}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
-                  {product.category_code}
+                  {categoryName}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
                   {product.condition_status}
@@ -226,7 +248,7 @@ const ProductDetail = () => {
                   <div className="flex items-center gap-1">
                     <CiLocationOn />
                     <span>
-                      {product.state_code} {product.city_code}
+                      {productLocation.stateName} {productLocation.cityName}
                     </span>
                   </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import type { User } from 'src/types';
+import type { KakaoLoginRequest, User } from 'src/types';
 
 interface KakaoAuthResponse {
   access: string;
@@ -14,6 +14,8 @@ const KakaoCallback: React.FC = () => {
   const code: string | null = searchParams.get('code');
   const error: string | null = searchParams.get('error');
 
+  console.log(code);
+
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
@@ -21,7 +23,9 @@ const KakaoCallback: React.FC = () => {
     try {
       setIsLoading(true);
 
-      const requestBody = {
+      console.log(code);
+
+      const requestBody: KakaoLoginRequest = {
         code,
       };
 
