@@ -25,7 +25,8 @@ const ChatModal = ({ onClose }: { onClose: () => void }) => {
   // const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
   //   setMessage(e.target.value);
   // };
-  const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080/chat';
+  const WS_URL = 'ws://localhost:5173';
+  //TODO WS_URL에 API 주소 할당.
   useEffect(() => {
     connect(WS_URL);
     return () => disconnect(); // 모달 닫힐 때 연결 종료
