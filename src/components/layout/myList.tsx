@@ -177,14 +177,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
 
         {/* 상품 정보 */}
         <div className="flex-1">
-          <h3
-            className="bodySmall text-text-primary overflow-hidden text-ellipsis"
-            style={{
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
-            }}
-          >
+          <h3 className="bodySmall text-text-primary overflow-hidden text-ellipsis line-clamp-2">
             {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
             {product.title}
           </h3>

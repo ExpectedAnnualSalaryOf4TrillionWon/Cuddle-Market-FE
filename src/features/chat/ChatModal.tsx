@@ -25,9 +25,9 @@ const ChatModal = ({ onClose }: { onClose: () => void }) => {
   // const handleChangeMessage = (e: ChangeEvent<HTMLInputElement>) => {
   //   setMessage(e.target.value);
   // };
-
+  const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080/chat';
   useEffect(() => {
-    connect('ws://localhost:8080/chat');
+    connect(WS_URL);
     return () => disconnect(); // 모달 닫힐 때 연결 종료
   }, [connect, disconnect]);
 

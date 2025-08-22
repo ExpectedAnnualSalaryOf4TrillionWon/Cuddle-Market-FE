@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 convention
 .env
+.env.local
+.env.production

@@ -49,6 +49,7 @@ export const useChatSocketStore = create<ChatSocketState>((set, get) => ({
           ],
         },
       }));
+      set({ socket: ws });
     };
 
     ws.onclose = () => {
