@@ -30,11 +30,29 @@ export interface SignupRequest {
   birth_date?: string;
 }
 
+export interface CreateUserRequest {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state: string;
+  city: string;
+}
+
+export interface CreateUserResponse {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state_name: string;
+  city_name: string;
+}
+
+// ========== 필터링 관련 타입 ==========
 export interface FilterApiResponse {
   categories: CategoryData[];
   petTypes: PetTypeData[];
   locations: LocationData[];
 }
+
 export interface CategoryData {
   code: string;
   name: string;
@@ -58,17 +76,23 @@ export interface CityData {
   name: string;
 }
 
-// 필터 선택 상태 타입
 export interface FilterState {
-  selectedPetType: string | null; // 대분류 (MAMMAL, BIRD 등)
-  selectedPetDetails: string[]; // 세부 동물 (DOG, CAT 등) - 복수 선택
-  selectedCategories: string[]; // 상품 카테고리 - 복수 선택
-  selectedConditions: string[]; // 상품 상태 - 복수 선택
-  selectedPriceRanges: string[]; // 가격대 - 복수 선택
+  selectedPetType: string | null;
+  selectedPetDetails: string[];
+  selectedCategories: string[];
+  selectedConditions: string[];
+  selectedPriceRanges: string[];
   selectedLocation: {
-    state: string | null; // 시/도 코드
-    city: string | null; // 구/군 코드
+    state: string | null;
+    city: string | null;
   };
+}
+
+// ========== 찜하기 관련 타입 ==========
+export interface LikeApiResponse {
+  message: string;
+  product_id: number;
+  is_liked: boolean;
 }
 //!!!!!!!!!!!!!!!!!!!!
 export interface UserWithProducts extends User {
@@ -197,20 +221,4 @@ export interface FormErrors {
   userName?: string;
   userNickName?: string;
   userBirth?: string;
-}
-
-export interface CreateUserRequest {
-  nickname: string;
-  name: string;
-  birthday: string;
-  state: string;
-  city: string;
-}
-
-export interface CreateUserResponse {
-  nickname: string;
-  name: string;
-  birthday: string;
-  state_name: string;
-  city_name: string;
 }

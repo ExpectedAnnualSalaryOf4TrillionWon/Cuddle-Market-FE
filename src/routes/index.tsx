@@ -37,7 +37,7 @@ const AppRoutes = () => {
       {/* Header 포함 구간: Home, ProductDetail */}
       <Route element={<WithHeaderLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
       </Route>
 
       {/* Header 미포함 구간: Signup, MyPage */}

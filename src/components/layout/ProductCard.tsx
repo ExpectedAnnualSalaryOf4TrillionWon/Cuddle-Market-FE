@@ -5,13 +5,12 @@ import React, { useState } from 'react';
 import { CiClock2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
-import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import type { Product, UserProduct } from '../../types';
+import type { LikeApiResponse, Product, UserProduct } from '../../types';
 export type ProductCardProps = {
-  product: Product | UserProduct;
+  data: Product | UserProduct;
   'data-index'?: number;
-  isLiked: boolean;
+  // isLiked: boolean;
   // onToggleLike: () => void;
 };
 
@@ -41,30 +40,28 @@ const getTimeAgo = (createdAt: string): string => {
 };
 
 const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
-  console.log(petTypeCode);
-  console.log(petDetailCode);
-
   const petType = PETS.find(pet => pet.code === petTypeCode);
   if (!petType) return petDetailCode;
 
   const detail = petType.details.find(d => d.code === petDetailCode);
-  console.log(detail);
 
   return detail?.name || petDetailCode;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  product,
+  data,
   'data-index': dataIndex,
-  isLiked,
+  // isLiked,
   // onToggleLike,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-
-  if (!product) {
+  if (!data) {
     return null; // 또는 로딩 상태 표시
   }
+
+  const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore();
+
+  const navigate = useNavigate();
+
   const {
     id,
     title,
@@ -76,15 +73,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
     elapsed_time,
     like_count,
     transaction_status,
-  } = product;
-
+  } = data;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const isSold = transaction_status === '판매완료';
   const isReserved = transaction_status === '예약중';
 
-  const navigate = useNavigate();
-  const { user } = useUserStore();
   const goToProductDetail = () => {
-    navigate(`/products/${id}`);
+    navigate(`/product/${id}`);
   };
 
   const handleModalConfirm = () => {
@@ -96,16 +94,57 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const handleModalCancel = () => {
     setIsModalOpen(false);
   };
-  const toggleLike = () => {
-    if (!user) {
+
+  const toggleLike = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    console.log(user);
+    if (!user || !accessToken) {
+      setIsLoading(false);
       setModalMessage('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?');
       setIsModalOpen(true);
-    } else {
-      // 로그인한 경우 찜하기 처리
-      console.log('찜하기 토글');
-      // TODO: 실제 찜하기 API 호출
+      return; // ❹ 로딩에 갇히지 않게 즉시 종료
+    }
+
+    console.log(API_BASE_URL);
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/likes/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ product_id: Number(id) }),
+      });
+
+      if (!response.ok) {
+        throw new Error('찜하기 실패');
+      }
+      const data: LikeApiResponse = await response.json();
+      console.log('응답 데이터:', data);
+
+      if (redirectUrl) {
+        const targetUrl = redirectUrl;
+        setRedirectUrl(null); // 사용 후 초기화
+        console.log('저장된 페이지로 이동:', targetUrl);
+        navigate(targetUrl, { replace: true });
+      } else {
+        console.log('홈으로 이동');
+        navigate('/', { replace: true });
+      }
+    } catch (error) {
+      console.error('찜하기 실패:', error);
+      // setErrors({
+      //   general: error instanceof Error ? error.message : '회원가입에 실패했습니다.',
+      // });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) return <p>로딩중입니다</p>;
 
   const petTypeName = getPetTypeName(pet_type_code || '', pet_type_detail_code);
   return (
@@ -151,7 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             }}
             aria-label="찜하기"
           >
-            {isLiked ? <FaHeart color="red" /> : <IoIosHeartEmpty />}
+            <FaHeart color="red" />
           </button>
           {/* 상단 좌측 배지 */}
           <div className="absolute top-sm left-sm flex gap-xs z-1">

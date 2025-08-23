@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
-import { useLike } from '../components/hook/useLike';
+// import { useLike } from '../components/hook/useLike';
 import { LOCATIONS, PETS, PRODUCT_CATEGORIES, stateStyleMap } from '../constants/constants';
 
 import type { ProductDetailItem } from '../types';
@@ -72,8 +71,8 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { isProductLiked, toggleLike } = useLike();
-  const isLiked = product ? isProductLiked(product.id) : false;
+  // const { isProductLiked, toggleLike } = useLike();
+  // const isLiked = product ? isProductLiked(product.id) : false;
 
   const loadProductDetail = async () => {
     if (!id) return;
@@ -286,15 +285,17 @@ const ProductDetail = () => {
                   text-text-primary
                   transition-colors
                 "
-                onClick={() => {
-                  if (product) {
-                    console.log('상세페이지 찜하기 클릭, productId:', product.id);
-                    toggleLike(product.id);
-                  }
-                }}
+                // onClick={() => {
+                //   if (product) {
+                //     console.log('상세페이지 찜하기 클릭, productId:', product.id);
+                //     toggleLike(product.id);
+                //   }
+                // }}
               >
-                {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />}
-                <span>{isLiked ? '찜 취소' : '찜하기'}</span>
+                <FaHeart size={16} className="text-alert" />
+                {/* {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />} */}
+                {/* <span>{isLiked ? '찜 취소' : '찜하기'}</span> */}
+                <span>찜하기</span>
               </button>
             </div>
           </div>
@@ -310,8 +311,8 @@ const ProductDetail = () => {
               {product.seller_products?.map(sellerProducts => (
                 <ProductCard
                   key={sellerProducts.id}
-                  product={sellerProducts}
-                  isLiked={isProductLiked(product.id)}
+                  data={sellerProducts}
+                  // isLiked={isProductLiked(product.id)}
                   // onToggleLike={() => toggleLike(product.id)}
                 />
               ))}
