@@ -218,8 +218,8 @@ const Signup = () => {
         nickname: data.nickname,
         name: data.name,
         birthday: data.birthday,
-        state: data.state,
-        city: data.city,
+        state_name: data.state_name,
+        city_name: data.city_name,
         profile_completed: true,
       });
 

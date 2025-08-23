@@ -19,6 +19,40 @@ const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
 };
 
+const getTimeAgo = (createdAt: string): string => {
+  const now = new Date();
+  const created = new Date(createdAt); // ISO 문자열 파싱
+  const diffMs = now.getTime() - created.getTime();
+
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMinutes < 1) {
+    return '방금 전';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes}분 전`;
+  } else if (diffHours < 24) {
+    return `${diffHours}시간 전`;
+  } else {
+    // 24시간이 넘으면 무조건 'n일 전'
+    return `${diffDays}일 전`;
+  }
+};
+
+const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
+  console.log(petTypeCode);
+  console.log(petDetailCode);
+
+  const petType = PETS.find(pet => pet.code === petTypeCode);
+  if (!petType) return petDetailCode;
+
+  const detail = petType.details.find(d => d.code === petDetailCode);
+  console.log(detail);
+
+  return detail?.name || petDetailCode;
+};
+
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   'data-index': dataIndex,
@@ -53,26 +87,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     navigate(`/products/${id}`);
   };
 
-  const getTimeAgo = (createdAt: string): string => {
-    const now = new Date();
-    const created = new Date(createdAt); // ISO 문자열 파싱
-    const diffMs = now.getTime() - created.getTime();
-
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMinutes / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMinutes < 1) {
-      return '방금 전';
-    } else if (diffMinutes < 60) {
-      return `${diffMinutes}분 전`;
-    } else if (diffHours < 24) {
-      return `${diffHours}시간 전`;
-    } else {
-      // 24시간이 넘으면 무조건 'n일 전'
-      return `${diffDays}일 전`;
-    }
-  };
   const handleModalConfirm = () => {
     setIsModalOpen(false);
     // 로그인 페이지로 이동
@@ -92,18 +106,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       // TODO: 실제 찜하기 API 호출
     }
   };
-  const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
-    console.log(petTypeCode);
-    console.log(petDetailCode);
 
-    const petType = PETS.find(pet => pet.code === petTypeCode);
-    if (!petType) return petDetailCode;
-
-    const detail = petType.details.find(d => d.code === petDetailCode);
-    console.log(detail);
-
-    return detail?.name || petDetailCode;
-  };
   const petTypeName = getPetTypeName(pet_type_code || '', pet_type_detail_code);
   return (
     <>

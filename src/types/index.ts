@@ -13,8 +13,8 @@ export interface User {
   profile_completed: boolean;
   last_login: string;
 
-  state?: string; // 시/도
-  city?: string;
+  state_name?: string; // 시/도
+  city_name?: string;
 }
 
 // ========== 인증 관련 타입 ==========
@@ -91,8 +91,9 @@ export interface ProductBase {
   category_code?: string;
   pet_type_code?: string;
   pet_type_detail_code: string;
-  transaction_status: '판매중' | '예약중' | '판매완료';
   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
+
+  transaction_status: '판매중' | '예약중' | '판매완료';
   view_count?: number;
   like_count: number;
   elapsed_time: string;
@@ -210,6 +211,6 @@ export interface CreateUserResponse {
   nickname: string;
   name: string;
   birthday: string;
-  state: string;
-  city: string;
+  state_name: string;
+  city_name: string;
 }

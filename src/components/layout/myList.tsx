@@ -1,9 +1,10 @@
+import { stateStyleMap, type TransactionStatus } from '@constants/constants';
 import { useEffect, useState } from 'react';
 import { GrView } from 'react-icons/gr';
+import { IoIosArrowDown, IoMdCheckmark } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
 import { fetchMyPageData } from '../../api/products';
-import { ProductState, stateLabelMap, stateStyleMap } from '../../constants/constants';
 
 type TabId = 'products' | 'wishlist';
 
@@ -13,25 +14,30 @@ interface MyListProps {
   onDelete: (itemId?: number) => void;
 }
 
-const getProductState = (status: string): ProductState => {
-  switch (status) {
-    case '판매중':
-      return 'selling';
-    case '예약중':
-      return 'reserved';
-    case '판매완료':
-      return 'sold';
-    default:
-      return 'selling';
-  }
-};
-
 const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [showStatusDropdown, setShowStatusDropdown] = useState<{ [key: number]: boolean }>({});
   const navigate = useNavigate();
+  const handleStatusChange = async (productId: number, newStatus: TransactionStatus) => {
+    try {
+      // TODO: API 호출하여 서버에 상태 업데이트
+      // await updateProductStatus(productId, newStatus);
+
+      // 로컬 상태 업데이트
+      setShowStatusDropdown(prev => ({ ...prev, [productId]: false }));
+
+      // MyProductList 업데이트 (옵션)
+      setMyProductList(prev =>
+        prev.map(product =>
+          product.id === productId ? { ...product, transaction_status: newStatus } : product,
+        ),
+      );
+    } catch (error) {
+      console.error('상태 변경 실패:', error);
+    }
+  };
   const loadUserInfo = async () => {
     try {
       const data = await fetchMyPageData();
@@ -69,67 +75,123 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   }, [MyProductList.length, wishlist.length, loading]);
 
   const renderContents = (product: Product) => {
-    const state = getProductState(product.transaction_status);
+    const currentStatus = product.transaction_status;
+    const statusOptions: TransactionStatus[] = ['판매중', '예약중', '판매완료'];
     return (
       <div
         className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm"
         key={product.id}
       >
         {/* 상품 이미지 */}
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-light">
-          <img src={product.images} alt={product.title} className="w-full h-full object-cover" />
+        <div className="relative pb-[10%] w-[10%] h-full rounded-lg overflow-hidden bg-light">
+          <img
+            src={product.images}
+            alt={product.title}
+            className="w-full h-full object-cover  absolute top-0 left-0"
+          />
         </div>
 
         {/* 상품 정보 */}
-        <div className="flex-1">
-          <h3 className="bodySmall text-text-primary overflow-hidden text-ellipsis line-clamp-2">
-            {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
-            {product.title}
-          </h3>
-          <p className="text-bodyLarge text-text-primary font-bold">{product.price}원</p>
-          <div className="flex items-center gap-xs caption text-text-secondary">
-            <GrView />
-            <span>조회 {product.view_count}</span>
+        <div className="flex-1 flex flex-col gap-2">
+          <p
+            className={`col-start-1 row-start-1   
+                          rounded-md w-fit p-1
+                          border text-bg
+                          text-xs font-medium whitespace-nowrap 
+                          flex items-center justify-center
+                          ${stateStyleMap[currentStatus]}
+                        `}
+          >
+            {currentStatus}
+          </p>
+          <div className="flex flex-col gap-1">
+            <h3 className="bodySmall text-text-primary overflow-hidden text-ellipsis line-clamp-2">
+              {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
+              {product.title}
+            </h3>
+            <p className="text-bodyLarge text-text-primary font-bold">{product.price}원</p>
+            <div className="flex items-center gap-xs caption text-text-secondary">
+              <GrView />
+              <span>조회 {product.view_count}</span>
+            </div>
           </div>
         </div>
 
         {/* 상품 상태 및 액션 */}
-        <div className="grid grid-cols-2 gap-xs">
-          <p
-            className={`col-start-1 row-start-1   
-                          rounded-md px-3 py-1
-                          border text-bg
-                          text-xs font-medium whitespace-nowrap min-w-[70px] 
-                          flex items-center justify-center
-                          ${stateStyleMap[state]}
-                        `}
-          >
-            {stateLabelMap[state]}
-          </p>
-
+        <div className="flex gap-3">
           {activeTab === 'products' && (
+            <div className="relative">
+              <button
+                type="button"
+                role="combobox"
+                className={`flex w-32 h-8 rounded-md px-3 py-2 items-center justify-between gap-2  text-sm bg-secondary/30`}
+                aria-expanded={showStatusDropdown[product.id] || false}
+                onClick={e => {
+                  e.stopPropagation();
+                  setShowStatusDropdown(prev => ({
+                    ...prev,
+                    [product.id]: !prev[product.id],
+                  }));
+                }}
+              >
+                <span className="text-gray-500"> {currentStatus}</span>
+                <IoIosArrowDown />
+              </button>
+              {showStatusDropdown[product.id] && (
+                <div
+                  role="listbox"
+                  aria-label="거래상태 선택"
+                  className="absolute left-0 top-full z-40 w-full min-w-[120px] rounded-md border border-border bg-white p-1 shadow-md mt-1"
+                >
+                  {statusOptions.map(status => (
+                    <button
+                      key={status}
+                      role="option"
+                      type="button"
+                      aria-selected={currentStatus === status}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleStatusChange(product.id, status);
+                      }}
+                      className={`w-full text-left text-sm
+                          hover:bg-gray-100 focus:bg-gray-100 justify-between
+                          flex items-center gap-2 rounded-md  py-1.5 px-2 whitespace-nowrap transition-[color,box-shadow]
+                          ${currentStatus === status ? 'bg-gray-100' : ''}
+                        `}
+                    >
+                      <span className={`text-xs font-medium rounded`}>{status}</span>
+                      {currentStatus === status && <IoMdCheckmark />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            {activeTab === 'products' && (
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  handleEdit(product.id);
+                }}
+                className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+              >
+                수정
+              </button>
+            )}
             <button
               onClick={e => {
                 e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-                handleEdit(product.id);
+                onDelete(product.id);
               }}
-              className={`text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+              className={`${
+                activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
+              }  text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm`}
             >
-              수정
+              삭제
             </button>
-          )}
-
-          <button
-            onClick={e => {
-              e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-              onDelete(product.id);
-            }}
-            className={`${
-              activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
-            }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
-          >
-            삭제
-          </button>
+          </div>
         </div>
       </div>
     );

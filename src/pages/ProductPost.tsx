@@ -14,7 +14,7 @@ import {
   PRODUCT_CATEGORIES,
   PRODUCT_POST_TABS,
   type CityCode,
-  type ConditionValue,
+  type ConditionCode,
   type PetDetailCode,
   type PetTypeCode,
   type ProductCategoryCode,
@@ -22,16 +22,11 @@ import {
   type StateCode,
 } from '../constants/constants';
 
-// type StateCode = string; // SEOUL, GYEONGGIDO 등
-// type CityCode = string;
-
 const ProductPost = () => {
   const [activeTab, setActiveTab] = useState<ProductPostTabId>('sales');
 
   /**반려동물 종류 */
   // 대분류
-  // const [selectedPetCategory, setSelectedPetCategory] = useState<PetCategory | null>(null);
-  // const [showPetCategorySelect, setShowPetCategorySelect] = useState(false);
   const [selectedPetType, setSelectedPetType] = useState<PetTypeCode | string>('');
   const [showPetTypeSelect, setShowPetTypeSelect] = useState(false);
 
@@ -41,7 +36,7 @@ const ProductPost = () => {
 
   // 반려동물 세부 종류 선택
   const petTypeDetailOptions = selectedPetType
-    ? PETS.find(cat => cat.code === selectedPetType)?.details || []
+    ? PETS.find(petType => petType.code === selectedPetType)?.details || []
     : [];
 
   // 반려동물 종류 선택창
@@ -56,7 +51,7 @@ const ProductPost = () => {
   const [price, setPrice] = useState<number | ''>('');
 
   /**상품 상태 */
-  const [selectedCondition, setSelectedCondition] = useState<ConditionValue | null>(null);
+  const [selectedCondition, setSelectedCondition] = useState<ConditionCode | null>(null);
 
   /**상품명 */
   const [productName, setProductName] = useState<string>('');
@@ -166,7 +161,7 @@ const ProductPost = () => {
   };
 
   // 상품 상태
-  const handleSelectCondition = (val: ConditionValue) => {
+  const handleSelectCondition = (val: ConditionCode) => {
     setSelectedCondition(val);
     if (val) {
       setErrors(prev => {
@@ -447,7 +442,7 @@ const ProductPost = () => {
         setSelectedPetType(product.pet_type_code || '');
         setSelectedPetTypeDetail(product.pet_type_detail_code);
         setProductCategory(product.category_code || '');
-        setSelectedCondition(product.condition_status as ConditionValue);
+        setSelectedCondition(product.condition_status as ConditionCode);
         setSelectedState(product.state_code || '');
         setSelectedCity(product.city_code || '');
 
@@ -788,12 +783,12 @@ const ProductPost = () => {
                                 value={item.value}
                                 checked={selectedCondition === item.value}
                                 onChange={e => {
-                                  const val = e.target.value as ConditionValue;
+                                  const val = e.target.value as ConditionCode;
                                   handleSelectCondition(val);
                                 }}
                                 className="blind" // 화면에서 숨김
                               />
-                              <div className="font-medium">{item.value}</div>
+                              <div className="font-medium">{item.title}</div>
                               <div className="text-xs text-gray-500">{item.subtitle}</div>
                             </label>
                           ))}

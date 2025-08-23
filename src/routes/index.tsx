@@ -14,7 +14,7 @@ import UserPage from '@pages/UserPage';
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
 const WithHeaderLayout = () => (
-  <div className="min-h-screen bg-gray-50">
+  <div className="min-h-screen ">
     <Header />
     <Outlet />
   </div>
@@ -25,7 +25,7 @@ const NoHeaderLayout = () => {
   const pathName = location.pathname;
 
   return (
-    <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : ''}`}>
       <Outlet />
     </div>
   );

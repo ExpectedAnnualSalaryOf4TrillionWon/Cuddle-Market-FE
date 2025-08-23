@@ -1,14 +1,7 @@
-import { LOCATIONS, type CityCode, type StateCode } from '@constants/constants';
+import { CONDITION_ITEMS, LOCATIONS } from '@constants/constants';
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import type { FilterApiResponse, FilterState } from 'src/types';
-
-const conditionItems = [
-  { value: 'new', title: '새상품' },
-  { value: 'nearly', title: '거의새것' },
-  { value: 'used', title: '사용감있음' },
-  { value: 'repair', title: '수리필요' },
-];
 
 const priceItems = [
   { value: 'under10k', title: '1만원 이하' },
@@ -42,8 +35,8 @@ export function CategoryFilter({
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
 
   /**거주지 */
-  const [selectedState, setSelectedState] = useState<StateCode | string>('');
-  const [selectedCity, setSelectedCity] = useState<CityCode | string>('');
+  const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
@@ -367,7 +360,7 @@ export function CategoryFilter({
             <div>
               <h3 className="mb-md font-medium text-text-primary">상품 상태</h3>
               <div className="flex flex-wrap gap-sm">
-                {conditionItems.map(item => (
+                {CONDITION_ITEMS.map(item => (
                   <button
                     key={item.value}
                     onClick={() => handleConditionToggle(item.value)}
