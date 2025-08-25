@@ -1,7 +1,6 @@
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { SimpleHeader } from '@layout/SimpleHeader';
-// import { useModalStore } from '@store/modalStore';
 import ConfirmModal from '@common/confirmModal';
 import { useUserStore } from '@store/userStore';
 import React, { useState } from 'react';
@@ -25,19 +24,17 @@ const MyPage: React.FC = () => {
   // const [userInfo, setUserInfo] = useState<User | null>(null);
   const [counts, setCounts] = useState({ products: 0, wishlist: 0 });
 
-  // 확인 모달 설정 (22번째 줄 근처)
-  // const exitConfirm = useModalStore(state => state.confirm);
-  // const deleteConfirm = useModalStore(state => state.confirm);
-
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null);
   const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
+  const [SubMessage, setSubMessage] = useState('');
 
   // 회원탈퇴 핸들러
   const handleExit = () => {
-    setModalMessage('정말로 회원탈퇴 하시겠습니까?\n탈퇴 후에는 복구할 수 없습니다.');
+    setModalMessage('정말로 회원탈퇴 하시겠습니까?');
+    setSubMessage('탈퇴후에는 복구할 수 없습니다');
     setModalAction('exit');
     setIsModalOpen(true);
   };
@@ -45,6 +42,7 @@ const MyPage: React.FC = () => {
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = (itemId?: number) => {
     setModalMessage('정말로 삭제하시겠습니까?');
+    setSubMessage('');
     setModalAction('delete');
     setDeleteItemId(itemId);
     setIsModalOpen(true);
@@ -148,14 +146,14 @@ const MyPage: React.FC = () => {
               내 정보 수정
             </Link>
             {/* 회원탈퇴 버튼을 div에서 button으로 변경하고 핸들러 연결 */}
-            <div className=" text-xs text-red-500 cursor-pointer hover:underline self-start">
+            <div className="text-xs text-red-500 cursor-pointer hover:underline self-start">
               <button onClick={handleExit}>회원탈퇴</button>
             </div>
           </div>
         </aside>
 
         {/* 우측 탭 및 컨텐츠 영역 */}
-        <section className="flex-1 flex flex-col gap-2xl">
+        <section className="flex-1 flex flex-col gap-lg">
           {/* 탭 목록*/}
           <div
             role="tablist"
@@ -183,7 +181,7 @@ const MyPage: React.FC = () => {
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={`tab-${activeTab}`}
-            className="flex flex-col gap-xl border border-border p-xl rounded-xl"
+            className="flex flex-col gap-lg border border-border p-lg rounded-xl"
           >
             {/* 탭 선택시 컨텐츠 헤더 */}
             {activeTab === 'products' ? (
@@ -219,6 +217,7 @@ const MyPage: React.FC = () => {
       <ConfirmModal
         isOpen={isModalOpen}
         message={modalMessage}
+        submessage={SubMessage}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
       />
