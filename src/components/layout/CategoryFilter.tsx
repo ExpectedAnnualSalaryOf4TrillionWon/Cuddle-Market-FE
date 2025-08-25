@@ -2,6 +2,7 @@ import { CONDITION_ITEMS, LOCATIONS } from '@constants/constants';
 import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import type { FilterApiResponse, FilterState } from 'src/types';
+import { fetchAllCategory } from '../../api/products';
 
 const priceItems = [
   { value: 'under10k', title: '1만원 이하' },
@@ -48,7 +49,7 @@ export function CategoryFilter({
   const stateBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
 
-  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+  // const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
   // 반려동물 종류 대분류 선택
   const handlePetTypeChange = (typeCode: string) => {
@@ -115,16 +116,8 @@ export function CategoryFilter({
   const loadFilterData = async () => {
     try {
       setLoading(true);
-
-      const response = await fetch(`${API_BASE_URL}/categories/all-get`);
-
-      if (!response.ok) {
-        throw new Error('필터 데이터를 불러오는데 실패했습니다.');
-      }
-
-      const data: FilterApiResponse = await response.json();
+      const data = await fetchAllCategory();
       console.log(data);
-
       setFilterData(data);
       setError(null);
     } catch (err) {
