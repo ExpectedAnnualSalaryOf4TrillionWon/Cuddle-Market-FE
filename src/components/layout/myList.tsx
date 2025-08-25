@@ -79,20 +79,16 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
     const statusOptions: TransactionStatus[] = ['판매중', '예약중', '판매완료'];
     return (
       <div
-        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm"
+        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm h-[150px]"
         key={product.id}
       >
         {/* 상품 이미지 */}
-        <div className="relative pb-[10%] w-[10%] h-full rounded-lg overflow-hidden bg-light">
-          <img
-            src={product.images}
-            alt={product.title}
-            className="w-full h-full object-cover  absolute top-0 left-0"
-          />
+        <div className="w-[113px] h-full rounded-lg overflow-hidden">
+          <img src={product.images} alt={product.title} className=" h-full object-cover" />
         </div>
 
         {/* 상품 정보 */}
-        <div className="flex-1 flex flex-col gap-2">
+        <div className="flex-1 flex flex-col gap-xs">
           <p
             className={`col-start-1 row-start-1   
                           rounded-md w-fit p-1
@@ -104,7 +100,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
           >
             {currentStatus}
           </p>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-xs">
             <h3 className="bodySmall text-text-primary overflow-hidden text-ellipsis line-clamp-2">
               {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
               {product.title}
@@ -118,13 +114,13 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
         </div>
 
         {/* 상품 상태 및 액션 */}
-        <div className="flex gap-3">
+        <div className="flex flex-col items-end gap-xs">
           {activeTab === 'products' && (
             <div className="relative">
               <button
                 type="button"
                 role="combobox"
-                className={`flex w-32 h-8 rounded-md px-3 py-2 items-center justify-between gap-2  text-sm bg-secondary/30`}
+                className={`flex w-28 h-8 rounded-md px-3 py-2 items-center justify-between gap-2  text-sm bg-secondary/30`}
                 aria-expanded={showStatusDropdown[product.id] || false}
                 onClick={e => {
                   e.stopPropagation();
@@ -168,7 +164,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex gap-xs">
             {activeTab === 'products' && (
               <button
                 onClick={e => {
@@ -203,7 +199,10 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
         return MyProductList.length > 0 ? (
           MyProductList.map(product => renderContents(product))
         ) : (
-          <div className="text-heading3">목록이 없습니다.</div>
+          <div className="flex flex-col items-center justify-center">
+            <h3 className="text-lg font-medium text-gray-900 mb-2"> 거래한 상품이 없어요</h3>
+          </div>
+          // 빈 목록 안내문구 양식 통일을 위해 찜한상품 양식 복사.
         );
       case 'wishlist':
         return wishlist.length > 0 ? (
