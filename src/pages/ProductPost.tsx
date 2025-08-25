@@ -14,7 +14,7 @@ import {
   PRODUCT_CATEGORIES,
   PRODUCT_POST_TABS,
   type CityCode,
-  type ConditionValue,
+  type ConditionCode,
   type PetDetailCode,
   type PetTypeCode,
   type ProductCategoryCode,
@@ -22,16 +22,11 @@ import {
   type StateCode,
 } from '../constants/constants';
 
-// type StateCode = string; // SEOUL, GYEONGGIDO 등
-// type CityCode = string;
-
 const ProductPost = () => {
   const [activeTab, setActiveTab] = useState<ProductPostTabId>('sales');
 
   /**반려동물 종류 */
   // 대분류
-  // const [selectedPetCategory, setSelectedPetCategory] = useState<PetCategory | null>(null);
-  // const [showPetCategorySelect, setShowPetCategorySelect] = useState(false);
   const [selectedPetType, setSelectedPetType] = useState<PetTypeCode | string>('');
   const [showPetTypeSelect, setShowPetTypeSelect] = useState(false);
 
@@ -41,7 +36,7 @@ const ProductPost = () => {
 
   // 반려동물 세부 종류 선택
   const petTypeDetailOptions = selectedPetType
-    ? PETS.find(cat => cat.code === selectedPetType)?.details || []
+    ? PETS.find(petType => petType.code === selectedPetType)?.details || []
     : [];
 
   // 반려동물 종류 선택창
@@ -56,7 +51,7 @@ const ProductPost = () => {
   const [price, setPrice] = useState<number | ''>('');
 
   /**상품 상태 */
-  const [selectedCondition, setSelectedCondition] = useState<ConditionValue | null>(null);
+  const [selectedCondition, setSelectedCondition] = useState<ConditionCode | null>(null);
 
   /**상품명 */
   const [productName, setProductName] = useState<string>('');
@@ -66,9 +61,9 @@ const ProductPost = () => {
 
   /**거주지 */
   const [selectedState, setSelectedState] = useState<StateCode | string>('');
-  const [showStateSelect, setShowStateSelect] = useState(false);
   const [selectedCity, setSelectedCity] = useState<CityCode | string>('');
-  const [showCitySelect, setShowCitySelect] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const cityOptions = selectedState
     ? LOCATIONS.find(location => location.code === selectedState)?.cities || []
@@ -166,7 +161,7 @@ const ProductPost = () => {
   };
 
   // 상품 상태
-  const handleSelectCondition = (val: ConditionValue) => {
+  const handleSelectCondition = (val: ConditionCode) => {
     setSelectedCondition(val);
     if (val) {
       setErrors(prev => {
@@ -178,17 +173,16 @@ const ProductPost = () => {
   };
 
   // 거주지
-  const handleSelectState = (opt: StateCode) => {
-    setSelectedState(opt);
+  const handleStateSelect = (stateCode: string) => {
+    setSelectedState(stateCode);
     setSelectedCity('');
-    setShowStateSelect(false);
-    setShowCitySelect(false);
+    setShowStateDropdown(false);
   };
 
-  const handleSelectCity = (opt: CityCode) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
-    if (selectedState && opt) {
+  const handleCitySelect = (cityCode: string) => {
+    setSelectedCity(cityCode);
+    setShowCityDropdown(false);
+    if (selectedState && cityCode) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.location;
@@ -395,12 +389,12 @@ const ProductPost = () => {
       const target = e.target as Node;
 
       // 시/도 드롭다운 바깥 클릭
-      if (showStateSelect && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
-        setShowStateSelect(false);
+      if (showStateDropdown && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
+        setShowStateDropdown(false);
       }
       // 구/군 드롭다운 바깥 클릭
-      if (showCitySelect && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
-        setShowCitySelect(false);
+      if (showCityDropdown && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
+        setShowCityDropdown(false);
       }
       // 반려동물 카테고리 드롭다운
       if (showPetTypeSelect && petTypeBoxRef.current && !petTypeBoxRef.current.contains(target)) {
@@ -418,8 +412,8 @@ const ProductPost = () => {
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (showStateSelect) setShowStateSelect(false);
-        if (showCitySelect) setShowCitySelect(false);
+        if (showStateDropdown) setShowStateDropdown(false);
+        if (showCityDropdown) setShowCityDropdown(false);
         if (showPetTypeSelect) setShowPetTypeSelect(false);
         if (showPetTypeDetailSelect) setShowPetTypeDetailSelect(false);
       }
@@ -431,7 +425,7 @@ const ProductPost = () => {
       document.removeEventListener('mousedown', handleOutside);
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [showStateSelect, showCitySelect, showPetTypeSelect, showPetTypeDetailSelect]);
+  }, [showStateDropdown, showCityDropdown, showPetTypeSelect, showPetTypeDetailSelect]);
 
   // 수정 모드일 때 기존 데이터 로드
   useEffect(() => {
@@ -448,7 +442,7 @@ const ProductPost = () => {
         setSelectedPetType(product.pet_type_code || '');
         setSelectedPetTypeDetail(product.pet_type_detail_code);
         setProductCategory(product.category_code || '');
-        setSelectedCondition(product.condition_status as ConditionValue);
+        setSelectedCondition(product.condition_status as ConditionCode);
         setSelectedState(product.state_code || '');
         setSelectedCity(product.city_code || '');
 
@@ -789,12 +783,12 @@ const ProductPost = () => {
                                 value={item.value}
                                 checked={selectedCondition === item.value}
                                 onChange={e => {
-                                  const val = e.target.value as ConditionValue;
+                                  const val = e.target.value as ConditionCode;
                                   handleSelectCondition(val);
                                 }}
                                 className="blind" // 화면에서 숨김
                               />
-                              <div className="font-medium">{item.value}</div>
+                              <div className="font-medium">{item.title}</div>
                               <div className="text-xs text-gray-500">{item.subtitle}</div>
                             </label>
                           ))}
@@ -939,10 +933,10 @@ const ProductPost = () => {
                           <button
                             type="button"
                             role="combobox"
-                            aria-expanded={showStateSelect}
+                            aria-expanded={showStateDropdown}
                             onClick={() => {
-                              setShowStateSelect(prev => !prev);
-                              setShowCitySelect(false);
+                              setShowStateDropdown(prev => !prev);
+                              setShowCityDropdown(false);
                             }}
                             className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
@@ -952,7 +946,7 @@ const ProductPost = () => {
                                 : '시/도를 선택해주세요'}
                             </span>
                           </button>
-                          {showStateSelect && (
+                          {showStateDropdown && (
                             <div
                               role="listbox"
                               aria-label="시/도 선택"
@@ -962,9 +956,9 @@ const ProductPost = () => {
                                 <button
                                   key={location.code}
                                   role="option"
-                                  aria-selected={selectedState === location.code}
                                   type="button"
-                                  onClick={() => handleSelectState(location.code)}
+                                  aria-selected={selectedState === location.code}
+                                  onClick={() => handleStateSelect(location.code)}
                                   className={`w-full px-3 py-xs rounded-md transition
                                 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
                                 ${
@@ -984,11 +978,11 @@ const ProductPost = () => {
                           <button
                             type="button"
                             role="combobox"
-                            aria-expanded={showCitySelect}
+                            aria-expanded={showCityDropdown}
                             onClick={() => {
                               if (!selectedState) return;
-                              setShowCitySelect(prev => !prev);
-                              setShowStateSelect(false);
+                              setShowCityDropdown(prev => !prev);
+                              setShowStateDropdown(false);
                             }}
                             className={`flex w-full rounded-md py-2 pl-10 text-sm bg-secondary/30`}
                           >
@@ -1000,7 +994,7 @@ const ProductPost = () => {
                                 : '먼저 시/도를 선택해주세요'}
                             </span>
                           </button>
-                          {showCitySelect && selectedState && (
+                          {showCityDropdown && selectedState && (
                             <div
                               role="listbox"
                               aria-label="구/군 선택"
@@ -1013,7 +1007,7 @@ const ProductPost = () => {
                                   type="button"
                                   role="option"
                                   aria-selected={selectedCity === city.code}
-                                  onClick={() => handleSelectCity(city.code)}
+                                  onClick={() => handleCitySelect(city.code)}
                                   className={`w-full px-3 py-xs rounded-md transition
                                     hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
                                     ${

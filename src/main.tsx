@@ -15,7 +15,8 @@ const enableMocking = async () => {
       if (
         request.url.includes('/users/kakao-auth/') ||
         request.url.includes('/users/profile-complete/') ||
-        request.url.includes('/categories/all-get/')
+        request.url.includes('/categories/all-get/') ||
+        request.url.includes('/likes')
       ) {
         return;
       }

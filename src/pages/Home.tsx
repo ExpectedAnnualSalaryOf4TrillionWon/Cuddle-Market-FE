@@ -3,7 +3,7 @@ import ProductCard from '@layout/ProductCard';
 import { useEffect, useMemo, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
 // import { useLike } from '../components/hook/useLike';
-import { useLike } from '../components/hook/useLike';
+// import { useLike } from '../components/hook/useLike';
 import type { FilterState, Product } from '../types'; // 타입 변경
 const Home = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -26,7 +26,7 @@ const Home = () => {
    * 하트 번호 클릭 -> toggleLike 함수 실행(useLike 안의 toggleLike) ->
    * toggleLike 함수 안의 addLike 함수 실행 -> 핸들러 안의 http.post('/api/likes') 실행
    */
-  const { isProductLiked, toggleLike } = useLike();
+  // const { isProductLiked } = useLike();
 
   const loadProducts = async () => {
     try {
@@ -187,9 +187,9 @@ const Home = () => {
             <ProductCard
               key={product.id}
               data-index={index}
-              product={product}
-              isLiked={isProductLiked(product.id)}
-              onToggleLike={() => toggleLike(product.id)}
+              data={product}
+              // isLiked={isProductLiked(product.id)}
+              // onToggleLike={() => toggleLike(product.id)}
             />
           ))}
         </ul>

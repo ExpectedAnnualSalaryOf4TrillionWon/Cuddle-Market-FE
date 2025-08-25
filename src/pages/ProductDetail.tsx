@@ -3,32 +3,64 @@ import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
-import { useLike } from '../components/hook/useLike';
-import {
-  LOCATIONS,
-  PETS,
-  PRODUCT_CATEGORIES,
-  ProductState,
-  stateLabelMap,
-  stateStyleMap,
-} from '../constants/constants';
+// import { useLike } from '../components/hook/useLike';
+import { LOCATIONS, PETS, PRODUCT_CATEGORIES, stateStyleMap } from '../constants/constants';
 
 import type { ProductDetailItem } from '../types';
-const getProductState = (status: string): ProductState => {
-  switch (status) {
-    case '판매중':
-      return 'selling';
-    case '예약중':
-      return 'reserved';
-    case '판매완료':
-      return 'sold';
-    default:
-      return 'selling';
+
+const formatPrice = (price: number): string => {
+  return `${price.toLocaleString()}원`;
+};
+
+const getTimeAgo = (createdAt: string): string => {
+  const now = new Date();
+  const created = new Date(createdAt); // ISO 문자열 파싱
+  const diffMs = now.getTime() - created.getTime();
+
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMinutes < 1) {
+    return '방금 전';
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes}분 전`;
+  } else if (diffHours < 24) {
+    return `${diffHours}시간 전`;
+  } else {
+    // 24시간이 넘으면 무조건 'n일 전'
+    return `${diffDays}일 전`;
   }
+};
+
+const getLocationName = (stateCode: string, cityCode?: string) => {
+  const state = LOCATIONS.find(loc => loc.code === stateCode);
+  if (!state) return { stateName: stateCode, cityName: cityCode };
+
+  const stateName = state.name;
+  const cityName = cityCode
+    ? state.cities.find(city => city.code === cityCode)?.name || cityCode
+    : '';
+
+  return { stateName, cityName };
+};
+
+// 펫 타입 세부 코드를 한글로 변환
+const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
+  const petType = PETS.find(pet => pet.code === petTypeCode);
+  if (!petType) return petDetailCode;
+
+  const detail = petType.details.find(d => d.code === petDetailCode);
+  return detail?.name || petDetailCode;
+};
+
+// 카테고리 코드를 한글로 변환
+const getCategoryName = (categoryCode: string) => {
+  const category = PRODUCT_CATEGORIES.find(cat => cat.code === categoryCode);
+  return category?.name || categoryCode;
 };
 
 const ProductDetail = () => {
@@ -39,60 +71,9 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
-  const { isProductLiked, toggleLike } = useLike();
-  const isLiked = product ? isProductLiked(product.id) : false;
+  // const { isProductLiked, toggleLike } = useLike();
+  // const isLiked = product ? isProductLiked(product.id) : false;
 
-  const formatPrice = (price: number): string => {
-    return `${price.toLocaleString()}원`;
-  };
-
-  const getTimeAgo = (createdAt: string): string => {
-    const now = new Date();
-    const created = new Date(createdAt); // ISO 문자열 파싱
-    const diffMs = now.getTime() - created.getTime();
-
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMinutes / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMinutes < 1) {
-      return '방금 전';
-    } else if (diffMinutes < 60) {
-      return `${diffMinutes}분 전`;
-    } else if (diffHours < 24) {
-      return `${diffHours}시간 전`;
-    } else {
-      // 24시간이 넘으면 무조건 'n일 전'
-      return `${diffDays}일 전`;
-    }
-  };
-
-  const getLocationName = (stateCode: string, cityCode?: string) => {
-    const state = LOCATIONS.find(loc => loc.code === stateCode);
-    if (!state) return { stateName: stateCode, cityName: cityCode };
-
-    const stateName = state.name;
-    const cityName = cityCode
-      ? state.cities.find(city => city.code === cityCode)?.name || cityCode
-      : '';
-
-    return { stateName, cityName };
-  };
-
-  // 펫 타입 세부 코드를 한글로 변환
-  const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
-    const petType = PETS.find(pet => pet.code === petTypeCode);
-    if (!petType) return petDetailCode;
-
-    const detail = petType.details.find(d => d.code === petDetailCode);
-    return detail?.name || petDetailCode;
-  };
-
-  // 카테고리 코드를 한글로 변환
-  const getCategoryName = (categoryCode: string) => {
-    const category = PRODUCT_CATEGORIES.find(cat => cat.code === categoryCode);
-    return category?.name || categoryCode;
-  };
   const loadProductDetail = async () => {
     if (!id) return;
 
@@ -146,7 +127,7 @@ const ProductDetail = () => {
     );
   }
 
-  const state = getProductState(product.transaction_status);
+  const currentStatus = product.transaction_status; // state 변수 제거, currentStatus로 변경
   const productLocation = getLocationName(product.state_code || '', product.city_code || '');
   const petTypeName = getPetTypeName(product.pet_type_code || '', product.pet_type_detail_code);
   const categoryName = getCategoryName(product.category_code || '');
@@ -199,7 +180,7 @@ const ProductDetail = () => {
                   <div className="flex items-center gap-xs text-text-secondary bodySmall">
                     <CiLocationOn />
                     <span>
-                      {product.seller_info?.state} {product.seller_info?.city}
+                      {product.seller_info?.state_name} {product.seller_info?.city_name}
                     </span>
                   </div>
                 </div>
@@ -221,11 +202,11 @@ const ProductDetail = () => {
               <div className="flex items-center gap-xs">
                 <span
                   className={`inline-flex items-center text-md px-md py-xs rounded-xl border
-                    ${stateStyleMap[state]}
+                    ${stateStyleMap[currentStatus]}
                     text-bg
                 `}
                 >
-                  {stateLabelMap[state]}
+                  {currentStatus}
                 </span>
                 <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
                   {petTypeName}
@@ -304,15 +285,17 @@ const ProductDetail = () => {
                   text-text-primary
                   transition-colors
                 "
-                onClick={() => {
-                  if (product) {
-                    console.log('상세페이지 찜하기 클릭, productId:', product.id);
-                    toggleLike(product.id);
-                  }
-                }}
+                // onClick={() => {
+                //   if (product) {
+                //     console.log('상세페이지 찜하기 클릭, productId:', product.id);
+                //     toggleLike(product.id);
+                //   }
+                // }}
               >
-                {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />}
-                <span>{isLiked ? '찜 취소' : '찜하기'}</span>
+                <FaHeart size={16} className="text-alert" />
+                {/* {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />} */}
+                {/* <span>{isLiked ? '찜 취소' : '찜하기'}</span> */}
+                <span>찜하기</span>
               </button>
             </div>
           </div>
@@ -328,9 +311,9 @@ const ProductDetail = () => {
               {product.seller_products?.map(sellerProducts => (
                 <ProductCard
                   key={sellerProducts.id}
-                  product={sellerProducts}
-                  isLiked={isProductLiked(product.id)}
-                  onToggleLike={() => toggleLike(product.id)}
+                  data={sellerProducts}
+                  // isLiked={isProductLiked(product.id)}
+                  // onToggleLike={() => toggleLike(product.id)}
                 />
               ))}
             </div>

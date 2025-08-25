@@ -1,97 +1,38 @@
+import { LOCATIONS, type CityCode, type StateCode } from '@constants/constants';
 import logoImage from '@images/CuddleMarketLogoImage.png';
+import { useUserStore } from '@store/userStore';
 import { useEffect, useRef, useState } from 'react';
 import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';
 import { PiTagThin } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import type { CreateUserRequest, CreateUserResponse, FormErrors } from 'src/types';
 
-//max-w-[375px]  : 해당 값보다 요소가 더 커지지 않게
-const CITIES = {
-  서울특별시: [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-    '노원구',
-    '도봉구',
-    '동대문구',
-    '동작구',
-    '마포구',
-    '서대문구',
-    '서초구',
-    '성동구',
-    '성북구',
-    '송파구',
-    '양천구',
-    '영등포구',
-    '용산구',
-    '은평구',
-    '종로구',
-    '중구',
-    '중랑구',
-  ],
-  부산광역시: [
-    '강서구',
-    '금정구',
-    '기장군',
-    '남구',
-    '동구',
-    '동래구',
-    '부산진구',
-    '북구',
-    '사상구',
-    '사하구',
-    '서구',
-    '수영구',
-    '연제구',
-    '영도구',
-    '중구',
-    '해운대구',
-  ],
-  대구광역시: ['남구', '달서구', '달성군', '동구', '북구', '서구', '수성구', '중구'],
-  인천광역시: [
-    '강화군',
-    '계양구',
-    '남동구',
-    '동구',
-    '미추홀구',
-    '부평구',
-    '서구',
-    '연수구',
-    '옹진군',
-    '중구',
-  ],
-  광주광역시: ['광산구', '남구', '동구', '북구', '서구'],
-  대전광역시: ['대덕구', '동구', '서구', '유성구', '중구'],
-  울산광역시: ['남구', '동구', '북구', '울주군', '중구'],
-  세종특별자치시: ['세종시'],
-} as const;
-type Province = keyof typeof CITIES;
-const PROVINCES = Object.keys(CITIES) as Province[];
-
 const Signup = () => {
   const [userName, setUserName] = useState<string>('');
   const [userNickName, setUserNickName] = useState<string>('');
   const [userBirth, setUserBirth] = useState<string>('');
 
-  const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
-  const [showProvinceSelect, setShowProvinceSelect] = useState(false);
+  /**거주지 */
+  const [selectedState, setSelectedState] = useState<StateCode | string>('');
+  const [selectedCity, setSelectedCity] = useState<CityCode | string>('');
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
-  const [selectedCity, setSelectedCity] = useState<string>('');
-  const [showCitySelect, setShowCitySelect] = useState(false);
+  const cityOptions = selectedState
+    ? LOCATIONS.find(location => location.code === selectedState)?.cities || []
+    : [];
 
-  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
-  const provinceBoxRef = useRef<HTMLDivElement | null>(null);
+  /** 거주지 선택창 */
+  const stateBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate();
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+
+  const { accessToken, updateUserProfile, redirectUrl, setRedirectUrl } = useUserStore();
+
   // 이름
   const handleUserName = (val: string) => {
     setUserName(val === '' ? '' : val);
@@ -126,17 +67,16 @@ const Signup = () => {
     }
   };
 
-  const handleSelectProvince = (opt: Province) => {
-    setSelectedProvince(opt);
+  const handleStateSelect = (stateCode: string) => {
+    setSelectedState(stateCode);
     setSelectedCity('');
-    setShowProvinceSelect(false);
-    setShowCitySelect(false);
+    setShowStateDropdown(false);
   };
 
-  const handleSelectCity = (opt: string) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
-    if (selectedProvince && opt) {
+  const handleCitySelect = (cityCode: string) => {
+    setSelectedCity(cityCode);
+    setShowCityDropdown(false);
+    if (selectedState && cityCode) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors.location;
@@ -166,7 +106,7 @@ const Signup = () => {
       newErrors.userBirth = '생년월일을 선택해주세요.';
     }
 
-    if (!selectedProvince || !selectedCity) {
+    if (!selectedState || !selectedCity) {
       newErrors.location = '거래 희망 지역을 선택해주세요.';
     }
 
@@ -178,33 +118,51 @@ const Signup = () => {
     }
     try {
       const requestBody: CreateUserRequest = {
-        nickname: userName,
-        name: userNickName,
+        nickname: userNickName,
+        name: userName,
         birthday: userBirth,
-        state: selectedProvince!,
+        state: selectedState!,
         city: selectedCity,
       };
-      const token = localStorage.getItem('access_token');
+
+      if (!accessToken) {
+        alert('로그인이 필요합니다.');
+        navigate('/login');
+        return;
+      }
 
       const response = await fetch(`${API_BASE_URL}/users/profile-complete/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(requestBody),
       });
 
+      if (!response.ok) {
+        throw new Error('회원가입 실패');
+      }
+
       const data: CreateUserResponse = await response.json();
       console.log('📍 응답 데이터:', data);
 
-      const redirectUrl = localStorage.getItem('redirectUrl');
+      updateUserProfile({
+        nickname: data.nickname,
+        name: data.name,
+        birthday: data.birthday,
+        state_name: data.state_name,
+        city_name: data.city_name,
+        profile_completed: true,
+      });
+
       if (redirectUrl) {
-        console.log('📍 저장된 페이지로 이동:', redirectUrl);
-        localStorage.removeItem('redirectUrl'); // 사용 후 삭제
-        navigate(redirectUrl, { replace: true });
+        const targetUrl = redirectUrl;
+        setRedirectUrl(null); // 사용 후 초기화
+        console.log('저장된 페이지로 이동:', targetUrl);
+        navigate(targetUrl, { replace: true });
       } else {
-        console.log('📍 홈으로 이동');
+        console.log('홈으로 이동');
         navigate('/', { replace: true });
       }
     } catch (error) {
@@ -222,23 +180,19 @@ const Signup = () => {
       const target = e.target as Node;
 
       // 시/도 드롭다운 바깥 클릭
-      if (
-        showProvinceSelect &&
-        provinceBoxRef.current &&
-        !provinceBoxRef.current.contains(target)
-      ) {
-        setShowProvinceSelect(false);
+      if (showStateDropdown && stateBoxRef.current && !stateBoxRef.current.contains(target)) {
+        setShowStateDropdown(false);
       }
       // 구/군 드롭다운 바깥 클릭
-      if (showCitySelect && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
-        setShowCitySelect(false);
+      if (showCityDropdown && cityBoxRef.current && !cityBoxRef.current.contains(target)) {
+        setShowCityDropdown(false);
       }
     };
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (showProvinceSelect) setShowProvinceSelect(false);
-        if (showCitySelect) setShowCitySelect(false);
+        if (showStateDropdown) setShowStateDropdown(false);
+        if (showCityDropdown) setShowCityDropdown(false);
       }
     };
 
@@ -248,7 +202,7 @@ const Signup = () => {
       document.removeEventListener('mousedown', handleOutside);
       document.removeEventListener('keydown', handleEsc);
     };
-  }, [showProvinceSelect, showCitySelect]);
+  }, [showStateDropdown, showCityDropdown]);
 
   return (
     <div className="px-lg py-8 bg-primary min-h-[100vh] flex items-center justify-center">
@@ -373,7 +327,7 @@ const Signup = () => {
                   <label className="bodySmall font-medium text-text-primary">거주지 *</label>
 
                   <div className="flex flex-col gap-3">
-                    <div className="relative" ref={provinceBoxRef}>
+                    <div className="relative" ref={stateBoxRef}>
                       <CiLocationOn
                         className="absolute left-4 top-1/2 translate-y-[-50%]"
                         size={18}
@@ -381,36 +335,41 @@ const Signup = () => {
                       <button
                         type="button"
                         role="combobox"
+                        aria-expanded={showStateDropdown}
                         onClick={() => {
-                          setShowProvinceSelect(prev => !prev);
-                          setShowCitySelect(false);
+                          setShowStateDropdown(prev => !prev);
+                          setShowCityDropdown(false);
                         }}
                         className={`flex w-full rounded-md py-2 pl-10 text-sm bg-light border border-border`}
                       >
                         <span className="text-gray-500">
-                          {selectedProvince || '시/도를 선택해주세요'}
+                          {selectedState
+                            ? LOCATIONS.find(location => location.code === selectedState)?.name
+                            : '시/도를 선택해주세요'}
                         </span>
                       </button>
-                      {showProvinceSelect && (
+                      {showStateDropdown && (
                         <div
                           role="listbox"
                           aria-label="시/도 선택"
                           className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                         >
-                          {PROVINCES.map(opt => (
+                          {LOCATIONS.map(location => (
                             <button
-                              key={opt}
+                              key={location.code}
                               role="option"
-                              aria-selected={selectedProvince === opt}
                               type="button"
-                              onClick={() => handleSelectProvince(opt)}
+                              aria-selected={selectedState === location.code}
+                              onClick={() => handleStateSelect(location.code)}
                               className={`w-full p-1 rounded-md transition
                               hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                              ${
-                                selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''
-                              }`}
+                          ${
+                            selectedState === location.code
+                              ? 'bg-gray-100 ring-1 ring-gray-300'
+                              : ''
+                          }`}
                             >
-                              {opt}
+                              {location.name}
                             </button>
                           ))}
                         </div>
@@ -424,40 +383,45 @@ const Signup = () => {
                       <button
                         type="button"
                         role="combobox"
-                        aria-expanded={showCitySelect}
+                        aria-expanded={showCityDropdown}
                         onClick={() => {
-                          if (!selectedProvince) return;
-                          setShowCitySelect(prev => !prev);
-                          setShowProvinceSelect(false);
+                          if (!selectedState) return;
+                          setShowCityDropdown(prev => !prev);
+                          setShowStateDropdown(false);
                         }}
                         className={`flex w-full rounded-md py-2 pl-10 text-sm bg-light border border-border`}
                       >
                         <span className="text-gray-500">
-                          {selectedCity ||
-                            (selectedProvince
-                              ? '구/군을 선택해주세요'
-                              : '먼저 시/도를 선택해주세요')}
+                          {selectedCity
+                            ? cityOptions.find(city => city.code === selectedCity)?.name
+                            : selectedState
+                            ? '구/군을 선택해주세요'
+                            : '먼저 시/도를 선택해주세요'}
                         </span>
                       </button>
-                      {showCitySelect && selectedProvince && (
+                      {showCityDropdown && selectedState && (
                         <div
                           role="listbox"
                           aria-label="구/군 선택"
                           className="absolute left-0 top-full z-40  w-full rounded-md border border-border bg-white p-1 shadow-md
                           mt-sm"
                         >
-                          {cityOptions.map(opt => (
+                          {cityOptions.map(city => (
                             <button
-                              key={opt}
+                              key={city.code}
                               role="option"
-                              aria-selected={selectedCity === opt}
+                              aria-selected={selectedCity === city.code}
                               type="button"
-                              onClick={() => handleSelectCity(opt)}
+                              onClick={() => handleCitySelect(city.code)}
                               className={`w-full p-1 py-xs rounded-md transition
                               hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                              ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                                ${
+                                  selectedCity === city.code
+                                    ? 'bg-gray-100 ring-1 ring-gray-300'
+                                    : ''
+                                }`}
                             >
-                              {opt}
+                              {city.name}
                             </button>
                           ))}
                         </div>
