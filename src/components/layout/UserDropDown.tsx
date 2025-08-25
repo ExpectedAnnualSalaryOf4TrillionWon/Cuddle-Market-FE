@@ -68,7 +68,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
-      <div className="absolute right-2 top-full bg-point rounded-xl z-50 opacity-65 flex flex-col whitespace-nowrap min-w-[5rem]">
+      <div className="absolute right-0 top-[110%] py-sm bg-point rounded-md z-2 opacity-90 flex flex-col whitespace-nowrap min-w-[7rem]">
         {!isLoggedIn /*로그인이 안 되어있을 경우*/ ? (
           <>
             {/* 드롭다운메뉴 내의 버튼 별도 컴포넌트화 */}
@@ -78,13 +78,15 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
           /*로그인이 되어있을 경우*/
           <>
             {user && (
-              <div className="px-md py-sm border-b border-border/20">
-                <p className="text-sm font-medium">{user.nickname}</p>
+              <div className="flex justify-center border-b pb-sm border-black/20 ">
+                <p className="font-medium">{user.nickname}님</p>
               </div>
             )}
-            <DropdownButton label={'마이페이지'} onClick={goToMyPage} />
-            <DropdownButton label={'로그아웃'} onClick={handleLogout} />
-            <DropdownButton label={'상품 등록'} onClick={goToProductPost} />
+            <div className="flex flex-col pt-sm px-xs gap-xs">
+              <DropdownButton label={'마이페이지'} onClick={goToMyPage} />
+              <DropdownButton label={'로그아웃'} onClick={handleLogout} />
+              <DropdownButton label={'상품 등록'} onClick={goToProductPost} />
+            </div>
           </>
         )}
       </div>

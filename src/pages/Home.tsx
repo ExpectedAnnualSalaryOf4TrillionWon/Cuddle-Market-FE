@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
 // import { useLike } from '../components/hook/useLike';
 // import { useLike } from '../components/hook/useLike';
+import { LOCATIONS } from '@constants/constants';
 import type { FilterState, Product } from '../types'; // 타입 변경
 const Home = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -74,10 +75,10 @@ const Home = () => {
     if (filters.selectedConditions.length > 0) {
       filtered = filtered.filter(product => {
         const conditionMap: Record<string, string> = {
-          new: '새 상품',
-          nearly: '거의 새것',
-          used: '사용감 있음',
-          repair: '수리 필요',
+          NEW: '새 상품',
+          LIKE_NEW: '거의 새것',
+          USED: '사용감 있음',
+          NEEDS_REPAIR: '수리 필요',
         };
 
         return filters.selectedConditions.some(
@@ -109,11 +110,16 @@ const Home = () => {
 
     // 지역 필터링
     if (filters.selectedLocation.state) {
-      filtered = filtered.filter(product => product.state_code === filters.selectedLocation.state);
+      const stateName = LOCATIONS.find(loc => loc.code === filters.selectedLocation.state)?.name;
+      filtered = filtered.filter(product => product.state_code === stateName);
     }
 
     if (filters.selectedLocation.city) {
-      filtered = filtered.filter(product => product.city_code === filters.selectedLocation.city);
+      const state = LOCATIONS.find(loc => loc.code === filters.selectedLocation.state);
+      const cityName = state?.cities.find(
+        city => city.code === filters.selectedLocation.city,
+      )?.name;
+      filtered = filtered.filter(product => product.city_code === cityName);
     }
 
     return filtered;

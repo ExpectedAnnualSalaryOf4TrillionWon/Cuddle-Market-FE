@@ -22,20 +22,12 @@ export interface KakaoLoginRequest {
   code: string;
 }
 
-export interface SignupRequest {
-  registration_token?: string;
-  nickname: string;
-  state: string;
-  city: string;
-  birth_date?: string;
-}
-
 export interface CreateUserRequest {
   nickname: string;
   name: string;
   birthday: string;
-  state: string;
-  city: string;
+  state_name: string;
+  city_name: string;
 }
 
 export interface CreateUserResponse {

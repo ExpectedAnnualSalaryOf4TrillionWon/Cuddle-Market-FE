@@ -1,11 +1,11 @@
 import logoImage from '@images/CuddleMarketLogo.png';
 import { useEffect, useRef, useState } from 'react';
-import { IoIosSearch } from 'react-icons/io';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
+import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import UserDropdown from './UserDropDown';
 import AlarmDropdown from './AlarmDropDown';
+import UserDropdown from './UserDropDown';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -75,7 +75,7 @@ const Header = () => {
                   h-full px-sm py-sm
                   border border-border rounded-md
                   bg-bg/20 hover:bg-bg/30
-                  text-text-primary
+                  text-text-primary cursor-pointer
                 "
               >
                 <IoIosSearch className="text-xl tablet:text-2xl" />
@@ -84,9 +84,10 @@ const Header = () => {
           </div>
           <div className="flex gap-md tablet:gap-xl relative">
             {/* 알람 드롭다운 호출 */}
-            <div className="flex itmes-center" ref={alarmRef}>
+            <div className="flex items-center" ref={alarmRef}>
               <button
                 type="button"
+                className="cursor-pointer"
                 onClick={() => {
                   setIsAlarmDropdownOpen(prev => !prev);
                   setIsUserDropdownOpen(false);
@@ -104,6 +105,7 @@ const Header = () => {
             <div className="flex items-center" ref={userRef}>
               <button
                 type="button"
+                className="cursor-pointer"
                 onClick={() => {
                   setIsUserDropdownOpen(prev => !prev);
                   setIsAlarmDropdownOpen(false);
