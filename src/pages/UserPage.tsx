@@ -66,112 +66,109 @@ const UserPage = () => {
       {/* 헤더영역 => 컴포넌트화 */}
       <SimpleHeader title={'판매자 프로필 페이지'} />
 
-      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
-        <div className="grid grid-cols-1 tablet:grid-cols-3 gap-xl">
-          {/* 좌측: 사용자 카드 */}
-          <div className="tablet:col-span-1">
-            <div className="sticky top-24 flex flex-col gap-xl rounded-xl border border-border bg-bg text-text-primary">
-              <div className="p-xl">
-                <div className="text-center">
-                  <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
-                    <img
-                      src={seller.profile_image}
-                      alt={seller.nickname}
-                      className="block w-full h-full object-cover"
-                    />
-                  </div>
-                  <h2 className="heading4 text-text-primary mb-sm">{seller.nickname}</h2>
-                </div>
+      <div className="max-w-[var(--container-max-width)] mx-auto flex flex-col tablet:flex-row gap-xl px-lg py-xl">
+        {/* 좌측: 사용자 카드 */}
+        <div className="w-[300px] h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
+          <div className="sticky top-24 flex flex-col gap-xl rounded-xl  text-text-primary">
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
+                <img
+                  src={seller.profile_image}
+                  alt={seller.nickname}
+                  className="block w-full h-full object-cover"
+                />
+              </div>
+              <h2 className="heading4 text-text-primary mb-sm">{seller.nickname}</h2>
+            </div>
 
-                <div className="flex flex-col gap-sm">
-                  <div className="flex items-center gap-sm">
-                    <CiLocationOn />
-                    <span className="bodySmall text-text-primary">
-                      {seller.state} {seller.city}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-sm">
-                    <CiCalendar />
-                    <span className="bodySmall text-text-primary">
-                      {seller.created_at ? formatJoinDate(seller.created_at) : ''}
-                    </span>
-                  </div>
-                </div>
+            <div className="flex flex-col gap-sm">
+              <div className="flex items-center gap-sm">
+                <CiLocationOn />
+                <span className="bodySmall text-text-primary">
+                  {seller.state} {seller.city}
+                </span>
+              </div>
+              <div className="flex items-center gap-sm">
+                <CiCalendar />
+                <span className="bodySmall text-text-primary">
+                  {seller.created_at ? formatJoinDate(seller.created_at) : ''}
+                </span>
+              </div>
+            </div>
 
-                <div className="mt-lg flex flex-col gap-sm">
-                  <button
-                    className="
+            <div className="mt-lg flex flex-col gap-sm">
+              <button
+                className="
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90
                     text-bg text-sm font-medium
                     transition-all
                   "
-                  >
-                    <BsChat />
-                    <span>채팅하기</span>
-                  </button>
-                </div>
-              </div>
+              >
+                <BsChat />
+                <span>채팅하기</span>
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* 우측: 탭 + 목록 */}
-          <div className="tablet:col-span-2">
-            <div className="flex flex-col gap-sm w-full">
-              {/* 탭 리스트 */}
-              <div
-                role="tablist"
-                aria-label="사용자 탭"
-                className="mb-lg px-sm py-sm border-b border-gray-200"
-              >
-                <h3 className="heading4 text-text-primary">
-                  {seller.nickname}님 상품 ({seller.total_products}개)
-                </h3>
-              </div>
+        {/* 우측: 탭 + 목록 */}
+        <div className="flex-1 tablet:col-span-2">
+          <div className="flex flex-col gap-sm w-full">
+            {/* 탭 리스트 */}
+            <div
+              role="tablist"
+              aria-label="사용자 탭"
+              className="mb-lg px-sm py-sm border-b border-gray-200"
+            >
+              <h3 className="heading4 text-text-primary">
+                {seller.nickname}님 상품 ({seller.total_products}개)
+              </h3>
+            </div>
 
-              {/* 탭 패널: 상품 */}
-              <div
-                role="tabpanel"
-                id="panel-products"
-                aria-labelledby="tab-products"
-                className={`flex-1 outline-none`}
-              >
-                <div className="flex flex-col gap-md">
-                  {seller.seller_products.map(item => (
-                    <div
-                      key={item.id}
-                      className="
+            {/* 탭 패널: 상품 */}
+            <div
+              role="tabpanel"
+              id="panel-products"
+              aria-labelledby="tab-products"
+              className={`flex-1 outline-none`}
+            >
+              <div className="flex flex-col gap-md">
+                {seller.seller_products.map(item => (
+                  <div
+                    key={item.id}
+                    className="
                     cursor-pointer
                     rounded-lg p-lg
                     border border-border
                     bg-bg
                     transition-shadow hover:shadow-sm"
-                      onClick={goToProductDetail}
-                    >
-                      <div className="flex items-center gap-lg">
-                        <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-light">
-                          <img
-                            src={item.images}
-                            alt={item.title}
-                            className="block w-full h-full object-cover"
-                          />
+                    onClick={goToProductDetail}
+                  >
+                    <div className="flex items-center gap-lg">
+                      <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-light">
+                        <img
+                          src={item.images}
+                          alt={item.title}
+                          className="block w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="flex-1">
+                        <h3 className="bodySmall text-text-primary truncate">{item.title}</h3>
+                        <p className="heading5 text-text-primary font-bold">
+                          {item.price.toLocaleString()}원
+                        </p>
+
+                        <div className="flex items-center gap-xs caption text-text-secondary">
+                          <GrView />
+                          <span>조회 {item.view_count}</span>
                         </div>
+                      </div>
 
-                        <div className="flex-1">
-                          <h3 className="bodySmall text-text-primary truncate">{item.title}</h3>
-                          <p className="heading5 text-text-primary font-bold">
-                            {item.price.toLocaleString()}원
-                          </p>
-
-                          <div className="flex items-center gap-xs caption text-text-secondary">
-                            <GrView />
-                            <span>조회 {item.view_count}</span>
-                          </div>
-                        </div>
-
-                        <span
-                          className="
+                      <span
+                        className="
                           inline-flex items-center justify-center gap-1
                           rounded-md px-3 py-1
                           border border-sale
@@ -179,13 +176,12 @@ const UserPage = () => {
                           text-xs font-medium whitespace-nowrap
                           transition-[color,box-shadow] overflow-hidden
                         "
-                        >
-                          {item.transaction_status}
-                        </span>
-                      </div>
+                      >
+                        {item.transaction_status}
+                      </span>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

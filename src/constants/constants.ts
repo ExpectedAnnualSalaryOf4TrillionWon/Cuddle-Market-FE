@@ -130,7 +130,6 @@ export const PETS: PetTypeData[] = [
   },
 ] as const;
 export type PetTypeCode = (typeof PETS)[number]['code'];
-// PET_TYPE_CODE = 'MAMMAL' | 'BIRD' | 'REPTILE' | 'AQUATIC' | 'INSECT_ARTHROPOD'
 export const PET_DETAILS: Array<{ code: string; name: string; categoryCode?: string }> = [];
 PETS.forEach(category => {
   category.details.forEach(pet => {
@@ -141,7 +140,6 @@ PETS.forEach(category => {
   });
 });
 export type PetDetailCode = (typeof PETS)[number]['details'][number]['code'];
-// PET_DETAIL_CODE = 'DOG' | 'CAT' | 'RABBIT' | 'HAMSTER' | ...
 
 // ========== 상품 카테고리 관련 상수 ==========
 export const PRODUCT_CATEGORIES: CategoryData[] = [
@@ -157,19 +155,19 @@ export const PRODUCT_CATEGORIES: CategoryData[] = [
   { code: 'ETC', name: '기타' },
 ] as const;
 export type ProductCategoryCode = (typeof PRODUCT_CATEGORIES)[number]['code'];
-// ProductCategoryName = "FOOD" | "TOYS" | "HOUSING" | "HEALTH" | "ACCESSORIES" | "EQUIPMENT" | "CARRIER" | "CLEANING" | "TRAINING" | "ETC"
 
 // ========== 상품 상태 관련 상수 ==========
-export type ConditionValue = '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
+export type ConditionCode = 'NEW' | 'LIKE_NEW' | 'USED' | 'NEEDS_REPAIR';
 export interface ConditionItem {
-  value: ConditionValue;
+  value: ConditionCode;
+  title: string;
   subtitle: string;
 }
 export const CONDITION_ITEMS: ReadonlyArray<ConditionItem> = [
-  { value: '새 상품', subtitle: '미사용 상품' },
-  { value: '거의 새것', subtitle: '사용감 거의 없음' },
-  { value: '사용감 있음', subtitle: '일반적인 사용흔적' },
-  { value: '수리 필요', subtitle: '수리 후 사용가능' },
+  { value: 'NEW', title: '새 상품', subtitle: '미사용 상품' },
+  { value: 'LIKE_NEW', title: '거의 새것', subtitle: '사용감 거의 없음' },
+  { value: 'USED', title: '사용감 있음', subtitle: '일반적인 사용흔적' },
+  { value: 'NEEDS_REPAIR', title: '수리 필요', subtitle: '수리 후 사용가능' },
 ];
 
 // ========== 지역 관련 상수 ==========
@@ -1190,34 +1188,25 @@ export const LOCATIONS = [
 ] as const;
 export type StateCode = (typeof LOCATIONS)[number]['code'];
 export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code'];
-// export type STATE = keyof typeof CITIES;
-// export const PROVINCES = Object.keys(CITIES) as Province[];
 
 // ========== 탭 관련 상수 ==========
 export const PRODUCT_POST_TABS = [
   { id: 'sales', label: '판매' },
   { id: 'purchases', label: '판매요청' },
 ] as const;
-
 export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id'];
 
-export const ProductState = {
-  Selling: 'selling',
-  Reserved: 'reserved',
-  Sold: 'sold',
+// ========== 거래상태 관련 상수 ==========
+export type TransactionStatus = '판매중' | '예약중' | '판매완료';
+export const TRANSACTION_STATUS = {
+  SELLING: '판매중',
+  RESERVED: '예약중',
+  SOLD: '판매완료',
 } as const;
-export type ProductState = (typeof ProductState)[keyof typeof ProductState];
-
-export const stateLabelMap: Record<ProductState, string> = {
-  [ProductState.Selling]: '판매중',
-  [ProductState.Reserved]: '예약중',
-  [ProductState.Sold]: '판매완료',
-};
-
-export const stateStyleMap: Record<ProductState, string> = {
-  [ProductState.Selling]: 'bg-sale border-sale',
-  [ProductState.Reserved]: 'bg-reserved border-reserved',
-  [ProductState.Sold]: 'bg-complete border-complete',
+export const stateStyleMap: Record<TransactionStatus, string> = {
+  [TRANSACTION_STATUS.SELLING]: 'bg-sale border-sale',
+  [TRANSACTION_STATUS.RESERVED]: 'bg-reserved border-reserved',
+  [TRANSACTION_STATUS.SOLD]: 'bg-complete border-complete',
 };
 
 export const ALLOWED_IMAGE_TYPES = [

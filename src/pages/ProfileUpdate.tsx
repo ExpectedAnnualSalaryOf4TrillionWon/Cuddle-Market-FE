@@ -1,6 +1,8 @@
-import { CITIES, PROVINCES, type Province } from '@constants/Cities';
+// import { PROVINCES, type Province } from '@constants/Cities';
+import { LOCATIONS, type StateCode } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
 import { SimpleHeader } from '@layout/SimpleHeader';
+import { useUserStore } from '@store/userStore';
 import { useRef, useState } from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
 
@@ -9,40 +11,55 @@ interface ProfileUpdateProps {
 }
 
 const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
-  const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
-  const [showProvinceSelect, setShowProvinceSelect] = useState(false);
-  const [selectedCity, setSelectedCity] = useState<string>('');
-  const [showCitySelect, setShowCitySelect] = useState(false);
-
-  const provinceBoxRef = useRef<HTMLDivElement | null>(null);
-  const cityBoxRef = useRef<HTMLDivElement | null>(null);
-  const cityOptions = selectedProvince ? CITIES[selectedProvince] : [];
-
-  const [editField, setEditField] = useState<string | null>(null);
+  const user = useUserStore(state => state.user);
+  console.log(user);
 
   //TODO 전역상태로 현재 유저가 전에 설정한 정보 불러와서 디폴트로 연결하기.
   //디폴트값 대체. 연동되면 지우기.
-  const currentNickname: string | null = '닉네임';
-  const currentSelectedProvince: null = null;
-  const currentSelectedcity: null = null;
+  const currentNickname = user?.nickname || '';
+  const currentSelectedState = user?.state_name || '';
+  const currentSelectedCity = user?.city_name || '';
+
+  const [selectedState, setSelectedState] = useState<StateCode | string>('');
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+
+  const provinceBoxRef = useRef<HTMLDivElement | null>(null);
+  const cityBoxRef = useRef<HTMLDivElement | null>(null);
+
+  const [editField, setEditField] = useState<string | null>(null);
+
+  const cityOptions = selectedState
+    ? LOCATIONS.find(location => location.code === selectedState)?.cities || []
+    : [];
 
   const [formData, setFormData] = useState({
     nickname: currentNickname,
-    selectedProvince: currentSelectedProvince,
-    selectedCity: currentSelectedcity,
+    selectedProvince: currentSelectedState,
+    selectedCity: currentSelectedCity,
     profile_image_url,
   });
 
-  const handleSelectProvince = (opt: Province) => {
-    setSelectedProvince(opt);
+  const getStateNameByCode = (code?: string) =>
+    LOCATIONS.find(location => location.code === code)?.name ?? code ?? '';
+
+  const getCityNameByCode = (stateCode?: string, cityCode?: string) =>
+    LOCATIONS.find(location => location.code === stateCode)?.cities.find(
+      city => city.code === cityCode,
+    )?.name ??
+    cityCode ??
+    '';
+
+  const handleStateSelect = (stateCode: string) => {
+    setSelectedState(stateCode);
     setSelectedCity('');
-    setShowProvinceSelect(false);
-    setShowCitySelect(false);
+    setShowStateDropdown(false);
   };
 
-  const handleSelectCity = (opt: string) => {
-    setSelectedCity(opt);
-    setShowCitySelect(false);
+  const handleSelectCity = (cityCode: string) => {
+    setSelectedCity(cityCode);
+    setShowCityDropdown(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +130,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   return (
     <>
       <SimpleHeader title="내 정보 수정" />
-      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
+      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:pb-xl tablet:pt-[10vh]">
         <div className="flex flex-col gap-[20px]">
           <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
             <div className="flex flex-col items-start gap-1">
@@ -156,35 +173,41 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                         <button
                           type="button"
                           role="combobox"
-                          aria-expanded={showProvinceSelect}
+                          aria-expanded={showStateDropdown}
                           onClick={() => {
-                            setShowProvinceSelect(prev => !prev);
-                            setShowCitySelect(false);
+                            setShowStateDropdown(prev => !prev);
+                            setShowCityDropdown(false);
                           }}
                           className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
                         >
                           <span className="text-gray-500">
-                            {selectedProvince || '시/도를 선택해주세요'}
+                            {selectedState
+                              ? getStateNameByCode(selectedState as string)
+                              : currentSelectedState || '시/도를 선택해주세요'}
                           </span>
                         </button>
-                        {showProvinceSelect && (
+                        {showStateDropdown && (
                           <div
                             role="listbox"
                             aria-label="시/도 선택"
                             className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                           >
-                            {PROVINCES.map(opt => (
+                            {LOCATIONS.map(location => (
                               <button
-                                key={opt}
+                                key={location.code}
                                 role="option"
-                                aria-selected={selectedProvince === opt}
                                 type="button"
-                                onClick={() => handleSelectProvince(opt)}
+                                aria-selected={selectedState === location.code}
+                                onClick={() => handleStateSelect(location.code)}
                                 className={`w-full px-3 py-xs rounded-md transition
                             hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                            ${selectedProvince === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                            ${
+                              selectedState === location.code
+                                ? 'bg-gray-100 ring-1 ring-gray-300'
+                                : ''
+                            }`}
                               >
-                                {opt}
+                                {location.name}
                               </button>
                             ))}
                           </div>
@@ -197,40 +220,43 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                         <button
                           type="button"
                           role="combobox"
-                          aria-expanded={showCitySelect}
+                          aria-expanded={showCityDropdown}
                           onClick={() => {
-                            if (!selectedProvince) return;
-                            setShowCitySelect(prev => !prev);
-                            setShowProvinceSelect(false);
+                            if (!selectedState) return;
+                            setShowCityDropdown(prev => !prev);
+                            setShowStateDropdown(false);
                           }}
                           className="flex w-full rounded-md py-2 pl-3 text-sm bg-secondary/30"
                         >
                           <span className="text-gray-500">
-                            {selectedCity ||
-                              (selectedProvince
-                                ? '구/군을 선택해주세요'
-                                : '먼저 시/도를 선택해주세요')}
+                            {selectedCity
+                              ? getCityNameByCode(selectedState as string, selectedCity)
+                              : selectedState
+                              ? '구/군을 선택해주세요'
+                              : currentSelectedCity || '구/군을 선택해주세요'}
                           </span>
                         </button>
-                        {showCitySelect && selectedProvince && (
+                        {showCityDropdown && selectedState && (
                           <div
                             role="listbox"
                             aria-label="구/군 선택"
                             className="absolute left-0 top-full z-1 w-full rounded-md border border-border bg-white p-1 shadow-md
                                               mt-sm"
                           >
-                            {cityOptions.map(opt => (
+                            {cityOptions.map(city => (
                               <button
-                                key={opt}
+                                key={city.code}
                                 role="option"
-                                aria-selected={selectedCity === opt}
+                                aria-selected={selectedCity === city.code}
                                 type="button"
-                                onClick={() => handleSelectCity(opt)}
+                                onClick={() => handleSelectCity(city.code)}
                                 className={`w-full px-3 py-xs rounded-md transition
                             hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
-                            ${selectedCity === opt ? 'bg-gray-100 ring-1 ring-gray-300' : ''}`}
+                            ${
+                              selectedCity === city.code ? 'bg-gray-100 ring-1 ring-gray-300' : ''
+                            }`}
                               >
-                                {opt}
+                                {city.name}
                               </button>
                             ))}
                           </div>

@@ -1,7 +1,14 @@
-import { useModalStore } from '@store/modalStore';
+// import { useModalStore } from '@store/modalStore';
 
-const ConfirmModal = () => {
-  const { isOpen, message, handleConfirm } = useModalStore();
+interface ConfirmModalProps {
+  isOpen: boolean;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, message, onConfirm, onCancel }) => {
+  // const { isOpen, message, handleConfirm } = useModalStore();
 
   if (!isOpen) return null;
 
@@ -10,16 +17,10 @@ const ConfirmModal = () => {
       <div className="bg-dark p-2xl rounded-md">
         <p className="mb-4 text-heading5">{message}</p>
         <div className="flex justify-evenly">
-          <button
-            onClick={() => handleConfirm(true)}
-            className="px-md py-xs bg-point text-text-primary rounded-md"
-          >
+          <button onClick={onConfirm} className="px-md py-xs bg-point text-text-primary rounded-md">
             확인
           </button>
-          <button
-            onClick={() => handleConfirm(false)}
-            className="px-md py-xs bg-point text-text-primary rounded-md"
-          >
+          <button onClick={onCancel} className="px-md py-xs bg-point text-text-primary rounded-md">
             취소
           </button>
         </div>

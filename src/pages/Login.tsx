@@ -1,11 +1,13 @@
 import logo from '@images/CuddleMarketLogoBase.png';
 import kakao from '@images/kakao.svg';
+import { useUserStore } from '@store/userStore';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
 const Login: React.FC = () => {
   const location = useLocation();
+  const setRedirectUrl = useUserStore(state => state.setRedirectUrl);
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
@@ -42,19 +44,19 @@ const Login: React.FC = () => {
           const url = new URL(from);
           // 같은 도메인인 경우만 저장
           if (url.origin === window.location.origin) {
-            localStorage.setItem('redirectUrl', url.pathname);
-            console.log('📍 이전 페이지 저장:', url.pathname);
+            setRedirectUrl(url.pathname); // localStorage 대신 zustand 사용
+            console.log(' 이전 페이지 저장:', url.pathname);
           }
         } catch {
           // from이 상대 경로인 경우
           if (from.startsWith('/')) {
-            localStorage.setItem('redirectUrl', from);
-            console.log('📍 이전 페이지 저장:', from);
+            setRedirectUrl(from); // localStorage 대신 zustand 사용
+            console.log('이전 페이지 저장:', from);
           }
         }
       }
     }
-  }, [location]);
+  }, [location, setRedirectUrl]);
 
   return (
     <div className="flex items-center justify-center bg-primary h-[90vh]">
