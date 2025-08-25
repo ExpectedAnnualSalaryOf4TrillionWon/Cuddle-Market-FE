@@ -102,15 +102,15 @@ export function CategoryFilter({
   };
 
   // 필터 초기화
-  // const resetFilters = () => {
-  //   setSelectedPetType('ALL');
-  //   setSelectedPetDetails([]);
-  //   setSelectedCategories([]);
-  //   setSelectedConditions([]);
-  //   setSelectedPriceRanges([]);
-  //   setSelectedState(null);
-  //   setSelectedCity(null);
-  // };
+  const resetFilters = () => {
+    setSelectedPetType('ALL');
+    setSelectedPetDetails([]);
+    setSelectedCategories([]);
+    setSelectedConditions([]);
+    setSelectedPriceRanges([]);
+    setSelectedState(null);
+    setSelectedCity(null);
+  };
 
   const loadFilterData = async () => {
     try {
@@ -214,10 +214,19 @@ export function CategoryFilter({
   return (
     <div className="max-w-[var(--container-max-width)] mx-auto py-xl flex flex-col gap-xl">
       {/* 반려동물 종류 */}
-      <div>
-        <h3 id="pet-type-heading" className="tablet:mb-lg heading5 text-text-primary">
-          반려동물 종류
-        </h3>
+      <div className="flex flex-col gap-lg">
+        <div className="flex justify-between items-center">
+          <h3 id="pet-type-heading" className="heading5 text-text-primary">
+            반려동물 종류
+          </h3>
+          <button
+            className="bg-dark/25 rounded-md p-2 cursor-pointer"
+            type="button"
+            onClick={resetFilters}
+          >
+            필터 초기화
+          </button>
+        </div>
 
         {/* 상위 분류 탭 */}
         <div
@@ -233,7 +242,7 @@ export function CategoryFilter({
             onClick={() => handlePetTypeChange('ALL')}
             className={`w-full px-md py-sm rounded-3xl
             ${selectedPetType === 'ALL' ? 'bg-dark text-white font-bold' : 'bg-transparent'} 
-            bodySmall text-text-primary text-center`}
+            bodySmall text-text-primary text-center cursor-pointer`}
           >
             전체
           </button>
@@ -249,7 +258,7 @@ export function CategoryFilter({
               ${
                 selectedPetType === petType.code ? 'bg-dark text-white font-bold' : 'bg-transparent'
               } 
-              bodySmall text-text-primary text-center`}
+              bodySmall text-text-primary text-center cursor-pointer`}
             >
               {petType.name}
             </button>
@@ -268,13 +277,13 @@ export function CategoryFilter({
                     key={detail.code}
                     type="button"
                     onClick={() => handlePetDetailToggle(detail.code)}
-                    className={`inline-flex items-center px-md py-xs rounded-md border 
+                    className={`flex items-center px-md py-xs rounded-md border 
                     ${
                       selectedPetDetails.includes(detail.code)
                         ? 'border-primary bg-primary text-white font-bold'
                         : 'border-border bg-secondary/40'
                     } 
-                    bodySmall text-text-primary`}
+                    bodySmall text-text-primary cursor-pointer`}
                   >
                     <span>{detail.name}</span>
                   </button>
@@ -300,7 +309,7 @@ export function CategoryFilter({
                           ? 'border-primary bg-primary text-white font-bold'
                           : 'border-border bg-secondary/40'
                       } 
-                      bodySmall text-text-primary`}
+                      bodySmall text-text-primary cursor-pointer`}
                     >
                       <span>{detail.name}</span>
                     </button>
@@ -329,7 +338,7 @@ export function CategoryFilter({
                       ? 'border-primary bg-primary text-white font-bold'
                       : 'border-border bg-secondary/40'
                   } 
-                  bodySmall text-text-primary`}
+                  bodySmall text-text-primary cursor-pointer`}
                 >
                   {category.name}
                 </button>
@@ -368,7 +377,7 @@ export function CategoryFilter({
                     ${
                       selectedConditions.includes(item.value)
                         ? 'bg-primary border-primary text-white font-bold'
-                        : 'bg-light border-border'
+                        : 'bg-light border-border cursor-pointer'
                     } 
                     bodySmall transition-all`}
                   >
@@ -392,7 +401,7 @@ export function CategoryFilter({
                         ? 'bg-primary  border-primary text-white font-bold'
                         : 'border-border bg-light'
                     } 
-                    bodySmall text-text-primary`}
+                    bodySmall text-text-primary cursor-pointer`}
                   >
                     {item.title}
                   </button>
@@ -413,7 +422,7 @@ export function CategoryFilter({
                       setShowStateDropdown(prev => !prev);
                       setShowCityDropdown(false);
                     }}
-                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light`}
+                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer`}
                   >
                     <span className="text-gray-500">
                       {selectedState
@@ -440,7 +449,7 @@ export function CategoryFilter({
                             selectedState === location.code
                               ? 'bg-gray-100 ring-1 ring-gray-300'
                               : ''
-                          }`}
+                          } cursor-pointer`}
                         >
                           {location.name}
                         </button>
@@ -458,7 +467,7 @@ export function CategoryFilter({
                       setShowCityDropdown(prev => !prev);
                       setShowStateDropdown(false);
                     }}
-                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light`}
+                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer`}
                   >
                     <span className="text-gray-500">
                       {selectedCity
@@ -482,7 +491,7 @@ export function CategoryFilter({
                           type="button"
                           onClick={() => handleCitySelect(city.code)}
                           className={`w-full px-3 py-xs rounded-md transition
-                            hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall
+                            hover:bg-gray-100 focus:bg-gray-100 focus:outline-none text-left bodySmall cursor-pointer
                             ${
                               selectedCity === city.code ? 'bg-gray-100 ring-1 ring-gray-300' : ''
                             }`}

@@ -87,7 +87,7 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('상품등록 버튼 클릭');
+    console.log('회원가입 버튼 클릭');
 
     if (isSubmitting) return; // 중복 제출 방지
 
@@ -121,8 +121,8 @@ const Signup = () => {
         nickname: userNickName,
         name: userName,
         birthday: userBirth,
-        state: selectedState!,
-        city: selectedCity,
+        state_name: selectedState!,
+        city_name: selectedCity,
       };
 
       if (!accessToken) {
@@ -140,30 +140,46 @@ const Signup = () => {
         body: JSON.stringify(requestBody),
       });
 
-      if (!response.ok) {
-        throw new Error('회원가입 실패');
-      }
+      if (response.ok) {
+        const data: CreateUserResponse = await response.json();
+        console.log('📍 응답 데이터:', data);
 
-      const data: CreateUserResponse = await response.json();
-      console.log('📍 응답 데이터:', data);
+        updateUserProfile({
+          nickname: data.nickname,
+          name: data.name,
+          birthday: data.birthday,
+          state_name: data.state_name,
+          city_name: data.city_name,
+          profile_completed: true,
+        });
 
-      updateUserProfile({
-        nickname: data.nickname,
-        name: data.name,
-        birthday: data.birthday,
-        state_name: data.state_name,
-        city_name: data.city_name,
-        profile_completed: true,
-      });
-
-      if (redirectUrl) {
-        const targetUrl = redirectUrl;
-        setRedirectUrl(null); // 사용 후 초기화
-        console.log('저장된 페이지로 이동:', targetUrl);
-        navigate(targetUrl, { replace: true });
+        if (redirectUrl) {
+          const targetUrl = redirectUrl;
+          setRedirectUrl(null); // 사용 후 초기화
+          console.log('저장된 페이지로 이동:', targetUrl);
+          navigate(targetUrl, { replace: true });
+        } else {
+          console.log('홈으로 이동');
+          navigate('/', { replace: true });
+        }
       } else {
-        console.log('홈으로 이동');
-        navigate('/', { replace: true });
+        const errorResponse = await response.json();
+        const serverErrors: FormErrors = {};
+
+        if (errorResponse.birthday && errorResponse.birthday.length > 0) {
+          serverErrors.userBirth = errorResponse.birthday[0];
+        }
+        // 닉네임 에러 처리
+        if (errorResponse.nickname && errorResponse.nickname.length > 0) {
+          serverErrors.userNickName = errorResponse.nickname[0];
+        }
+
+        if (Object.keys(serverErrors).length > 0) {
+          setErrors(serverErrors);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          throw new Error('회원가입 실패');
+        }
       }
     } catch (error) {
       console.error('회원가입 실패:', error);
