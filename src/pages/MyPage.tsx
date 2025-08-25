@@ -29,10 +29,12 @@ const MyPage: React.FC = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null);
   const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
+  const [SubMessage, setSubMessage] = useState('');
 
   // 회원탈퇴 핸들러
   const handleExit = () => {
-    setModalMessage('정말로 회원탈퇴 하시겠습니까?탈퇴 후에는 복구할 수 없습니다.');
+    setModalMessage('정말로 회원탈퇴 하시겠습니까?');
+    setSubMessage('탈퇴후에는 복구할 수 없습니다');
     setModalAction('exit');
     setIsModalOpen(true);
   };
@@ -40,6 +42,7 @@ const MyPage: React.FC = () => {
   // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = (itemId?: number) => {
     setModalMessage('정말로 삭제하시겠습니까?');
+    setSubMessage('');
     setModalAction('delete');
     setDeleteItemId(itemId);
     setIsModalOpen(true);
@@ -214,6 +217,7 @@ const MyPage: React.FC = () => {
       <ConfirmModal
         isOpen={isModalOpen}
         message={modalMessage}
+        submessage={SubMessage}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
       />
