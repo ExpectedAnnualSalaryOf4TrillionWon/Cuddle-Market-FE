@@ -162,9 +162,11 @@ export const useUserStore = create<UserState>()(
           redirectUrl: null,
         });
         useAuthStore.getState().logout();
-        localStorage.removeItem('user-storage');
+        useUserStore.persist.clearStorage();
         // persist 데이터까지 초기화
+        // zustand v4부터는 persist의 내부 helper에 clearStorage() 함수가 있어 스토리지 자체를 완전 초기화할 수 있습니다.
       },
+
       clearRegistrationToken: () => {
         set({ redirectUrl: null });
         // redirectUrl만 초기화
