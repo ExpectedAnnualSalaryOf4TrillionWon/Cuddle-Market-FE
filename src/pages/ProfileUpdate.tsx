@@ -277,7 +277,10 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary"
+                className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary hover:bg-primary"
+                onClick={() => {
+                  alert('API 연동 시 userStore 상태변경 후 리렌더링');
+                }}
               >
                 프로필 저장
               </button>
@@ -304,7 +307,10 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-md text-sm border border-border px-4 py-2 w-full bg-secondary"
+                className="flex items-center justify-center gap-2 rounded-md text-sm border border-border px-4 py-2 w-full bg-secondary hover:bg-primary"
+                onClick={() => {
+                  alert('비밀번호 변경은 자체 로그인 기능 생성시 변경 링크 이메일 발송');
+                }}
               >
                 비밀번호 변경
               </button>
