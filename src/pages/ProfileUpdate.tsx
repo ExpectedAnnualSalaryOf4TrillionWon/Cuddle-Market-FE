@@ -68,7 +68,6 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   };
 
   const handleSave = () => {
-    // TODO: 저장 API 호출 후 handlechange 삭제.
     setEditField(null); // 변동사항 적용 후 편집 종료
   };
 
@@ -78,7 +77,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault(); // 브라우저 기본 새로고침 막기
-    // 여기서 API 호출 + 상태 업데이트
+    // TODO 여기서 API 호출 + 상태 업데이트
     console.log('프로필 저장:', formData);
     // 예: useUserStore.getState().updateUserProfile(formData);
   };
