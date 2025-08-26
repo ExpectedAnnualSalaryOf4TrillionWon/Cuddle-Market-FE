@@ -106,7 +106,6 @@ export const useUserStore = create<UserState>()(
           accessToken: null,
           redirectUrl: null,
         });
-        useAuthStore.getState().logout();
       },
 
       clearRegistrationToken: () => {
