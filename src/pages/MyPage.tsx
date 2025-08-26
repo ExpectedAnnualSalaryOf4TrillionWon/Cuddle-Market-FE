@@ -160,7 +160,6 @@ const MyPage: React.FC = () => {
               </button>
             ))}
           </div>
-
           {/* 탭 컨텐츠 */}
           <div
             role="tabpanel"
@@ -185,7 +184,6 @@ const MyPage: React.FC = () => {
             <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-lg">
               {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
               <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
-
               {/* 목록이 있을 때만 더보기 버튼 표시 */}
               {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (
                 <button
