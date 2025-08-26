@@ -79,7 +79,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
     const statusOptions: TransactionStatus[] = ['판매중', '예약중', '판매완료'];
     return (
       <div
-        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm h-[150px]"
+        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm flex-wrap"
         key={product.id}
       >
         {/* 상품 이미지 */}
@@ -114,7 +114,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
         </div>
 
         {/* 상품 상태 및 액션 */}
-        <div className="flex flex-col items-end gap-xs">
+        <div className="flex tablet:flex-col items-end gap-xs flex-1 justify-between">
           {activeTab === 'products' && (
             <div className="relative">
               <button
@@ -164,14 +164,14 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
             </div>
           )}
 
-          <div className="flex gap-xs">
+          <div className="flex gap-xs w-28">
             {activeTab === 'products' && (
               <button
                 onClick={e => {
                   e.stopPropagation();
                   handleEdit(product.id);
                 }}
-                className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+                className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
               >
                 수정
               </button>
@@ -183,7 +183,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
               }}
               className={`${
                 activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
-              }  text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+              }  text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
             >
               삭제
             </button>

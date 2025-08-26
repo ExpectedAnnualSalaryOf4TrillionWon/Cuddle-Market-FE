@@ -158,7 +158,7 @@ const ProductDetail = () => {
   return (
     <>
       <div className="bg-bg">
-        <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
+        <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl flex flex-col gap-4xl">
           <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
             {/* 이미지 갤러리 */}
             <div className="flex flex-col gap-lg">
@@ -296,7 +296,7 @@ const ProductDetail = () => {
                   rounded-xl p-sm
                   border border-border
                   bg-dark text-bg
-                  transition-colors
+                  transition-colors cursor-pointer
                 "
                 >
                   <BsChat size={16} />
@@ -309,7 +309,7 @@ const ProductDetail = () => {
                   border border-border
                   bg-bg
                   text-text-primary
-                  transition-colors
+                  transition-colors cursor-pointer
                 "
                   // onClick={() => {
                   //   if (product) {
@@ -329,7 +329,7 @@ const ProductDetail = () => {
 
           {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
           {product.seller_products && (
-            <div className="mt-4xl">
+            <div className="pb-4xl">
               <h2 className="heading4 text-text-primary mb-lg">
                 {product.seller_info?.nickname}님의 다른 상품
               </h2>

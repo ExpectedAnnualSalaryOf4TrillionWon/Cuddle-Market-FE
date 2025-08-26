@@ -76,6 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   } = data;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [subMessage, setSubMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const isSold = transaction_status === '판매완료';
@@ -87,8 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleModalConfirm = () => {
     setIsModalOpen(false);
-    // 로그인 페이지로 이동
-    navigate('/login');
+    navigate('/signin');
   };
 
   const handleModalCancel = () => {
@@ -100,9 +100,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
     console.log(user);
     if (!user || !accessToken) {
       setIsLoading(false);
-      setModalMessage('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?');
+      setModalMessage('로그인이 필요한 서비스입니다.');
+      setSubMessage('로그인 페이지로 이동하시겠습니까?');
       setIsModalOpen(true);
-      return; // ❹ 로딩에 갇히지 않게 즉시 종료
+      return;
     }
 
     console.log(API_BASE_URL);
@@ -170,11 +171,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
       >
         {/* 상품 썸네일 영역 */}
         <div className="relative pb-[75%] overflow-hidden">
-          {/* 우측 상단 하트 */}
-          <button
-            type="button"
-            className="
-            absolute top-sm right-sm z-1
+          <div className="absolute top-sm flex justify-between w-full px-sm">
+            {/* 상단 좌측 배지 */}
+            <div className="flex gap-xs z-1">
+              <span
+                className="
+              inline-flex items-center justify-center
+              rounded-md px-sm py-0.5
+              bg-secondary
+              text-caption font-medium whitespace-nowrap
+            "
+              >
+                {petTypeName}
+              </span>
+              <span
+                className="
+              inline-flex items-center justify-center
+              rounded-md px-sm py-0.5
+              border border-border
+                bg-secondary
+              text-caption font-medium whitespace-nowrap
+            "
+              >
+                {condition_status}
+              </span>
+            </div>
+            {/* 우측 상단 하트 */}
+            <button
+              type="button"
+              className="z-1
             flex items-center justify-center
             w-8 h-8
             rounded-md
@@ -183,38 +208,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
             transition-all
             cursor-pointer
           "
-            onClick={e => {
-              e.stopPropagation();
-              // TODO: 찜 상태 토글 핸들러 연결
-              toggleLike();
-            }}
-            aria-label="찜하기"
-          >
-            <FaHeart color="red" />
-          </button>
-          {/* 상단 좌측 배지 */}
-          <div className="absolute top-sm left-sm flex gap-xs z-1">
-            <span
-              className="
-              inline-flex items-center justify-center
-              rounded-md px-sm py-0.5
-              bg-secondary
-              text-caption font-medium whitespace-nowrap
-            "
+              onClick={e => {
+                e.stopPropagation();
+                // TODO: 찜 상태 토글 핸들러 연결
+                toggleLike();
+              }}
+              aria-label="찜하기"
             >
-              {petTypeName}
-            </span>
-            <span
-              className="
-              inline-flex items-center justify-center
-              rounded-md px-sm py-0.5
-              border border-border
-                bg-secondary
-              text-caption font-medium whitespace-nowrap
-            "
-            >
-              {condition_status}
-            </span>
+              <FaHeart color="red" />
+            </button>
           </div>
 
           <span
@@ -266,6 +268,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <ConfirmModal
         isOpen={isModalOpen}
         message={modalMessage}
+        subMessage={subMessage}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
       />

@@ -479,7 +479,7 @@ const ProductPost = () => {
   return (
     <div className="bg-bg">
       {/* 헤더 영역 - 컴포넌트화 */}
-      <SimpleHeader title="상품 등록" />
+      <SimpleHeader title={isEditMode ? '상품 수정' : '상품 등록'} />
 
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-3xl flex items-center">
         <div className="flex flex-col gap-2xl w-full">
@@ -498,8 +498,8 @@ const ProductPost = () => {
                 aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full px-md py-sm rounded-3xl ${
-                  activeTab === tab.id ? 'border-dark' : 'border-transparent'
-                } bodySmall text-text-primary text-center transition hover:bg-dark`}
+                  activeTab === tab.id ? 'bg-dark' : ''
+                } bodySmall text-text-primary text-center transition`}
               >
                 {tab.label}
               </button>

@@ -1,7 +1,7 @@
+import ConfirmModal from '@common/confirmModal';
 import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { SimpleHeader } from '@layout/SimpleHeader';
-import ConfirmModal from '@common/confirmModal';
 import { useUserStore } from '@store/userStore';
 import React, { useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -80,21 +80,6 @@ const MyPage: React.FC = () => {
     setDeleteItemId(undefined);
   };
 
-  // const loadUserInfo = async () => {
-  //   try {
-  //     const data = await fetchMyInfo();
-  //     setUserInfo(data);
-  //   } catch (error) {
-  //     console.error('사용자 정보 로드 실패:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loadUserInfo();
-  // }, []);
-
   if (!user) return <div>로딩중...</div>;
 
   return (
@@ -104,7 +89,7 @@ const MyPage: React.FC = () => {
 
       <main className="max-w-[var(--container-max-width)] mx-auto flex flex-col tablet:flex-row gap-xl px-lg py-xl">
         {/* 좌측 내 정보 영역 / 너비,높이 고정값 부여가 차라리 나은듯 함 */}
-        <aside className="w-[300px] h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
+        <aside className="tablet:w-[300px] tablet:h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
           <div className="sticky top-24 flex flex-col gap-xl rounded-xl text-text-primary">
             {/* 유저 이미지와 닉네임 */}
             <div className="flex flex-col items-center">
@@ -168,8 +153,8 @@ const MyPage: React.FC = () => {
                 aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full px-md py-xs rounded-3xl ${
-                  activeTab === tab.id ? 'border-dark' : 'border-transparent'
-                } bodySmall text-text-primary text-center transition hover:bg-dark`}
+                  activeTab === tab.id ? 'bg-dark' : ''
+                } bodySmall text-text-primary text-center `}
               >
                 {tab.label}
               </button>

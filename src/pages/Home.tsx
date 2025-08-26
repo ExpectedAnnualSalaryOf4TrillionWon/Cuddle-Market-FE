@@ -1,6 +1,6 @@
 import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
 // import { useLike } from '../components/hook/useLike';
 // import { useLike } from '../components/hook/useLike';
@@ -11,6 +11,9 @@ const Home = () => {
   const [visibleItems, setVisibleItems] = useState(12);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const triggerRef = useRef<HTMLDivElement | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     selectedPetType: null,
     selectedPetDetails: [],
@@ -124,29 +127,57 @@ const Home = () => {
     return filtered;
   }, [allProducts, filters]);
 
+  const loadMoreItems = useCallback(() => {
+    if (isLoadingMore || visibleItems >= filteredProducts.length) return;
+
+    setIsLoadingMore(true);
+    // 약간의 지연을 주어 자연스러운 로딩 효과
+    setTimeout(() => {
+      setVisibleItems(prev => Math.min(prev + 4, filteredProducts.length));
+      setIsLoadingMore(false);
+    }, 100);
+  }, [visibleItems, filteredProducts.length, isLoadingMore]);
+  useEffect(() => {
+    // 8번째 아이템이 표시될 때까지는 Observer를 설정하지 않음
+    if (visibleItems < 8) return;
+
+    // 이전 Observer 정리
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    // 새로운 Observer 생성
+    observerRef.current = new IntersectionObserver(
+      entries => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          loadMoreItems();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5, // 트리거 요소의 50%가 보일 때 실행
+      },
+    );
+
+    // 트리거 요소 관찰 시작
+    if (triggerRef.current) {
+      observerRef.current.observe(triggerRef.current);
+    }
+
+    // 클린업
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [loadMoreItems, visibleItems]);
+
   // 필터가 변경되면 visibleItems 초기화
   useEffect(() => {
     setVisibleItems(12);
   }, [filters]);
-
-  useEffect(() => {
-    if (visibleItems >= filteredProducts.length || filteredProducts.length === 0) return;
-
-    const handleScroll = () => {
-      const scrollPercent =
-        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      console.log('스크롤 퍼센트:', scrollPercent);
-      console.log('현재 visibleItems:', visibleItems);
-
-      if (scrollPercent > 30 && visibleItems === 12) {
-        console.log('조건 만족! 아이템 추가');
-        setVisibleItems(Math.min(20, filteredProducts.length));
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [visibleItems, filteredProducts.length]);
 
   useEffect(() => {
     // 실행순서1️⃣
