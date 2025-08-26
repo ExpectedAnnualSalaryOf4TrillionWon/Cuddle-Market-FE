@@ -21,8 +21,12 @@
   --text-heading5--line-height: 1.375;
   --text-heading5--font-weight: 500;
 
-  --text-bodyLarge: 16px;
-  --text-bodyLarge--line-height: 1.625;
+  --text-bodyRegular: 16px;
+  --text-bodyRegular--line-height: 1.625;
+  --text-bodyRegular--font-weight: 400;
+
+  --text-bodyLarge: 18px;
+  --text-bodyLarge--line-height: 1.5;
   --text-bodyLarge--font-weight: 400;
 
   --text-bodySmall: 14px;

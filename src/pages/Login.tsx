@@ -68,7 +68,7 @@ const Login: React.FC = () => {
         <button
           type="submit"
           onClick={handleKakaoLogin}
-          className="flex w-full items-center justify-center gap-sm rounded-xl bg-[#fee500] px-2 py-2 text-bodySmall tablet:text-bodyLarge font-semibold shadow-lg cursor-pointer"
+          className="flex w-full items-center justify-center gap-sm rounded-xl bg-[#fee500] px-2 py-2 text-bodySmall tablet:text-bodyRegular font-semibold shadow-lg cursor-pointer"
         >
           <div className="w-lg">
             <img src={kakao} className="w-full h-full object-cover" />

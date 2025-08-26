@@ -447,9 +447,9 @@ const ProductPost = () => {
         setSelectedCity(product.city_code || '');
 
         // 기존 이미지 URL을 미리보기로 설정
-        if (product.images) {
+        if (product.thumbnail) {
           // 메인 이미지를 배열로 변환
-          const imageUrls = [product.images];
+          const imageUrls = [product.thumbnail];
 
           // sub_images가 있으면 추가
           if (product.sub_images && product.sub_images.length > 0) {
@@ -881,36 +881,6 @@ const ProductPost = () => {
                                     </button>
                                   </div>
                                 </div>
-                                {/* 순서 변경 및 삭제 버튼 */}
-                                {/* <div className="absolute top-2 right-2 flex gap-1">
-                                  {index > 0 && (
-                                    <button
-                                      type="button"
-                                      onClick={() => moveImage(index, index - 1)}
-                                      className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
-                                      title="앞으로 이동"
-                                    >
-                                      <IoIosArrowBack />
-                                    </button>
-                                  )}
-                                  {index < imagePreviews.length - 1 && (
-                                    <button
-                                      type="button"
-                                      onClick={() => moveImage(index, index + 1)}
-                                      className="p-1 bg-white rounded-full shadow hover:bg-gray-100"
-                                      title="뒤로 이동"
-                                    >
-                                      <IoIosArrowForward />
-                                    </button>
-                                  )}
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRemoveImage(index)}
-                                    title="삭제"
-                                  >
-                                    <IoCloseCircle size={25} color="white" />
-                                  </button>
-                                </div> */}
                               </div>
                             ))}
                           </div>

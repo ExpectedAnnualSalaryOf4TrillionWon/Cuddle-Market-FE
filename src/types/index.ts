@@ -12,6 +12,7 @@ export interface User {
   is_superuser: boolean;
   profile_completed: boolean;
   last_login: string;
+  created_at: string;
 
   state_name?: string; // 시/도
   city_name?: string;
@@ -42,7 +43,6 @@ export interface CreateUserResponse {
 export interface FilterApiResponse {
   categories: CategoryData[];
   petTypes: PetTypeData[];
-  locations: LocationData[];
 }
 
 export interface CategoryData {
@@ -86,29 +86,29 @@ export interface LikeApiResponse {
   product_id: number;
   is_liked: boolean;
 }
+
 //!!!!!!!!!!!!!!!!!!!!
 export interface UserWithProducts extends User {
   state: string;
   city: string;
-  created_at?: string;
+  created_at: string;
   seller_products: UserProduct[];
   total_products: number;
 }
 
 // ========== 상품 관련 타입 ==========
 export interface ProductBase {
-  id: number;
+  product_id: number;
   title: string;
   description?: string;
   price: number;
-  images: string;
+  thumbnail: string;
   state_code?: string;
   city_code?: string;
   category_code?: string;
   pet_type_code?: string;
   pet_type_detail_code: string;
   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
-
   transaction_status: '판매중' | '예약중' | '판매완료';
   view_count?: number;
   like_count: number;
@@ -125,10 +125,10 @@ export interface ProductDetailItem extends ProductBase {
 }
 
 export interface UserProduct {
-  id: number;
+  product_id: number;
   title: string;
   price: number;
-  images: string;
+  thumbnail: string;
   pet_type_code: string;
   pet_type_detail_code: string;
   transaction_status: '판매중' | '예약중' | '판매완료';
@@ -136,6 +136,7 @@ export interface UserProduct {
   elapsed_time: string;
   like_count?: number;
   view_count?: number;
+  is_liked?: boolean;
 }
 
 export interface State {

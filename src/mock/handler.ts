@@ -8,15 +8,17 @@ import { mockUsers } from './data/users';
 
 // mockProducts 원소 타입을 그대로 가져오기
 type MockProduct = (typeof mockProducts)[number];
-const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
+const getProductById = (id: number): MockProduct | undefined =>
+  mockProducts.find(p => p.product_id === id);
 
 const API_STATUS = {
   AUTH: true, // 카카오 인증 - 실제 API 사용
   PROFILE: true, // 프로필 완성 - 실제 API 사용
   CATEGORIES: true, // 카테고리 - 실제 API 사용
-  LIKES: false, // 찜하기 - 실제 API 사용
+  LIKES: true, // 찜하기 - 실제 API 사용
   PRODUCTS: false, // 상품 목록 - 아직 모킹
   PRODUCT_DETAIL: false, // 상품 상세 - 아직 모킹
+  MY_PAGE: true, // 상품 상세 - 아직 모킹
 };
 
 export const handlers = [
@@ -39,6 +41,7 @@ export const handlers = [
       profile_completed: false, // 신규 회원은 false
       last_login: new Date().toISOString(),
       profile_image: '',
+      created_at: '2025-08-20T15:45:38.795623+09:00',
     };
 
     return HttpResponse.json(
@@ -165,6 +168,82 @@ export const handlers = [
     return HttpResponse.json(mockFilterData, { status: 200 });
   }),
 
+  // 프로필 수정
+  http.patch('*/users/mypage*', async ({ request }) => {
+    if (API_STATUS.MY_PAGE) {
+      return passthrough();
+    }
+
+    const formData = await request.formData();
+
+    // FormData에서 값 추출
+    const nickname = formData.get('nickname') as string;
+    const state = formData.get('state') as string;
+    const city = formData.get('city') as string;
+
+    console.log('[MSW] 프로필 수정:', { nickname, state, city });
+
+    // 모의 응답 - 업데이트된 user 객체 반환
+    const updatedUser = {
+      id: 3,
+      nickname: nickname,
+      state_name: state,
+      city_name: city,
+      // 나머지 필드들...
+    };
+
+    return HttpResponse.json({
+      user: updatedUser,
+      message: '프로필이 수정되었습니다.',
+    });
+  }),
+
+  // 내가 찜한 상품 조회
+  http.get('*/likes*', () => {
+    if (API_STATUS.LIKES) {
+      return passthrough();
+    }
+    const myPageData = {
+      liked_product_list: mockProducts.slice(3),
+    };
+
+    return HttpResponse.json(myPageData);
+  }),
+
+  // 찜하기 추가
+  http.post('*/likes*', async ({ request }) => {
+    if (API_STATUS.LIKES) {
+      return passthrough();
+    }
+    try {
+      const body = (await request.json()) as { product_id?: number };
+      const id = Number(body?.product_id);
+      console.log('클릭된 상품의 id:', id);
+
+      if (!Number.isFinite(id) || id <= 0) {
+        return new HttpResponse('product_id required', { status: 400 });
+      }
+
+      const producted = getProductById(id);
+
+      if (!producted) {
+        return new HttpResponse('Product not found', { status: 404 });
+      }
+
+      if (!producted.is_liked) {
+        producted.is_liked = true;
+        producted.like_count = (producted.like_count ?? 0) + 1;
+      }
+      console.log(producted);
+      return HttpResponse.json(
+        { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.product_id) },
+        { status: 201 },
+      );
+    } catch {
+      return new HttpResponse('Bad Request', { status: 400 });
+    }
+  }),
+
   // 핵심: MSW 핸들러 순서가 중요합니다. /products/:id를 /products보다 먼저 정의해야 합니다.
   //  상품 상세 조회 핸들러 추가
   http.get('*/products/:id', ({ params }) => {
@@ -175,8 +254,7 @@ export const handlers = [
     const productId = parseInt(id as string);
 
     // mockProducts에서 해당 상품 찾기
-    const product = mockProducts.find(product => product.id === productId);
-    console.log(product);
+    const product = mockProducts.find(product => product.product_id === productId);
 
     if (!product) {
       return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
@@ -225,7 +303,10 @@ export const handlers = [
   }),
 
   // 내가 찜한 상품과, 내가 등록한 상품 조회
-  http.get('*/users/mypage', () => {
+  http.get('*/users/mypage*', () => {
+    if (API_STATUS.MY_PAGE) {
+      return passthrough();
+    }
     const myPageData = {
       my_product_list: mockProducts.slice(0),
       liked_product_list: mockProducts.slice(3),
@@ -252,22 +333,23 @@ export const handlers = [
       last_login: new Date().toISOString(),
       state_name: '서울특별시',
       city_name: '강남구',
+      created_at: '2025-08-20T15:45:38.795623+09:00',
     };
 
     // FormData에서 데이터 추출
     const newProduct = {
-      id: mockProducts.length + 1, // 임시 ID 생성
+      product_id: mockProducts.length + 1, // 임시 ID 생성
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       price: parseInt(formData.get('price') as string),
       // 이미지 처리 (실제로는 파일 업로드 처리 필요)
-      images: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=600&fit=crop',
+      thumbnail:
+        'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=600&fit=crop',
       state_code: formData.get('state_code') as string,
       city_code: formData.get('city_code') as string,
       category_code: formData.get('category_code') as string,
       pet_type_code: formData.get('pet_type_code') as string,
       pet_type_detail_code: formData.get('pet_type_detail_code') as string,
-
       condition_status: formData.get('condition_status') as
         | '새 상품'
         | '거의 새것'
@@ -296,7 +378,7 @@ export const handlers = [
 
     return HttpResponse.json(
       {
-        id: newProduct.id,
+        id: newProduct.product_id,
         message: '상품이 성공적으로 등록되었습니다.',
         product: newProduct,
       },
@@ -311,7 +393,7 @@ export const handlers = [
     const formData = await request.formData();
 
     // 기존 상품 찾기
-    const existingProductIndex = mockProducts.findIndex(p => p.id === productId);
+    const existingProductIndex = mockProducts.findIndex(p => p.product_id === productId);
 
     if (existingProductIndex === -1) {
       return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
@@ -358,39 +440,5 @@ export const handlers = [
       message: '상품이 성공적으로 수정되었습니다.',
       product: updatedProduct,
     });
-  }),
-
-  // 찜하기 추가
-  http.post('*/likes', async ({ request }) => {
-    if (API_STATUS.LIKES) {
-      return passthrough();
-    }
-    try {
-      const body = (await request.json()) as { product_id?: number };
-      const id = Number(body?.product_id);
-      console.log('클릭된 상품의 id:', id);
-
-      if (!Number.isFinite(id) || id <= 0) {
-        return new HttpResponse('product_id required', { status: 400 });
-      }
-
-      const producted = getProductById(id);
-
-      if (!producted) {
-        return new HttpResponse('Product not found', { status: 404 });
-      }
-
-      if (!producted.is_liked) {
-        producted.is_liked = true;
-        producted.like_count = (producted.like_count ?? 0) + 1;
-      }
-      console.log(producted);
-      return HttpResponse.json(
-        { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.id) },
-        { status: 201 },
-      );
-    } catch {
-      return new HttpResponse('Bad Request', { status: 400 });
-    }
   }),
 ];

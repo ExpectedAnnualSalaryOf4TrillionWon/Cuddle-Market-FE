@@ -18,6 +18,9 @@
   }
 
   /* 본문 */
+  .bodyRegular {
+    @apply text-bodyRegular;
+  }
   .bodyLarge {
     @apply text-bodyLarge;
   }

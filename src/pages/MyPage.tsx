@@ -3,10 +3,11 @@ import userDefaultImage from '@images/userDefault.svg';
 import MyList from '@layout/myList';
 import { SimpleHeader } from '@layout/SimpleHeader';
 import { useUserStore } from '@store/userStore';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
-// import { fetchMyInfo } from '../api/products';
+
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 const TABS = [
   { id: 'products', label: '내 상품' },
@@ -15,23 +16,25 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]['id'];
 
+const formatJoinDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
+};
+
 const MyPage: React.FC = () => {
-  const user = useUserStore(state => state.user);
-  console.log(user);
+  const { user: storeUser, accessToken } = useUserStore();
+  const [currentUser, setCurrentUser] = useState(storeUser);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [activeTab, setActiveTab] = useState<TabId>('products');
-  // const [loading, setLoading] = useState(true);
-  // const [userInfo, setUserInfo] = useState<User | null>(null);
   const [counts, setCounts] = useState({ products: 0, wishlist: 0 });
 
-  // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null);
   const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
   const [subMessage, setSubMessage] = useState('');
 
-  // 회원탈퇴 핸들러
   const handleExit = () => {
     setModalMessage('정말로 회원탈퇴 하시겠습니까?');
     setSubMessage('탈퇴후에는 복구할 수 없습니다');
@@ -39,7 +42,6 @@ const MyPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  // 상품삭제 핸들러 (MyList 컴포넌트에서 사용할 수 있도록 함수로 제공)
   const handleDelete = (itemId?: number) => {
     setModalMessage('정말로 삭제하시겠습니까?');
     setSubMessage('');
@@ -47,11 +49,6 @@ const MyPage: React.FC = () => {
     setDeleteItemId(itemId);
     setIsModalOpen(true);
   };
-
-  // const formatJoinDate = (dateString: string): string => {
-  //   const date = new Date(dateString);
-  //   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
-  // };
 
   const handleModalConfirm = () => {
     setIsModalOpen(false);
@@ -80,8 +77,35 @@ const MyPage: React.FC = () => {
     setDeleteItemId(undefined);
   };
 
-  if (!user) return <div>로딩중...</div>;
+  const loadUserInfo = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
+      if (response.ok) {
+        const data = await response.json();
+        console.log('API 응답:', data);
+
+        const userData = data.user || data;
+        setCurrentUser(userData);
+        useUserStore.getState().setUser(userData);
+      }
+    } catch (error) {
+      console.error('사용자 정보 로드 실패:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    loadUserInfo();
+  }, []);
+
+  if (isLoading) return <div>로딩중...</div>;
+  if (!currentUser) return <div>사용자 정보를 불러올 수 없습니다.</div>;
   return (
     <>
       {/* 헤더영역 => 컴포넌트화 */}
@@ -95,12 +119,12 @@ const MyPage: React.FC = () => {
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
                 <img
-                  src={userDefaultImage}
+                  src={currentUser.profile_image || userDefaultImage}
                   alt="유저이미지"
                   className="block w-full h-full object-cover"
                 />
               </div>
-              <h3 className="heading4 text-text-primary mb-sm">{user.nickname}</h3>
+              <h3 className="heading4 text-text-primary mb-sm">{currentUser.nickname}</h3>
             </div>
             {/* 거주지와 가입일 */}
             <div className="flex flex-col gap-sm">
@@ -108,14 +132,14 @@ const MyPage: React.FC = () => {
               <div className="flex items-center gap-sm">
                 <CiLocationOn />
                 <span className="bodySmall text-text-primary">
-                  {user.state_name} {user.city_name}
+                  {currentUser.state_name} {currentUser.city_name}
                 </span>
               </div>
               {/* 가입일 */}
               <div className="flex items-center gap-sm">
                 <CiCalendar />
                 <span className="bodySmall text-text-primary">
-                  가입일 :{/* {userInfo.created_at ? formatJoinDate(userInfo.created_at) : ''} */}
+                  가입일 : {currentUser.created_at ? formatJoinDate(currentUser.created_at) : ''}
                 </span>
               </div>
             </div>
@@ -125,7 +149,7 @@ const MyPage: React.FC = () => {
                     flex items-center justify-center gap-sm
                     h-10 rounded-md px-xl
                     bg-primary hover:bg-primary/90
-                    text-bg text-sm font-medium
+                    text-bg font-bold
                     transition-all"
             >
               내 정보 수정
@@ -153,13 +177,16 @@ const MyPage: React.FC = () => {
                 aria-controls={`panel-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full px-md py-xs rounded-3xl ${
-                  activeTab === tab.id ? 'bg-dark' : ''
-                } bodySmall text-text-primary text-center `}
+                  activeTab === tab.id
+                    ? 'bg-dark text-white font-extrabold'
+                    : 'hover:bg-light hover:shadow-sm'
+                } text-md text-text-primary text-center cursor-pointer hover:shadow-sm`}
               >
                 {tab.label}
               </button>
             ))}
           </div>
+
           {/* 탭 컨텐츠 */}
           <div
             role="tabpanel"
@@ -184,11 +211,12 @@ const MyPage: React.FC = () => {
             <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-lg">
               {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
               <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
+
               {/* 목록이 있을 때만 더보기 버튼 표시 */}
               {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (
                 <button
                   onClick={() => alert('목록 5개씩 추가렌더링!')}
-                  className="w-full bg-dark rounded-lg shadow-2xs py-sm"
+                  className="w-full bg-dark rounded-lg py-sm text-white cursor-pointer shadow-md hover:shadow-lg"
                 >
                   더보기
                 </button>

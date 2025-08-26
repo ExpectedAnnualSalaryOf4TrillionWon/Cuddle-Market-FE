@@ -230,7 +230,7 @@ const Signup = () => {
           </div>
           <div className="flex flex-col items-center gap-1">
             <h2 className="heading3 text-text-primary">커들마켓에 오신 것을 환영합니다!</h2>
-            <p className="bodyLarge text-text-secondary">
+            <p className="bodyRegular text-text-secondary">
               안전한 반려동물 용품 거래를 시작해보세요
             </p>
           </div>
@@ -241,7 +241,7 @@ const Signup = () => {
             {/* 카드 헤더: grid → flex + gap */}
             <div className="flex flex-col items-center gap-1.5">
               <h4 className="heading4 text-center text-text-primary">회원가입</h4>
-              <p className="bodyLarge text-center text-text-secondary">
+              <p className="bodyRegular text-center text-text-secondary">
                 커들마켓에 가입하여 더 많은 기능을 이용해보세요
               </p>
             </div>

@@ -5,13 +5,15 @@ import React, { useState } from 'react';
 import { CiClock2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
+import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import type { LikeApiResponse, Product, UserProduct } from '../../types';
+import type { Product, UserProduct } from '../../types';
+
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+
 export type ProductCardProps = {
   data: Product | UserProduct;
   'data-index'?: number;
-  // isLiked: boolean;
-  // onToggleLike: () => void;
 };
 
 const formatPrice = (price: number): string => {
@@ -34,7 +36,6 @@ const getTimeAgo = (createdAt: string): string => {
   } else if (diffHours < 24) {
     return `${diffHours}시간 전`;
   } else {
-    // 24시간이 넘으면 무조건 'n일 전'
     return `${diffDays}일 전`;
   }
 };
@@ -48,14 +49,9 @@ const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
   return detail?.name || petDetailCode;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  data,
-  'data-index': dataIndex,
-  // isLiked,
-  // onToggleLike,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex }) => {
   if (!data) {
-    return null; // 또는 로딩 상태 표시
+    return null;
   }
 
   const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore();
@@ -63,10 +59,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const navigate = useNavigate();
 
   const {
-    id,
+    product_id: id,
     title,
     price,
-    images,
+    thumbnail: images,
     pet_type_code,
     pet_type_detail_code,
     condition_status,
@@ -78,7 +74,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [modalMessage, setModalMessage] = useState('');
   const [subMessage, setSubMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+  const [isLiked, setIsLiked] = useState(data.is_liked || false);
+
   const isSold = transaction_status === '판매완료';
   const isReserved = transaction_status === '예약중';
 
@@ -106,8 +103,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
       return;
     }
 
-    console.log(API_BASE_URL);
-
     try {
       setIsLoading(true);
       const response = await fetch(`${API_BASE_URL}/likes/`, {
@@ -119,26 +114,37 @@ const ProductCard: React.FC<ProductCardProps> = ({
         body: JSON.stringify({ product_id: Number(id) }),
       });
 
-      if (!response.ok) {
-        throw new Error('찜하기 실패');
-      }
-      const data: LikeApiResponse = await response.json();
-      console.log('응답 데이터:', data);
+      const data = await response.json();
+      console.log(data); // ['이미 관심 상품으로 추가된 상품입니다.']
 
+      if (response.ok) {
+        setIsLiked(true);
+      } else if (response.status === 400 || data[0] === '이미 관심 상품으로 추가된 상품입니다.') {
+        console.log('여기서 상품 찜하기 취소가 되어야 합니다');
+
+        const deleteResponse = await fetch(`${API_BASE_URL}/likes/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ product_id: Number(id) }),
+        });
+
+        if (deleteResponse.ok) {
+          setIsLiked(false);
+          console.log('찜하기 삭제 성공');
+        }
+      }
       if (redirectUrl) {
         const targetUrl = redirectUrl;
-        setRedirectUrl(null); // 사용 후 초기화
-        console.log('저장된 페이지로 이동:', targetUrl);
+        setRedirectUrl(null);
         navigate(targetUrl, { replace: true });
       } else {
-        console.log('홈으로 이동');
         navigate('/', { replace: true });
       }
     } catch (error) {
       console.error('찜하기 실패:', error);
-      // setErrors({
-      //   general: error instanceof Error ? error.message : '회원가입에 실패했습니다.',
-      // });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsLoading(false);
@@ -151,13 +157,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className="
+        className="group
         flex flex-col overflow-hidden
         border border-border rounded-xl
         bg-bg
         text-text-primary
-        cursor-pointer transition-shadow duration-200 hover:shadow-lg
-      "
+        cursor-pointer transition-shadow duration-200 hover:shadow-xl
+        shadow-md"
         onClick={goToProductDetail}
         role="button"
         data-index={dataIndex} // 이 줄 추가
@@ -178,8 +184,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 className="
               inline-flex items-center justify-center
               rounded-md px-sm py-0.5
-              bg-secondary
-              text-caption font-medium whitespace-nowrap
+              bg-dark-point text-white
+              text-caption font-extrabold whitespace-nowrap shadow-md
             "
               >
                 {petTypeName}
@@ -188,9 +194,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 className="
               inline-flex items-center justify-center
               rounded-md px-sm py-0.5
-              border border-border
                 bg-secondary
-              text-caption font-medium whitespace-nowrap
+              text-caption font-extrabold whitespace-nowrap shadow-md
             "
               >
                 {condition_status}
@@ -199,23 +204,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
             {/* 우측 상단 하트 */}
             <button
               type="button"
-              className="z-1
-            flex items-center justify-center
-            w-8 h-8
-            rounded-md
-            border border-border
-            bg-bg/80 hover:bg-bg
-            transition-all
-            cursor-pointer
-          "
+              className="z-2 flex items-center justify-center w-8 h-8 rounded-full shadow:lg bg-bg/80 hover:bg-bg transition-all cursor-pointer"
               onClick={e => {
                 e.stopPropagation();
-                // TODO: 찜 상태 토글 핸들러 연결
                 toggleLike();
               }}
               aria-label="찜하기"
             >
-              <FaHeart color="red" />
+              {isLiked ? <FaHeart color="red" /> : <IoIosHeartEmpty />}
             </button>
           </div>
 
@@ -242,22 +238,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={images || ''}
             alt={title}
-            className="w-full h-full absolute t-0 l-0 object-cover"
+            className="w-full h-full absolute t-0 l-0 object-cover group-hover:scale-105 transition-all duration-300 ease-in-out"
           />
         </div>
 
         {/* 상품 정보 영역 */}
         <div className="p-md">
-          <h3 className="heading5 text-text-primary mb-xs line-clamp-2 nobreakstyle">{title}</h3>
-          <p className="heading5 text-primary font-bold mb-sm">{formatPrice(price)}</p>
+          <h3 className="heading5 font-extrabold text-text-primary mb-xs line-clamp-2 nobreakstyle">
+            {title}
+          </h3>
+          <p className="heading5 text-dark font-extrabold mb-sm">{formatPrice(price)}</p>
 
           <div className="flex items-center justify-between">
             <div className="flex justify-between w-full gap-xs text-text-secondary caption">
-              <div className="flex items-center gap-xs text-text-secondary caption">
+              <div className="flex items-center gap-xs text-text-secondary bodySmall">
                 <CiClock2 size={16} />
                 <span>{getTimeAgo(elapsed_time)}</span>
               </div>
-              <div className="flex items-center gap-xs text-text-secondary caption">
+              <div className="flex items-center gap-xs text-text-secondary bodySmall">
                 <GoHeart size={16} />
                 <span>{like_count}</span>
               </div>

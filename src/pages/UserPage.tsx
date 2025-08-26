@@ -78,7 +78,7 @@ const UserPage = () => {
                   className="block w-full h-full object-cover"
                 />
               </div>
-              <h2 className="heading4 text-text-primary mb-sm">{seller.nickname}</h2>
+              <h2 className="heading4 text-text-primary mb-sm font-bold">{seller.nickname}</h2>
             </div>
 
             <div className="flex flex-col gap-sm">
@@ -99,11 +99,8 @@ const UserPage = () => {
             <div className="mt-lg flex flex-col gap-sm">
               <button
                 className="
-                    flex items-center justify-center gap-sm
-                    h-10 rounded-md px-xl
-                    bg-primary hover:bg-primary/90
-                    text-bg text-sm font-medium
-                    transition-all
+                    flex items-center justify-center gap-sm font-bold
+                    h-10 rounded-md px-xl bg-dark text-bg shadow-sm cursor-pointer hover:shadow-lg hover:bg-dark-point/30 hover:text-text-primary transition-all duration-300 ease-in-out
                   "
               >
                 <BsChat />
@@ -122,7 +119,7 @@ const UserPage = () => {
               aria-label="사용자 탭"
               className="mb-lg px-sm py-sm border-b border-gray-200"
             >
-              <h3 className="heading4 text-text-primary">
+              <h3 className="heading4 text-text-primary font-bold">
                 {seller.nickname}님 상품 ({seller.total_products}개)
               </h3>
             </div>
@@ -137,7 +134,7 @@ const UserPage = () => {
               <div className="flex flex-col gap-md">
                 {seller.seller_products.map(item => (
                   <div
-                    key={item.id}
+                    key={item.product_id}
                     className="
                     cursor-pointer
                     rounded-lg p-lg
@@ -146,22 +143,22 @@ const UserPage = () => {
                     transition-shadow hover:shadow-sm"
                     onClick={goToProductDetail}
                   >
-                    <div className="flex items-center gap-lg">
+                    <div className="flex gap-lg ">
                       <div className="w-[113px] h-full rounded-lg overflow-hidden">
                         <img
-                          src={item.images}
+                          src={item.thumbnail}
                           alt={item.title}
                           className="block w-full h-full object-cover"
                         />
                       </div>
 
-                      <div className="flex-1">
-                        <h3 className="bodySmall text-text-primary truncate">{item.title}</h3>
-                        <p className="heading5 text-text-primary font-bold">
+                      <div className="flex-1 flex flex-col gap-1">
+                        <h3 className="bodyRegular text-text-primary font-bold">{item.title}</h3>
+                        <p className="heading5 text-dark font-bold">
                           {item.price.toLocaleString()}원
                         </p>
 
-                        <div className="flex items-center gap-xs caption text-text-secondary">
+                        <div className="flex items-center gap-xs bodySmall text-text-secondary">
                           <GrView />
                           <span>조회 {item.view_count}</span>
                         </div>
@@ -169,12 +166,12 @@ const UserPage = () => {
 
                       <span
                         className="
-                          inline-flex items-center justify-center gap-1
-                          rounded-md px-3 py-1
+                        flex items-center justify-center gap-1
+                          rounded-md px-3 py-2 
                           border border-sale
                           bg-sale text-bg
-                          text-xs font-medium whitespace-nowrap
-                          transition-[color,box-shadow] overflow-hidden
+                          text-sm font-medium whitespace-nowrap
+                          transition-[color,box-shadow] overflow-hidden h-max
                         "
                       >
                         {item.transaction_status}

@@ -1,17 +1,17 @@
+import ConfirmModal from '@common/confirmModal';
 import ProductCard from '@layout/ProductCard';
+import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
-import { BsChat } from 'react-icons/bs';
+import { BsBoxSeam, BsChat } from 'react-icons/bs';
 import { CiClock2, CiLocationOn } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
+import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
-// import { useLike } from '../components/hook/useLike';
 import { LOCATIONS, PETS, PRODUCT_CATEGORIES, stateStyleMap } from '../constants/constants';
-
-import ConfirmModal from '@common/confirmModal';
-import { useUserStore } from '@store/userStore';
 import type { ProductDetailItem } from '../types';
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
@@ -71,14 +71,68 @@ const ProductDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const { user } = useUserStore();
-  console.log(user);
+  const [subMessage, setSubMessage] = useState('');
+  const [isLiked, setIsLiked] = useState(product?.is_liked || false);
+  const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore();
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  console.log(isLiked); // false
 
-  // const { isProductLiked, toggleLike } = useLike();
-  // const isLiked = product ? isProductLiked(product.id) : false;
+  const toggleLike = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+
+    if (!product) {
+      console.error('Product is not loaded');
+      return;
+    }
+    console.log(user);
+    if (!user || !accessToken) {
+      setLoading(false);
+      setModalMessage('로그인이 필요한 서비스입니다.');
+      setSubMessage('로그인 페이지로 이동하시겠습니까?');
+      setIsModalOpen(true);
+      return;
+    }
+
+    try {
+      const newLikedState = !isLiked;
+      setIsLiked(newLikedState);
+      const response = await fetch(`${API_BASE_URL}/likes/`, {
+        method: newLikedState ? 'POST' : 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ product_id: Number(id) }),
+      });
+      if (!response.ok) {
+        setIsLiked(!newLikedState);
+
+        const errorData = await response.json();
+        console.error('찜하기 실패:', errorData);
+
+        if (errorData.message?.includes('이미 찜')) {
+          setIsLiked(true);
+        }
+      } else {
+        console.log(newLikedState ? '찜하기 성공' : '찜하기 취소 성공');
+      }
+      if (redirectUrl) {
+        const targetUrl = redirectUrl;
+        setRedirectUrl(null);
+        navigate(targetUrl, { replace: true });
+      } else {
+        navigate(`/product/${id}`, { replace: true });
+      }
+    } catch (error) {
+      console.error('찜하기 실패:', error);
+      setIsLiked(!isLiked);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadProductDetail = async () => {
     if (!id) return;
@@ -99,6 +153,7 @@ const ProductDetail = () => {
       setLoading(false);
     }
   };
+
   const goToUserPage = () => {
     if (!user) {
       setIsModalOpen(true);
@@ -129,6 +184,13 @@ const ProductDetail = () => {
     loadProductDetail();
   }, [id]);
 
+  useEffect(() => {
+    if (product) {
+      setIsLiked(product.is_liked || false);
+    }
+  }, [product]);
+  // if (isLoading) return <p>로딩중입니다</p>;
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -157,7 +219,7 @@ const ProductDetail = () => {
 
   return (
     <>
-      <div className="bg-bg">
+      <div className="bg-bg pt-3xl">
         <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl flex flex-col gap-4xl">
           <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
             {/* 이미지 갤러리 */}
@@ -165,7 +227,7 @@ const ProductDetail = () => {
               {/* 메인 이미지 */}
               <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
                 <img
-                  src={product.images}
+                  src={product.thumbnail}
                   alt={product.title}
                   className="w-full h-full absolute t-0 l-0 object-cover"
                 />
@@ -175,10 +237,7 @@ const ProductDetail = () => {
               {product.sub_images && product.sub_images.length > 0 && (
                 <div className="grid grid-cols-4 gap-sm">
                   {product.sub_images.map((image, idx) => (
-                    <div
-                      key={idx}
-                      className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity"
-                    >
+                    <div key={idx} className="overflow-hidden rounded-lg bg-bg  ">
                       <img
                         src={image}
                         alt={`${product.title} - ${idx + 1}`}
@@ -214,7 +273,7 @@ const ProductDetail = () => {
                 <button
                   onClick={goToUserPage}
                   type="button"
-                  className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer"
+                  className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer shadow-xs"
                 >
                   판매자 정보보기
                 </button>
@@ -227,28 +286,26 @@ const ProductDetail = () => {
                 {/* 카테고리/상태 뱃지 */}
                 <div className="flex items-center gap-xs">
                   <span
-                    className={`inline-flex items-center text-md px-md py-xs rounded-xl border
-                    ${stateStyleMap[currentStatus]}
-                    text-bg
-                `}
+                    className={`flex items-center text-md px-md py-xs rounded-xl text-bg font-bold
+                    ${stateStyleMap[currentStatus]}`}
                   >
                     {currentStatus}
                   </span>
-                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                  <span className="text-sm px-md py-xs rounded-xl bg-dark-point text-white font-bold">
                     {petTypeName}
                   </span>
-                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40 font-bold">
                     {categoryName}
                   </span>
-                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40 font-bold">
                     {product.condition_status}
                   </span>
                 </div>
 
                 {/* 제목/가격/메타 */}
                 <div className="flex flex-col gap-sm">
-                  <h1 className="heading3 text-text-primary">{product.title}</h1>
-                  <span className={`text-3xl font-bold text-primary`}>
+                  <h1 className="heading3 text-text-primary font-extrabold">{product.title}</h1>
+                  <span className={`text-3xl font-extrabold text-dark`}>
                     {formatPrice(product.price)}
                   </span>
                   <div className="flex items-center gap-lg text-text-secondary bodySmall">
@@ -259,17 +316,17 @@ const ProductDetail = () => {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 bodySmall">
                       <CiClock2 />
                       <span>{getTimeAgo(product.elapsed_time)}</span>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 bodySmall">
                       <SlEye />
                       <span>조회 {product.view_count}</span>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 bodySmall">
                       <span>찜 {product.like_count}</span>
                     </div>
                   </div>
@@ -279,11 +336,7 @@ const ProductDetail = () => {
               {/* 상품 설명 */}
               <div>
                 <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
-
-                <div
-                  className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
-              min-h-[22vh]"
-                >
+                <div className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line min-h-[22vh]">
                   {product.description}
                 </div>
               </div>
@@ -293,11 +346,9 @@ const ProductDetail = () => {
                 <button
                   className="
                   flex-1 flex items-center justify-center gap-sm
-                  rounded-xl p-sm
-                  border border-border
-                  bg-dark text-bg
-                  transition-colors cursor-pointer
-                "
+                  rounded-xl p-sm  font-bold
+                  bg-dark text-bg shadow-sm
+                  cursor-pointer hover:shadow-lg hover:bg-dark-point/30 hover:text-text-primary transition-all duration-300 ease-in-out"
                 >
                   <BsChat size={16} />
                   <span>채팅하기</span>
@@ -308,48 +359,47 @@ const ProductDetail = () => {
                   rounded-xl p-sm
                   border border-border
                   bg-bg
-                  text-text-primary
-                  transition-colors cursor-pointer
+                  text-text-primary shadow-xs
+                  transition-shadow cursor-pointer hover:shadow-sm hover:shadow-alert duration-300 ease-in-out
                 "
-                  // onClick={() => {
-                  //   if (product) {
-                  //     console.log('상세페이지 찜하기 클릭, productId:', product.id);
-                  //     toggleLike(product.id);
-                  //   }
-                  // }}
+                  onClick={toggleLike}
                 >
-                  <FaHeart size={16} className="text-alert" />
-                  {/* {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />} */}
-                  {/* <span>{isLiked ? '찜 취소' : '찜하기'}</span> */}
-                  <span>찜하기</span>
+                  {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />}
+                  <span>{isLiked ? '찜 취소' : '찜 하기'}</span>
                 </button>
               </div>
             </div>
           </div>
 
           {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
-          {product.seller_products && (
-            <div className="pb-4xl">
-              <h2 className="heading4 text-text-primary mb-lg">
-                {product.seller_info?.nickname}님의 다른 상품
-              </h2>
+          <div className="pb-4xl">
+            <h2 className="heading4 text-text-primary mb-lg">
+              {product.seller_info?.nickname}님의 다른 상품
+            </h2>
+            {product.seller_products ? (
               <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
                 {product.seller_products?.map(sellerProducts => (
-                  <ProductCard
-                    key={sellerProducts.id}
-                    data={sellerProducts}
-                    // isLiked={isProductLiked(product.id)}
-                    // onToggleLike={() => toggleLike(product.id)}
-                  />
+                  <ProductCard key={sellerProducts.product_id} data={sellerProducts} />
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-col gap-md items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30">
+                <div className="bg-light w-[100px] h-[100px] rounded-full flex items-center justify-center">
+                  <BsBoxSeam size={50} />
+                </div>
+                <p>등록된 다른 상품이 없어요</p>
+                <p className="text-sm">
+                  {product.seller_info?.nickname}님이 판매 중인 다른 상품이 아직 없습니다.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <ConfirmModal
         isOpen={isModalOpen}
         message={modalMessage}
+        subMessage={subMessage}
         onConfirm={handleConfirmLogin}
         onCancel={handleCancelLogout}
       />

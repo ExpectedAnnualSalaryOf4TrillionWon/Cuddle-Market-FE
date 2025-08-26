@@ -17,6 +17,7 @@ interface UserState {
   isProfileCompleted: () => boolean;
   getUserNickname: () => string;
   getUserId: () => number | null;
+  created_at: string | null;
 }
 
 export const useUserStore = create<UserState>()(
@@ -41,6 +42,7 @@ export const useUserStore = create<UserState>()(
       // 돌아갈 URL도 없음
       redirectUrl: null,
 
+      created_at: null,
       // ===== 액션 구현 =====
 
       // user만 변경
