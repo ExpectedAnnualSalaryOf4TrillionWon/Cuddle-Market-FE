@@ -29,7 +29,7 @@ const MyPage: React.FC = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null);
   const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
-  const [SubMessage, setSubMessage] = useState('');
+  const [subMessage, setSubMessage] = useState('');
 
   // 회원탈퇴 핸들러
   const handleExit = () => {
@@ -202,7 +202,7 @@ const MyPage: React.FC = () => {
       <ConfirmModal
         isOpen={isModalOpen}
         message={modalMessage}
-        submessage={SubMessage}
+        subMessage={subMessage}
         onConfirm={handleModalConfirm}
         onCancel={handleModalCancel}
       />
