@@ -22,10 +22,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
 
   const user = useUserStore(state => state.user);
   const clearAll = useUserStore(state => state.clearAll);
-  const isLogged = useUserStore(state => state.isLogin);
-
-  // isLoggedIn은 함수이므로 호출해서 사용
-  const isLoggedIn = isLogged();
+  const isLoggedIn = useUserStore(state => state.isLogin());
 
   // 드롭다운이 열려있지 않으면 렌더링하지 않음
   if (!isOpen) return null;
@@ -55,7 +52,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
   };
 
   // 모달에서 확인 클릭 시
-  const handleConfirmLogout = async () => {
+  const handleConfirmLogout = () => {
     clearAll(); // 로그아웃 실행
     setIsModalOpen(false);
     setIsOpen(false);

@@ -1,4 +1,3 @@
-// import { PROVINCES, type Province } from '@constants/Cities';
 import { LOCATIONS, type StateCode } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
 import { SimpleHeader } from '@layout/SimpleHeader';
@@ -69,12 +68,18 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   };
 
   const handleSave = () => {
-    // TODO: 저장 API 호출 후 handlechange 삭제.
     setEditField(null); // 변동사항 적용 후 편집 종료
   };
 
   const handleCancel = () => {
     setEditField(null); // 변동사항 없이 종료
+  };
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 브라우저 기본 새로고침 막기
+    // TODO 여기서 API 호출 + 상태 업데이트
+    console.log('프로필 저장:', formData);
+    // 예: useUserStore.getState().updateUserProfile(formData);
   };
 
   const renderField = (label: string, fieldName: keyof typeof formData) => {
@@ -132,7 +137,10 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
       <SimpleHeader title="내 정보 수정" />
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:pb-xl tablet:pt-[10vh]">
         <div className="flex flex-col gap-[20px]">
-          <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
+          <form
+            className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6"
+            onSubmit={handleProfileSubmit}
+          >
             <div className="flex flex-col items-start gap-1">
               <h4 className="flex items-center gap-2">기본 정보</h4>
               <p className="text-sm">프로필 이미지, 닉네임, 거주지를 수정할 수 있습니다</p>
@@ -268,7 +276,10 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary"
+                className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary hover:bg-primary"
+                onClick={() => {
+                  alert('API 연동 시 userStore 상태변경 후 리렌더링');
+                }}
               >
                 프로필 저장
               </button>
@@ -295,7 +306,10 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               </div>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-md text-sm border border-border px-4 py-2 w-full bg-secondary"
+                className="flex items-center justify-center gap-2 rounded-md text-sm border border-border px-4 py-2 w-full bg-secondary hover:bg-primary"
+                onClick={() => {
+                  alert('비밀번호 변경은 자체 로그인 기능 생성시 변경 링크 이메일 발송');
+                }}
               >
                 비밀번호 변경
               </button>

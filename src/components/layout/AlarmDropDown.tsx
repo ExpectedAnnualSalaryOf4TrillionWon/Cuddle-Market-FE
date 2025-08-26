@@ -21,11 +21,8 @@ const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
   const [alarms, setAlarms] = useState<string[]>([]);
   // 알람은 추후에 전역상태로 관리필요.
   const navigate = useNavigate();
-  const isLogged = useUserStore(state => state.isLogin);
-
-  // isLoggedIn은 함수이므로 호출해서 사용
-  const isLoggedIn = isLogged();
-
+  const isLoggedIn = useUserStore(state => state.isLogin());
+  console.log(isLoggedIn);
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
 
