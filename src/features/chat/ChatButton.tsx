@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import ChatModal from './ChatModal';
-import { useAuthStore } from '@store/authStore';
+import { useUserStore } from '@store/userStore';
 
 const ChatWidget: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
-  const { isLoggedIn } = useAuthStore();
+  const isLoggedIn = useUserStore(state => state.isLogin());
 
   // 버튼 클릭 시 항상 열기만 함
   const openChatModal = () => {

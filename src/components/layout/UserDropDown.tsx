@@ -4,7 +4,6 @@ import { useUserStore } from '@store/userStore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DropdownProps } from 'src/types/DropDownType';
-import { useAuthStore } from '@store/authStore';
 
 // 상태관리 props 전달을 위한 타입설정은 재사용을 위해 types 폴더로 이동.
 // 로그인 관련 Props는 전역상태관리로 바뀌었으므로 삭제
@@ -23,7 +22,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
 
   const user = useUserStore(state => state.user);
   const clearAll = useUserStore(state => state.clearAll);
-  const { isLoggedIn } = useAuthStore();
+  const isLoggedIn = useUserStore(state => state.isLogin());
 
   // 드롭다운이 열려있지 않으면 렌더링하지 않음
   if (!isOpen) return null;
@@ -53,7 +52,7 @@ const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
   };
 
   // 모달에서 확인 클릭 시
-  const handleConfirmLogout = async () => {
+  const handleConfirmLogout = () => {
     clearAll(); // 로그아웃 실행
     setIsModalOpen(false);
     setIsOpen(false);
