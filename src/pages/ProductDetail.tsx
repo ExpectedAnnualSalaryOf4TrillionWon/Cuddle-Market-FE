@@ -9,6 +9,8 @@ import { fetchProductById } from '../api/products';
 // import { useLike } from '../components/hook/useLike';
 import { LOCATIONS, PETS, PRODUCT_CATEGORIES, stateStyleMap } from '../constants/constants';
 
+import ConfirmModal from '@common/confirmModal';
+import { useUserStore } from '@store/userStore';
 import type { ProductDetailItem } from '../types';
 
 const formatPrice = (price: number): string => {
@@ -67,6 +69,10 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<ProductDetailItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const { user } = useUserStore();
+  console.log(user);
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -93,18 +99,35 @@ const ProductDetail = () => {
       setLoading(false);
     }
   };
+  const goToUserPage = () => {
+    if (!user) {
+      setIsModalOpen(true);
+      setModalMessage('로그인이 필요한 서비스입니다.');
+    } else {
+      const sellerEmail = product?.seller_info?.email;
+      const sellerId = product?.seller_info?.id;
+      console.log(sellerId);
+      console.log(user);
+      if (sellerEmail === user.email) {
+        navigate(`/mypage`);
+      } else {
+        navigate(`/user/${sellerId}`);
+      }
+    }
+  };
+
+  const handleConfirmLogin = async () => {
+    setIsModalOpen(false);
+    navigate('/signin');
+  };
+  const handleCancelLogout = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     console.log(id);
     loadProductDetail();
   }, [id]);
-
-  const goToUserPage = () => {
-    const sellerId = product?.seller_info?.id;
-
-    if (sellerId) {
-      navigate(`/user/${sellerId}`);
-    }
-  };
 
   if (loading) {
     return (
@@ -133,151 +156,154 @@ const ProductDetail = () => {
   const categoryName = getCategoryName(product.category_code || '');
 
   return (
-    <div className="bg-bg">
-      <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
-          {/* 이미지 갤러리 */}
-          <div className="flex flex-col gap-lg">
-            {/* 메인 이미지 */}
-            <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
-              <img
-                src={product.images}
-                alt={product.title}
-                className="w-full h-full absolute t-0 l-0 object-cover"
-              />
-            </div>
+    <>
+      <div className="bg-bg">
+        <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
+          <div className="grid grid-cols-1 tablet:grid-cols-2 gap-xl">
+            {/* 이미지 갤러리 */}
+            <div className="flex flex-col gap-lg">
+              {/* 메인 이미지 */}
+              <div className="relative overflow-hidden rounded-xl bg-bg  pb-[100%] ">
+                <img
+                  src={product.images}
+                  alt={product.title}
+                  className="w-full h-full absolute t-0 l-0 object-cover"
+                />
+              </div>
 
-            {/* 서브 이미지 */}
-            {product.sub_images && product.sub_images.length > 0 && (
-              <div className="grid grid-cols-4 gap-sm">
-                {product.sub_images.map((image, idx) => (
-                  <div
-                    key={idx}
-                    className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity"
-                  >
+              {/* 서브 이미지 */}
+              {product.sub_images && product.sub_images.length > 0 && (
+                <div className="grid grid-cols-4 gap-sm">
+                  {product.sub_images.map((image, idx) => (
+                    <div
+                      key={idx}
+                      className="overflow-hidden rounded-lg bg-bg cursor-pointer hover:opacity-75 transition-opacity"
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.title} - ${idx + 1}`}
+                        className="block w-full h-auto"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 판매자 정보 */}
+              <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
+                <div className="flex items-center gap-sm mb-sm">
+                  <div className="w-12 h-12 overflow-hidden rounded-full">
                     <img
-                      src={image}
-                      alt={`${product.title} - ${idx + 1}`}
-                      className="block w-full h-auto"
+                      src={product.seller_info?.profile_image ?? ''}
+                      alt={product.seller_info?.nickname}
+                      className="block w-full h-full object-cover"
                     />
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* 판매자 정보 */}
-            <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
-              <div className="flex items-center gap-sm mb-sm">
-                <div className="w-12 h-12 overflow-hidden rounded-full">
-                  <img
-                    src={product.seller_info?.profile_image ?? ''}
-                    alt={product.seller_info?.nickname}
-                    className="block w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-text-primary font-medium">{product.seller_info?.nickname}</h3>
-                  <div className="flex items-center gap-xs text-text-secondary bodySmall">
-                    <CiLocationOn />
-                    <span>
-                      {product.seller_info?.state_name} {product.seller_info?.city_name}
-                    </span>
+                  <div>
+                    <h3 className="text-text-primary font-medium">
+                      {product.seller_info?.nickname}
+                    </h3>
+                    <div className="flex items-center gap-xs text-text-secondary bodySmall">
+                      <CiLocationOn />
+                      <span>
+                        {product.seller_info?.state_name} {product.seller_info?.city_name}
+                      </span>
+                    </div>
                   </div>
                 </div>
+                <button
+                  onClick={goToUserPage}
+                  type="button"
+                  className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer"
+                >
+                  판매자 정보보기
+                </button>
               </div>
-              <button
-                onClick={goToUserPage}
-                type="button"
-                className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer"
-              >
-                판매자 정보보기
-              </button>
             </div>
-          </div>
 
-          {/* 상품 정보 */}
-          <div className="flex flex-col gap-xl">
-            <div className="flex flex-col gap-lg">
-              {/* 카테고리/상태 뱃지 */}
-              <div className="flex items-center gap-xs">
-                <span
-                  className={`inline-flex items-center text-md px-md py-xs rounded-xl border
+            {/* 상품 정보 */}
+            <div className="flex flex-col gap-xl">
+              <div className="flex flex-col gap-lg">
+                {/* 카테고리/상태 뱃지 */}
+                <div className="flex items-center gap-xs">
+                  <span
+                    className={`inline-flex items-center text-md px-md py-xs rounded-xl border
                     ${stateStyleMap[currentStatus]}
                     text-bg
                 `}
-                >
-                  {currentStatus}
-                </span>
-                <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
-                  {petTypeName}
-                </span>
-                <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
-                  {categoryName}
-                </span>
-                <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
-                  {product.condition_status}
-                </span>
-              </div>
+                  >
+                    {currentStatus}
+                  </span>
+                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                    {petTypeName}
+                  </span>
+                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                    {categoryName}
+                  </span>
+                  <span className="text-sm px-md py-xs rounded-xl bg-secondary/40">
+                    {product.condition_status}
+                  </span>
+                </div>
 
-              {/* 제목/가격/메타 */}
-              <div className="flex flex-col gap-sm">
-                <h1 className="heading3 text-text-primary">{product.title}</h1>
-                <span className={`text-3xl font-bold text-primary`}>
-                  {formatPrice(product.price)}
-                </span>
-                <div className="flex items-center gap-lg text-text-secondary bodySmall">
-                  <div className="flex items-center gap-1">
-                    <CiLocationOn />
-                    <span>
-                      {productLocation.stateName} {productLocation.cityName}
-                    </span>
-                  </div>
+                {/* 제목/가격/메타 */}
+                <div className="flex flex-col gap-sm">
+                  <h1 className="heading3 text-text-primary">{product.title}</h1>
+                  <span className={`text-3xl font-bold text-primary`}>
+                    {formatPrice(product.price)}
+                  </span>
+                  <div className="flex items-center gap-lg text-text-secondary bodySmall">
+                    <div className="flex items-center gap-1">
+                      <CiLocationOn />
+                      <span>
+                        {productLocation.stateName} {productLocation.cityName}
+                      </span>
+                    </div>
 
-                  <div className="flex items-center gap-1">
-                    <CiClock2 />
-                    <span>{getTimeAgo(product.elapsed_time)}</span>
-                  </div>
+                    <div className="flex items-center gap-1">
+                      <CiClock2 />
+                      <span>{getTimeAgo(product.elapsed_time)}</span>
+                    </div>
 
-                  <div className="flex items-center gap-1">
-                    <SlEye />
-                    <span>조회 {product.view_count}</span>
-                  </div>
+                    <div className="flex items-center gap-1">
+                      <SlEye />
+                      <span>조회 {product.view_count}</span>
+                    </div>
 
-                  <div className="flex items-center gap-1">
-                    <span>찜 {product.like_count}</span>
+                    <div className="flex items-center gap-1">
+                      <span>찜 {product.like_count}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 상품 설명 */}
-            <div>
-              <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
+              {/* 상품 설명 */}
+              <div>
+                <h3 className="heading5 text-text-primary mb-sm">상품 설명</h3>
 
-              <div
-                className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
+                <div
+                  className="rounded-lg p-lg bg-secondary/50 text-text-secondary whitespace-pre-line
               min-h-[22vh]"
-              >
-                {product.description}
+                >
+                  {product.description}
+                </div>
               </div>
-            </div>
 
-            {/* 액션 버튼 */}
-            <div className="flex gap-sm">
-              <button
-                className="
+              {/* 액션 버튼 */}
+              <div className="flex gap-sm">
+                <button
+                  className="
                   flex-1 flex items-center justify-center gap-sm
                   rounded-xl p-sm
                   border border-border
                   bg-dark text-bg
                   transition-colors
                 "
-              >
-                <BsChat size={16} />
-                <span>채팅하기</span>
-              </button>
-              <button
-                className="
+                >
+                  <BsChat size={16} />
+                  <span>채팅하기</span>
+                </button>
+                <button
+                  className="
                   flex-1 flex items-center justify-center gap-sm
                   rounded-xl p-sm
                   border border-border
@@ -285,42 +311,49 @@ const ProductDetail = () => {
                   text-text-primary
                   transition-colors
                 "
-                // onClick={() => {
-                //   if (product) {
-                //     console.log('상세페이지 찜하기 클릭, productId:', product.id);
-                //     toggleLike(product.id);
-                //   }
-                // }}
-              >
-                <FaHeart size={16} className="text-alert" />
-                {/* {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />} */}
-                {/* <span>{isLiked ? '찜 취소' : '찜하기'}</span> */}
-                <span>찜하기</span>
-              </button>
+                  // onClick={() => {
+                  //   if (product) {
+                  //     console.log('상세페이지 찜하기 클릭, productId:', product.id);
+                  //     toggleLike(product.id);
+                  //   }
+                  // }}
+                >
+                  <FaHeart size={16} className="text-alert" />
+                  {/* {isLiked ? <FaHeart size={16} className="text-alert" /> : <GoHeart size={16} />} */}
+                  {/* <span>{isLiked ? '찜 취소' : '찜하기'}</span> */}
+                  <span>찜하기</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
-        {product.seller_products && (
-          <div className="mt-4xl">
-            <h2 className="heading4 text-text-primary mb-lg">
-              {product.seller_info?.nickname}님의 다른 상품
-            </h2>
-            <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
-              {product.seller_products?.map(sellerProducts => (
-                <ProductCard
-                  key={sellerProducts.id}
-                  data={sellerProducts}
-                  // isLiked={isProductLiked(product.id)}
-                  // onToggleLike={() => toggleLike(product.id)}
-                />
-              ))}
+          {/* 판매자의 다른 상품 - Home.tsx의 visibleProducts 패턴과 유사 */}
+          {product.seller_products && (
+            <div className="mt-4xl">
+              <h2 className="heading4 text-text-primary mb-lg">
+                {product.seller_info?.nickname}님의 다른 상품
+              </h2>
+              <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
+                {product.seller_products?.map(sellerProducts => (
+                  <ProductCard
+                    key={sellerProducts.id}
+                    data={sellerProducts}
+                    // isLiked={isProductLiked(product.id)}
+                    // onToggleLike={() => toggleLike(product.id)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onConfirm={handleConfirmLogin}
+        onCancel={handleCancelLogout}
+      />
+    </>
   );
 };
 

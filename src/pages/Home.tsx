@@ -34,7 +34,6 @@ const Home = () => {
       setLoading(true);
 
       const result = await fetchAllProducts();
-      // console.log('API response:', result); // 실행순서6️⃣
 
       setAllProducts(result); // 변수명 수정
       setVisibleItems(12);

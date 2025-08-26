@@ -1,66 +1,176 @@
+import { LOCATIONS, PETS, PRODUCT_CATEGORIES } from '../constants/constants';
 import { mockProducts } from './data/products';
-
 // http: HTTP 요청(GET, POST 등)을 처리하는 도구
 // HttpResponse: 응답을 만들어주는 도구
 import { http, HttpResponse, passthrough } from 'msw';
-import type { ProductDetailItem, User } from 'src/types';
+import type { Product, User } from 'src/types';
 import { mockUsers } from './data/users';
 
 // mockProducts 원소 타입을 그대로 가져오기
-// type MockProduct = (typeof mockProducts)[number];
-// const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
+type MockProduct = (typeof mockProducts)[number];
+const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
+
+const API_STATUS = {
+  AUTH: true, // 카카오 인증 - 실제 API 사용
+  PROFILE: true, // 프로필 완성 - 실제 API 사용
+  CATEGORIES: true, // 카테고리 - 실제 API 사용
+  LIKES: false, // 찜하기 - 실제 API 사용
+  PRODUCTS: false, // 상품 목록 - 아직 모킹
+  PRODUCT_DETAIL: false, // 상품 상세 - 아직 모킹
+};
 
 export const handlers = [
-  http.post('*/api/v1/users/kakao-auth/', () => {
-    return passthrough(); // 실제 서버로 요청 전달
-  }),
-
-  // 프로필 완성 API도 실제 서버로 통과
-  http.post('*/api/v1/users/profile-complete/', () => {
-    return passthrough();
-  }),
-  http.get('*/api/v1/categories/all-get/', () => {
-    return passthrough();
-  }),
-  http.get('*/api/v1/likes', () => {
-    return passthrough();
-  }),
-
-  // 상품 목록 조회
-  http.get('/api/products', ({ request }) => {
-    // ({ request }): 요청 정보를 request라는 이름으로 받아옵니다
-
-    // console.log(request);
-    /** 실행순서5️⃣ :
-    { method: 'GET',
-      url: 'http://localhost:5173/api/products?page=1&limit=12', 
-      headers: Headers, 
-      destination: '',
-      referrer: 'http://localhost:5173/',…} */
-
-    // new URL(): 주소를 분석하기 쉽게 만듦
-    // 예: http://localhost:3000/api/products?page=2&limit=10를 객체로 만듦
-
-    const url = new URL(request.url);
-    // console.log(request.url); //localhost:5173/api/products?page=1&limit=12 // 실행순서6️⃣
-
-    // searchParams.get('pet_type_code'): ?pet_type_code=DOG 같은 값을 추출. 만약 pet_type_code 파라미터가 없으면 null을 반환합니다.
-    const pet_type_code = url.searchParams.get('pet_type_code');
-    // console.log(pet_type_code);
-
-    // 반려동물 종류 필터링
-    let filteredProducts = mockProducts;
-    if (pet_type_code && pet_type_code !== 'ALL') {
-      filteredProducts = mockProducts.filter(product => product.pet_type_code === pet_type_code);
-      // console.log(filteredProducts);
+  http.post('*/users/kakao-auth/', async () => {
+    if (API_STATUS.AUTH) {
+      return passthrough();
     }
-    // console.log(filteredProducts); // 실행순서7️⃣: 전체 상품목록
 
-    return HttpResponse.json(filteredProducts);
+    const mockUser: User = {
+      id: 999,
+      email: 'test@kakao.com',
+      nickname: '테스트유저',
+      name: '홍길동',
+      state_name: '서울특별시',
+      city_name: '강남구',
+      birthday: '1990-01-01',
+      is_active: true,
+      is_staff: false,
+      is_superuser: false,
+      profile_completed: false, // 신규 회원은 false
+      last_login: new Date().toISOString(),
+      profile_image: '',
+    };
+
+    return HttpResponse.json(
+      {
+        access: 'mock_access_token_' + Date.now(),
+        user: mockUser,
+      },
+      { status: 200 },
+    );
   }),
 
+  http.post('*/users/profile-complete/', async ({ request }) => {
+    if (API_STATUS.PROFILE) {
+      return passthrough();
+    }
+    const body = (await request.json()) as {
+      nickname: string;
+      name: string;
+      birthday: string;
+      state_name: string;
+      city_name: string;
+    };
+
+    const errors: Record<string, string[]> = {};
+
+    // 닉네임 검증
+    if (!body.nickname) {
+      errors.nickname = ['닉네임을 입력해주세요.'];
+    } else if (body.nickname.length < 2) {
+      errors.nickname = ['닉네임은 2글자 이상이어야 합니다.'];
+    } else if (body.nickname.length > 12) {
+      errors.nickname = ['닉네임은 12글자 이하여야 합니다.'];
+    } else if (body.nickname === '중복닉네임' || body.nickname === '테스트유저') {
+      errors.nickname = ['이미 사용중인 닉네임입니다.'];
+    }
+
+    // 이름 검증
+    if (!body.name) {
+      errors.name = ['이름을 입력해주세요.'];
+    } else if (body.name.length < 2) {
+      errors.name = ['이름은 2글자 이상이어야 합니다.'];
+    } else if (body.name.length > 15) {
+      errors.name = ['이름은 15글자 이하여야 합니다.'];
+    }
+
+    // 생년월일 검증
+    if (!body.birthday) {
+      errors.birthday = ['생년월일을 입력해주세요.'];
+    } else {
+      const birthDate = new Date(body.birthday);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+
+      if (birthDate > today) {
+        errors.birthday = ['생년월일이 올바르지 않습니다.'];
+      } else if (age < 14) {
+        errors.birthday = ['만 14세 이상만 가입 가능합니다.'];
+      } else if (age > 120) {
+        errors.birthday = ['생년월일을 확인해주세요.'];
+      }
+    }
+    // 지역 검증
+    if (!body.state_name) {
+      errors.state_name = ['시/도를 선택해주세요.'];
+    }
+    if (!body.city_name) {
+      errors.city_name = ['구/군을 선택해주세요.'];
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return HttpResponse.json(errors, { status: 400 });
+    }
+    const state = LOCATIONS.find(location => location.code === body.state_name);
+    const city = state?.cities.find(city => city.code === body.city_name);
+
+    return HttpResponse.json(
+      {
+        id: 999,
+        email: 'test@kakao.com',
+        nickname: body.nickname,
+        name: body.name,
+        birthday: body.birthday,
+        state_name: state?.name || '',
+        city_name: city?.name || '',
+        is_active: true,
+        is_staff: false,
+        is_superuser: false,
+        profile_completed: true,
+        last_login: new Date().toISOString(),
+        profile_image:
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+      },
+      { status: 200 },
+    );
+  }),
+
+  http.get('*/categories/all-get*', () => {
+    if (API_STATUS.CATEGORIES) {
+      return passthrough();
+    }
+
+    const mockFilterData = {
+      petTypes: PETS.map(petType => ({
+        code: petType.code,
+        name: petType.name,
+        details: petType.details.map(detail => ({
+          code: detail.code,
+          name: detail.name,
+        })),
+      })),
+      categories: PRODUCT_CATEGORIES.map(category => ({
+        code: category.code,
+        name: category.name,
+      })),
+      locations: LOCATIONS.map(location => ({
+        code: location.code,
+        name: location.name,
+        cities: location.cities.map(city => ({
+          code: city.code,
+          name: city.name,
+        })),
+      })),
+    };
+    return HttpResponse.json(mockFilterData, { status: 200 });
+  }),
+
+  // 핵심: MSW 핸들러 순서가 중요합니다. /products/:id를 /products보다 먼저 정의해야 합니다.
   //  상품 상세 조회 핸들러 추가
-  http.get('/api/products/:id', ({ params }) => {
+  http.get('*/products/:id', ({ params }) => {
+    if (API_STATUS.PRODUCT_DETAIL) {
+      return passthrough();
+    }
     const { id } = params;
     const productId = parseInt(id as string);
 
@@ -86,8 +196,21 @@ export const handlers = [
     return HttpResponse.json(productDetail);
   }),
 
+  // 상품 목록 조회
+  http.get('*/products*', ({ request }) => {
+    const url = new URL(request.url);
+    const pet_type_code = url.searchParams.get('pet_type_code');
+    // 반려동물 종류 필터링
+    let filteredProducts = mockProducts;
+    if (pet_type_code && pet_type_code !== 'ALL') {
+      filteredProducts = mockProducts.filter(product => product.pet_type_code === pet_type_code);
+    }
+
+    return HttpResponse.json(filteredProducts);
+  }),
+
   // 판매자 프로필 페이지 조회
-  http.get('/api/user/:id', ({ params }) => {
+  http.get('*/user/:id', ({ params }) => {
     const { id } = params;
     const userId = parseInt(id as string);
 
@@ -101,28 +224,8 @@ export const handlers = [
     return HttpResponse.json(res);
   }),
 
-  // 마이 페이지 조회
-  http.get('/api/mypage', () => {
-    // const { id } = params;
-    // const userId = parseInt(id as string);
-    // console.log(userId);
-
-    // 임시로 mockProducts에서 일부 상품만 반환
-    const myInfo = {
-      id: 999,
-      nickname: '테스트유저',
-      profile_image:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-      email: 'test@example.com',
-      state: '서울특별시',
-      city: '강남구',
-      created_at: '2024-01-15T00:00:00Z',
-    };
-    return HttpResponse.json(myInfo);
-  }),
-
   // 내가 찜한 상품과, 내가 등록한 상품 조회
-  http.get('/api/users/mypage', () => {
+  http.get('*/users/mypage', () => {
     const myPageData = {
       my_product_list: mockProducts.slice(0),
       liked_product_list: mockProducts.slice(3),
@@ -132,7 +235,7 @@ export const handlers = [
   }),
 
   // 상품 등록
-  http.post('/api/products', async ({ request }) => {
+  http.post('*/products', async ({ request }) => {
     const formData = await request.formData();
 
     const currentUser: User = {
@@ -202,7 +305,7 @@ export const handlers = [
   }),
 
   // 상품 수정 핸들러
-  http.patch('/api/products/:id', async ({ params, request }) => {
+  http.patch('*/products/:id', async ({ params, request }) => {
     const { id } = params;
     const productId = parseInt(id as string);
     const formData = await request.formData();
@@ -215,31 +318,33 @@ export const handlers = [
     }
 
     // 수정된 데이터로 업데이트 (PATCH이므로 부분 업데이트)
-    const updatedProduct: ProductDetailItem = {
+    // Partial<Product> : 타입 T의 모든 속성을 선택적(optional)으로 만듭니다.
+    const updates: Partial<Product> = {};
+    const fields = [
+      'title',
+      'description',
+      'pet_type_code',
+      'pet_type_detail_code',
+      'category_code',
+      'condition_status',
+      'state_code',
+      'city_code',
+    ];
+
+    fields.forEach(field => {
+      const value = formData.get(field);
+      if (value !== null) {
+        (updates as Record<string, string>)[field] = value.toString();
+      }
+    });
+
+    // price는 별도 처리
+    const price = formData.get('price');
+    if (price !== null) updates.price = parseInt(price.toString());
+
+    const updatedProduct = {
       ...mockProducts[existingProductIndex],
-      title: (formData.get('title') as string) || mockProducts[existingProductIndex].title,
-      description:
-        (formData.get('description') as string) || mockProducts[existingProductIndex].description,
-      price: formData.has('price')
-        ? parseInt(formData.get('price') as string)
-        : mockProducts[existingProductIndex].price,
-      pet_type_code:
-        (formData.get('pet_type_code') as string) ||
-        mockProducts[existingProductIndex].pet_type_code,
-      pet_type_detail_code:
-        (formData.get('pet_type_detail_code') as string) ||
-        mockProducts[existingProductIndex].pet_type_detail_code,
-      category_code:
-        (formData.get('category_code') as string) ||
-        mockProducts[existingProductIndex].category_code,
-      condition_status:
-        (formData.get('condition_status') as '새 상품' | '거의 새것' | '사용감 있음') ||
-        mockProducts[existingProductIndex].condition_status,
-      state_code:
-        (formData.get('state_code') as string) || mockProducts[existingProductIndex].state_code,
-      city_code:
-        (formData.get('city_code') as string) || mockProducts[existingProductIndex].city_code,
-      // 수정 시간 업데이트
+      ...updates,
       elapsed_time: new Date().toISOString(),
     };
 
@@ -254,66 +359,38 @@ export const handlers = [
       product: updatedProduct,
     });
   }),
-  // // 찜하기 목록 조회
-  // http.get('/api/likes', () => {
-  //   const product_ids = mockProducts.filter(p => p.is_liked === true).map(p => p.id);
-  //   return HttpResponse.json({ product_ids }, { status: 200 });
-  // }),
 
   // 찜하기 추가
-  // http.post('/api/likes', async ({ request }) => {
-  //   console.log('POST /api/likes 핸들러 호출됨');
-  //   try {
-  //     const body = (await request.json()) as { product_id?: number };
-  //     const id = Number(body?.product_id);
-  //     console.log('클릭된 상품의 id:', id);
+  http.post('*/likes', async ({ request }) => {
+    if (API_STATUS.LIKES) {
+      return passthrough();
+    }
+    try {
+      const body = (await request.json()) as { product_id?: number };
+      const id = Number(body?.product_id);
+      console.log('클릭된 상품의 id:', id);
 
-  //     if (!Number.isFinite(id) || id <= 0) {
-  //       return new HttpResponse('product_id required', { status: 400 });
-  //     }
+      if (!Number.isFinite(id) || id <= 0) {
+        return new HttpResponse('product_id required', { status: 400 });
+      }
 
-  //     // 특정 상품이 찜되어 있는지 확인
-  //     const producted = getProductById(id);
+      const producted = getProductById(id);
 
-  //     if (!producted) {
-  //       return new HttpResponse('Product not found', { status: 404 });
-  //     }
+      if (!producted) {
+        return new HttpResponse('Product not found', { status: 404 });
+      }
 
-  //     // 이미 좋아요 상태면 그대로 응답. 그게 아니면 좋아요 추가
-  //     if (!producted.is_liked) {
-  //       producted.is_liked = true;
-  //       producted.like_count = (producted.like_count ?? 0) + 1;
-  //     }
-  //     console.log(producted);
-  //     return HttpResponse.json(
-  //       { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.id) },
-  //       { status: 201 },
-  //     );
-  //   } catch {
-  //     return new HttpResponse('Bad Request', { status: 400 });
-  //   }
-  // }),
-
-  // // 찜하기 삭제
-  // http.delete('/api/likes/:productId', ({ params }) => {
-  //   console.log('delete /api/likes 핸들러 호출됨');
-  //   const id = Number(params.productId);
-  //   console.log('클릭된 상품의 id:', id);
-
-  //   if (!Number.isFinite(id) || id <= 0) {
-  //     return new HttpResponse('Invalid id', { status: 400 });
-  //   }
-
-  //   const producted = getProductById(id);
-  //   if (!producted) {
-  //     return new HttpResponse('Product not found', { status: 404 });
-  //   }
-
-  //   if (producted.is_liked) {
-  //     producted.is_liked = false;
-  //     producted.like_count = Math.max(0, (producted.like_count ?? 0) - 1);
-  //   }
-  //   console.log('삭제한 찜한 상품', producted);
-  //   return new HttpResponse(null, { status: 204 });
-  // }),
+      if (!producted.is_liked) {
+        producted.is_liked = true;
+        producted.like_count = (producted.like_count ?? 0) + 1;
+      }
+      console.log(producted);
+      return HttpResponse.json(
+        { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.id) },
+        { status: 201 },
+      );
+    } catch {
+      return new HttpResponse('Bad Request', { status: 400 });
+    }
+  }),
 ];
