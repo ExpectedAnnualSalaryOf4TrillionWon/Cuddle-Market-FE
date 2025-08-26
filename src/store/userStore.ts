@@ -42,10 +42,10 @@ interface UserState {
   /** 상태를 변경하는 함수들 (setter 역할)*/
 
   // user 상태를 변경하는 함수
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
 
   // 토큰만 변경할 때
-  setAccessToken: (token: string) => void;
+  setAccessToken: (token: string | null) => void;
 
   // URL만 변경할 때
   setRedirectUrl: (url: string | null) => void;
@@ -109,25 +109,26 @@ export const useUserStore = create<UserState>()(
       //      3. localStorage 자동 저장
 
       // 토큰만 변경
+      setAccessToken: token => set({ accessToken: token }),
       // 실행: setAccessToken("abc123")
       // 동작: accessToken만 변경, token 구독 컴포넌트만 리렌더링
-      setAccessToken: token => set({ accessToken: token }),
 
       // redirectUrl만 변경
+      setRedirectUrl: url => set({ redirectUrl: url }),
       // localStorage에는 저장 안함 (partialize에서 제외)
-      setRedirectUrl: (url: string | null) => set({ redirectUrl: url }),
 
       // 프로필 수정
-      // Partial<User>: User의 일부 속성만 전달 가능
-      // 사용: updateUserProfile({ nickname: "새이름" })
-      // 결과: user.nickname만 변경, 나머지는 유지
-      updateUserProfile: (updates: Partial<User>) =>
+      updateUserProfile: updates =>
         set(state => ({
           // 현재 상태를 받아옴
           //    있으면?        기존 유저 복사, 새 값 덮어쓰기
           //                                              없으면 null
           user: state.user ? { ...state.user, ...updates } : null,
         })),
+      // Partial<User>: User의 일부 속성만 전달 가능
+      // 사용: updateUserProfile({ nickname: "새이름" })
+      // 결과: user.nickname만 변경, 나머지는 유지
+
       // 사용: updateUserProfile({ nickname: "새이름" })
       // 결과: user.nickname만 변경, 나머지는 유지
       // 예시:
@@ -160,10 +161,19 @@ export const useUserStore = create<UserState>()(
           accessToken: null,
           redirectUrl: null,
         });
+        useAuthStore.getState().logout();
+        localStorage.removeItem('user-storage');
+        // persist 데이터까지 초기화
       },
+      clearRegistrationToken: () => {
+        set({ redirectUrl: null });
+        // redirectUrl만 초기화
+        // 이름이 맞지 않음 (registrationToken이 없어서)
+      },
+
       isLogin: () => {
-        const state = get();
-        return !!(state.user && state.accessToken);
+        const { user, accessToken } = get();
+        return Boolean(user && accessToken);
       },
 
       isProfileCompleted: () => {
@@ -176,23 +186,17 @@ export const useUserStore = create<UserState>()(
       },
 
       getUserNickname: () => {
-        const user = get().user;
-        return user?.nickname || '';
-        //                    ^^ nickname이 없으면 빈 문자열
+        return get().user?.nickname || '';
+        //nickname이 없으면 빈 문자열
       },
 
       getUserId: () => {
-        const user = get().user;
-        return user?.id || null;
-        // number | null 반환
+        return get().user?.id || null;
+        //number | null 반환
       },
-      // redirectUrl만 초기화
-      clearRegistrationToken: () => {
-        set({ redirectUrl: null });
-        // redirectUrl만 초기화
-        // 이름이 맞지 않음 (registrationToken이 없어서)
-      },
-    }), // 스토어 정의 끝
+    }),
+
+    // 스토어 정의 끝
 
     // Persist 설정 - localStorage 연동
     {
