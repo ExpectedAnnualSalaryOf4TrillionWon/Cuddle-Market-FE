@@ -207,13 +207,13 @@ export function CategoryFilter({
   return (
     <div className="max-w-[var(--container-max-width)] mx-auto py-xl flex flex-col gap-xl">
       {/* 반려동물 종류 */}
-      <div className="flex flex-col gap-lg">
+      <div className="flex flex-col gap-sm">
         <div className="flex justify-between items-center">
           <h3 id="pet-type-heading" className="heading5 text-text-primary">
             반려동물 종류
           </h3>
           <button
-            className="bg-dark/25 rounded-md p-2 cursor-pointer"
+            className="bg-dark/25 rounded-md p-2 cursor-pointer text-sm"
             type="button"
             onClick={resetFilters}
           >
@@ -357,10 +357,10 @@ export function CategoryFilter({
         </button>
 
         <div className="bg-secondary/40 px-lg py-sm rounded-md">
-          <div className="grid grid-cols-1 desktop:grid-cols-3 gap-xl rounded-lg ">
+          <div className="grid grid-cols-1 desktop:grid-cols-3 gap-lg rounded-lg ">
             {/* 상품 상태 */}
-            <div>
-              <h3 className="mb-md font-medium text-text-primary">상품 상태</h3>
+            <div className="flex flex-col gap-sm">
+              <h3 className="font-medium text-text-primary">상품 상태</h3>
               <div className="flex flex-wrap gap-sm">
                 {CONDITION_ITEMS.map(item => (
                   <button
@@ -381,8 +381,8 @@ export function CategoryFilter({
             </div>
 
             {/* 가격대 */}
-            <div>
-              <h3 className="mb-md font-medium text-text-primary">가격대</h3>
+            <div className="flex flex-col gap-sm">
+              <h3 className="font-medium text-text-primary">가격대</h3>
               <div className="flex flex-wrap gap-sm">
                 {priceItems.map(item => (
                   <button
@@ -403,9 +403,9 @@ export function CategoryFilter({
             </div>
 
             {/* 거주지 */}
-            <div>
-              <h3 className="mb-md font-medium text-text-primary">지역</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-sm">
+              <h3 className="font-medium text-text-primary">지역</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div className="relative" ref={stateBoxRef}>
                   <button
                     type="button"

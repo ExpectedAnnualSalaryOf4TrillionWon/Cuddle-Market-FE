@@ -3,7 +3,7 @@
 interface ConfirmModalProps {
   isOpen: boolean;
   message: string;
-  submessage?: string;
+  subMessage?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -11,7 +11,7 @@ interface ConfirmModalProps {
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   message,
-  submessage,
+  subMessage,
   onConfirm,
   onCancel,
 }) => {
@@ -23,7 +23,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <div className="fixed inset-0 bg-black/10 flex justify-center items-center z-[9999]">
       <div className="bg-dark p-2xl rounded-md">
         <p className="text-heading5">{message}</p>
-        <p className="mb-4 text-bodySmall text-text-primary">{submessage}</p>
+        <p className="mb-4 text-bodySmall text-text-primary">{subMessage}</p>
         <div className="flex justify-evenly">
           <button onClick={onConfirm} className="px-md py-xs bg-point text-text-primary rounded-md">
             확인

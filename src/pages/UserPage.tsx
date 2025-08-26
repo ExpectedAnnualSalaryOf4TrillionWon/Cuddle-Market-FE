@@ -68,7 +68,7 @@ const UserPage = () => {
 
       <div className="max-w-[var(--container-max-width)] mx-auto flex flex-col tablet:flex-row gap-xl px-lg py-xl">
         {/* 좌측: 사용자 카드 */}
-        <div className="w-[300px] h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
+        <div className="tablet:w-[300px] tablet:h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
           <div className="sticky top-24 flex flex-col gap-xl rounded-xl  text-text-primary">
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
@@ -147,7 +147,7 @@ const UserPage = () => {
                     onClick={goToProductDetail}
                   >
                     <div className="flex items-center gap-lg">
-                      <div className="w-16 h-16 flex-shrink-0 rounded-full overflow-hidden bg-light">
+                      <div className="w-[113px] h-full rounded-lg overflow-hidden">
                         <img
                           src={item.images}
                           alt={item.title}
