@@ -6,6 +6,7 @@ import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';
 import { PiTagThin } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import type { CreateUserRequest, CreateUserResponse, FormErrors } from 'src/types';
+import { apiFetch } from '../api/apiFetch';
 
 const Signup = () => {
   const [userName, setUserName] = useState<string>('');
@@ -131,7 +132,7 @@ const Signup = () => {
         return;
       }
 
-      const response = await fetch(`${API_BASE_URL}/users/profile-complete/`, {
+      const response = await apiFetch(`${API_BASE_URL}/users/profile-complete/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

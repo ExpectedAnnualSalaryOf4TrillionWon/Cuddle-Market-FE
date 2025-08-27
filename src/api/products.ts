@@ -8,10 +8,11 @@ import type {
   ProductDetailItem,
   UserWithProducts,
 } from '../types';
+import { apiFetch } from './apiFetch';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
-  const response = await fetch(`${API_BASE_URL}/categories/all-get`);
+  const response = await apiFetch(`${API_BASE_URL}/categories/all-get`);
   if (!response.ok) {
     throw new Error('상품 목록을 불러오는데 실패했습니다.');
   }
