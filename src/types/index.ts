@@ -1,37 +1,115 @@
-// ========== 기본 유저 관련 타입 ==========
+// ========== 유저 관련 타입 ==========
 export interface User {
   id: number;
+  provider?: string;
+  email?: string;
   name: string;
   nickname: string;
-  state: string;
-  city: string;
-  birthday?: string;
   profile_image?: string;
-  created_at?: string;
-  profile_completed?: boolean;
-  last_login?: string;
-  seller_info?: User;
+  birthday: string;
+  is_active: boolean;
+  is_staff: boolean;
+  is_superuser: boolean;
+  profile_completed: boolean;
+  last_login: string;
+  created_at: string;
+
+  state_name?: string; // 시/도
+  city_name?: string;
 }
 
+// ========== 인증 관련 타입 ==========
+export interface KakaoLoginRequest {
+  code: string;
+}
+
+export interface CreateUserRequest {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state_name: string;
+  city_name: string;
+}
+
+export interface CreateUserResponse {
+  nickname: string;
+  name: string;
+  birthday: string;
+  state_name: string;
+  city_name: string;
+}
+
+// ========== 필터링 관련 타입 ==========
+export interface FilterApiResponse {
+  categories: CategoryData[];
+  petTypes: PetTypeData[];
+}
+
+export interface CategoryData {
+  code: string;
+  name: string;
+}
+export interface PetTypeData {
+  code: string;
+  name: string;
+  details: PetTypeDetail[];
+}
+export interface PetTypeDetail {
+  code: string;
+  name: string;
+}
+export interface LocationData {
+  code: string;
+  name: string;
+  cities: CityData[];
+}
+export interface CityData {
+  code: string;
+  name: string;
+}
+
+export interface FilterState {
+  selectedPetType: string | null;
+  selectedPetDetails: string[];
+  selectedCategories: string[];
+  selectedConditions: string[];
+  selectedPriceRanges: string[];
+  selectedLocation: {
+    state: string | null;
+    city: string | null;
+  };
+}
+
+// ========== 찜하기 관련 타입 ==========
+export interface LikeApiResponse {
+  message: string;
+  product_id: number;
+  is_liked: boolean;
+}
+
+//!!!!!!!!!!!!!!!!!!!!
 export interface UserWithProducts extends User {
+  state: string;
+  city: string;
+  created_at: string;
   seller_products: UserProduct[];
   total_products: number;
 }
 
 // ========== 상품 관련 타입 ==========
 export interface ProductBase {
-  id: number;
+  product_id: number;
   title: string;
   description?: string;
   price: number;
-  images: string;
+  thumbnail: string;
   state_code?: string;
   city_code?: string;
   category_code?: string;
   pet_type_code?: string;
   pet_type_detail_code: string;
-  transaction_status: '판매중' | '예약중' | '판매완료';
   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
+  transaction_status: '판매중' | '예약중' | '판매완료';
   view_count?: number;
   like_count: number;
   elapsed_time: string;
@@ -47,16 +125,18 @@ export interface ProductDetailItem extends ProductBase {
 }
 
 export interface UserProduct {
-  id: number;
+  product_id: number;
   title: string;
   price: number;
-  images: string;
+  thumbnail: string;
+  pet_type_code: string;
   pet_type_detail_code: string;
   transaction_status: '판매중' | '예약중' | '판매완료';
   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
   elapsed_time: string;
   like_count?: number;
   view_count?: number;
+  is_liked?: boolean;
 }
 
 export interface State {
@@ -69,47 +149,9 @@ export interface City {
   name: string;
 }
 
-export interface PetType {
-  id: number;
-  name: string;
-}
-
-export interface PetTypeDetail {
-  id: number;
-  name: string;
-}
-
 export interface Category {
   id: number;
   name: string;
-}
-
-// ========== 인증 관련 타입 ==========
-
-export interface KakaoLoginRequest {
-  code: string;
-  redirect_uri: string;
-}
-
-export interface KakaoLoginResponse {
-  status: 'existing_user' | 'new_user';
-  access_token?: string;
-  refresh_token?: string;
-  user?: User;
-}
-
-export interface SignupRequest {
-  registration_token?: string; // 백엔드가 발급한 임시 토큰 (선택사항)
-  nickname: string;
-  state: string;
-  city: string;
-  birth_date?: string;
-}
-
-export interface SignupResponse {
-  access_token?: string;
-  refresh_token?: string;
-  user?: User;
 }
 
 export interface MyPageData {
@@ -172,20 +214,4 @@ export interface FormErrors {
   userName?: string;
   userNickName?: string;
   userBirth?: string;
-}
-
-export interface CreateUserRequest {
-  nickname: string;
-  name: string;
-  birthday: string;
-  state: string;
-  city: string;
-}
-
-export interface CreateUserResponse {
-  nickname: string;
-  name: string;
-  birthday: string;
-  state: string;
-  city: string;
 }

@@ -1,143 +1,73 @@
+import { stateStyleMap, STATUS_EN_TO_KO, type TransactionStatus } from '@constants/constants';
+import UserDefaultImage from '@images/userDefault.svg';
+import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
+import { BsBoxSeam } from 'react-icons/bs';
 import { GrView } from 'react-icons/gr';
+import { IoIosArrowDown, IoMdCheckmark } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
-import { fetchMyPageData } from '../../api/products';
-import { ProductState, stateLabelMap, stateStyleMap } from '../../constants/constants';
 
 type TabId = 'products' | 'wishlist';
 
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
-  onDelete: (itemId?: number) => Promise<void>; // 삭제 핸들러 prop 추가
+  onDelete: (itemId?: number) => void;
 }
 
-const getProductState = (status: string): ProductState => {
-  switch (status) {
-    case '판매중':
-      return 'selling';
-    case '예약중':
-      return 'reserved';
-    case '판매완료':
-      return 'sold';
-    default:
-      return 'selling';
-  }
+const formatPrice = (price: number): string => {
+  return `${price.toLocaleString()}원`;
 };
 
-// interface Product {
-//   id: number;
-//   image: string;
-//   title: string;
-//   price: number;
-//   state: ProductState;
-//   view: number;
-// }
-
-// type ProductList = Product[];
-// const wishlist: ProductList = [];
-
-// const MyproductList: ProductList = [
-//   {
-//     id: 1,
-//     image: exampleImage,
-//     title: '강아지밥그릇',
-//     price: 20000,
-//     state: ProductState.Selling,
-//     view: 12,
-//   },
-//   {
-//     id: 2,
-//     image: defaultImage,
-//     title: '고양이장난감',
-//     price: 15000,
-//     state: ProductState.Selling,
-//     view: 12,
-//   },
-//   {
-//     id: 3,
-//     image: defaultImage,
-//     title: '햄스터집',
-//     state: ProductState.Selling,
-//     price: 25000,
-//     view: 120,
-//   },
-//   {
-//     id: 4,
-//     image: defaultImage,
-//     title: '새장',
-//     state: ProductState.Selling,
-//     price: 35000,
-//     view: 20,
-//   },
-//   {
-//     id: 5,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     state: ProductState.Reserved,
-//     price: 5000,
-//     view: 10,
-//   },
-//   {
-//     id: 6,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Sold,
-//     view: 120,
-//   },
-//   {
-//     id: 7,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-//   {
-//     id: 8,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-//   {
-//     id: 9,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Selling,
-//     view: 120,
-//   },
-//   {
-//     id: 10,
-//     image: defaultImage,
-//     title: '애착 방석',
-//     price: 5000,
-//     state: ProductState.Reserved,
-//     view: 120,
-//   },
-// ];
-
 const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
+  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
-  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [likeList, setLikeList] = useState<Product[]>([]);
+  const { accessToken } = useUserStore();
   const [loading, setLoading] = useState(true);
 
+  const [showStatusDropdown, setShowStatusDropdown] = useState<{ [key: number]: boolean }>({});
   const navigate = useNavigate();
-  const loadUserInfo = async () => {
+  const handleStatusChange = async (productId: number, newStatus: TransactionStatus) => {
     try {
-      const data = await fetchMyPageData();
-      console.log(data);
-      setMyProductList(data.my_product_list);
-      setWishlist(data.liked_product_list);
-      if (onCountsUpdate) {
-        onCountsUpdate({
-          products: data.my_product_list.length,
-          wishlist: data.liked_product_list.length,
-        });
+      // TODO: API 호출하여 서버에 상태 업데이트
+      // await updateProductStatus(productId, newStatus);
+
+      // 로컬 상태 업데이트
+      setShowStatusDropdown(prev => ({ ...prev, [productId]: false }));
+
+      // MyProductList 업데이트 (옵션)
+      setMyProductList(prev =>
+        prev.map(product =>
+          product.product_id === productId
+            ? { ...product, transaction_status: newStatus }
+            : product,
+        ),
+      );
+    } catch (error) {
+      console.error('상태 변경 실패:', error);
+    }
+  };
+  const loadUserProductInfo = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/likes/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // 인증 필요
+        },
+      });
+      if (response.ok) {
+        const likes = await response.json();
+        console.log(likes);
+
+        setLikeList(likes);
+        setMyProductList([]);
+        if (onCountsUpdate) {
+          onCountsUpdate({
+            products: 0, // 내 상품은 일단 0
+            wishlist: likes.length || 0, // 응답 구조에 따라 조정
+          });
+        }
       }
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
@@ -151,80 +81,140 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   };
 
   useEffect(() => {
-    loadUserInfo();
+    loadUserProductInfo();
   }, []);
 
   useEffect(() => {
     if (onCountsUpdate && !loading) {
       onCountsUpdate({
         products: MyProductList.length,
-        wishlist: wishlist.length,
+        wishlist: likeList.length,
       });
     }
-  }, [MyProductList.length, wishlist.length, loading]);
+  }, [MyProductList.length, likeList.length, loading]);
 
   const renderContents = (product: Product) => {
-    const state = getProductState(product.transaction_status);
+    const currentStatus = STATUS_EN_TO_KO[product.transaction_status] || product.transaction_status;
+    console.log(currentStatus); // SELLING
+
+    const statusOptions: TransactionStatus[] = ['판매중', '예약중', '판매완료'];
     return (
       <div
-        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm"
-        key={product.id}
+        className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm flex-wrap"
+        key={product.product_id}
       >
         {/* 상품 이미지 */}
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-light">
-          <img src={product.images} alt={product.title} className="w-full h-full object-cover" />
+        <div className="w-[113px] h-full rounded-lg overflow-hidden">
+          <img
+            src={product.thumbnail || UserDefaultImage}
+            alt={product.title}
+            className="h-full object-cover"
+          />
         </div>
 
         {/* 상품 정보 */}
-        <div className="flex-1">
-          <h3 className="bodySmall text-text-primary overflow-hidden text-ellipsis line-clamp-2">
-            {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
-            {product.title}
-          </h3>
-          <p className="text-bodyLarge text-text-primary font-bold">{product.price}원</p>
-          <div className="flex items-center gap-xs caption text-text-secondary">
-            <GrView />
-            <span>조회 {product.view_count}</span>
+        <div className="flex-1 flex flex-col gap-xs">
+          <p
+            className={`col-start-1 row-start-1   
+                          rounded-md w-fit py-1 px-2
+                          border text-bg
+                          text-sm font-bold whitespace-nowrap 
+                          flex items-center justify-center
+                          ${stateStyleMap[currentStatus]}
+                        `}
+          >
+            {currentStatus}
+          </p>
+          <div className="flex flex-col gap-xs">
+            <h3 className="text-text-primary overflow-hidden text-ellipsis line-clamp-2 font-extrabold">
+              {/* 화면이 축소되어 타이틀이 2줄 이상으로 변환시 ...으로 바뀌게끔 css 추가 / 2줄까지만 허용 */}
+              {product.title}
+            </h3>
+            <p className="bodyLarge font-extrabold text-dark">
+              {formatPrice(Math.floor(product.price))}
+            </p>
+            <div className="flex items-center gap-xs text-sm text-text-secondary">
+              <GrView />
+              <span>조회 {product.view_count}</span>
+            </div>
           </div>
         </div>
 
         {/* 상품 상태 및 액션 */}
-        <div className="grid grid-cols-2 gap-xs">
-          <p
-            className={`col-start-1 row-start-1   
-                          rounded-md px-3 py-1
-                          border text-bg
-                          text-xs font-medium whitespace-nowrap min-w-[70px] 
-                          flex items-center justify-center
-                          ${stateStyleMap[state]}
-                        `}
-          >
-            {stateLabelMap[state]}
-          </p>
-
+        <div className="flex tablet:flex-col items-end gap-xs flex-1 justify-between">
           {activeTab === 'products' && (
+            <div className="relative">
+              <button
+                type="button"
+                role="combobox"
+                className={`flex w-28 h-8 rounded-md px-3 py-2 items-center justify-between gap-2  text-sm bg-secondary/30`}
+                aria-expanded={showStatusDropdown[product.product_id] || false}
+                onClick={e => {
+                  e.stopPropagation();
+                  setShowStatusDropdown(prev => ({
+                    ...prev,
+                    [product.product_id]: !prev[product.product_id],
+                  }));
+                }}
+              >
+                <span className="text-gray-500"> {currentStatus}</span>
+                <IoIosArrowDown />
+              </button>
+              {showStatusDropdown[product.product_id] && (
+                <div
+                  role="listbox"
+                  aria-label="거래상태 선택"
+                  className="absolute left-0 top-full z-40 w-full min-w-[120px] rounded-md border border-border bg-white p-1 shadow-md mt-1"
+                >
+                  {statusOptions.map(status => (
+                    <button
+                      key={status}
+                      role="option"
+                      type="button"
+                      aria-selected={currentStatus === status}
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleStatusChange(product.product_id, status);
+                      }}
+                      className={`w-full text-left text-sm
+                          hover:bg-gray-100 focus:bg-gray-100 justify-between
+                          flex items-center gap-2 rounded-md  py-1.5 px-2 whitespace-nowrap transition-[color,box-shadow]
+                          ${currentStatus === status ? 'bg-gray-100' : ''}
+                        `}
+                    >
+                      <span className={`text-xs font-medium rounded`}>{status}</span>
+                      {currentStatus === status && <IoMdCheckmark />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex gap-xs w-28">
+            {activeTab === 'products' && (
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  handleEdit(product.product_id);
+                }}
+                className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
+              >
+                수정
+              </button>
+            )}
             <button
               onClick={e => {
                 e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-                handleEdit(product.id);
+                onDelete(product.product_id);
               }}
-              className={`text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
+              className={`${
+                activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
+              }  px-3 text-sm bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
             >
-              수정
+              삭제
             </button>
-          )}
-
-          <button
-            onClick={e => {
-              e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-              onDelete(product.id);
-            }}
-            className={`${
-              activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
-            }  text-xs  bg-primary hover:bg-dark text-point py-sm rounded-sm`}
-          >
-            삭제
-          </button>
+          </div>
         </div>
       </div>
     );
@@ -236,11 +226,17 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
         return MyProductList.length > 0 ? (
           MyProductList.map(product => renderContents(product))
         ) : (
-          <div className="text-heading3">목록이 없습니다.</div>
+          <div className="flex flex-col gap-md items-center border-2 border-dashed border-gray-300 rounded-lg p-7 text-center hover:border-border-400 transition-colors cursor-pointer bg-secondary/30">
+            <div className="bg-light w-[100px] h-[100px] rounded-full flex items-center justify-center">
+              <BsBoxSeam size={50} />
+            </div>
+            <p>등록한 상품이 없어요</p>
+          </div>
+          // 빈 목록 안내문구 양식 통일을 위해 찜한상품 양식 복사.
         );
       case 'wishlist':
-        return wishlist.length > 0 ? (
-          wishlist.map(product => renderContents(product))
+        return likeList.length > 0 ? (
+          likeList.map(product => renderContents(product))
         ) : (
           <div className="flex flex-col items-center justify-center">
             <h3 className="text-lg font-medium text-gray-900 mb-2">아직 찜한 상품이 없어요</h3>

@@ -7,6 +7,7 @@
   --color-secondary: #c8d9f0; /* 보조 */
   --color-dark: #7ba5d6; /* 어두운 요소 */
   --color-point: #fff8f0; /* 포인트 컬러 */
+  --color-dark-point: #2b7fff;
 
   /* 텍스트 색상 */
   --color-text-primary: #2d3748; /* 제목과 주요 텍스트 */
@@ -19,9 +20,9 @@
   --color-light: #f7fafc;
 
   /* 상태 컬러 */
-  --color-sale: #48bb78;
-  --color-complete: #a0aec0;
-  --color-reserved: #ed8936;
+  --color-sale: #00c951;
+  --color-complete: #6a7282;
+  --color-reserved: #ff6900;
 
   /* 알림 */
   --color-alert: #fc8181;

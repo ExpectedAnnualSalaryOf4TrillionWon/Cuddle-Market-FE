@@ -1,11 +1,13 @@
 import logo from '@images/CuddleMarketLogoBase.png';
 import kakao from '@images/kakao.svg';
+import { useUserStore } from '@store/userStore';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
 const Login: React.FC = () => {
   const location = useLocation();
+  const setRedirectUrl = useUserStore(state => state.setRedirectUrl);
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
   const REDIRECT_URI: string =
     import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
@@ -42,46 +44,37 @@ const Login: React.FC = () => {
           const url = new URL(from);
           // 같은 도메인인 경우만 저장
           if (url.origin === window.location.origin) {
-            localStorage.setItem('redirectUrl', url.pathname);
-            console.log('📍 이전 페이지 저장:', url.pathname);
+            setRedirectUrl(url.pathname); // localStorage 대신 zustand 사용
+            console.log(' 이전 페이지 저장:', url.pathname);
           }
         } catch {
           // from이 상대 경로인 경우
           if (from.startsWith('/')) {
-            localStorage.setItem('redirectUrl', from);
-            console.log('📍 이전 페이지 저장:', from);
+            setRedirectUrl(from); // localStorage 대신 zustand 사용
+            console.log('이전 페이지 저장:', from);
           }
         }
       }
     }
-  }, [location]);
+  }, [location, setRedirectUrl]);
 
   return (
-    <div className="flex items-center justify-center bg-primary h-[90vh]">
-      <div className="bg-light/90 flex flex-col justify-center items-center gap-md rounded-xl p-2xl shadow-xl w-[40vw] max-w-[500px] min-w-[250px] h-[400px] min-h-[350px]">
-        <div className="w-[20vw] max-w-[300px] h-auto flex items-center justify-center ">
+    <div className="flex items-center justify-center bg-primary h-[90vh] px-5">
+      <div className="bg-light/90 flex flex-col justify-center items-center gap-md rounded-xl p-2xl shadow-xl w-full max-w-[500px] min-w-[250px] h-[400px] min-h-[350px]">
+        <div className="w-[40vw] tablet:w-[15vw] max-w-[300px] h-auto flex items-center justify-center ">
           <img src={logo} alt="Cuddle Market 로고" className="w-full h-full mb-xl object-contain" />
         </div>
 
         <button
           type="submit"
           onClick={handleKakaoLogin}
-          className="flex w-full items-center justify-center gap-sm rounded-xl bg-[#fee500] px-2 py-2 text-bodySmall tablet:text-bodyLarge font-semibold shadow-lg cursor-pointer"
+          className="flex w-full items-center justify-center gap-sm rounded-xl bg-[#fee500] px-2 py-2 text-bodySmall tablet:text-bodyRegular font-semibold shadow-lg cursor-pointer"
         >
-          <img src={kakao} className="w-md" />
-          <span>카카오톡으로 시작하기</span>
+          <div className="w-lg">
+            <img src={kakao} className="w-full h-full object-cover" />
+          </div>
+          <span className="text-lg">카카오톡으로 시작하기</span>
         </button>
-        {/*이 아래의 버튼들은 일반 로그인 구현 가능성을 염두에 둔 UI로 소셜로그인만 구현시 최종 배포전에 삭제할 예정*/}
-        {/* <button
-          onClick={handleEmailLogin}
-          className="w-full bg-point text-text-primary py-2 px-2  rounded-xl text-bodySmall tablet:text-bodyLarge font-semibold"
-        >
-          <span>이메일로 시작하기</span>
-        </button> */}
-        {/* 
-        <button onClick={handleSignupClick} className="text-text-secondary text-sm">
-          회원가입
-        </button> */}
       </div>
     </div>
   );

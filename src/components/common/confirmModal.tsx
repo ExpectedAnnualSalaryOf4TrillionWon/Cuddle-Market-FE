@@ -1,25 +1,34 @@
-import { useModalStore } from '@store/modalStore';
+// import { useModalStore } from '@store/modalStore';
 
-const ConfirmModal = () => {
-  const { isOpen, message, handleConfirm } = useModalStore();
+interface ConfirmModalProps {
+  isOpen: boolean;
+  message: string;
+  subMessage?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  isOpen,
+  message,
+  subMessage,
+  onConfirm,
+  onCancel,
+}) => {
+  // const { isOpen, message, handleConfirm } = useModalStore();
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/10 flex justify-center items-center z-[9999]">
       <div className="bg-dark p-2xl rounded-md">
-        <p className="mb-4 text-heading5">{message}</p>
+        <p className="text-heading5">{message}</p>
+        <p className="mb-4 text-bodySmall text-text-primary">{subMessage}</p>
         <div className="flex justify-evenly">
-          <button
-            onClick={() => handleConfirm(true)}
-            className="px-md py-xs bg-point text-text-primary rounded-md"
-          >
+          <button onClick={onConfirm} className="px-md py-xs bg-point text-text-primary rounded-md">
             확인
           </button>
-          <button
-            onClick={() => handleConfirm(false)}
-            className="px-md py-xs bg-point text-text-primary rounded-md"
-          >
+          <button onClick={onCancel} className="px-md py-xs bg-point text-text-primary rounded-md">
             취소
           </button>
         </div>

@@ -1,4 +1,4 @@
-import { useAuthStore } from '@store/authStore';
+import { useUserStore } from '@store/userStore';
 import type { DropdownProps } from 'src/types/DropDownType';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -21,8 +21,8 @@ const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
   const [alarms, setAlarms] = useState<string[]>([]);
   // 알람은 추후에 전역상태로 관리필요.
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuthStore();
-  // 로그인 상태에 따른 알람 기능 활성화 여부를 설정하기 위한 전역상태 호출.
+  const isLoggedIn = useUserStore(state => state.isLogin());
+  console.log(isLoggedIn);
   if (!isOpen) return null;
   // 드롭다운 활성화 boolean값이 false면 드롭다운이 사라진다.
 
