@@ -11,8 +11,15 @@ interface ProfileUpdateProps {
 }
 
 const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
-  const { user, accessToken, redirectUrl, setRedirectUrl, setUser, updateUserProfile } =
-    useUserStore();
+  const {
+    user,
+    accessToken,
+    redirectUrl,
+    setRedirectUrl,
+    setUser,
+    updateUserProfile,
+    refreshAccessToken,
+  } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
@@ -139,7 +146,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+      let response = await fetch(`${API_BASE_URL}/users/mypage/`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -148,8 +155,27 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
       });
       console.log('Response status:', response.status);
 
-      if (!response.ok) {
-        throw new Error('회원정보 수정 실패');
+      if (response.status === 401) {
+        console.log('토큰 만료 감지, 갱신 시도...');
+
+        // refreshAccessToken 함수 호출
+        const newToken = await refreshAccessToken();
+
+        if (newToken) {
+          // 새 토큰으로 재시도
+          console.log('새 토큰으로 재시도');
+          response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${newToken}`,
+            },
+            body: formDataToSend,
+          });
+        } else {
+          console.error('토큰 갱신 실패, 로그인 페이지로 이동');
+          navigate('/signin');
+          return;
+        }
       }
       const data = await response.json();
       console.log('응답 데이터:', data);
@@ -171,6 +197,9 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
       } else {
         console.log('홈으로 이동');
         navigate('/mypage', { replace: true });
+      }
+      if (!response.ok) {
+        throw new Error('회원정보 수정 실패');
       }
     } catch (error) {
       console.error('회원정보 수정 실패:', error);
