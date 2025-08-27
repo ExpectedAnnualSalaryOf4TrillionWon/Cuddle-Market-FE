@@ -7,7 +7,7 @@ import { GrView } from 'react-icons/gr';
 import { IoIosArrowDown, IoMdCheckmark } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
-
+import { apiFetch } from '../../api/apiFetch';
 type TabId = 'products' | 'wishlist';
 
 interface MyListProps {
@@ -51,7 +51,7 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   };
   const loadUserProductInfo = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/likes/`, {
+      const response = await apiFetch(`${API_BASE_URL}/likes/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`, // 인증 필요
         },

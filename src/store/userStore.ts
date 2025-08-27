@@ -18,6 +18,7 @@ interface UserState {
   getUserNickname: () => string;
   getUserId: () => number | null;
   created_at: string | null;
+  // refreshAccessToken: () => Promise<string | null>;
 }
 
 export const useUserStore = create<UserState>()(
@@ -139,6 +140,49 @@ export const useUserStore = create<UserState>()(
         return get().user?.id || null;
         //number | null 반환
       },
+
+      // refreshAccessToken: async () => {
+      //   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      //   try {
+      //     const response = await fetch(`${API_BASE_URL}/users/token-refresh/`, {
+      //       method: 'POST',
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //       // refresh token이 필요한 경우 body에 추가
+      //       // body: JSON.stringify({ refresh: get().refreshToken })
+      //     });
+
+      //     if (!response.ok) {
+      //       throw new Error('Token refresh failed');
+      //     }
+
+      //     const data = await response.json();
+
+      //     // 새로운 access token 저장
+      //     if (data.access) {
+      //       set({ accessToken: data.access });
+      //       return data.access;
+      //     }
+
+      //     // refresh token도 갱신되는 경우
+      //     // if (data.refresh) {
+      //     //   set({ refreshToken: data.refresh });
+      //     // }
+
+      //     return data.access || null;
+      //   } catch (error) {
+      //     console.error('Token refresh failed:', error);
+      //     // 토큰 갱신 실패 시 로그아웃 처리
+      //     set({
+      //       user: null,
+      //       accessToken: null,
+      //       redirectUrl: null,
+      //     });
+      //     return null;
+      //   }
+      // },
     }),
 
     // 스토어 정의 끝

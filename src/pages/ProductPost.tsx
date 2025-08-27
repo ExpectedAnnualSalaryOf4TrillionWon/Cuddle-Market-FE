@@ -230,12 +230,15 @@ const ProductPost = () => {
     }
 
     // 이미지 필수 검증 추가 : qa
-    if (imageFiles.length === 0) {
+    if (!isEditMode && imageFiles.length === 0) {
+      newErrors.images = '상품 이미지를 최소 1장 이상 등록해주세요.';
+    } else if (isEditMode && imagePreviews.length === 0 && imageFiles.length === 0) {
       newErrors.images = '상품 이미지를 최소 1장 이상 등록해주세요.';
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      console.log('유효성 검사 실패:', newErrors);
       // 첫 번째 에러가 있는 위치로 스크롤
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -258,6 +261,8 @@ const ProductPost = () => {
         isEditMode && id ? await updateProduct(id, productData) : await createProduct(productData);
 
       console.log(isEditMode ? '상품 수정 성공:' : '상품 등록 성공:', response);
+
+      console.log(response);
 
       // 성공 시 상품 상세 페이지로 이동
       if (response.id) {
@@ -434,7 +439,11 @@ const ProductPost = () => {
 
       try {
         const product = await fetchProductById(id);
-
+        console.log('로드된 상품 데이터:', product); // 디버깅용
+        console.log('지역 정보:', {
+          state_code: product.state_code,
+          city_code: product.city_code,
+        });
         // 폼 필드에 데이터 설정
         setProductName(product.title);
         setDescription(product.description || '');
@@ -443,8 +452,22 @@ const ProductPost = () => {
         setSelectedPetTypeDetail(product.pet_type_detail_code);
         setProductCategory(product.category_code || '');
         setSelectedCondition(product.condition_status as ConditionCode);
-        setSelectedState(product.state_code || '');
-        setSelectedCity(product.city_code || '');
+
+        if (product.state_code) {
+          // state_code가 실제로는 이름이므로 코드 찾기
+          const stateData = LOCATIONS.find(loc => loc.name === product.state_code);
+          if (stateData) {
+            setSelectedState(stateData.code);
+
+            // city_code도 이름이므로 코드 찾기
+            if (product.city_code) {
+              const cityData = stateData.cities.find(city => city.name === product.city_code);
+              if (cityData) {
+                setSelectedCity(cityData.code);
+              }
+            }
+          }
+        }
 
         // 기존 이미지 URL을 미리보기로 설정
         if (product.thumbnail) {

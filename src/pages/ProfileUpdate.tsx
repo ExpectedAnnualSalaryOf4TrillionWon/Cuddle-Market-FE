@@ -5,6 +5,7 @@ import { useUserStore } from '@store/userStore';
 import { useRef, useState } from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../api/apiFetch';
 
 interface ProfileUpdateProps {
   profile_image_url?: string;
@@ -139,19 +140,15 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+      const data = await apiFetch(`${API_BASE_URL}/users/mypage/`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
         body: formDataToSend,
       });
-      console.log('Response status:', response.status);
 
-      if (!response.ok) {
-        throw new Error('회원정보 수정 실패');
-      }
-      const data = await response.json();
+      // const data = await response.json();
       console.log('응답 데이터:', data);
       if (data.user) {
         setUser(data.user);

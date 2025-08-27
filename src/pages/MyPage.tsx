@@ -6,6 +6,7 @@ import { useUserStore } from '@store/userStore';
 import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
+import { apiFetch } from '../api/apiFetch';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
@@ -80,7 +81,7 @@ const MyPage: React.FC = () => {
   const loadUserInfo = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+      const response = await apiFetch(`${API_BASE_URL}/users/mypage/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
