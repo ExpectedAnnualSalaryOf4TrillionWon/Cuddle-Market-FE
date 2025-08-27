@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import type { FilterApiResponse, FilterState } from 'src/types';
 import { fetchAllCategory } from '../../api/products';
-
 const priceItems = [
   { value: 'under10k', title: '1만원 이하' },
   { value: 'over10k', title: '1만원 이상' },

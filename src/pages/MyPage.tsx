@@ -6,6 +6,7 @@ import { useUserStore } from '@store/userStore';
 import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
+import { apiFetch } from '../api/apiFetch';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
@@ -22,7 +23,7 @@ const formatJoinDate = (dateString: string): string => {
 };
 
 const MyPage: React.FC = () => {
-  const { user: storeUser, accessToken } = useUserStore();
+  const { user: storeUser } = useUserStore();
   const [currentUser, setCurrentUser] = useState(storeUser);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,7 +43,7 @@ const MyPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (itemId?: number) => {
+  const handleProductDelete = (itemId?: number) => {
     setModalMessage('정말로 삭제하시겠습니까?');
     setSubMessage('');
     setModalAction('delete');
@@ -77,23 +78,33 @@ const MyPage: React.FC = () => {
     setDeleteItemId(undefined);
   };
 
+  const handleLikeDelete = async (productId?: number) => {
+    if (!productId) return false;
+
+    try {
+      await apiFetch(`${API_BASE_URL}/likes/`, {
+        method: 'DELETE',
+        body: JSON.stringify({ product_id: productId }),
+      });
+
+      console.log('찜하기 삭제 성공');
+      return true;
+    } catch (error) {
+      console.error('찜하기 삭제 실패:', error);
+      return false;
+    }
+  };
+
   const loadUserInfo = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const data = await apiFetch(`${API_BASE_URL}/users/mypage/`);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('API 응답:', data);
+      console.log('API 응답:', data);
 
-        const userData = data.user || data;
-        setCurrentUser(userData);
-        useUserStore.getState().setUser(userData);
-      }
+      const userData = data.user || data;
+      setCurrentUser(userData);
+      useUserStore.getState().setUser(userData);
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
     } finally {
@@ -210,7 +221,12 @@ const MyPage: React.FC = () => {
             {/* 컨텐츠 목록 */}
             <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-lg">
               {/* MyList 컴포넌트에 삭제 핸들러 전달 */}
-              <MyList activeTab={activeTab} onCountsUpdate={setCounts} onDelete={handleDelete} />
+              <MyList
+                activeTab={activeTab}
+                onCountsUpdate={setCounts}
+                onProductDelete={handleProductDelete}
+                onLikeDelete={handleLikeDelete}
+              />
 
               {/* 목록이 있을 때만 더보기 버튼 표시 */}
               {(activeTab === 'products' ? counts.products > 0 : counts.wishlist > 0) && (

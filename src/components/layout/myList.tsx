@@ -1,30 +1,34 @@
 import { stateStyleMap, STATUS_EN_TO_KO, type TransactionStatus } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
-import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
 import { BsBoxSeam } from 'react-icons/bs';
 import { GrView } from 'react-icons/gr';
 import { IoIosArrowDown, IoMdCheckmark } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from 'src/types';
-
+import { apiFetch } from '../../api/apiFetch';
 type TabId = 'products' | 'wishlist';
 
 interface MyListProps {
   activeTab: TabId;
   onCountsUpdate?: (counts: { products: number; wishlist: number }) => void; // ← 추가
-  onDelete: (itemId?: number) => void;
+  onProductDelete: (itemId?: number) => void;
+  onLikeDelete: (itemId?: number) => Promise<boolean>;
 }
 
 const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
 };
 
-const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) => {
+const MyList: React.FC<MyListProps> = ({
+  activeTab,
+  onCountsUpdate,
+  onProductDelete,
+  onLikeDelete,
+}) => {
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [likeList, setLikeList] = useState<Product[]>([]);
-  const { accessToken } = useUserStore();
   const [loading, setLoading] = useState(true);
 
   const [showStatusDropdown, setShowStatusDropdown] = useState<{ [key: number]: boolean }>({});
@@ -49,25 +53,34 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
       console.error('상태 변경 실패:', error);
     }
   };
+  const handleLikeDeleteWithUpdate = async (productId: number) => {
+    // 부모 컴포넌트의 삭제 함수 호출
+    await onLikeDelete(productId);
+
+    // 삭제 성공 시 로컬 상태에서 제거
+    setLikeList(prev => prev.filter(item => item.product_id !== productId));
+
+    // 카운트 업데이트
+    if (onCountsUpdate) {
+      onCountsUpdate({
+        products: MyProductList.length,
+        wishlist: likeList.length - 1, // 삭제된 항목 반영
+      });
+    }
+  };
+
   const loadUserProductInfo = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/likes/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // 인증 필요
-        },
-      });
-      if (response.ok) {
-        const likes = await response.json();
-        console.log(likes);
+      const likes = await apiFetch(`${API_BASE_URL}/likes/`);
+      console.log(likes);
 
-        setLikeList(likes);
-        setMyProductList([]);
-        if (onCountsUpdate) {
-          onCountsUpdate({
-            products: 0, // 내 상품은 일단 0
-            wishlist: likes.length || 0, // 응답 구조에 따라 조정
-          });
-        }
+      setLikeList(likes);
+      setMyProductList([]);
+      if (onCountsUpdate) {
+        onCountsUpdate({
+          products: 0,
+          wishlist: likes.length || 0,
+        });
       }
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);
@@ -192,28 +205,40 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
           )}
 
           <div className="flex gap-xs w-28">
-            {activeTab === 'products' && (
+            {activeTab === 'products' ? (
+              <>
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleEdit(product.product_id);
+                  }}
+                  className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
+                >
+                  수정
+                </button>
+                <button
+                  onClick={e => {
+                    e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+                    onProductDelete(product.product_id);
+                  }}
+                  className={`${
+                    activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
+                  }  px-3 text-sm bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
+                >
+                  삭제
+                </button>
+              </>
+            ) : (
               <button
                 onClick={e => {
-                  e.stopPropagation();
-                  handleEdit(product.product_id);
+                  e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
+                  handleLikeDeleteWithUpdate(product.product_id);
                 }}
-                className={`text-xs px-3 bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
+                className={`px-3 text-sm bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
               >
-                수정
+                삭제
               </button>
             )}
-            <button
-              onClick={e => {
-                e.stopPropagation(); // 부모 div의 클릭 이벤트 방지
-                onDelete(product.product_id);
-              }}
-              className={`${
-                activeTab === 'products' ? 'col-start-2 row-start-2' : 'col-start-2 row-start-1'
-              }  px-3 text-sm bg-primary hover:bg-dark text-point py-sm rounded-sm flex-1`}
-            >
-              삭제
-            </button>
           </div>
         </div>
       </div>

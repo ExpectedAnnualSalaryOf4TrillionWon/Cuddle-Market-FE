@@ -276,6 +276,9 @@ export const handlers = [
 
   // 상품 목록 조회
   http.get('*/products*', ({ request }) => {
+    if (API_STATUS.PRODUCTS) {
+      return passthrough();
+    }
     const url = new URL(request.url);
     const pet_type_code = url.searchParams.get('pet_type_code');
     // 반려동물 종류 필터링
