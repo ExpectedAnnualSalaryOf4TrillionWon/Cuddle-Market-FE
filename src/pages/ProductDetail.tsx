@@ -159,15 +159,14 @@ const ProductDetail = () => {
       setIsModalOpen(true);
       setModalMessage('로그인이 필요한 서비스입니다.');
     } else {
-      const sellerEmail = product?.seller_info?.email;
       const sellerId = product?.seller_info?.id;
-      console.log(sellerId);
-      console.log(user);
-      if (sellerEmail === user.email) {
-        navigate(`/mypage`);
-      } else {
-        navigate(`/user/${sellerId}`);
-      }
+
+      const email = product?.seller_info?.email;
+      const useremail = user?.email;
+      console.log(email);
+      console.log(useremail);
+
+      navigate(`/user/${sellerId}`);
     }
   };
 
@@ -249,35 +248,38 @@ const ProductDetail = () => {
               )}
 
               {/* 판매자 정보 */}
-              <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
-                <div className="flex items-center gap-sm mb-sm">
-                  <div className="w-12 h-12 overflow-hidden rounded-full">
-                    <img
-                      src={product.seller_info?.profile_image ?? ''}
-                      alt={product.seller_info?.nickname}
-                      className="block w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-text-primary font-medium">
-                      {product.seller_info?.nickname}
-                    </h3>
-                    <div className="flex items-center gap-xs text-text-secondary bodySmall">
-                      <CiLocationOn />
-                      <span>
-                        {product.seller_info?.state_name} {product.seller_info?.city_name}
-                      </span>
+              {product?.seller_info?.email !== user?.email && (
+                <div className="flex flex-col gap-md rounded-xl p-xl bg-secondary/50">
+                  <div className="flex items-center gap-sm mb-sm">
+                    <div className="w-12 h-12 overflow-hidden rounded-full">
+                      <img
+                        src={product.seller_info?.profile_image ?? ''}
+                        alt={product.seller_info?.nickname}
+                        className="block w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-text-primary font-medium">
+                        {product.seller_info?.nickname}
+                      </h3>
+                      <div className="flex items-center gap-xs text-text-secondary bodySmall">
+                        <CiLocationOn />
+                        <span>
+                          {product.seller_info?.state_name} {product.seller_info?.city_name}
+                        </span>
+                      </div>
                     </div>
                   </div>
+
+                  <button
+                    onClick={goToUserPage}
+                    type="button"
+                    className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer shadow-xs"
+                  >
+                    판매자 정보보기
+                  </button>
                 </div>
-                <button
-                  onClick={goToUserPage}
-                  type="button"
-                  className="w-full rounded-xl p-xs border border-border bg-bg/50 cursor-pointer shadow-xs"
-                >
-                  판매자 정보보기
-                </button>
-              </div>
+              )}
             </div>
 
             {/* 상품 정보 */}
