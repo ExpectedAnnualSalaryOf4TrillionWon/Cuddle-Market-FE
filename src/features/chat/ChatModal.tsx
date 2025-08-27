@@ -50,7 +50,7 @@ const ChatModal = ({ onClose }: { onClose: () => void }) => {
     w-[auto] max-w-[768px]
     h-[80vh] max-h-[667px]
     bg-white shadow-xl rounded-lg border z-50
-    flex opacity-85 justify-end
+    flex opacity-95 justify-end
   "
     >
       <div className="flex h-full">
