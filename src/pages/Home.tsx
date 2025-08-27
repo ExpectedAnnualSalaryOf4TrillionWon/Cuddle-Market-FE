@@ -1,13 +1,18 @@
+import { LOCATIONS } from '@constants/constants';
 import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
+import { useUserStore } from '@store/userStore';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchAllProducts } from '../api/products';
-// import { useLike } from '../components/hook/useLike';
-// import { useLike } from '../components/hook/useLike';
-import { LOCATIONS } from '@constants/constants';
-import type { FilterState, Product } from '../types'; // 타입 변경
+import type { FilterState, Product } from '../types';
+
+const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+
 const Home = () => {
+  const { accessToken } = useUserStore();
+
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [likedProductIds, setLikedProductIds] = useState<number[]>([]);
   const [visibleItems, setVisibleItems] = useState(12);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,23 +31,29 @@ const Home = () => {
     },
   });
 
-  /**
-   * 하트 번호 클릭 -> toggleLike 함수 실행(useLike 안의 toggleLike) ->
-   * toggleLike 함수 안의 addLike 함수 실행 -> 핸들러 안의 http.post('/api/likes') 실행
-   */
-  // const { isProductLiked } = useLike();
-
   const loadProducts = async () => {
     try {
       setLoading(true);
-
       const result = await fetchAllProducts();
+      setAllProducts(result);
 
-      setAllProducts(result); // 변수명 수정
+      if (accessToken) {
+        const likesResponse = await fetch(`${API_BASE_URL}/likes/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (likesResponse.ok) {
+          const likesData: Product[] = await likesResponse.json();
+          console.log(likesData);
+          const likedIds = likesData.map(item => item.product_id);
+          setLikedProductIds(likedIds);
+        }
+      }
       setVisibleItems(12);
       setError(null);
     } catch (err) {
-      // console.error('Error loading products:', err); // 디버깅용
       setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
     } finally {
       setLoading(false);
@@ -137,6 +148,7 @@ const Home = () => {
       setIsLoadingMore(false);
     }, 100);
   }, [visibleItems, filteredProducts.length, isLoadingMore]);
+
   useEffect(() => {
     // 8번째 아이템이 표시될 때까지는 Observer를 설정하지 않음
     if (visibleItems < 8) return;
@@ -209,11 +221,11 @@ const Home = () => {
   const visibleProducts = filteredProducts.slice(0, visibleItems); // 수정
 
   return (
-    <div className="bg-bg">
+    <div className="bg-bg pb-4xl">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-md tablet:py-xl">
         {/* 필터링 */}
         <CategoryFilter onFilterChange={setFilters} />
-        <div>
+        <div className="pt-3xl pb-lg">
           <h2 className="heading4 text-text-primary">전체 상품</h2>
           <p className="mt-xs bodySmall text-text-secondary">{`총 ${filteredProducts.length}개의 상품`}</p>
         </div>
@@ -221,9 +233,9 @@ const Home = () => {
         <ul className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-4 gap-md tablet:gap-lg desktop:gap-xl">
           {visibleProducts.map((product, index) => (
             <ProductCard
-              key={product.id}
+              key={product.product_id}
               data-index={index}
-              data={product}
+              data={{ ...product, is_liked: likedProductIds.includes(product.product_id) }}
               // isLiked={isProductLiked(product.id)}
               // onToggleLike={() => toggleLike(product.id)}
             />

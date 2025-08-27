@@ -1208,6 +1208,11 @@ export const stateStyleMap: Record<TransactionStatus, string> = {
   [TRANSACTION_STATUS.RESERVED]: 'bg-reserved border-reserved',
   [TRANSACTION_STATUS.SOLD]: 'bg-complete border-complete',
 };
+export const STATUS_EN_TO_KO: Record<string, TransactionStatus> = {
+  SELLING: TRANSACTION_STATUS.SELLING,
+  RESERVED: TRANSACTION_STATUS.RESERVED,
+  SOLD: TRANSACTION_STATUS.SOLD,
+};
 
 export const ALLOWED_IMAGE_TYPES = [
   'image/jpeg',

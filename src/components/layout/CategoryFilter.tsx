@@ -209,11 +209,11 @@ export function CategoryFilter({
       {/* 반려동물 종류 */}
       <div className="flex flex-col gap-sm">
         <div className="flex justify-between items-center">
-          <h3 id="pet-type-heading" className="heading5 text-text-primary">
+          <h3 id="pet-type-heading" className="heading5 font-extrabold text-text-primary">
             반려동물 종류
           </h3>
           <button
-            className="bg-dark/25 rounded-md p-2 cursor-pointer text-sm"
+            className="bg-black/50 text-white rounded-xl py-1 px-2 cursor-pointer text-sm font-bold shadow-md hover:shadow-md"
             type="button"
             onClick={resetFilters}
           >
@@ -234,8 +234,12 @@ export function CategoryFilter({
             aria-selected={selectedPetType === 'ALL'}
             onClick={() => handlePetTypeChange('ALL')}
             className={`w-full px-md py-sm rounded-3xl
-            ${selectedPetType === 'ALL' ? 'bg-dark text-white font-bold' : 'bg-transparent'} 
-            bodySmall text-text-primary text-center cursor-pointer`}
+            ${
+              selectedPetType === 'ALL'
+                ? 'bg-dark text-white font-extrabold'
+                : 'hover:bg-light hover:shadow-sm'
+            } 
+            text-text-primary text-center cursor-pointer hover:shadow-sm `}
           >
             전체
           </button>
@@ -249,9 +253,11 @@ export function CategoryFilter({
               onClick={() => handlePetTypeChange(petType.code)}
               className={`w-full px-md py-sm rounded-3xl
               ${
-                selectedPetType === petType.code ? 'bg-dark text-white font-bold' : 'bg-transparent'
+                selectedPetType === petType.code
+                  ? 'bg-dark text-white font-extrabold hover:bg-secondary hover:text-text-primary '
+                  : 'font-bold'
               } 
-              bodySmall text-text-primary text-center cursor-pointer`}
+              text-text-primary text-center cursor-pointer  hover:bg-light hover:shadow-sm transition-colors duration-300 ease-in-out`}
             >
               {petType.name}
             </button>
@@ -270,13 +276,13 @@ export function CategoryFilter({
                     key={detail.code}
                     type="button"
                     onClick={() => handlePetDetailToggle(detail.code)}
-                    className={`flex items-center px-md py-xs rounded-md border 
+                    className={`flex items-center px-md py-xs rounded-md
                     ${
                       selectedPetDetails.includes(detail.code)
-                        ? 'border-primary bg-primary text-white font-bold'
-                        : 'border-border bg-secondary/40'
+                        ? ' bg-dark text-white font-extrabold hover:bg-secondary hover:text-text-primary'
+                        : ' bg-secondary/40 font-bold'
                     } 
-                    bodySmall text-text-primary cursor-pointer`}
+                    bodySmall text-text-primary cursor-pointer shadow-sm hover:shadow-md hover:bg-secondary`}
                   >
                     <span>{detail.name}</span>
                   </button>
@@ -296,13 +302,13 @@ export function CategoryFilter({
                       key={detail.code}
                       type="button"
                       onClick={() => handlePetDetailToggle(detail.code)}
-                      className={`flex items-center px-md py-xs rounded-md border 
+                      className={`flex items-center px-md py-xs rounded-md
                       ${
                         selectedPetDetails.includes(detail.code)
-                          ? 'border-primary bg-primary text-white font-bold'
-                          : 'border-border bg-secondary/40'
+                          ? 'bg-dark text-white font-extrabold hover:bg-secondary hover:text-text-primary'
+                          : 'bg-secondary/40 font-bold'
                       } 
-                      bodySmall text-text-primary cursor-pointer`}
+                      bodySmall text-text-primary cursor-pointer shadow-sm hover:shadow-md hover:bg-secondary`}
                     >
                       <span>{detail.name}</span>
                     </button>
@@ -315,7 +321,10 @@ export function CategoryFilter({
 
       {/* 상품 카테고리 */}
       <div>
-        <h3 id="category-heading" className="mb-md tablet:mb-lg heading5 text-text-primary">
+        <h3
+          id="category-heading"
+          className="mb-md tablet:mb-lg heading5 font-extrabold text-text-primary"
+        >
           상품 카테고리
         </h3>
         <nav aria-label="상품 카테고리 목록">
@@ -325,13 +334,13 @@ export function CategoryFilter({
                 <button
                   type="button"
                   onClick={() => handleCategoryToggle(category.code)}
-                  className={`flex items-center px-md py-xs rounded-md border 
+                  className={`flex items-center px-md py-xs rounded-md
                   ${
                     selectedCategories.includes(category.code)
-                      ? 'border-primary bg-primary text-white font-bold'
-                      : 'border-border bg-secondary/40'
+                      ? 'bg-dark text-white font-extrabold hover:bg-secondary hover:text-text-primary'
+                      : 'bg-secondary/40 font-bold'
                   } 
-                  bodySmall text-text-primary cursor-pointer`}
+                  bodySmall text-text-primary cursor-pointer shadow-sm hover:shadow-md hover:bg-secondary`}
                 >
                   {category.name}
                 </button>
@@ -349,18 +358,18 @@ export function CategoryFilter({
         >
           <div className="flex items-center gap-sm">
             <FiFilter />
-            <span className="bodySmall">세부 필터</span>
-            <span className="items-center justify-center px-sm py-[2px] gap-sm whitespace-nowrap overflow-hidden rounded-md bg-secondary border border-border caption text-text-primary">
+            <span className="bodyRegular">세부 필터</span>
+            <span className="text-md font-bold  items-center justify-center px-sm py-[2px] gap-sm whitespace-nowrap overflow-hidden rounded-md bg-secondary border border-border caption text-text-primary">
               상품상태 · 가격대 · 지역
             </span>
           </div>
         </button>
 
-        <div className="bg-secondary/40 px-lg py-sm rounded-md">
+        <div className="bg-secondary/40 px-lg py-md rounded-md">
           <div className="grid grid-cols-1 desktop:grid-cols-3 gap-lg rounded-lg ">
             {/* 상품 상태 */}
             <div className="flex flex-col gap-sm">
-              <h3 className="font-medium text-text-primary">상품 상태</h3>
+              <h3 className="font-md text-text-primary">상품 상태</h3>
               <div className="flex flex-wrap gap-sm">
                 {CONDITION_ITEMS.map(item => (
                   <button
@@ -369,10 +378,10 @@ export function CategoryFilter({
                     className={`px-md py-sm rounded-md 
                     ${
                       selectedConditions.includes(item.value)
-                        ? 'bg-primary border-primary text-white font-bold'
-                        : 'bg-light border-border cursor-pointer'
+                        ? 'bg-primary border-primary text-white font-extrabold'
+                        : 'bg-light border-border cursor-pointer font-bold'
                     } 
-                    bodySmall transition-all`}
+                    bodySmall transition-all shadow-sm hover:shadow-md`}
                   >
                     {item.title}
                   </button>
@@ -391,10 +400,10 @@ export function CategoryFilter({
                     className={`px-md py-sm rounded-md 
                     ${
                       selectedPriceRanges.includes(item.value)
-                        ? 'bg-primary  border-primary text-white font-bold'
-                        : 'border-border bg-light'
+                        ? 'bg-primary  border-primary text-white font-extrabold'
+                        : 'border-border bg-light font-bold'
                     } 
-                    bodySmall text-text-primary cursor-pointer`}
+                    bodySmall text-text-primary cursor-pointer shadow-sm hover:shadow-md`}
                   >
                     {item.title}
                   </button>
@@ -415,9 +424,9 @@ export function CategoryFilter({
                       setShowStateDropdown(prev => !prev);
                       setShowCityDropdown(false);
                     }}
-                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer`}
+                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer shadow-sm hover:shadow-md font-bold text-text-primary`}
                   >
-                    <span className="text-gray-500">
+                    <span>
                       {selectedState
                         ? LOCATIONS.find(location => location.code === selectedState)?.name
                         : '시/도를 선택해주세요'}
@@ -429,7 +438,7 @@ export function CategoryFilter({
                       aria-label="시/도 선택"
                       className="absolute left-0 top-full z-2 w-full rounded-md border border-border bg-white p-1 shadow-md mt-sm"
                     >
-                      {filterData?.locations.map(location => (
+                      {LOCATIONS.map(location => (
                         <button
                           key={location.code}
                           role="option"
@@ -460,9 +469,9 @@ export function CategoryFilter({
                       setShowCityDropdown(prev => !prev);
                       setShowStateDropdown(false);
                     }}
-                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer`}
+                    className={`flex w-full rounded-md py-2 pl-3 text-sm bg-light cursor-pointer shadow-sm hover:shadow-md font-bold text-text-primary `}
                   >
-                    <span className="text-gray-500">
+                    <span>
                       {selectedCity
                         ? cityOptions.find(city => city.code === selectedCity)?.name
                         : selectedState

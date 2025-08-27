@@ -50,7 +50,7 @@ export const fetchSellerById = async (sellerId: string): Promise<UserWithProduct
 
 // 내 상품과 찜상품 목록 조회
 export const fetchMyPageData = async (): Promise<MyPageData> => {
-  const response = await fetch(`${API_BASE_URL}/users/mypage`);
+  const response = await fetch(`${API_BASE_URL}/likes/`, {});
   if (!response.ok) {
     throw new Error('마이페이지 데이터를 불러오는데 실패했습니다.');
   }

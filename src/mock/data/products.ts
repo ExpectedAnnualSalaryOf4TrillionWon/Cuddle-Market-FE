@@ -3,7 +3,7 @@ import type { ProductDetailItem } from '../../types';
 // 상세페이지용 mock 데이터
 export const mockProducts: ProductDetailItem[] = [
   {
-    id: 1,
+    product_id: 1,
     title: '로얄캐닌 강아지 사료 15kg (유통기한 6개월)',
     description: `로얄캐닌 골든리트리버 어덜트 사료 15kg 판매합니다.
 
@@ -17,7 +17,7 @@ export const mockProducts: ProductDetailItem[] = [
 직거래 우선이며, 택배도 가능합니다.
 궁금한 점 있으시면 채팅 주세요!`,
     price: 45000,
-    images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '강남구',
     category_code: 'FOOD',
@@ -26,6 +26,7 @@ export const mockProducts: ProductDetailItem[] = [
     transaction_status: '판매중',
     condition_status: '새 상품',
     view_count: 23,
+
     like_count: 30,
     elapsed_time: '2025-08-16T08:00:00Z',
     seller_info: {
@@ -41,15 +42,16 @@ export const mockProducts: ProductDetailItem[] = [
       is_superuser: false,
       profile_completed: true,
       last_login: new Date().toISOString(),
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_image:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
     seller_products: [
       {
-        id: 123,
+        product_id: 123,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
+        thumbnail: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',
@@ -58,10 +60,11 @@ export const mockProducts: ProductDetailItem[] = [
         like_count: 5,
       },
       {
-        id: 356,
+        product_id: 356,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+        thumbnail:
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',
@@ -72,12 +75,12 @@ export const mockProducts: ProductDetailItem[] = [
     ],
   },
   {
-    id: 2,
+    product_id: 2,
     title: '고양이 자동급식기 (새상품)',
     description: '고양이 자동급식기 새상품입니다. 선물받았는데 사용하지 않아서 판매합니다.',
     price: 89000,
     state_code: '경기도',
-    images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
     city_code: '성남시',
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
@@ -86,6 +89,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 45,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -99,17 +103,18 @@ export const mockProducts: ProductDetailItem[] = [
       is_staff: false,
       is_superuser: false,
       profile_completed: true,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       last_login: new Date().toISOString(),
       profile_image:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
-    id: 3,
+    product_id: 3,
     title: '강아지 목줄 세트 (중형견용)',
     description: '중형견용 목줄과 하네스 세트입니다. 사용감은 있지만 기능상 문제없습니다.',
     price: 25000,
-    images:
+    thumbnail:
       'https://images.unsplash.com/photo-1667716705760-233650f8f3fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb2clMjBsZWFzaCUyMGNvbGxhciUyMHNldHxlbnwxfHx8fDE3NTUzMzEzNDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     state_code: '서울특별시',
     city_code: '마포구',
@@ -120,6 +125,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '사용감 있음',
     view_count: 12,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -131,6 +137,7 @@ export const mockProducts: ProductDetailItem[] = [
       birthday: '1990-01-01',
       is_active: true,
       is_staff: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_superuser: false,
       profile_completed: true,
       last_login: new Date().toISOString(),
@@ -139,11 +146,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 4,
+    product_id: 4,
     title: '고양이 캣타워 (대형)',
     description: '높이 150cm 대형 캣타워입니다. 우리 고양이가 잘 안써서 판매합니다.',
     price: 120000,
-    images:
+    thumbnail:
       'https://images.unsplash.com/photo-1599907370087-e0955afcb920?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXQlMjB0b3dlciUyMHNjcmF0Y2hpbmclMjBwb3N0fGVufDF8fHx8MTc1NTMzMTM1MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     state_code: '인천광역시',
     city_code: '연수구',
@@ -154,6 +161,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '거의 새것',
     view_count: 67,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -165,6 +173,7 @@ export const mockProducts: ProductDetailItem[] = [
       birthday: '1990-01-01',
       is_active: true,
       is_staff: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_superuser: false,
       profile_completed: true,
       last_login: new Date().toISOString(),
@@ -173,11 +182,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 5,
+    product_id: 5,
     title: '강아지 겨울옷 (소형견용 S사이즈)',
     description: '소형견용 겨울 패딩입니다. 한두번 입혀봤는데 사이즈가 안 맞아서 판매합니다.',
     price: 15000,
-    images:
+    thumbnail:
       'https://images.unsplash.com/photo-1643168453529-4e2e5ca1fec3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkb2clMjB3aW50ZXIlMjBjbG90aGVzJTIwc21hbGx8ZW58MXx8fHwxNzU1MzMxMzU0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     state_code: '서울특별시',
     city_code: '송파구',
@@ -187,6 +196,7 @@ export const mockProducts: ProductDetailItem[] = [
     transaction_status: '판매중',
     condition_status: '거의 새것',
     view_count: 34,
+
     like_count: 30,
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
@@ -200,6 +210,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_staff: false,
       email: 'goo1@google.com',
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -207,11 +218,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 6,
+    product_id: 6,
     title: '햄스터 케이지 세트 (급처분)',
     description: '햄스터 케이지와 용품 일체 판매합니다. 이사로 인한 급처분입니다.',
     price: 35000,
-    images: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '종로구',
     category_code: 'HOUSING',
@@ -220,6 +231,7 @@ export const mockProducts: ProductDetailItem[] = [
     transaction_status: '판매중',
     condition_status: '사용감 있음',
     view_count: 89,
+
     like_count: 30,
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
@@ -233,6 +245,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_staff: false,
       email: 'goo12@google.com',
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -240,11 +253,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 7,
+    product_id: 7,
     title: '새끼고양이 전용 사료 2kg',
     description: '새끼고양이를 위한 영양 만점 사료입니다. 개봉하지 않은 새 제품입니다.',
     price: 32000,
-    images: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
     state_code: '부산광역시',
     city_code: '해운대구',
     category_code: 'FOOD',
@@ -253,6 +266,7 @@ export const mockProducts: ProductDetailItem[] = [
     transaction_status: '판매완료',
     condition_status: '새 상품',
     view_count: 15,
+
     like_count: 30,
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
@@ -264,6 +278,7 @@ export const mockProducts: ProductDetailItem[] = [
       city_name: '서초구',
       birthday: '1990-01-01',
       is_active: true,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_staff: false,
       is_superuser: false,
       profile_completed: true,
@@ -273,11 +288,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 8,
+    product_id: 8,
     title: '강아지 장난감 세트 (소형견용)',
     description: '소형견을 위한 다양한 장난감 세트입니다. 치아 건강에도 좋습니다.',
     price: 18000,
-    images: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop',
     state_code: '대구광역시',
     city_code: '동구',
     category_code: 'TOYS',
@@ -287,12 +302,14 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '거의 새것',
     view_count: 28,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
       nickname: '멍멍이 아빠',
       email: 'goo124@google.com',
       name: '강주현',
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       state_name: '서울특별시',
       city_name: '서초구',
       birthday: '1990-01-01',
@@ -306,11 +323,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 9,
+    product_id: 9,
     title: '고양이 모래 10L (벤토나이트)',
     description: '냄새 제거력이 뛰어난 벤토나이트 모래입니다. 먼지가 적어 안전합니다.',
     price: 22000,
-    images: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '고양시',
     category_code: 'HEALTH',
@@ -320,6 +337,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 52,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -331,6 +349,7 @@ export const mockProducts: ProductDetailItem[] = [
       birthday: '1990-01-01',
       is_active: true,
       is_staff: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_superuser: false,
       profile_completed: true,
       last_login: new Date().toISOString(),
@@ -339,11 +358,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 10,
+    product_id: 10,
     title: '강아지 이동가방 (중형견용)',
     description: '중형견용 이동가방입니다. 여행이나 병원 갈 때 사용하기 좋습니다.',
     price: 65000,
-    images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '영등포구',
     category_code: 'HEALTH',
@@ -353,6 +372,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '사용감 있음',
     view_count: 73,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -361,6 +381,7 @@ export const mockProducts: ProductDetailItem[] = [
       name: '강주현',
       state_name: '서울특별시',
       city_name: '서초구',
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       birthday: '1990-01-01',
       is_active: true,
       is_staff: false,
@@ -372,11 +393,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 11,
+    product_id: 11,
     title: '토끼 건초 3kg (티모시)',
     description: '토끼가 좋아하는 신선한 티모시 건초입니다. 소화에 좋습니다.',
     price: 28000,
-    images: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop',
     state_code: '인천광역시',
     city_code: '연수구',
     category_code: 'FOOD',
@@ -386,6 +407,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 19,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -398,6 +420,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -405,11 +428,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 12,
+    product_id: 12,
     title: '고양이 목걸이 (안전고리)',
     description: '안전고리가 있는 고양이 목걸이입니다. 이름표 포함되어 있습니다.',
     price: 12000,
-    images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '강남구',
     category_code: 'ACCESSORIES',
@@ -419,6 +442,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '거의 새것',
     view_count: 36,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -431,6 +455,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -438,11 +463,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 13,
+    product_id: 13,
     title: '대형견 급수대 (스테인리스)',
     description: '대형견을 위한 스테인리스 급수대입니다. 미끄럼 방지 패드 포함.',
     price: 42000,
-    images: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=400&fit=crop',
     state_code: '부산광역시',
     city_code: '해운대구',
     category_code: 'HEALTH',
@@ -452,6 +477,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '사용감 있음',
     view_count: 61,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -464,6 +490,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -471,11 +498,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 14,
+    product_id: 14,
     title: '기니피그 하우스 (원목)',
     description: '천연 원목으로 만든 기니피그 하우스입니다. 안전하고 튼튼합니다.',
     price: 38000,
-    images: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '성남시',
     category_code: 'HOUSING',
@@ -485,6 +512,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 24,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -494,6 +522,7 @@ export const mockProducts: ProductDetailItem[] = [
       email: 'goo12567@google.com',
       city_name: '서초구',
       birthday: '1990-01-01',
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_active: true,
       is_staff: false,
       is_superuser: false,
@@ -504,11 +533,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 15,
+    product_id: 15,
     title: '강아지 브러시 세트',
     description: '털 빠짐 방지와 마사지 효과가 있는 브러시 세트입니다.',
     price: 16000,
-    images: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '마포구',
     category_code: 'ACCESSORIES',
@@ -518,6 +547,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '거의 새것',
     view_count: 42,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -531,17 +561,18 @@ export const mockProducts: ProductDetailItem[] = [
       is_staff: false,
       is_superuser: false,
       profile_completed: true,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       last_login: new Date().toISOString(),
       profile_image:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
   },
   {
-    id: 16,
+    product_id: 16,
     title: '새끼고양이 낚시대 장난감',
     description: '새끼고양이가 좋아하는 깃털 낚시대 장난감입니다. 운동량 증가에 좋습니다.',
     price: 9500,
-    images: 'https://images.unsplash.com/photo-1599907370087-e0955afcb920?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1599907370087-e0955afcb920?w=400&h=400&fit=crop',
     state_code: '대구광역시',
     city_code: '동구',
     category_code: 'TOYS',
@@ -551,6 +582,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 33,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -563,6 +595,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -570,11 +603,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 17,
+    product_id: 17,
     title: '소형견 하네스 (패딩)',
     description: '소형견을 위한 패딩 하네스입니다. 목에 무리가 가지 않습니다.',
     price: 27000,
-    images: 'https://images.unsplash.com/photo-1667716705760-233650f8f3fe?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1667716705760-233650f8f3fe?w=400&h=400&fit=crop',
     state_code: '인천광역시',
     city_code: '연수구',
     category_code: 'CARRIER',
@@ -584,6 +617,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '사용감 있음',
     view_count: 48,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -596,6 +630,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -603,11 +638,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 18,
+    product_id: 18,
     title: '대형견 간식 (치킨 져키)',
     description: '대형견을 위한 치킨 져키 간식입니다. 무첨가물 자연 간식입니다.',
     price: 21000,
-    images: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1589883661923-6476cb0ae9f2?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '송파구',
     category_code: 'FOOD',
@@ -617,6 +652,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 57,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -627,6 +663,7 @@ export const mockProducts: ProductDetailItem[] = [
       city_name: '서초구',
       birthday: '1990-01-01',
       is_active: true,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_staff: false,
       is_superuser: false,
       profile_completed: true,
@@ -636,11 +673,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 19,
+    product_id: 19,
     title: '고양이 화장실 매트',
     description: '고양이 화장실 앞에 깔아두는 매트입니다. 모래 날림을 방지합니다.',
     price: 14000,
-    images: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop',
     state_code: '경기도',
     city_code: '고양시',
     category_code: 'HEALTH',
@@ -650,6 +687,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '거의 새것',
     view_count: 29,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -662,6 +700,7 @@ export const mockProducts: ProductDetailItem[] = [
       is_active: true,
       is_staff: false,
       is_superuser: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       profile_completed: true,
       last_login: new Date().toISOString(),
       profile_image:
@@ -669,11 +708,11 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    id: 20,
+    product_id: 20,
     title: '햄스터 쳇바퀴 (조용한 타입)',
     description: '소음이 거의 없는 햄스터 쳇바퀴입니다. 야간에도 조용합니다.',
     price: 13500,
-    images: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop',
     state_code: '서울특별시',
     city_code: '종로구',
     category_code: 'ETC',
@@ -683,6 +722,7 @@ export const mockProducts: ProductDetailItem[] = [
     condition_status: '새 상품',
     view_count: 41,
     like_count: 30,
+
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -694,6 +734,7 @@ export const mockProducts: ProductDetailItem[] = [
       birthday: '1990-01-01',
       is_active: true,
       is_staff: false,
+      created_at: '2025-08-20T15:45:38.795623+09:00',
       is_superuser: false,
       profile_completed: true,
       last_login: new Date().toISOString(),

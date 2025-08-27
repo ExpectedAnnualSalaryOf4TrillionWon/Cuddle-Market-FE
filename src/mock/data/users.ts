@@ -19,10 +19,10 @@ export const mockUsers: UserWithProducts[] = [
     created_at: '2025-08-16T08:00:00Z',
     seller_products: [
       {
-        id: 123,
+        product_id: 123,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
+        thumbnail: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',
@@ -31,10 +31,11 @@ export const mockUsers: UserWithProducts[] = [
         view_count: 5,
       },
       {
-        id: 356,
+        product_id: 356,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+        thumbnail:
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',
@@ -63,10 +64,10 @@ export const mockUsers: UserWithProducts[] = [
     created_at: '2025-08-16T08:00:00Z',
     seller_products: [
       {
-        id: 123,
+        product_id: 123,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
+        thumbnail: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',
@@ -75,10 +76,11 @@ export const mockUsers: UserWithProducts[] = [
         view_count: 5,
       },
       {
-        id: 356,
+        product_id: 356,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
-        images: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+        thumbnail:
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
         transaction_status: '판매중',

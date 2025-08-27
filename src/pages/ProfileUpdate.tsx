@@ -4,15 +4,18 @@ import { SimpleHeader } from '@layout/SimpleHeader';
 import { useUserStore } from '@store/userStore';
 import { useRef, useState } from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileUpdateProps {
   profile_image_url?: string;
 }
 
-const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
-  const user = useUserStore(state => state.user);
-  console.log(user);
-
+const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
+  const { user, accessToken, redirectUrl, setRedirectUrl, setUser, updateUserProfile } =
+    useUserStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   //TODO 전역상태로 현재 유저가 전에 설정한 정보 불러와서 디폴트로 연결하기.
   //디폴트값 대체. 연동되면 지우기.
   const currentNickname = user?.nickname || '';
@@ -23,6 +26,9 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [showCityDropdown, setShowCityDropdown] = useState(false);
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   const provinceBoxRef = useRef<HTMLDivElement | null>(null);
   const cityBoxRef = useRef<HTMLDivElement | null>(null);
@@ -35,9 +41,9 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
 
   const [formData, setFormData] = useState({
     nickname: currentNickname,
-    selectedProvince: currentSelectedState,
-    selectedCity: currentSelectedCity,
-    profile_image_url,
+    state: currentSelectedState,
+    city: currentSelectedCity,
+    profile_image_url: '',
   });
 
   const getStateNameByCode = (code?: string) =>
@@ -54,11 +60,48 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
     setSelectedState(stateCode);
     setSelectedCity('');
     setShowStateDropdown(false);
+    const stateName = getStateNameByCode(stateCode);
+    setFormData(prev => ({
+      ...prev,
+      state: stateName, // 코드 대신 이름 저장
+      city: '',
+    }));
   };
 
   const handleSelectCity = (cityCode: string) => {
     setSelectedCity(cityCode);
     setShowCityDropdown(false);
+    const cityName = getCityNameByCode(selectedState, cityCode);
+    setFormData(prev => ({
+      ...prev,
+      city: cityName, // 코드 대신 이름 저장
+    }));
+  };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      // 파일 크기 체크 (예: 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('이미지 크기는 5MB 이하여야 합니다.');
+        return;
+      }
+
+      // 파일 타입 체크
+      if (!file.type.startsWith('image/')) {
+        alert('이미지 파일만 업로드 가능합니다.');
+        return;
+      }
+
+      setSelectedImage(file);
+
+      // 미리보기 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,13 +118,69 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
     setEditField(null); // 변동사항 없이 종료
   };
 
-  const handleProfileSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // 브라우저 기본 새로고침 막기
-    // TODO 여기서 API 호출 + 상태 업데이트
-    console.log('프로필 저장:', formData);
-    // 예: useUserStore.getState().updateUserProfile(formData);
-  };
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
+    const formDataToSend = new FormData();
+    formDataToSend.append('nickname', formData.nickname);
+    formDataToSend.append('state', getStateNameByCode(formData.state));
+    formDataToSend.append('city', getCityNameByCode(formData.state, formData.city));
+
+    if (selectedImage) {
+      formDataToSend.append('profile_image_file', selectedImage);
+    }
+
+    console.log('전송할 데이터:', {
+      nickname: formData.nickname,
+      state: getStateNameByCode(formData.state), // "경기도"
+      city: getCityNameByCode(formData.state, formData.city), // "고양시"
+      profile_image_file: !!selectedImage,
+    });
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${API_BASE_URL}/users/mypage/`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formDataToSend,
+      });
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error('회원정보 수정 실패');
+      }
+      const data = await response.json();
+      console.log('응답 데이터:', data);
+      if (data.user) {
+        setUser(data.user);
+      } else {
+        updateUserProfile({
+          nickname: formData.nickname,
+          state_name: formData.state,
+          city_name: formData.city,
+          profile_image: data.profile_image || imagePreview,
+        });
+      }
+      if (redirectUrl) {
+        const targetUrl = redirectUrl;
+        setRedirectUrl(null);
+        console.log('저장된 페이지로 이동:', targetUrl);
+        navigate(targetUrl, { replace: true });
+      } else {
+        console.log('홈으로 이동');
+        navigate('/mypage', { replace: true });
+      }
+    } catch (error) {
+      console.error('회원정보 수정 실패:', error);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  if (isLoading) return <p>로딩중입니다</p>;
   const renderField = (label: string, fieldName: keyof typeof formData) => {
     const value = formData[fieldName] || '';
 
@@ -97,7 +196,8 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               name={fieldName}
               value={value}
               onChange={handleChange}
-              className="flex w-full rounded-md px-3 py-1 text-sm "
+              maxLength={12}
+              className="flex w-full rounded-md px-3 py-1 text-sm line-clamp-2"
             />
             <div className="flex gap-2">
               <button
@@ -151,9 +251,9 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                 <div className="relative">
                   <div className="relative flex overflow-hidden rounded-full h-24 w-24">
                     <img
-                      className="aspect-square size-full"
+                      className="aspect-square size-full object-cover"
                       alt="멍멍이아빠"
-                      src={UserDefaultImage}
+                      src={imagePreview || user?.profile_image || UserDefaultImage}
                     />
                   </div>
                   <label
@@ -162,7 +262,13 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                   >
                     <MdPhotoCamera />
                   </label>
-                  <input id="profile-image" type="file" accept="image/*" className="hidden" />
+                  <input
+                    id="profile-image"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
                 </div>
 
                 {/* 프로필 정보 */}
@@ -191,7 +297,9 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                           <span className="text-gray-500">
                             {selectedState
                               ? getStateNameByCode(selectedState as string)
-                              : currentSelectedState || '시/도를 선택해주세요'}
+                              : formData.state // currentSelectedState 대신 formData.state 사용
+                              ? getStateNameByCode(formData.state)
+                              : '시/도를 선택해주세요'}
                           </span>
                         </button>
                         {showStateDropdown && (
@@ -239,9 +347,11 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                           <span className="text-gray-500">
                             {selectedCity
                               ? getCityNameByCode(selectedState as string, selectedCity)
-                              : selectedState
+                              : formData.city // currentSelectedCity 대신 formData.city 사용
+                              ? getCityNameByCode(formData.state, formData.city)
+                              : selectedState || formData.state
                               ? '구/군을 선택해주세요'
-                              : currentSelectedCity || '구/군을 선택해주세요'}
+                              : '시/도를 먼저 선택해주세요'}
                           </span>
                         </button>
                         {showCityDropdown && selectedState && (
@@ -277,16 +387,13 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
               <button
                 type="submit"
                 className="flex items-center justify-center gap-2 rounded-md text-sm px-4 py-2 w-full border border-border bg-secondary hover:bg-primary"
-                onClick={() => {
-                  alert('API 연동 시 userStore 상태변경 후 리렌더링');
-                }}
               >
                 프로필 저장
               </button>
             </div>
           </form>
 
-          <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
+          {/* <form className="flex flex-col gap-6 rounded-xl border border-border px-6 py-6">
             <div className="flex flex-col items-start gap-1">
               <h4 className="flex items-center gap-2">비밀번호 변경</h4>
               <p className="text-sm">보안을 위해 주기적으로 비밀번호를 변경해주세요</p>
@@ -314,7 +421,7 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = ({ profile_image_url }) => {
                 비밀번호 변경
               </button>
             </div>
-          </form>
+          </form> */}
         </div>
       </div>
     </>
