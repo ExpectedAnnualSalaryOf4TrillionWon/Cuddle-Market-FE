@@ -12,8 +12,7 @@ interface ProfileUpdateProps {
 }
 
 const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
-  const { user, accessToken, redirectUrl, setRedirectUrl, setUser, updateUserProfile } =
-    useUserStore();
+  const { user, redirectUrl, setRedirectUrl, setUser, updateUserProfile } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
@@ -142,9 +141,6 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
       setIsLoading(true);
       const data = await apiFetch(`${API_BASE_URL}/users/mypage/`, {
         method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         body: formDataToSend,
       });
 
