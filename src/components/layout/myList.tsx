@@ -1,6 +1,5 @@
 import { stateStyleMap, STATUS_EN_TO_KO, type TransactionStatus } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
-import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
 import { BsBoxSeam } from 'react-icons/bs';
 import { GrView } from 'react-icons/gr';
@@ -24,7 +23,6 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [likeList, setLikeList] = useState<Product[]>([]);
-  const { accessToken } = useUserStore();
   const [loading, setLoading] = useState(true);
 
   const [showStatusDropdown, setShowStatusDropdown] = useState<{ [key: number]: boolean }>({});
@@ -51,23 +49,16 @@ const MyList: React.FC<MyListProps> = ({ activeTab, onCountsUpdate, onDelete }) 
   };
   const loadUserProductInfo = async () => {
     try {
-      const response = await apiFetch(`${API_BASE_URL}/likes/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // 인증 필요
-        },
-      });
-      if (response.ok) {
-        const likes = await response.json();
-        console.log(likes);
+      const likes = await apiFetch(`${API_BASE_URL}/likes/`);
+      console.log(likes);
 
-        setLikeList(likes);
-        setMyProductList([]);
-        if (onCountsUpdate) {
-          onCountsUpdate({
-            products: 0, // 내 상품은 일단 0
-            wishlist: likes.length || 0, // 응답 구조에 따라 조정
-          });
-        }
+      setLikeList(likes);
+      setMyProductList([]);
+      if (onCountsUpdate) {
+        onCountsUpdate({
+          products: 0,
+          wishlist: likes.length || 0,
+        });
       }
     } catch (error) {
       console.error('사용자 정보 로드 실패:', error);

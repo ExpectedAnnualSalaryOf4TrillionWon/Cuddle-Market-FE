@@ -26,7 +26,6 @@ export const mockProducts: ProductDetailItem[] = [
     transaction_status: '판매중',
     condition_status: '새 상품',
     view_count: 23,
-
     like_count: 30,
     elapsed_time: '2025-08-16T08:00:00Z',
     seller_info: {
