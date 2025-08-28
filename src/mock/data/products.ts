@@ -3,7 +3,7 @@ import type { ProductDetailItem } from '../../types';
 // 상세페이지용 mock 데이터
 export const mockProducts: ProductDetailItem[] = [
   {
-    product_id: 1,
+    id: 1,
     title: '로얄캐닌 강아지 사료 15kg (유통기한 6개월)',
     description: `로얄캐닌 골든리트리버 어덜트 사료 15kg 판매합니다.
 
@@ -23,8 +23,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'FOOD',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 23,
     like_count: 30,
     elapsed_time: '2025-08-16T08:00:00Z',
@@ -47,34 +47,34 @@ export const mockProducts: ProductDetailItem[] = [
     },
     seller_products: [
       {
-        product_id: 123,
+        id: 123,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
         thumbnail: 'https://images.unsplash.com/photo-1548546738-8509cb246ed3?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
-        transaction_status: '판매중',
-        condition_status: '거의 새것',
+        transaction_status: 'SELLING',
+        condition_status: 'EXCELLENT',
         elapsed_time: '2025-08-08T13:20:00',
         like_count: 5,
       },
       {
-        product_id: 356,
+        id: 356,
         title: '기니피그 케이지 + 하우스 + 급수기',
         price: 20000,
         thumbnail:
           'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
         pet_type_code: 'MAMMAL',
         pet_type_detail_code: 'HAMSTER',
-        transaction_status: '판매중',
-        condition_status: '거의 새것',
+        transaction_status: 'SELLING',
+        condition_status: 'EXCELLENT',
         elapsed_time: '2025-08-08T13:20:00',
         like_count: 5,
       },
     ],
   },
   {
-    product_id: 2,
+    id: 2,
     title: '고양이 자동급식기 (새상품)',
     description: '고양이 자동급식기 새상품입니다. 선물받았는데 사용하지 않아서 판매합니다.',
     price: 89000,
@@ -84,8 +84,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 45,
     like_count: 30,
 
@@ -109,7 +109,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 3,
+    id: 3,
     title: '강아지 목줄 세트 (중형견용)',
     description: '중형견용 목줄과 하네스 세트입니다. 사용감은 있지만 기능상 문제없습니다.',
     price: 25000,
@@ -120,8 +120,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'CARRIER',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매완료',
-    condition_status: '사용감 있음',
+    transaction_status: 'SOLD',
+    condition_status: 'GOOD',
     view_count: 12,
     like_count: 30,
 
@@ -145,7 +145,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 4,
+    id: 4,
     title: '고양이 캣타워 (대형)',
     description: '높이 150cm 대형 캣타워입니다. 우리 고양이가 잘 안써서 판매합니다.',
     price: 120000,
@@ -156,8 +156,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'TOYS',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '예약중',
-    condition_status: '거의 새것',
+    transaction_status: 'RESERVED',
+    condition_status: 'EXCELLENT',
     view_count: 67,
     like_count: 30,
 
@@ -181,7 +181,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 5,
+    id: 5,
     title: '강아지 겨울옷 (소형견용 S사이즈)',
     description: '소형견용 겨울 패딩입니다. 한두번 입혀봤는데 사이즈가 안 맞아서 판매합니다.',
     price: 15000,
@@ -192,8 +192,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'ACCESSORIES',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '거의 새것',
+    transaction_status: 'SELLING',
+    condition_status: 'EXCELLENT',
     view_count: 34,
 
     like_count: 30,
@@ -217,7 +217,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 6,
+    id: 6,
     title: '햄스터 케이지 세트 (급처분)',
     description: '햄스터 케이지와 용품 일체 판매합니다. 이사로 인한 급처분입니다.',
     price: 35000,
@@ -227,8 +227,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HOUSING',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'HAMSTER',
-    transaction_status: '판매중',
-    condition_status: '사용감 있음',
+    transaction_status: 'SELLING',
+    condition_status: 'GOOD',
     view_count: 89,
 
     like_count: 30,
@@ -252,7 +252,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 7,
+    id: 7,
     title: '새끼고양이 전용 사료 2kg',
     description: '새끼고양이를 위한 영양 만점 사료입니다. 개봉하지 않은 새 제품입니다.',
     price: 32000,
@@ -262,8 +262,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'FOOD',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매완료',
-    condition_status: '새 상품',
+    transaction_status: 'SOLD',
+    condition_status: 'MINT',
     view_count: 15,
 
     like_count: 30,
@@ -287,7 +287,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 8,
+    id: 8,
     title: '강아지 장난감 세트 (소형견용)',
     description: '소형견을 위한 다양한 장난감 세트입니다. 치아 건강에도 좋습니다.',
     price: 18000,
@@ -297,8 +297,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'TOYS',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '거의 새것',
+    transaction_status: 'SELLING',
+    condition_status: 'EXCELLENT',
     view_count: 28,
     like_count: 30,
 
@@ -322,7 +322,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 9,
+    id: 9,
     title: '고양이 모래 10L (벤토나이트)',
     description: '냄새 제거력이 뛰어난 벤토나이트 모래입니다. 먼지가 적어 안전합니다.',
     price: 22000,
@@ -332,8 +332,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 52,
     like_count: 30,
 
@@ -357,7 +357,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 10,
+    id: 10,
     title: '강아지 이동가방 (중형견용)',
     description: '중형견용 이동가방입니다. 여행이나 병원 갈 때 사용하기 좋습니다.',
     price: 65000,
@@ -367,8 +367,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매완료',
-    condition_status: '사용감 있음',
+    transaction_status: 'SOLD',
+    condition_status: 'GOOD',
     view_count: 73,
     like_count: 30,
 
@@ -392,7 +392,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 11,
+    id: 11,
     title: '토끼 건초 3kg (티모시)',
     description: '토끼가 좋아하는 신선한 티모시 건초입니다. 소화에 좋습니다.',
     price: 28000,
@@ -400,10 +400,10 @@ export const mockProducts: ProductDetailItem[] = [
     state_code: '인천광역시',
     city_code: '연수구',
     category_code: 'FOOD',
-    pet_type_code: 'INSECT_ARTHROPOD',
+    pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'RABBIT',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 19,
     like_count: 30,
 
@@ -427,7 +427,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 12,
+    id: 12,
     title: '고양이 목걸이 (안전고리)',
     description: '안전고리가 있는 고양이 목걸이입니다. 이름표 포함되어 있습니다.',
     price: 12000,
@@ -437,8 +437,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'ACCESSORIES',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매중',
-    condition_status: '거의 새것',
+    transaction_status: 'SELLING',
+    condition_status: 'EXCELLENT',
     view_count: 36,
     like_count: 30,
 
@@ -462,7 +462,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 13,
+    id: 13,
     title: '대형견 급수대 (스테인리스)',
     description: '대형견을 위한 스테인리스 급수대입니다. 미끄럼 방지 패드 포함.',
     price: 42000,
@@ -472,11 +472,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '예약중',
-    condition_status: '사용감 있음',
+    transaction_status: 'RESERVED',
+    condition_status: 'GOOD',
     view_count: 61,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -497,7 +496,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 14,
+    id: 14,
     title: '기니피그 하우스 (원목)',
     description: '천연 원목으로 만든 기니피그 하우스입니다. 안전하고 튼튼합니다.',
     price: 38000,
@@ -507,11 +506,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HOUSING',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'GUINEA_PIG',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 24,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -532,7 +530,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 15,
+    id: 15,
     title: '강아지 브러시 세트',
     description: '털 빠짐 방지와 마사지 효과가 있는 브러시 세트입니다.',
     price: 16000,
@@ -542,11 +540,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'ACCESSORIES',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '거의 새것',
+    transaction_status: 'SELLING',
+    condition_status: 'EXCELLENT',
     view_count: 42,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -567,7 +564,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 16,
+    id: 16,
     title: '새끼고양이 낚시대 장난감',
     description: '새끼고양이가 좋아하는 깃털 낚시대 장난감입니다. 운동량 증가에 좋습니다.',
     price: 9500,
@@ -577,8 +574,8 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'TOYS',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 33,
     like_count: 30,
 
@@ -602,7 +599,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 17,
+    id: 17,
     title: '소형견 하네스 (패딩)',
     description: '소형견을 위한 패딩 하네스입니다. 목에 무리가 가지 않습니다.',
     price: 27000,
@@ -612,11 +609,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'CARRIER',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '사용감 있음',
+    transaction_status: 'SELLING',
+    condition_status: 'GOOD',
     view_count: 48,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -637,7 +633,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 18,
+    id: 18,
     title: '대형견 간식 (치킨 져키)',
     description: '대형견을 위한 치킨 져키 간식입니다. 무첨가물 자연 간식입니다.',
     price: 21000,
@@ -647,11 +643,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'FOOD',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'DOG',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 57,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -672,7 +667,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 19,
+    id: 19,
     title: '고양이 화장실 매트',
     description: '고양이 화장실 앞에 깔아두는 매트입니다. 모래 날림을 방지합니다.',
     price: 14000,
@@ -682,11 +677,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'HEALTH',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'CAT',
-    transaction_status: '판매중',
-    condition_status: '거의 새것',
+    transaction_status: 'SELLING',
+    condition_status: 'EXCELLENT',
     view_count: 29,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,
@@ -707,7 +701,7 @@ export const mockProducts: ProductDetailItem[] = [
     },
   },
   {
-    product_id: 20,
+    id: 20,
     title: '햄스터 쳇바퀴 (조용한 타입)',
     description: '소음이 거의 없는 햄스터 쳇바퀴입니다. 야간에도 조용합니다.',
     price: 13500,
@@ -717,11 +711,10 @@ export const mockProducts: ProductDetailItem[] = [
     category_code: 'ETC',
     pet_type_code: 'MAMMAL',
     pet_type_detail_code: 'HAMSTER',
-    transaction_status: '판매중',
-    condition_status: '새 상품',
+    transaction_status: 'SELLING',
+    condition_status: 'MINT',
     view_count: 41,
     like_count: 30,
-
     elapsed_time: '2024-12-16T10:00:00Z',
     seller_info: {
       id: 1,

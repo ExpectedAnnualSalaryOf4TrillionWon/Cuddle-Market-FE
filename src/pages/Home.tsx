@@ -3,6 +3,7 @@ import CategoryFilter from '@layout/CategoryFilter';
 import ProductCard from '@layout/ProductCard';
 import { useUserStore } from '@store/userStore';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { apiFetch } from '../api/apiFetch';
 import { fetchAllProducts } from '../api/products';
 import type { FilterState, Product } from '../types';
 
@@ -35,21 +36,18 @@ const Home = () => {
     try {
       setLoading(true);
       const result = await fetchAllProducts();
-      setAllProducts(result);
+      const products = result.product_list || [];
+      const mappedProducts = products.map((product: Product) => ({
+        ...product,
+      }));
+      console.log(mappedProducts);
 
+      setAllProducts(mappedProducts);
       if (accessToken) {
-        const likesResponse = await fetch(`${API_BASE_URL}/likes/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        if (likesResponse.ok) {
-          const likesData: Product[] = await likesResponse.json();
-          console.log(likesData);
-          const likedIds = likesData.map(item => item.product_id);
-          setLikedProductIds(likedIds);
-        }
+        const likesData: Product[] = await apiFetch(`${API_BASE_URL}/likes/`);
+        console.log(likesData);
+        const likedIds = likesData.map(item => item.id);
+        setLikedProductIds(likedIds);
       }
       setVisibleItems(12);
       setError(null);
@@ -233,9 +231,9 @@ const Home = () => {
         <ul className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-4 gap-md tablet:gap-lg desktop:gap-xl">
           {visibleProducts.map((product, index) => (
             <ProductCard
-              key={product.product_id}
+              key={product.id}
               data-index={index}
-              data={{ ...product, is_liked: likedProductIds.includes(product.product_id) }}
+              data={{ ...product, is_liked: likedProductIds.includes(product.id) }}
               // isLiked={isProductLiked(product.id)}
               // onToggleLike={() => toggleLike(product.id)}
             />

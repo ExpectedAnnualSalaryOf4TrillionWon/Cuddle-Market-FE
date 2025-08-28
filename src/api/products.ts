@@ -4,9 +4,8 @@ import type {
   FilterApiResponse,
   LikesResponse,
   MyPageData,
-  Product,
   ProductDetailItem,
-  UserWithProducts,
+  ProductsResponse,
 } from '../types';
 import { apiFetch } from './apiFetch';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -16,35 +15,24 @@ export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
   return data;
 };
 
-export const fetchAllProducts = async (): Promise<Product[]> => {
-  const response = await fetch(`${API_BASE_URL}/products`);
-  if (!response.ok) {
-    throw new Error('상품 목록을 불러오는데 실패했습니다.');
-  }
-  return response.json();
+export const fetchAllProducts = async (): Promise<ProductsResponse> => {
+  const data = await apiFetch(`${API_BASE_URL}/products`);
+  return data;
 };
 
 // 상품 상세 조회
 export const fetchProductById = async (productId: string): Promise<ProductDetailItem> => {
-  const url = `${API_BASE_URL}/products/${productId}`;
-  const response = await fetch(url);
+  const data = await apiFetch(`${API_BASE_URL}/products/${productId}`);
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error('상품을 찾을 수 없습니다.');
-    }
-    throw new Error('상품 정보를 불러오는데 실패했습니다.');
-  }
-
-  return response.json();
+  return data;
 };
 
 // 판매자 프로필 조회
-export const fetchSellerById = async (sellerId: string): Promise<UserWithProducts> => {
-  const res = await fetch(`${API_BASE_URL}/user/${sellerId}`);
-  if (!res.ok) throw new Error('사용자를 찾을 수 없습니다.');
-  return res.json();
-};
+// export const fetchSellerById = async (sellerId: string): Promise<UserWithProducts> => {
+//   const res = await fetch(`${API_BASE_URL}/user/${sellerId}`);
+//   if (!res.ok) throw new Error('사용자를 찾을 수 없습니다.');
+//   return res.json();
+// };
 
 // 내 상품과 찜상품 목록 조회
 export const fetchMyPageData = async (): Promise<MyPageData> => {
@@ -68,31 +56,49 @@ export const createProduct = async (
   formData.append('pet_type_code', productData.pet_type_code);
   formData.append('pet_type_detail_code', productData.pet_type_detail_code);
   formData.append('category_code', productData.category_code);
-  formData.append('condition_status', productData.condition_status);
   formData.append('state_code', productData.state_code);
   formData.append('city_code', productData.city_code);
 
+  const conditionMap: Record<string, string> = {
+    NEW: 'MINT', // 또는 백엔드가 실제로 기대하는 값
+    LIKE_NEW: 'EXCELLENT',
+    USED: 'GOOD',
+    NEEDS_REPAIR: 'FAIR',
+  };
+  formData.append(
+    'condition_status',
+    conditionMap[productData.condition_status] || productData.condition_status,
+  );
   // 이미지 파일 추가
+  // if (productData.images && productData.images.length > 0) {
+  //   productData.images.forEach((image, index) => {
+  //     formData.append(`images[${index}]`, image);
+  //   });
+  // }
+  // 첫 번째 이미지는 메인
   if (productData.images && productData.images.length > 0) {
-    productData.images.forEach((image, index) => {
-      formData.append(`images[${index}]`, image);
+    // 첫 번째 이미지는 메인 (복수형으로 변경)
+    formData.append('main_images', productData.images[0]);
+
+    // 나머지는 서브 이미지
+    productData.images.slice(1).forEach(image => {
+      formData.append('sub_images', image);
     });
   }
 
-  const response = await fetch(`${API_BASE_URL}/products`, {
-    method: 'POST',
-    body: formData,
-  });
+  try {
+    const data = await apiFetch(`${API_BASE_URL}/products/`, {
+      method: 'POST',
+      body: formData, // FormData 직접 전달
+    });
 
-  if (!response.ok) {
-    if (response.status === 400) {
-      const error = await response.json();
-      throw new Error(error.error || '입력 정보를 확인해주세요.');
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
     }
     throw new Error('상품 등록에 실패했습니다.');
   }
-
-  return response.json();
 };
 
 // 상품 수정
@@ -120,23 +126,19 @@ export const updateProduct = async (
     });
   }
 
-  const response = await fetch(`${API_BASE_URL}/products/${productId}`, {
-    method: 'PATCH',
-    body: formData,
-  });
+  try {
+    const data = await apiFetch(`${API_BASE_URL}/products/${productId}`, {
+      method: 'PATCH',
+      body: formData,
+    });
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error('상품을 찾을 수 없습니다.');
-    }
-    if (response.status === 400) {
-      const error = await response.json();
-      throw new Error(error.error || '입력 정보를 확인해주세요.');
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
     }
     throw new Error('상품 수정에 실패했습니다.');
   }
-
-  return response.json();
 };
 
 export const fetchMyLikes = async (): Promise<LikesResponse> => {

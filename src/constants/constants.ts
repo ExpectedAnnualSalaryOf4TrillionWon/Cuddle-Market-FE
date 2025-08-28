@@ -1197,21 +1197,25 @@ export const PRODUCT_POST_TABS = [
 export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id'];
 
 // ========== 거래상태 관련 상수 ==========
-export type TransactionStatus = '판매중' | '예약중' | '판매완료';
-export const TRANSACTION_STATUS = {
+export type TransactionStatus = 'SELLING' | 'RESERVED' | 'SOLD';
+export const STATUS_EN_TO_KO: Record<TransactionStatus, string> = {
   SELLING: '판매중',
   RESERVED: '예약중',
   SOLD: '판매완료',
-} as const;
-export const stateStyleMap: Record<TransactionStatus, string> = {
-  [TRANSACTION_STATUS.SELLING]: 'bg-sale border-sale',
-  [TRANSACTION_STATUS.RESERVED]: 'bg-reserved border-reserved',
-  [TRANSACTION_STATUS.SOLD]: 'bg-complete border-complete',
 };
-export const STATUS_EN_TO_KO: Record<string, TransactionStatus> = {
-  SELLING: TRANSACTION_STATUS.SELLING,
-  RESERVED: TRANSACTION_STATUS.RESERVED,
-  SOLD: TRANSACTION_STATUS.SOLD,
+export const stateStyleMap: Record<TransactionStatus, string> = {
+  SELLING: 'bg-sale border-sale',
+  RESERVED: 'bg-reserved border-reserved',
+  SOLD: 'bg-complete border-complete',
+};
+
+// ========== 상품상태 관련 상수 ==========
+export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR';
+export const CONDITION_EN_TO_KO: Record<TransactionConditaion, string> = {
+  MINT: '새 상품',
+  EXCELLENT: '거의 새것',
+  GOOD: '사용감 있음',
+  FAIR: '수리 필요',
 };
 
 export const ALLOWED_IMAGE_TYPES = [
