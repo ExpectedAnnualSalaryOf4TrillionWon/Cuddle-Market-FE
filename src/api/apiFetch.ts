@@ -67,7 +67,7 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
       } catch (refreshError) {
         // 리프레시 토큰도 만료 → 로그아웃 처리
         useUserStore.getState().clearAll();
-        window.location.href = '/login';
+        window.location.href = '/signin';
         throw refreshError;
       }
     }

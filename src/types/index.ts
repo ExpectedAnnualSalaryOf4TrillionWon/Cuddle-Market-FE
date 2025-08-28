@@ -16,6 +16,8 @@ export interface User {
 
   state_name?: string; // 시/도
   city_name?: string;
+  seller_products?: Product[];
+  seller_images?: string;
 }
 
 // ========== 인증 관련 타입 ==========
@@ -88,56 +90,60 @@ export interface LikeApiResponse {
 }
 
 //!!!!!!!!!!!!!!!!!!!!
-export interface UserWithProducts extends User {
-  state: string;
-  city: string;
-  created_at: string;
-  seller_products: UserProduct[];
-  total_products: number;
-}
+// export interface UserWithProducts extends User {
+//   state: string;
+//   city: string;
+//   created_at: string;
+//   seller_products: UserProduct[];
+//   total_products: number;
+// }
 
 // ========== 상품 관련 타입 ==========
-export interface ProductBase {
-  product_id: number;
+export interface Product {
+  id: number;
   title: string;
-  description?: string;
   price: number;
-  thumbnail: string;
+  description?: string;
   state_code?: string;
   city_code?: string;
   category_code?: string;
-  pet_type_code?: string;
-  pet_type_detail_code: string;
-  condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
-  transaction_status: '판매중' | '예약중' | '판매완료';
-  view_count?: number;
-  like_count: number;
-  elapsed_time: string;
-  is_liked?: boolean;
-}
-export type Product = ProductBase;
-
-/** 상세용: 판매자/다른상품/서브이미지 포함 */
-export interface ProductDetailItem extends ProductBase {
-  seller_info: User;
-  seller_products?: UserProduct[];
-  sub_images?: string[];
-}
-
-export interface UserProduct {
-  product_id: number;
-  title: string;
-  price: number;
   thumbnail: string;
   pet_type_code: string;
   pet_type_detail_code: string;
-  transaction_status: '판매중' | '예약중' | '판매완료';
-  condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
-  elapsed_time: string;
-  like_count?: number;
+  condition_status: 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR';
+  transaction_status: 'SELLING' | 'RESERVED' | 'SOLD';
+  like_count: number;
   view_count?: number;
+  elapsed_time: string;
   is_liked?: boolean;
 }
+
+export interface ProductsResponse {
+  product_list: Product[];
+}
+// export type Product = ProductBase;
+
+/** 상세용: 판매자/다른상품/서브이미지 포함 */
+export interface ProductDetailItem extends Product {
+  seller_info: User;
+  images?: string[];
+  seller_products?: Product[];
+}
+
+// export interface UserProduct {
+//   id: number;
+//   title: string;
+//   price: number;
+//   thumbnail: string;
+//   pet_type_code: string;
+//   pet_type_detail_code: string;
+//   transaction_status: '판매중' | '예약중' | '판매완료';
+//   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
+//   elapsed_time: string;
+//   like_count?: number;
+//   view_count?: number;
+//   is_liked?: boolean;
+// }
 
 export interface State {
   id: number;
@@ -176,8 +182,8 @@ export interface UseLikeReturn {
 export interface CreateProductRequest {
   pet_type_code: string; // 반려동물 카테고리 (포유류, 조류 등)
   pet_type_detail_code: string; // 반려동물 세부종 (강아지, 고양이 등)
-  category_code: string; // 상품 카테고리 (food, toys 등)
   title: string; // 상품명
+  category_code: string; // 상품 카테고리 (food, toys 등)
   description: string; // 상품 설명
 
   // 가격 및 상태

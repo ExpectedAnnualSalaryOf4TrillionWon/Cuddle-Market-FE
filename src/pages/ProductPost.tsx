@@ -257,6 +257,8 @@ const ProductPost = () => {
         condition_status: selectedCondition!,
       };
 
+      console.log(productData);
+
       const response =
         isEditMode && id ? await updateProduct(id, productData) : await createProduct(productData);
 
@@ -475,9 +477,9 @@ const ProductPost = () => {
           const imageUrls = [product.thumbnail];
 
           // sub_images가 있으면 추가
-          if (product.sub_images && product.sub_images.length > 0) {
-            imageUrls.push(...product.sub_images);
-          }
+          // if (product.sub_images && product.sub_images.length > 0) {
+          //   imageUrls.push(...product.sub_images);
+          // }
 
           // 최대 4장까지만 설정
           const previewImages = imageUrls.slice(0, 4);

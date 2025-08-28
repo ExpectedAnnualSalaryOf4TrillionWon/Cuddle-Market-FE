@@ -9,12 +9,19 @@ import { GoHeart } from 'react-icons/go';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchProductById } from '../api/products';
-import { LOCATIONS, PETS, PRODUCT_CATEGORIES, stateStyleMap } from '../constants/constants';
+import {
+  CONDITION_EN_TO_KO,
+  LOCATIONS,
+  PETS,
+  PRODUCT_CATEGORIES,
+  stateStyleMap,
+  STATUS_EN_TO_KO,
+} from '../constants/constants';
 import type { ProductDetailItem } from '../types';
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 const formatPrice = (price: number): string => {
-  return `${price.toLocaleString()}원`;
+  return `${Math.floor(price).toLocaleString()}원`;
 };
 
 const getTimeAgo = (createdAt: string): string => {
@@ -211,7 +218,8 @@ const ProductDetail = () => {
     );
   }
 
-  const currentStatus = product.transaction_status; // state 변수 제거, currentStatus로 변경
+  const currentStatus = STATUS_EN_TO_KO[product.transaction_status];
+  const statusClass = stateStyleMap[product.transaction_status];
   const productLocation = getLocationName(product.state_code || '', product.city_code || '');
   const petTypeName = getPetTypeName(product.pet_type_code || '', product.pet_type_detail_code);
   const categoryName = getCategoryName(product.category_code || '');
@@ -233,7 +241,7 @@ const ProductDetail = () => {
               </div>
 
               {/* 서브 이미지 */}
-              {product.sub_images && product.sub_images.length > 0 && (
+              {/* {product.images && product.sub_images.length > 0 && (
                 <div className="grid grid-cols-4 gap-sm">
                   {product.sub_images.map((image, idx) => (
                     <div key={idx} className="overflow-hidden rounded-lg bg-bg  ">
@@ -245,7 +253,7 @@ const ProductDetail = () => {
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
 
               {/* 판매자 정보 */}
               {product?.seller_info?.email !== user?.email && (
@@ -253,7 +261,7 @@ const ProductDetail = () => {
                   <div className="flex items-center gap-sm mb-sm">
                     <div className="w-12 h-12 overflow-hidden rounded-full">
                       <img
-                        src={product.seller_info?.profile_image ?? ''}
+                        src={product.seller_info.seller_images ?? ''}
                         alt={product.seller_info?.nickname}
                         className="block w-full h-full object-cover"
                       />
@@ -265,7 +273,7 @@ const ProductDetail = () => {
                       <div className="flex items-center gap-xs text-text-secondary bodySmall">
                         <CiLocationOn />
                         <span>
-                          {product.seller_info?.state_name} {product.seller_info?.city_name}
+                          {productLocation.stateName} {productLocation.cityName}
                         </span>
                       </div>
                     </div>
@@ -289,7 +297,7 @@ const ProductDetail = () => {
                 <div className="flex items-center gap-xs">
                   <span
                     className={`flex items-center text-md px-md py-xs rounded-xl text-bg font-bold
-                    ${stateStyleMap[currentStatus]}`}
+                                ${statusClass}`}
                   >
                     {currentStatus}
                   </span>
@@ -300,7 +308,7 @@ const ProductDetail = () => {
                     {categoryName}
                   </span>
                   <span className="text-sm px-md py-xs rounded-xl bg-secondary/40 font-bold">
-                    {product.condition_status}
+                    {CONDITION_EN_TO_KO[product.condition_status]}
                   </span>
                 </div>
 
@@ -378,10 +386,10 @@ const ProductDetail = () => {
             <h2 className="heading4 text-text-primary mb-lg">
               {product.seller_info?.nickname}님의 다른 상품
             </h2>
-            {product.seller_products ? (
+            {product.seller_products?.length !== 0 ? (
               <div className="grid grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-lg">
                 {product.seller_products?.map(sellerProducts => (
-                  <ProductCard key={sellerProducts.product_id} data={sellerProducts} />
+                  <ProductCard key={sellerProducts.id} data={sellerProducts} />
                 ))}
               </div>
             ) : (

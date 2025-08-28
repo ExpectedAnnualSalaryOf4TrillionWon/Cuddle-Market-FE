@@ -1,5 +1,5 @@
 import ConfirmModal from '@common/confirmModal';
-import { PETS } from '@constants/constants';
+import { CONDITION_EN_TO_KO, PETS, stateStyleMap, STATUS_EN_TO_KO } from '@constants/constants';
 import { useUserStore } from '@store/userStore';
 import React, { useState } from 'react';
 import { CiClock2 } from 'react-icons/ci';
@@ -7,17 +7,17 @@ import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import type { Product, UserProduct } from '../../types';
-
+import bowl from '../../../public/assets/images/bowl.jpg';
+import type { Product } from '../../types';
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 export type ProductCardProps = {
-  data: Product | UserProduct;
+  data: Product;
   'data-index'?: number;
 };
 
 const formatPrice = (price: number): string => {
-  return `${price.toLocaleString()}원`;
+  return `${Math.floor(price).toLocaleString()}원`;
 };
 
 const getTimeAgo = (createdAt: string): string => {
@@ -59,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex
   const navigate = useNavigate();
 
   const {
-    product_id: id,
+    id,
     title,
     price,
     thumbnail: images,
@@ -75,9 +75,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex
   const [subMessage, setSubMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(data.is_liked || false);
-
-  const isSold = transaction_status === '판매완료';
-  const isReserved = transaction_status === '예약중';
+  const currentStatus = STATUS_EN_TO_KO[transaction_status]; //
+  const statusClass = stateStyleMap[transaction_status];
+  const currentCondition = CONDITION_EN_TO_KO[condition_status]; //
 
   const goToProductDetail = () => {
     navigate(`/product/${id}`);
@@ -198,7 +198,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex
               text-caption font-extrabold whitespace-nowrap shadow-md
             "
               >
-                {condition_status}
+                {currentCondition}
               </span>
             </div>
             {/* 우측 상단 하트 */}
@@ -223,20 +223,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex
                 border 
                 text-caption font-bold whitespace-nowrap
                 text-white
-                ${
-                  isSold
-                    ? 'bg-complete border-complete'
-                    : isReserved
-                    ? 'bg-reserved border-reserved'
-                    : 'bg-sale border-sale'
-                }
+              ${statusClass}
                 `}
           >
-            {isSold ? '판매완료' : isReserved ? '예약중' : '판매중'}
+            {currentStatus}
           </span>
 
           <img
-            src={images || ''}
+            src={images || bowl}
             alt={title}
             className="w-full h-full absolute t-0 l-0 object-cover group-hover:scale-105 transition-all duration-300 ease-in-out"
           />
