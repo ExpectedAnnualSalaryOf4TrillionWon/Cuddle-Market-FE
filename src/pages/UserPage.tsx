@@ -1,65 +1,65 @@
 import { SimpleHeader } from '@layout/SimpleHeader';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
-import { GrView } from 'react-icons/gr';
-import { useNavigate, useParams } from 'react-router-dom';
-import type { UserWithProducts } from 'src/types';
-import { fetchSellerById } from '../api/products';
+// import { GrView } from 'react-icons/gr';
+// import { useNavigate, useParams } from 'react-router-dom';
+// import type { UserWithProducts } from 'src/types';
+// import { fetchSellerById } from '../api/products';
 
 const UserPage = () => {
-  const [seller, setSeller] = useState<UserWithProducts | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  // const [seller, setSeller] = useState(null)(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
+  // const navigate = useNavigate();
+  // const { id } = useParams<{ id: string }>();
 
-  const formatJoinDate = (dateString: string): string => {
-    const date = new Date(dateString);
+  // const formatJoinDate = (dateString: string): string => {
+  //   const date = new Date(dateString);
 
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
+  //   const year = date.getFullYear();
+  //   const month = date.getMonth() + 1;
 
-    return `${year}년 ${month}월 가입`;
-  };
+  //   return `${year}년 ${month}월 가입`;
+  // };
 
-  const goToProductDetail = () => {
-    navigate(`/products/${id}`);
-  };
+  // const goToProductDetail = () => {
+  //   navigate(`/products/${id}`);
+  // };
 
-  const loadSellerData = async () => {
-    if (!id) return;
+  // const loadSellerData = async () => {
+  //   // if (!id) return;
 
-    try {
-      setLoading(true);
+  //   try {
+  //     setLoading(true);
 
-      // 상품 상세 정보 가져오기
-      const productData = await fetchSellerById(id);
-      console.log(productData);
+  //     // 상품 상세 정보 가져오기
+  //     // const productData = await fetchSellerById(id);
+  //     // console.log(productData);
 
-      setSeller(productData);
-      setError(null);
-    } catch (err) {
-      console.error('Error loading product:', err);
-      setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    loadSellerData();
-  }, [id]);
+  //     // setSeller(productData);
+  //     // setError(null);
+  //   } catch (err) {
+  //     console.error('Error loading product:', err);
+  //     // setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   loadSellerData();
+  // }, [id]);
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">로딩중…</div>;
-  }
-  if (error || !seller) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-600">{error ?? '사용자를 찾을 수 없습니다.'}</p>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return <div className="min-h-screen flex items-center justify-center">로딩중…</div>;
+  // }
+  // if (error || !seller) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center">
+  //       <p className="text-red-600">{error ?? '사용자를 찾을 수 없습니다.'}</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -72,26 +72,26 @@ const UserPage = () => {
           <div className="sticky top-24 flex flex-col gap-xl rounded-xl  text-text-primary">
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
-                <img
+                {/* <img
                   src={seller.profile_image}
                   alt={seller.nickname}
                   className="block w-full h-full object-cover"
-                />
+                /> */}
               </div>
-              <h2 className="heading4 text-text-primary mb-sm font-bold">{seller.nickname}</h2>
+              {/* <h2 className="heading4 text-text-primary mb-sm font-bold">{seller.nickname}</h2> */}
             </div>
 
             <div className="flex flex-col gap-sm">
               <div className="flex items-center gap-sm">
                 <CiLocationOn />
                 <span className="bodySmall text-text-primary">
-                  {seller.state} {seller.city}
+                  {/* {seller.state} {seller.city} */}
                 </span>
               </div>
               <div className="flex items-center gap-sm">
                 <CiCalendar />
                 <span className="bodySmall text-text-primary">
-                  {seller.created_at ? formatJoinDate(seller.created_at) : ''}
+                  {/* {seller.created_at ? formatJoinDate(seller.created_at) : ''} */}
                 </span>
               </div>
             </div>
@@ -120,7 +120,7 @@ const UserPage = () => {
               className="mb-lg px-sm py-sm border-b border-gray-200"
             >
               <h3 className="heading4 text-text-primary font-bold">
-                {seller.nickname}님 상품 ({seller.total_products}개)
+                {/* {seller.nickname}님 상품 ({seller.total_products}개) */}
               </h3>
             </div>
 
@@ -132,7 +132,7 @@ const UserPage = () => {
               className={`flex-1 outline-none`}
             >
               <div className="flex flex-col gap-md">
-                {seller.seller_products.map(item => (
+                {/* {seller.seller_products.map(item => (
                   <div
                     key={item.product_id}
                     className="
@@ -178,7 +178,7 @@ const UserPage = () => {
                       </span>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>

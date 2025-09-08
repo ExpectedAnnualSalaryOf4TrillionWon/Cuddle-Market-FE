@@ -5,19 +5,19 @@ import { mockProducts } from './data/products';
 import { http, HttpResponse, passthrough } from 'msw';
 import type { Product, User } from 'src/types';
 import { mockUsers } from './data/users';
+// import { mockUsers } from './data/users';
 
 // mockProducts 원소 타입을 그대로 가져오기
 type MockProduct = (typeof mockProducts)[number];
-const getProductById = (id: number): MockProduct | undefined =>
-  mockProducts.find(p => p.product_id === id);
+const getProductById = (id: number): MockProduct | undefined => mockProducts.find(p => p.id === id);
 
 const API_STATUS = {
   AUTH: true, // 카카오 인증 - 실제 API 사용
   PROFILE: true, // 프로필 완성 - 실제 API 사용
   CATEGORIES: true, // 카테고리 - 실제 API 사용
   LIKES: true, // 찜하기 - 실제 API 사용
-  PRODUCTS: false, // 상품 목록 - 아직 모킹
-  PRODUCT_DETAIL: false, // 상품 상세 - 아직 모킹
+  PRODUCTS: true, // 상품 목록 - 아직 모킹
+  PRODUCT_DETAIL: true, // 상품 상세 - 아직 모킹
   MY_PAGE: true, // 상품 상세 - 아직 모킹
 };
 
@@ -236,7 +236,7 @@ export const handlers = [
       }
       console.log(producted);
       return HttpResponse.json(
-        { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.product_id) },
+        { product_ids: mockProducts.filter(p => p.is_liked).map(p => p.id) },
         { status: 201 },
       );
     } catch {
@@ -254,7 +254,7 @@ export const handlers = [
     const productId = parseInt(id as string);
 
     // mockProducts에서 해당 상품 찾기
-    const product = mockProducts.find(product => product.product_id === productId);
+    const product = mockProducts.find(product => product.id === productId);
 
     if (!product) {
       return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
@@ -280,11 +280,13 @@ export const handlers = [
       return passthrough();
     }
     const url = new URL(request.url);
-    const pet_type_code = url.searchParams.get('pet_type_code');
+    const pet_type_detail_code = url.searchParams.get('pet_type_detail_code');
     // 반려동물 종류 필터링
     let filteredProducts = mockProducts;
-    if (pet_type_code && pet_type_code !== 'ALL') {
-      filteredProducts = mockProducts.filter(product => product.pet_type_code === pet_type_code);
+    if (pet_type_detail_code && pet_type_detail_code !== 'ALL') {
+      filteredProducts = mockProducts.filter(
+        product => product.pet_type_detail_code === pet_type_detail_code,
+      );
     }
 
     return HttpResponse.json(filteredProducts);
@@ -301,7 +303,7 @@ export const handlers = [
       return HttpResponse.json({ error: '사용자를 찾을 수 없습니다.' }, { status: 404 });
     }
 
-    const res = { ...user, total_products: user.seller_products.length };
+    const res = { ...user, total_products: user.seller_products?.length };
     return HttpResponse.json(res);
   }),
 
@@ -320,6 +322,9 @@ export const handlers = [
 
   // 상품 등록
   http.post('*/products', async ({ request }) => {
+    if (API_STATUS.PRODUCTS) {
+      return passthrough();
+    }
     const formData = await request.formData();
 
     const currentUser: User = {
@@ -341,7 +346,7 @@ export const handlers = [
 
     // FormData에서 데이터 추출
     const newProduct = {
-      product_id: mockProducts.length + 1, // 임시 ID 생성
+      id: mockProducts.length + 1, // 임시 ID 생성
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       price: parseInt(formData.get('price') as string),
@@ -353,14 +358,10 @@ export const handlers = [
       category_code: formData.get('category_code') as string,
       pet_type_code: formData.get('pet_type_code') as string,
       pet_type_detail_code: formData.get('pet_type_detail_code') as string,
-      condition_status: formData.get('condition_status') as
-        | '새 상품'
-        | '거의 새것'
-        | '사용감 있음'
-        | '수리 필요',
+      condition_status: formData.get('condition_status') as 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR',
 
       // 기본값 설정
-      transaction_status: '판매중' as const,
+      transaction_status: 'SELLING' as const,
       view_count: 0,
       like_count: 0,
       elapsed_time: '2025-08-16T08:00:00Z',
@@ -381,7 +382,7 @@ export const handlers = [
 
     return HttpResponse.json(
       {
-        id: newProduct.product_id,
+        id: newProduct.id,
         message: '상품이 성공적으로 등록되었습니다.',
         product: newProduct,
       },
@@ -396,7 +397,7 @@ export const handlers = [
     const formData = await request.formData();
 
     // 기존 상품 찾기
-    const existingProductIndex = mockProducts.findIndex(p => p.product_id === productId);
+    const existingProductIndex = mockProducts.findIndex(p => p.id === productId);
 
     if (existingProductIndex === -1) {
       return HttpResponse.json({ error: '상품을 찾을 수 없습니다.' }, { status: 404 });
