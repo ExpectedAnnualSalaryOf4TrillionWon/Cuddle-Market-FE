@@ -39,8 +39,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/메인화면.gif"><img src="./profile/images/메인화면.gif" alt="MainPage" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/소셜 로그인.gif"><img src="./profile/images/소셜 로그인.gif" alt="Login" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/메인화면.gif"><img src="./public/assets/gif/메인화면.gif" alt="MainPage" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/소셜 로그인.gif"><img src="./public/assets/gif/소셜 로그인.gif" alt="Login" style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -53,8 +53,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/마이페이지.gif"><img src="./profile/images/마이페이지.gif" alt="MyPage" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/프로필 수정.gif"><img src="./profile/images/프로필 수정.gif" alt="ProfileUpdate" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/마이페이지.gif"><img src="./public/assets/gif/마이페이지.gif" alt="MyPage" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/프로필 수정.gif"><img src="./public/assets/gif/프로필 수정.gif" alt="ProfileUpdate" style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -67,8 +67,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/필터링.gif"><img src="./profile/images/필터링.gif" alt="Filtered" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/상품 상세페이지.gif"><img src="./profile/images/상품 상세페이지.gif" alt="ProductDetail" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/필터링.gif"><img src="./public/assets/gif/필터링.gif" alt="Filtered" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품 상세페이지.gif"><img src="./public/assets/gif/상품 상세페이지.gif" alt="ProductDetail" style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -81,8 +81,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/찜하기.gif"><img src="./profile/images/찜하기.gif" alt="Like" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/찜 취소.gif"><img src="./profile/images/찜 취소.gif" alt="LikeCancel"  style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/찜하기.gif"><img src="./public/assets/gif/찜하기.gif" alt="Like" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/찜 취소.gif"><img src="./public/assets/gif/찜 취소.gif" alt="LikeCancel"  style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -95,8 +95,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/상품등록.gif"><img src="./profile/images/상품등록.gif" alt="ProductRegister" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/상품 수정.gif"><img src="./profile/images/상품 수정.gif" alt="ProductUpdate" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품등록.gif"><img src="./public/assets/gif/상품등록.gif" alt="ProductRegister" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품 수정.gif"><img src="./public/assets/gif/상품 수정.gif" alt="ProductUpdate" style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -109,8 +109,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/채팅.gif"><img src="./profile/images/채팅.gif" alt="Chatting" style="width: 400px;"></a></td>
-  <td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./profile/images/로그아웃.gif"><img src="./profile/images/로그아웃.gif" alt="Logout" style="width: 400px;"></a></td>
+<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/채팅.gif"><img src="./public/assets/gif/채팅.gif" alt="Chatting" style="width: 400px;"></a></td>
+  <td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/로그아웃.gif"><img src="./public/assets/gif/로그아웃.gif" alt="Logout" style="width: 400px;"></a></td>
 </tr>
 </tbody>
 </table>
