@@ -14,7 +14,7 @@ function ConfirmModal({
   subMessage,
   onConfirm,
   onCancel,
-}) {
+}: ConfirmModalProps) {
   // const { isOpen, message, handleConfirm } = useModalStore();
 
   if (!isOpen) return null;
@@ -35,6 +35,6 @@ function ConfirmModal({
       </div>
     </div>
   );
-};
+}
 
 export default ConfirmModal;
