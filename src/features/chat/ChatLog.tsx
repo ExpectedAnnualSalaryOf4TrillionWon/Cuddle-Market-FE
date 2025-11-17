@@ -1,6 +1,6 @@
 import type { ChatMessage } from 'src/types/ChatType';
 
-export const ChatLog: React.FC<ChatMessage> = ({ message, time, position }) => {
+export function ChatLog({ message, time, position }: ChatMessage) {
   const isRight = position === 'right';
 
   return (
@@ -21,4 +21,4 @@ export const ChatLog: React.FC<ChatMessage> = ({ message, time, position }) => {
       </div>
     </div>
   );
-};
+}

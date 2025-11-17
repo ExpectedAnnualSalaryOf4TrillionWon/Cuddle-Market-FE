@@ -49,7 +49,7 @@ const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
   return detail?.name || petDetailCode;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex }) => {
+function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   if (!data) {
     return null;
   }

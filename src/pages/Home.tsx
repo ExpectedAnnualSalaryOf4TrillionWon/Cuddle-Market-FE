@@ -9,7 +9,7 @@ import type { FilterState, Product } from '../types';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
-const Home = () => {
+function Home() {
   const { accessToken } = useUserStore();
 
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -242,6 +242,6 @@ const Home = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Home;

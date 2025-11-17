@@ -10,7 +10,7 @@ import type { DropdownProps } from 'src/types/DropDownType';
 
 /* 유저 드롭다운 기능*/
 /* 타입은 리액트 함수형 컴포넌트(React.FC)이고, 위에 상태관리 타입설정도 props로 전달한다.*/
-const UserDropdown: React.FC<DropdownProps> = ({ isOpen, setIsOpen }) => {
+function UserDropdown({ isOpen, setIsOpen }: DropdownProps) {
   const navigate = useNavigate();
   // const logoutconfirm = useModalStore(state => state.confirm);
   //react 훅의 사용규칙 중에는 훅의 호출이 반드시 컴포넌트 상단에 위치하여야 한다(런타임 에러의 원인이 될 수 있다)라는 룰이 있고 이를 ESlint가 지적하여 코드상에 경고가 발생함.

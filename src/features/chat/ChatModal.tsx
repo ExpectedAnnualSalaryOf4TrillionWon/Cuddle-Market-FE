@@ -8,7 +8,7 @@ import { mockChatList } from './MockChatData';
 import { ChatOpponentInfo } from './ChatOpponentInfo';
 import { useChatSocketStore } from '@store/ChatSocketStore';
 
-const ChatModal = ({ onClose }: { onClose: () => void }) => {
+function ChatModal({ onClose }: { onClose: () => void }) {
   const [input, setInput] = useState('');
   const messageEndRef = useRef<HTMLDivElement>(null);
   const { connect, disconnect, sendMessage, currentRoomId } = useChatSocketStore();
@@ -128,6 +128,6 @@ const ChatModal = ({ onClose }: { onClose: () => void }) => {
       </div>
     </div>
   );
-};
+}
 
 export default ChatModal;

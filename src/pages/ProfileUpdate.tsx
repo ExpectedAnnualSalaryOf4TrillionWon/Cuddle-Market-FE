@@ -11,7 +11,7 @@ interface ProfileUpdateProps {
   profile_image_url?: string;
 }
 
-const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
+function ProfileUpdate() {
   const { user, redirectUrl, setRedirectUrl, setUser, updateUserProfile } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -419,6 +419,6 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
       </div>
     </>
   );
-};
+}
 
 export default ProfileUpdate;

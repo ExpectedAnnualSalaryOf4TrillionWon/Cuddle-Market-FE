@@ -2,7 +2,7 @@ import { useUserStore } from '@store/userStore';
 import { useEffect, useRef, useState } from 'react';
 import ChatModal from './ChatModal';
 
-const ChatWidget: React.FC = () => {
+function ChatWidget() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -64,6 +64,6 @@ const ChatWidget: React.FC = () => {
       )}
     </>
   );
-};
+}
 
 export default ChatWidget;

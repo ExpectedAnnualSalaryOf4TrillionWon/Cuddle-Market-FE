@@ -40,7 +40,7 @@ const routes = [
 //   );
 // };
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Routes>
       {/* Header 포함 구간: Home, ProductDetail */}
@@ -70,6 +70,6 @@ const AppRoutes = () => {
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
   );
-};
+}
 
 export default AppRoutes;

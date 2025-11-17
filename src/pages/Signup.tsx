@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import type { CreateUserRequest, CreateUserResponse, FormErrors } from 'src/types';
 import { apiFetch } from '../api/apiFetch';
 
-const Signup = () => {
+function Signup() {
   const [userName, setUserName] = useState<string>('');
   const [userNickName, setUserNickName] = useState<string>('');
   const [userBirth, setUserBirth] = useState<string>('');
@@ -465,6 +465,6 @@ const Signup = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Signup;

@@ -22,7 +22,7 @@ const formatJoinDate = (dateString: string): string => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
 };
 
-const MyPage: React.FC = () => {
+function MyPage() {
   const { user: storeUser } = useUserStore();
   const [currentUser, setCurrentUser] = useState(storeUser);
   const [isLoading, setIsLoading] = useState(true);

@@ -8,13 +8,13 @@ interface ConfirmModalProps {
   onCancel: () => void;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+function ConfirmModal({
   isOpen,
   message,
   subMessage,
   onConfirm,
   onCancel,
-}) => {
+}) {
   // const { isOpen, message, handleConfirm } = useModalStore();
 
   if (!isOpen) return null;

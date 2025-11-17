@@ -4,11 +4,11 @@ interface ChatOpponentInfoProps {
   username: string;
 }
 
-export const ChatOpponentInfo: React.FC<ChatOpponentInfoProps> = ({
+export function ChatOpponentInfo({
   profileimageurl,
   imagealt,
   username,
-}) => {
+}: ChatOpponentInfoProps) {
   return (
     <div>
       {/* 상대방의 사진과 이름만 전달 */}
@@ -18,4 +18,4 @@ export const ChatOpponentInfo: React.FC<ChatOpponentInfoProps> = ({
       </div>
     </div>
   );
-};
+}
