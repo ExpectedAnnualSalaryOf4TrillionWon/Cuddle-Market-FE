@@ -19,15 +19,15 @@ const stateStyleMap: Record<ProductState, string> = {
   [ProductState.Sold]: 'bg-complete border-complete',
 };
 
-type Props = {
+interface Props {
   image: string;
   title: string;
   price: number;
   state: ProductState;
   view: number;
-};
+}
 
-const UserProduct = ({ image, title, price, state, view }: Props) => {
+function UserProduct({ image, title, price, state, view }: Props) {
   return (
     <li className="flex items-start gap-lg cursor-pointer rounded-lg p-lg border border-border bg-bg transition-shadow hover:shadow-sm">
       <div className="w-16 h-16 rounded-full overflow-hidden bg-light">
@@ -51,6 +51,6 @@ const UserProduct = ({ image, title, price, state, view }: Props) => {
       </p>
     </li>
   );
-};
+}
 
 export default UserProduct;

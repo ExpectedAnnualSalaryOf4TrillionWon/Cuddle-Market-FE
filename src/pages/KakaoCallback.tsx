@@ -8,7 +8,7 @@ interface KakaoAuthResponse {
   user: User;
 }
 
-const KakaoCallback: React.FC = () => {
+function KakaoCallback() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
   const { handleLogin, redirectUrl, setRedirectUrl } = useUserStore();
@@ -85,6 +85,6 @@ const KakaoCallback: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default KakaoCallback;

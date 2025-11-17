@@ -72,7 +72,7 @@ const getCategoryName = (categoryCode: string) => {
   return category?.name || categoryCode;
 };
 
-const ProductDetail = () => {
+function ProductDetail() {
   const [product, setProduct] = useState<ProductDetailItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

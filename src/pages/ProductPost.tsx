@@ -22,7 +22,7 @@ import {
   type StateCode,
 } from '../constants/constants';
 
-const ProductPost = () => {
+function ProductPost() {
   const [activeTab, setActiveTab] = useState<ProductPostTabId>('sales');
 
   /**반려동물 종류 */
@@ -1048,6 +1048,6 @@ const ProductPost = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ProductPost;

@@ -20,12 +20,12 @@ const formatPrice = (price: number): string => {
   return `${price.toLocaleString()}원`;
 };
 
-const MyList: React.FC<MyListProps> = ({
+function MyList({
   activeTab,
   onCountsUpdate,
   onProductDelete,
   onLikeDelete,
-}) => {
+}: MyListProps) {
   const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
   const [MyProductList, setMyProductList] = useState<Product[]>([]);
   const [likeList, setLikeList] = useState<Product[]>([]);
@@ -278,6 +278,6 @@ const MyList: React.FC<MyListProps> = ({
   };
 
   return <>{renderList()}</>;
-};
+}
 
 export default MyList;
