@@ -1,20 +1,20 @@
-import ConfirmModal from '@components/common/confirmModal';
+import ConfirmModal from '@src/components/commons/confirmModal';
 import { CONDITION_EN_TO_KO, PETS, stateStyleMap, STATUS_EN_TO_KO } from '@constants/constants';
 import { useUserStore } from '@store/userStore';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CiClock2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import bowl from '../../../public/assets/images/bowl.jpg';
+import bowl from '@assets/images/bowl.jpg';
 import type { Product } from '../../types';
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
-export type ProductCardProps = {
+export interface ProductCardProps {
   data: Product;
   'data-index'?: number;
-};
+}
 
 const formatPrice = (price: number): string => {
   return `${Math.floor(price).toLocaleString()}원`;
@@ -49,14 +49,18 @@ const getPetTypeName = (petTypeCode: string, petDetailCode: string) => {
   return detail?.name || petDetailCode;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex }) => {
+function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
+  const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore();
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [subMessage, setSubMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(data?.is_liked || false);
+
   if (!data) {
     return null;
   }
-
-  const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore();
-
-  const navigate = useNavigate();
 
   const {
     id,
@@ -70,11 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, 'data-index': dataIndex
     like_count,
     transaction_status,
   } = data;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [subMessage, setSubMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(data.is_liked || false);
+
   const currentStatus = STATUS_EN_TO_KO[transaction_status]; //
   const statusClass = stateStyleMap[transaction_status];
   const currentCondition = CONDITION_EN_TO_KO[condition_status]; //

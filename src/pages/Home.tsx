@@ -1,6 +1,6 @@
 import { LOCATIONS } from '@constants/constants';
-import CategoryFilter from '@components/layout/CategoryFilter';
-import ProductCard from '@components/layout/ProductCard';
+import CategoryFilter from '@src/components/layouts/CategoryFilter';
+import ProductCard from '@src/components/layouts/ProductCard';
 import { useUserStore } from '@store/userStore';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiFetch } from '../api/apiFetch';
@@ -9,7 +9,7 @@ import type { FilterState, Product } from '../types';
 
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
-const Home = () => {
+function Home() {
   const { accessToken } = useUserStore();
 
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -242,6 +242,6 @@ const Home = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Home;

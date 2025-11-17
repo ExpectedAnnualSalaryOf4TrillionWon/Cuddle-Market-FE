@@ -3,7 +3,7 @@ interface DropdownButtonProps {
   onClick: () => void;
 }
 
-export const DropdownButton: React.FC<DropdownButtonProps> = ({ label, onClick }) => {
+export function DropdownButton({ label, onClick }: DropdownButtonProps) {
   return (
     <button
       className=" w-full py-sm cursor-pointer leading-none hover:bg-secondary transition rounded-sm text-bodyRegular"

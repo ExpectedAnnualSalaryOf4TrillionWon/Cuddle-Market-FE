@@ -7,17 +7,17 @@ interface AlarmDivProps {
   message: string;
 }
 
-const AlarmDiv: React.FC<AlarmDivProps> = ({ message }) => {
+function AlarmDiv({ message }: AlarmDivProps) {
   return (
     <div className="min-h-[5rem] px-md my-xs border border-secondary rounded-xl bg-white flex justify-center items-center">
       {message}
       {/* props로 내용 전달할 예정인데 타입지정에 대해 긴가민가하여 우선 생략 */}
     </div>
   );
-};
+}
 
 /* 알람 드롭다운 기능*/
-const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
+function AlarmDropdown({ isOpen }: DropdownProps) {
   const [alarms, setAlarms] = useState<string[]>([]);
   // 알람은 추후에 전역상태로 관리필요.
   const navigate = useNavigate();
@@ -57,6 +57,6 @@ const AlarmDropdown: React.FC<DropdownProps> = ({ isOpen }) => {
       )}
     </div>
   );
-};
+}
 
 export default AlarmDropdown;

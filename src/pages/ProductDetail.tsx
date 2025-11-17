@@ -1,5 +1,5 @@
-import ConfirmModal from '@components/common/confirmModal';
-import ProductCard from '@components/layout/ProductCard';
+import ConfirmModal from '@src/components/commons/confirmModal';
+import ProductCard from '@src/components/layouts/ProductCard';
 import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
 import { BsBoxSeam, BsChat } from 'react-icons/bs';
@@ -72,7 +72,7 @@ const getCategoryName = (categoryCode: string) => {
   return category?.name || categoryCode;
 };
 
-const ProductDetail = () => {
+function ProductDetail() {
   const [product, setProduct] = useState<ProductDetailItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

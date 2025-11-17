@@ -1,9 +1,9 @@
-import ConfirmModal from '@components/common/confirmModal';
-import userDefaultImage from '@images/userDefault.svg';
-import MyList from '@components/layout/myList';
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import ConfirmModal from '@src/components/commons/confirmModal';
+import userDefaultImage from '@assets/images/userDefault.svg';
+import MyList from '@src/components/layouts/myList';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useUserStore } from '@store/userStore';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { apiFetch } from '../api/apiFetch';
@@ -22,7 +22,7 @@ const formatJoinDate = (dateString: string): string => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
 };
 
-const MyPage: React.FC = () => {
+function MyPage() {
   const { user: storeUser } = useUserStore();
   const [currentUser, setCurrentUser] = useState(storeUser);
   const [isLoading, setIsLoading] = useState(true);

@@ -1,17 +1,17 @@
 import { LOCATIONS, type StateCode } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useUserStore } from '@store/userStore';
 import { useRef, useState } from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/apiFetch';
 
-interface ProfileUpdateProps {
-  profile_image_url?: string;
-}
+// interface ProfileUpdateProps {
+//   profile_image_url?: string;
+// }
 
-const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
+function ProfileUpdate() {
   const { user, redirectUrl, setRedirectUrl, setUser, updateUserProfile } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -419,6 +419,6 @@ const ProfileUpdate: React.FC<ProfileUpdateProps> = () => {
       </div>
     </>
   );
-};
+}
 
 export default ProfileUpdate;

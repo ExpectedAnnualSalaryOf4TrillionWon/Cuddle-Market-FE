@@ -1,11 +1,11 @@
-import logo from '@images/CuddleMarketLogoBase.png';
-import kakao from '@images/kakao.svg';
+import logo from '@assets/images/CuddleMarketLogoBase.png';
+import kakao from '@assets/images/kakao.svg';
 import { useUserStore } from '@store/userStore';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 //  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
-const Login: React.FC = () => {
+function Login() {
   const location = useLocation();
   const setRedirectUrl = useUserStore(state => state.setRedirectUrl);
   const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
@@ -78,6 +78,6 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Login;

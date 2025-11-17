@@ -1,6 +1,6 @@
-import CuddleMarketLogoImage from '../../../public/assets/images/CuddleMarketLogoImage.png';
+import CuddleMarketLogoImage from '@assets/images/CuddleMarketLogoImage.png';
 
-const Footer = () => {
+function Footer() {
   return (
     <footer className="border-t border-border bg-light">
       <div className="max-w-[var(--container-max-width)] mx-auto px-lg py-xl tablet:py-2xl">

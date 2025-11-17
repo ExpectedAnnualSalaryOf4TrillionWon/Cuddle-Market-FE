@@ -1,26 +1,8 @@
 {
   "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@components/*": ["./src/components/*"],
-      "@layout/*": ["./src/components/layout/*"],
-      "@features/*": ["./src/features/*"],
-      "@icons/*": ["./src/components/icons/*"],
-      "@common/*": ["./src/components/common/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@store/*": ["./src/store/*"],
-      "@constants/*": ["./src/constants/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@api/*": ["./src/api/*"],
-      "@types/*": ["./src/types/*"],
-      "@mock/*": ["./src/mock/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@images/*": ["./public/assets/images/*"]
-    }
-  },
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
   "exclude": ["src/mock/jobPosts.ts"]
 }

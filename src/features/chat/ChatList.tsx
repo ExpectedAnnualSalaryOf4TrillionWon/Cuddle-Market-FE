@@ -3,7 +3,7 @@ import type { ChatItem } from 'src/types/ChatType';
 import { useEffect } from 'react';
 import { useChatSocketStore } from '@store/ChatSocketStore';
 
-export const ChatList = ({ onClose }: { onClose: () => void }) => {
+export function ChatList({ onClose }: { onClose: () => void }) {
   const { joinRoom } = useChatSocketStore();
 
   // 예: 첫 채팅방 입장
@@ -66,4 +66,4 @@ export const ChatList = ({ onClose }: { onClose: () => void }) => {
       </div>
     </div>
   );
-};
+}

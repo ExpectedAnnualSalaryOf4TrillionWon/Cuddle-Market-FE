@@ -1,19 +1,20 @@
-import logoImage from '@images/CuddleMarketLogo.png';
+import logoImage from '@assets/images/CuddleMarketLogoImage.png';
+import { Z_INDEX } from '@constants/ui';
 import { useRef, useState } from 'react';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import AlarmDropdown from '../layout/AlarmDropDown';
-import UserDropdown from '../layout/UserDropDown';
-
+import { cn } from '@utils/cn';
+// import AlarmDropdown from '../layout/AlarmDropDown';
+// import UserDropdown from '../layout/UserDropDown';
 
 // import { useOutsideClick } from '../hook/useOutsideClick';
 
-const Header = () => {
+function Header() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  // const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
+  // const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const alarmRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -47,7 +48,12 @@ const Header = () => {
   // )
 
   return (
-    <header className="sticky top-0 z-99 bg-primary-200">
+    <header
+      className={cn(
+        'custom:px-20 sticky top-0 flex h-16 w-full items-center justify-center border-b border-gray-200 bg-white px-0',
+        `${Z_INDEX.HEADER}`,
+      )}
+    >
       <div className="max-w-7xl px-2.5">
         <div className="flex items-center justify-between gap-lg">
           {/* 로고를 link태그로 감싸 홈버튼으로 설정*/}
@@ -97,17 +103,17 @@ const Header = () => {
               <button
                 type="button"
                 className="cursor-pointer"
-                onClick={() => {
-                  setIsAlarmDropdownOpen(prev => !prev);
-                  setIsUserDropdownOpen(false);
-                }}
+                // onClick={() => {
+                //   setIsAlarmDropdownOpen(prev => !prev);
+                //   setIsUserDropdownOpen(false);
+                // }}
               >
                 <HiOutlineBellAlert className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isAlarmDropdownOpen && (
+              {/* {isAlarmDropdownOpen && (
                 <AlarmDropdown isOpen={isAlarmDropdownOpen} setIsOpen={setIsAlarmDropdownOpen} />
-              )}
+              )} */}
             </div>
 
             {/* 유저 드롭다운 호출 */}
@@ -115,23 +121,23 @@ const Header = () => {
               <button
                 type="button"
                 className="cursor-pointer"
-                onClick={() => {
-                  setIsUserDropdownOpen(prev => !prev);
-                  setIsAlarmDropdownOpen(false);
-                }}
+                // onClick={() => {
+                //   setIsUserDropdownOpen(prev => !prev);
+                //   setIsAlarmDropdownOpen(false);
+                // }}
               >
                 <RxAvatar className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isUserDropdownOpen && (
+              {/* {isUserDropdownOpen && (
                 <UserDropdown isOpen={isUserDropdownOpen} setIsOpen={setIsUserDropdownOpen} />
-              )}
+              )} */}
             </div>
           </div>
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default Header;

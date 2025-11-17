@@ -1,4 +1,4 @@
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 // import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
@@ -7,7 +7,7 @@ import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 // import type { UserWithProducts } from 'src/types';
 // import { fetchSellerById } from '../api/products';
 
-const UserPage = () => {
+function UserPage() {
   // const [seller, setSeller] = useState(null)(null);
   // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState<string | null>(null);
@@ -186,6 +186,6 @@ const UserPage = () => {
       </div>
     </>
   );
-};
+}
 
 export default UserPage;

@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import logoImage from '@images/CuddleMarketLogo.png';
+import logoImage from '@assets/images/CuddleMarketLogoImage.png';
 
-type SimpleHeaderProps = {
+interface SimpleHeaderProps {
   title: string;
-};
+}
 
-export const SimpleHeader = ({ title }: SimpleHeaderProps) => {
+export function SimpleHeader({ title }: SimpleHeaderProps) {
   return (
     <header className="sticky top-0 z-1 bg-primary">
       <div className="w-full max-w-[var(--container-max-width)] mx-auto px-lg py-md flex items-center gap-xl">
@@ -19,4 +19,4 @@ export const SimpleHeader = ({ title }: SimpleHeaderProps) => {
       </div>
     </header>
   );
-};
+}

@@ -6,10 +6,9 @@ interface AlarmPageProps {
   message: string;
 }
 
-const AlarmDetailDIV: React.FC<AlarmPageProps> = ({ image, message }) => {
+function AlarmDetailDIV({ image, message }: AlarmPageProps) {
   return (
-    <>
-      <div className="bg-white border-b border-gray-200 p-4 flex flex-col gap-lg">
+    <div className="bg-white border-b border-gray-200 p-4 flex flex-col gap-lg">
         <div className="flex items-center space-x-5  py-xs">
           <div>
             <img
@@ -21,11 +20,10 @@ const AlarmDetailDIV: React.FC<AlarmPageProps> = ({ image, message }) => {
           <div className="flex items-center"> {message} </div>
         </div>
       </div>
-    </>
   );
-};
+}
 
-const AlarmPage = () => {
+function AlarmPage() {
   return (
     <>
       {/* 채팅 페이지 코드 참조 */}
@@ -54,6 +52,6 @@ const AlarmPage = () => {
       </div>
     </>
   );
-};
+}
 
 export default AlarmPage;
