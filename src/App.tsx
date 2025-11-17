@@ -1,7 +1,9 @@
-import Footer from '@layout/Footer';
+// import './App.css';
+// vim 사용예시 커밋 작성
+
+import Footer from '@components/layout/Footer';
 import ChatButton from './features/chat/ChatButton';
 import AppRoutes from './routes/index';
-
 function App() {
   return (
     <>

@@ -1,4 +1,4 @@
-import ConfirmModal from '@common/confirmModal';
+import ConfirmModal from '@components/common/confirmModal';
 import { CONDITION_EN_TO_KO, PETS, stateStyleMap, STATUS_EN_TO_KO } from '@constants/constants';
 import { useUserStore } from '@store/userStore';
 import React, { useState } from 'react';

@@ -37,3 +37,13 @@
   --text-caption--line-height: 1.375;
   --text-caption--font-weight: 400;
 }
+
+/* src/styles/tokens.typography.css */
+/* theme 레이어에 타이포그래피 토큰 정의 */
+
+@theme {
+  /* 폰트 패밀리 */
+  --font-family-pretendard: 'Pretendard Variable';
+  --font-family-sans: 'Pretendard Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, monospace;
+}

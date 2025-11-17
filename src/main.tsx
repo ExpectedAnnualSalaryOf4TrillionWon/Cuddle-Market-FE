@@ -4,12 +4,17 @@ import App from './App';
 import './index.css';
 
 const enableMocking = async () => {
+  
   // 개발환경에서만 실행하기 위해, 개발환경이 아니면 함수 반환
   if (!import.meta.env.DEV) {
     return;
   }
+
+  
   // MSW 를 실행하기 위한 import
   const { worker } = await import('./mock/browser.ts');
+
+
   return worker.start({
     onUnhandledRequest(request, print) {
       if (
@@ -20,7 +25,6 @@ const enableMocking = async () => {
       ) {
         return;
       }
-      // 다른 unhandled 요청은 경고 출력
       print.warning();
     },
   });

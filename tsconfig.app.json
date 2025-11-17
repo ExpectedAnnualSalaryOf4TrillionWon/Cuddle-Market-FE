@@ -1,22 +1,49 @@
+// {
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       "@layout/*": ["./src/components/layout/*"],
+//       "@features/*": ["./src/features/*"],
+//       "@icons/*": ["./src/components/icons/*"],
+//       "@common/*": ["./src/components/common/*"],
+//       "@pages/*": ["./src/pages/*"],
+//       "@utils/*": ["./src/utils/*"],
+//       "@store/*": ["./src/store/*"],
+//       "@constants/*": ["./src/constants/*"],
+//       "@routes/*": ["./src/routes/*"],
+
+//     },
+//     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+//     "target": "ES2022",
+//     "useDefineForClassFields": true,
+//     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+//     "module": "ESNext",
+//     "skipLibCheck": true,
+
+//     /* Bundler mode */
+//     "moduleResolution": "bundler",
+//     "allowImportingTsExtensions": true,
+//     "verbatimModuleSyntax": true,
+//     "moduleDetection": "force",
+//     "noEmit": true,
+//     "jsx": "react-jsx",
+
+//     /* Linting */
+//     "strict": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "erasableSyntaxOnly": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "noUncheckedSideEffectImports": true
+//   },
+//   "include": ["src/**/*.ts", "src/**/*.tsx"]
+// }
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@layout/*": ["./src/components/layout/*"],
-      "@features/*": ["./src/features/*"],
-      "@icons/*": ["./src/components/icons/*"],
-      "@common/*": ["./src/components/common/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@store/*": ["./src/store/*"],
-      "@constants/*": ["./src/constants/*"],
-      "@routes/*": ["./src/routes/*"],
-
-    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2022",
+    "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -32,9 +59,31 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* alias 세팅 */
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@assets/*": ["src/assets/*"],
+      "@api/*": ["src/api/*"],
+      "@store/*": ["src/store/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@mock/*": ["src/mock/*"],
+      "@constants/*": ["src/constants/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@layout/*": ["./src/components/layout/*"],
+      "@common/*": ["./src/components/common/*"],
+      "@icons/*": ["./src/components/icons/*"],
+      "@features/*": ["./src/features/*"],
+      "@images/*": ["./public/assets/images/*"],
+      "@routes/*": ["./src/routes/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src"]
 }
