@@ -1,5 +1,5 @@
-import ConfirmModal from '@common/confirmModal';
-import ProductCard from '@layout/ProductCard';
+import ConfirmModal from '@components/common/confirmModal';
+import ProductCard from '@components/layout/ProductCard';
 import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
 import { BsBoxSeam, BsChat } from 'react-icons/bs';
