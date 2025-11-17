@@ -7,9 +7,9 @@ import { MdPhotoCamera } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/apiFetch';
 
-interface ProfileUpdateProps {
-  profile_image_url?: string;
-}
+// interface ProfileUpdateProps {
+//   profile_image_url?: string;
+// }
 
 function ProfileUpdate() {
   const { user, redirectUrl, setRedirectUrl, setUser, updateUserProfile } = useUserStore();

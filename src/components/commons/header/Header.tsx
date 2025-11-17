@@ -1,4 +1,5 @@
 import logoImage from '@assets/images/CuddleMarketLogoImage.png';
+import { Z_INDEX } from '@constants/ui';
 import { useRef, useState } from 'react';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoIosSearch } from 'react-icons/io';
@@ -10,7 +11,7 @@ import { cn } from '@utils/cn';
 
 // import { useOutsideClick } from '../hook/useOutsideClick';
 
-const Header = () => {
+function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   // const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
   // const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -137,6 +138,6 @@ const Header = () => {
       </div>
     </header>
   );
-};
+}
 
 export default Header;

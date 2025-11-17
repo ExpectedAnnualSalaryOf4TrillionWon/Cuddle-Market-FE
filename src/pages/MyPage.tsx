@@ -3,7 +3,7 @@ import userDefaultImage from '@assets/images/userDefault.svg';
 import MyList from '@src/components/layouts/myList';
 import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useUserStore } from '@store/userStore';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { apiFetch } from '../api/apiFetch';
