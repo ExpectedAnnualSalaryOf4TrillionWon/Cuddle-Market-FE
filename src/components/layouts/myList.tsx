@@ -1,5 +1,5 @@
 import { stateStyleMap, STATUS_EN_TO_KO, type TransactionStatus } from '@constants/constants';
-import UserDefaultImage from '@images/userDefault.svg';
+import UserDefaultImage from '@assets/images/userDefault.svg';
 import { useEffect, useState } from 'react';
 import { BsBoxSeam } from 'react-icons/bs';
 import { GrView } from 'react-icons/gr';

@@ -1,4 +1,4 @@
-import CuddleMarketLogoImage from '../../../public/assets/images/CuddleMarketLogoImage.png';
+import CuddleMarketLogoImage from '@assets/images/CuddleMarketLogoImage.png';
 
 const Footer = () => {
   return (

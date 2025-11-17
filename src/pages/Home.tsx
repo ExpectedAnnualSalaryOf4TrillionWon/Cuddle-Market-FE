@@ -1,6 +1,6 @@
 import { LOCATIONS } from '@constants/constants';
-import CategoryFilter from '@components/layout/CategoryFilter';
-import ProductCard from '@components/layout/ProductCard';
+import CategoryFilter from '@src/components/layouts/CategoryFilter';
+import ProductCard from '@src/components/layouts/ProductCard';
 import { useUserStore } from '@store/userStore';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiFetch } from '../api/apiFetch';

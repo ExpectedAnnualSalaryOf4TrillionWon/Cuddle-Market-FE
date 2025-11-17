@@ -1,4 +1,4 @@
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 // import { useEffect, useState } from 'react';
 import { BsChat } from 'react-icons/bs';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';

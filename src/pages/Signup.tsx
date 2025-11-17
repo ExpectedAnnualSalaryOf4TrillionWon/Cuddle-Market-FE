@@ -1,5 +1,5 @@
 import { LOCATIONS, type CityCode, type StateCode } from '@constants/constants';
-import logoImage from '@images/CuddleMarketLogoImage.png';
+import logoImage from '@assets/images/CuddleMarketLogoImage.png';
 import { useUserStore } from '@store/userStore';
 import { useEffect, useRef, useState } from 'react';
 import { CiCalendar, CiLocationOn, CiUser } from 'react-icons/ci';

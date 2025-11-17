@@ -1,4 +1,4 @@
-import ConfirmModal from '@components/common/confirmModal';
+import ConfirmModal from '@src/components/commons/confirmModal';
 import { CONDITION_EN_TO_KO, PETS, stateStyleMap, STATUS_EN_TO_KO } from '@constants/constants';
 import { useUserStore } from '@store/userStore';
 import React, { useState } from 'react';
@@ -7,7 +7,7 @@ import { FaHeart } from 'react-icons/fa';
 import { GoHeart } from 'react-icons/go';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import bowl from '../../../public/assets/images/bowl.jpg';
+import bowl from '@assets/images/bowl.jpg';
 import type { Product } from '../../types';
 const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
