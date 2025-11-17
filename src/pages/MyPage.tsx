@@ -1,7 +1,7 @@
-import ConfirmModal from '@common/confirmModal';
+import ConfirmModal from '@components/common/confirmModal';
 import userDefaultImage from '@images/userDefault.svg';
-import MyList from '@layout/myList';
-import { SimpleHeader } from '@layout/SimpleHeader';
+import MyList from '@components/layout/myList';
+import { SimpleHeader } from '@components/layout/SimpleHeader';
 import { useUserStore } from '@store/userStore';
 import React, { useEffect, useState } from 'react';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';

@@ -1,5 +1,5 @@
-import ConfirmModal from '@common/confirmModal';
-import { DropdownButton } from '@common/DropdownButton';
+import ConfirmModal from '@components/common/confirmModal';
+import { DropdownButton } from '@components/common/DropdownButton';
 import { useUserStore } from '@store/userStore';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

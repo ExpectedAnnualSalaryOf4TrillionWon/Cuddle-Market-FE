@@ -1,4 +1,4 @@
-import Header from '@common/Header';
+import Header from '@components/common/Header';
 import AlarmPage from '@pages/AlarmPage';
 import Home from '@pages/Home';
 
