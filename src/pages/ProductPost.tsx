@@ -1,4 +1,4 @@
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useEffect, useRef, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { IoCloseCircle } from 'react-icons/io5';

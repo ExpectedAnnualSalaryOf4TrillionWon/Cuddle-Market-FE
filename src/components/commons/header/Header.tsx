@@ -1,19 +1,18 @@
-import logoImage from '@images/CuddleMarketLogo.png';
+import logoImage from '@assets/images/CuddleMarketLogoImage.png';
 import { useRef, useState } from 'react';
 import { HiOutlineBellAlert } from 'react-icons/hi2';
 import { IoIosSearch } from 'react-icons/io';
 import { RxAvatar } from 'react-icons/rx';
 import { Link } from 'react-router-dom';
-import AlarmDropdown from '../layout/AlarmDropDown';
-import UserDropdown from '../layout/UserDropDown';
-
+// import AlarmDropdown from '../layout/AlarmDropDown';
+// import UserDropdown from '../layout/UserDropDown';
 
 // import { useOutsideClick } from '../hook/useOutsideClick';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  // const [isAlarmDropdownOpen, setIsAlarmDropdownOpen] = useState(false);
+  // const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const alarmRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
@@ -97,17 +96,17 @@ const Header = () => {
               <button
                 type="button"
                 className="cursor-pointer"
-                onClick={() => {
-                  setIsAlarmDropdownOpen(prev => !prev);
-                  setIsUserDropdownOpen(false);
-                }}
+                // onClick={() => {
+                //   setIsAlarmDropdownOpen(prev => !prev);
+                //   setIsUserDropdownOpen(false);
+                // }}
               >
                 <HiOutlineBellAlert className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isAlarmDropdownOpen && (
+              {/* {isAlarmDropdownOpen && (
                 <AlarmDropdown isOpen={isAlarmDropdownOpen} setIsOpen={setIsAlarmDropdownOpen} />
-              )}
+              )} */}
             </div>
 
             {/* 유저 드롭다운 호출 */}
@@ -115,17 +114,17 @@ const Header = () => {
               <button
                 type="button"
                 className="cursor-pointer"
-                onClick={() => {
-                  setIsUserDropdownOpen(prev => !prev);
-                  setIsAlarmDropdownOpen(false);
-                }}
+                // onClick={() => {
+                //   setIsUserDropdownOpen(prev => !prev);
+                //   setIsAlarmDropdownOpen(false);
+                // }}
               >
                 <RxAvatar className="text-3xl tablet:text-4xl" />
               </button>
 
-              {isUserDropdownOpen && (
+              {/* {isUserDropdownOpen && (
                 <UserDropdown isOpen={isUserDropdownOpen} setIsOpen={setIsUserDropdownOpen} />
-              )}
+              )} */}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logoImage from '@images/CuddleMarketLogo.png';
+import logoImage from '@assets/images/CuddleMarketLogoImage.png';
 
 type SimpleHeaderProps = {
   title: string;

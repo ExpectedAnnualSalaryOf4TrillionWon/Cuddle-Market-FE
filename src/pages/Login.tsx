@@ -1,5 +1,5 @@
-import logo from '@images/CuddleMarketLogoBase.png';
-import kakao from '@images/kakao.svg';
+import logo from '@assets/images/CuddleMarketLogoBase.png';
+import kakao from '@assets/images/kakao.svg';
 import { useUserStore } from '@store/userStore';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

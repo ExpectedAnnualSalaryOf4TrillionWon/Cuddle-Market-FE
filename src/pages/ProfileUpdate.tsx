@@ -1,6 +1,6 @@
 import { LOCATIONS, type StateCode } from '@constants/constants';
 import UserDefaultImage from '@images/userDefault.svg';
-import { SimpleHeader } from '@components/layout/SimpleHeader';
+import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useUserStore } from '@store/userStore';
 import { useRef, useState } from 'react';
 import { MdPhotoCamera } from 'react-icons/md';
