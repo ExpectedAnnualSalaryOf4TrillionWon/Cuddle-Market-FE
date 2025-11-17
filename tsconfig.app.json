@@ -65,6 +65,7 @@
     /* alias 세팅 */
     "baseUrl": ".",
     "paths": {
+      "@components/*": ["./src/components/*"],
       "@layout/*": ["./src/components/layout/*"],
       "@common/*": ["./src/components/common/*"],
       "@icons/*": ["./src/components/icons/*"],
