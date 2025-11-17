@@ -1,15 +1,5 @@
 {
   "files": [],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@layout/*": ["./src/components/layout/*"],
-      "@features/*": ["./src/features/*"],
-      "@icons/*": ["./src/components/icons/*"],
-      "@common/*": ["./src/components/common/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@utils/*": ["./src/utils/*"]
-    }
-  }
+  "exclude": ["src/mock/jobPosts.ts"]
 }
