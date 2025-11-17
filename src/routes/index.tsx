@@ -1,4 +1,4 @@
-import Header from '@layout/Header';
+import Header from '@common/Header';
 import AlarmPage from '@pages/AlarmPage';
 import Home from '@pages/Home';
 

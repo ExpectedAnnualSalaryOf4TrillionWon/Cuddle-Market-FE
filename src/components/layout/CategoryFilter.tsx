@@ -355,7 +355,7 @@ export function CategoryFilter({
           type="button"
           className="w-full items-center justify-between px-lg py-sm h-10 rounded-md bg-secondary/40 text-text-primary transition-all"
         >
-          <div className="flex items-center gap-sm">
+          <div className="flex items-center8 gap-sm">
             <FiFilter />
             <span className="bodyRegular">세부 필터</span>
             <span className="text-md font-bold  items-center justify-center px-sm py-[2px] gap-sm whitespace-nowrap overflow-hidden rounded-md bg-secondary border border-border caption text-text-primary">
