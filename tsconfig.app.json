@@ -76,7 +76,13 @@
       "@utils/*": ["src/utils/*"],
       "@mock/*": ["src/mock/*"],
       "@constants/*": ["src/constants/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@layouts/*": ["src/layouts/*"],
+      "@layout/*": ["./src/components/layout/*"],
+      "@common/*": ["./src/components/common/*"],
+      "@icons/*": ["./src/components/icons/*"],
+      "@features/*": ["./src/features/*"],
+      "@images/*": ["./public/assets/images/*"],
+      "@routes/*": ["./src/routes/*"]
     }
   },
   "include": ["src"]

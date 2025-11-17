@@ -21,6 +21,12 @@ export default defineConfig({
       '@mock': fileURLToPath(new URL('./src/mock', import.meta.url)),
       '@constants': fileURLToPath(new URL('./src/constants', import.meta.url)),
       '@layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),
+      '@layout': fileURLToPath(new URL('./src/components/layout', import.meta.url)),
+      '@common': fileURLToPath(new URL('./src/components/common', import.meta.url)),
+      '@icons': fileURLToPath(new URL('./src/components/icons', import.meta.url)),
+      '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
+      '@images': fileURLToPath(new URL('./public/assets/images', import.meta.url)),
+      '@routes': fileURLToPath(new URL('./src/routes', import.meta.url)),
     },
   },
 });
