@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
 // import PageLink from '@components/commons/page-link/PageLink'
-const ACCOUNT = 'https://account.ozcoding.site'
-const returnTo = encodeURIComponent(window.location.href)
+// const ACCOUNT = 'https://account.ozcoding.site'
+// const returnTo = encodeURIComponent(window.location.href)
 export default function AuthMenu() {
   return (
     <>
