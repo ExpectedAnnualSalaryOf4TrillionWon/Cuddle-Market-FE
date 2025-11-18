@@ -4,8 +4,14 @@ import kakao from '@assets/images/kakao.svg'
 import google from '@assets/images/google.svg'
 import { Input } from '@src/components/commons/Input'
 import { Button } from '@src/components/commons/button/Button'
+import { useState } from 'react'
 
 function Login() {
+  const [inputValue, setInputValue] = useState('')
+  const handleEmail = () => {
+
+  }
+
   return (
     <div className="flex h-screen items-center justify-center bg-[#F3F4F6]">
       <div className="flex min-w-[400px] flex-col items-center gap-10 rounded-[20px] bg-white px-5 py-10">
@@ -39,7 +45,14 @@ function Login() {
           <fieldset className="flex flex-col gap-3">
             <legend className="sr-only">로그인폼</legend>
             <div className="flex flex-col gap-2">
-              <Input type="email" placeholder="아이디 (example@cuddle.com)" backgroundColor="bg-primary-50" size="text-sm" />
+              <Input 
+              type="email" 
+              value={inputValue}
+              placeholder="아이디 (example@cuddle.com)" 
+              backgroundColor="bg-primary-50" 
+              size="text-sm" 
+              onChange={(e) => setInputValue(e.target.value)}
+              />
               <Input
                 type="password"
                 placeholder="비밀번호 (10~30자의 영문 대소문자, 숫자, 특수문자 포함)"
@@ -50,7 +63,7 @@ function Login() {
             <Link to={ROUTES.FIND_PASSWORD} className="text-primary-300 text-sm font-medium">
               비밀번호를 잊으셨나요?
             </Link>
-            <Button size="md" className="bg-primary-300 w-full text-white">
+            <Button size="md" className="bg-primary-300 w-full text-white" type='submit'>
               일반회원 로그인
             </Button>
           </fieldset>

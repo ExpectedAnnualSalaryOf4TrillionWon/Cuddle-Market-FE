@@ -15,7 +15,7 @@ interface SearchBarProps {
 export function SearchBar({
   value = '',
   // onSearch,
-  placeholder = '검색어 입력',
+  placeholder = '원하는 반려동물 ',
   // delay = 500,
   className,
 }: SearchBarProps) {
@@ -31,8 +31,8 @@ export function SearchBar({
       <Input
         type="text"
         value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
         placeholder={placeholder}
+        onChange={(e) => setKeyword(e.target.value)}
         icon={SearchIcon}
         border
         borderColor="border-gray-100"
