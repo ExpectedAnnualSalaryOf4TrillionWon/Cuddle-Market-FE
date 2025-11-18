@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 // import { useOutsideClick } from '@src/hooks/useOutsideClick'
 // import Icon from '@components/commons/Icon'
-import { Bell as BellIcon } from 'lucide-react'
+// import { Bell as BellIcon } from 'lucide-react'
 // import NotificationsDropdown from './NotificationsDropdown'
 // import { useUnreadCountQuery } from '@hooks/useNotifications'
 
@@ -20,7 +20,7 @@ export default function NotificationButton({
 }: NotificationButtonProps) {
   // const { unreadCount } = useUnreadCountQuery()
 
-  const notificationsDropdownRef = useRef<HTMLDivElement>(null)
+  // const notificationsDropdownRef = useRef<HTMLDivElement>(null)
   const notificationButtonRef = useRef<HTMLDivElement>(null)
 
   const handleNotificationToggle = () => {
