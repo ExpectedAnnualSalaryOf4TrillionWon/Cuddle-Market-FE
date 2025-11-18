@@ -2,6 +2,7 @@ import { Search as SearchIcon } from 'lucide-react'
 import { useState } from 'react'
 // import { useDebounce } from '@hooks/useDebounce'
 import { cn } from '@src/utils/cn'
+import { Input } from '@components/commons/Input'
 
 interface SearchBarProps {
   value?: string // 초기값
@@ -26,22 +27,16 @@ export function SearchBar({
   //   onSearch(debouncedKeyword)
   // }, [debouncedKeyword, onSearch])
   return (
-    <div
-      className={cn(
-        'focus-within:border-primary-500 relative flex h-10 min-w-[700px] items-center rounded-lg border border-gray-100 bg-white pl-9',
-        className
-      )}
-    >
-      <div className="absolute left-0 flex h-full w-9 items-center justify-center">
-        <SearchIcon className="h-4 w-4 text-gray-400" strokeWidth={1.3} />
-      </div>
-      <input
+    <div className={cn('h-10 min-w-[700px]', className)}>
+      <Input
         type="text"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         placeholder={placeholder}
-        aria-label={placeholder}
-        className="w-full placeholder:text-gray-400 focus:border-transparent focus:outline-none"
+        icon={SearchIcon}
+        border
+        borderColor="border-gray-100"
+        backgroundColor="bg-white"
       />
     </div>
   )

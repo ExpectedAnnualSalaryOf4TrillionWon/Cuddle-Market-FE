@@ -33,6 +33,11 @@ textarea::placeholder {
   font-family: 'Pretendard Variable';
 }
 
+/* Logo 폰트 */
+.logo {
+  font-family: 'BMJUA', sans-serif;
+}
+
 /* Chrome / Edge / Safari */
 input[type='date']::-webkit-calendar-picker-indicator {
   opacity: 0; /* 안 보이게 */
