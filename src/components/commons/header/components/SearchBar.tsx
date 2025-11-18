@@ -1,5 +1,5 @@
 import { Search as SearchIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 // import { useDebounce } from '@hooks/useDebounce'
 import { cn } from '@src/utils/cn'
 
