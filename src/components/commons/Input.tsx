@@ -27,7 +27,7 @@ export function Input({
   return (
     <div
       className={cn(
-        'relative flex w-full items-center overflow-hidden rounded-lg transition-colors',
+        'relative flex w-full h-full items-center overflow-hidden rounded-lg transition-colors',
         border && 'focus-within:border-primary-500 border',
         border && borderColor,
         backgroundColor,
