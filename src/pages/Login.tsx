@@ -8,9 +8,7 @@ import { useState } from 'react'
 
 function Login() {
   const [inputValue, setInputValue] = useState('')
-  const handleEmail = () => {
 
-  }
 
   return (
     <div className="flex h-screen items-center justify-center bg-[#F3F4F6]">
