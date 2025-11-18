@@ -1,83 +1,63 @@
-import logo from '@assets/images/CuddleMarketLogoBase.png';
-import kakao from '@assets/images/kakao.svg';
-import { useUserStore } from '@store/userStore';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { ROUTES } from '@src/constants/routes'
+import { Link } from 'react-router-dom'
+import kakao from '@assets/images/kakao.svg'
+import google from '@assets/images/google.svg'
+import { Input } from '@src/components/commons/Input'
+import { Button } from '@src/components/commons/button/Button'
 
-//  React.FC : "Login은 React 함수형 컴포넌트야!" 라고 타입스크립트에게 알려주는 것
 function Login() {
-  const location = useLocation();
-  const setRedirectUrl = useUserStore(state => state.setRedirectUrl);
-  const KAKAO_CLIENT_ID: string = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
-  const REDIRECT_URI: string =
-    import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`;
-
-  // 카카오 로그인 시작
-  const handleKakaoLogin = (): void => {
-    console.log('카카오 로그인 시작');
-
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI,
-    )}`;
-
-    console.log(kakaoAuthUrl);
-
-    // 카카오 로그인 페이지로 이동
-    window.location.href = kakaoAuthUrl.toString();
-  };
-  // 로그인 페이지 접근 시 이전 페이지 저장
-  useEffect(() => {
-    // state로 전달된 from이 있으면 사용, 없으면 document.referrer 사용
-    const from = location.state?.from || document.referrer;
-
-    if (from) {
-      // 로그인 관련 페이지가 아닌 경우만 저장
-      const isAuthPage =
-        from.includes('/signin') ||
-        from.includes('/signup') ||
-        from.includes('/oauth') ||
-        from.includes('/kakao');
-
-      if (!isAuthPage) {
-        // URL 객체로 파싱하여 pathname만 저장
-        try {
-          const url = new URL(from);
-          // 같은 도메인인 경우만 저장
-          if (url.origin === window.location.origin) {
-            setRedirectUrl(url.pathname); // localStorage 대신 zustand 사용
-            console.log(' 이전 페이지 저장:', url.pathname);
-          }
-        } catch {
-          // from이 상대 경로인 경우
-          if (from.startsWith('/')) {
-            setRedirectUrl(from); // localStorage 대신 zustand 사용
-            console.log('이전 페이지 저장:', from);
-          }
-        }
-      }
-    }
-  }, [location, setRedirectUrl]);
-
   return (
-    <div className="flex items-center justify-center bg-primary h-[90vh] px-5">
-      <div className="bg-light/90 flex flex-col justify-center items-center gap-md rounded-xl p-2xl shadow-xl w-full max-w-[500px] min-w-[250px] h-[400px] min-h-[350px]">
-        <div className="w-[40vw] tablet:w-[15vw] max-w-[300px] h-auto flex items-center justify-center ">
-          <img src={logo} alt="Cuddle Market 로고" className="w-full h-full mb-xl object-contain" />
-        </div>
-
-        <button
-          type="submit"
-          onClick={handleKakaoLogin}
-          className="flex w-full items-center justify-center gap-sm rounded-xl bg-[#fee500] px-2 py-2 text-bodySmall tablet:text-bodyRegular font-semibold shadow-lg cursor-pointer"
-        >
-          <div className="w-lg">
-            <img src={kakao} className="w-full h-full object-cover" />
+    <div className="flex h-screen items-center justify-center bg-[#F3F4F6]">
+      <div className="flex min-w-[400px] flex-col items-center gap-10 rounded-[20px] bg-white px-5 py-10">
+        {/* 타이틀 섹션 */}
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="heading-h2">로그인</h2>
+          <div className="flex items-center gap-2">
+            <span className="">아직 계정이 없으신가요?</span>
+            <Link to={ROUTES.SIGNUP} className="text-primary-600">
+              회원가입하기
+            </Link>
           </div>
-          <span className="text-lg">카카오톡으로 시작하기</span>
-        </button>
+        </div>
+        {/* 소셜 로그인 버튼 */}
+        <div className="flex w-full flex-col gap-2">
+          <button className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[#fee500] px-8 py-2">
+            <div className="h-auto w-4">
+              <img src={kakao} className="h-full w-full object-cover" />
+            </div>
+            <span className="">카카오 간편 로그인</span>
+          </button>
+          <button className="flex w-full items-center justify-center gap-2.5 rounded-lg bg-[#F2F2F2] px-8 py-2">
+            <div className="h-auto w-4">
+              <img src={google} className="h-full w-full object-cover" />
+            </div>
+            <span className="">구글 간편 로그인</span>
+          </button>
+        </div>
+        {/* 로그인 폼 */}
+        <form action="" className="w-full">
+          <fieldset className="flex flex-col gap-3">
+            <legend className="sr-only">로그인폼</legend>
+            <div className="flex flex-col gap-2">
+              <Input type="email" placeholder="아이디 (example@cuddle.com)" backgroundColor="bg-primary-50" size="text-sm" />
+              <Input
+                type="password"
+                placeholder="비밀번호 (10~30자의 영문 대소문자, 숫자, 특수문자 포함)"
+                backgroundColor="bg-primary-50"
+                size="text-sm"
+              />
+            </div>
+            <Link to={ROUTES.FIND_PASSWORD} className="text-primary-300 text-sm font-medium">
+              비밀번호를 잊으셨나요?
+            </Link>
+            <Button size="md" className="bg-primary-300 w-full text-white">
+              일반회원 로그인
+            </Button>
+          </fieldset>
+        </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

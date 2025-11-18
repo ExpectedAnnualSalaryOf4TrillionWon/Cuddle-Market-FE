@@ -1,36 +1,38 @@
 @layer utilities {
   /* 헤딩 */
-  /* @apply 키워드를 사용하면 (예시: text-heading1) 하나의 클래스네임의 Tailwind 클래스가 자동 생성됩니다. */
-  .heading1 {
-    @apply text-heading1;
-  }
-  .heading2 {
-    @apply text-heading2;
-  }
-  .heading3 {
-    @apply text-heading3;
-  }
-  .heading4 {
-    @apply text-heading4;
-  }
-  .heading5 {
-    @apply text-heading5;
+  .heading-h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    font-weight: var(--text-h1--weight);
+    letter-spacing: var(--text-h1--tracking);
   }
 
-  /* 본문 */
-  .bodyRegular {
-    @apply text-bodyRegular;
-  }
-  .bodyLarge {
-    @apply text-bodyLarge;
-  }
-  .bodySmall {
-    @apply text-bodySmall;
+  .heading-h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: var(--text-h2--weight);
+    letter-spacing: var(--text-h2--tracking);
   }
 
-  /* 캡션 */
-  .caption {
-    @apply text-caption;
+  .heading-h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: var(--text-h3--weight);
+    letter-spacing: var(--text-h3--tracking);
+  }
+
+  .heading-h4 {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    font-weight: var(--text-h4--weight);
+    letter-spacing: var(--text-h4--tracking);
+  }
+
+  .heading-h5 {
+    font-size: var(--text-h5);
+    line-height: var(--text-h5--line-height);
+    font-weight: var(--text-h5--weight);
+    letter-spacing: var(--text-h5--tracking);
   }
 
   .blind {
@@ -47,7 +49,7 @@
   }
 
   .nobreakstyle {
-    @apply whitespace-nowrap break-keep overflow-hidden text-ellipsis;
+    @apply overflow-hidden break-keep text-ellipsis whitespace-nowrap;
   }
 
   /* 기본 line-clamp 유틸리티 */

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import logoImage from '@assets/images/CuddleMarketLogoImage.png';
 
-type SimpleHeaderProps = {
+interface SimpleHeaderProps {
   title: string;
-};
+}
 
 export function SimpleHeader({ title }: SimpleHeaderProps) {
   return (
