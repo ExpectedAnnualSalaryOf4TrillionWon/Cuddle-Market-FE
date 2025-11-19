@@ -9,7 +9,7 @@ import MyPage from '@pages/MyPage'
 // import ProductDetail from '@pages/ProductDetail';
 // import ProductPost from '@pages/ProductPost';
 // import ProfileUpdate from '@pages/ProfileUpdate';
-import Signup from '@pages/Signup'
+import Signup from '@src/pages/signup/Signup'
 // import UserPage from '@pages/UserPage';
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from '@src/components/layouts/MainLayout'
