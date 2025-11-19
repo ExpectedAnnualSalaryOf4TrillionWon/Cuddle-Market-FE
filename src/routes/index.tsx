@@ -1,19 +1,19 @@
 // import Header from '@src/components/commons/header/Header';
 // import AlarmPage from '@pages/AlarmPage';
-import Home from '@pages/Home';
+import Home from '@pages/Home'
 
-import KakaoCallback from '@pages/KakaoCallback';
+import KakaoCallback from '@pages/KakaoCallback'
 
-import Login from '@pages/Login';
-import MyPage from '@pages/MyPage';
+import Login from '@src/pages/login/Login'
+import MyPage from '@pages/MyPage'
 // import ProductDetail from '@pages/ProductDetail';
 // import ProductPost from '@pages/ProductPost';
 // import ProfileUpdate from '@pages/ProfileUpdate';
-import Signup from '@pages/Signup';
+import Signup from '@pages/Signup'
 // import UserPage from '@pages/UserPage';
-import { Route, Routes } from 'react-router-dom';
-import MainLayout from '@src/components/layouts/MainLayout';
-import { ROUTES } from '@src/constants/routes';
+import { Route, Routes } from 'react-router-dom'
+import MainLayout from '@src/components/layouts/MainLayout'
+import { ROUTES } from '@src/constants/routes'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -21,7 +21,7 @@ const routes = [
   { path: ROUTES.SIGNUP, element: <Signup /> },
   { path: ROUTES.MYPAGE, element: <MyPage /> },
   // { path: '/test/UI', element: <TestUIPage /> },
-];
+]
 // const WithHeaderLayout = () => (
 //   <div className="min-h-screen ">
 //     <Header />
@@ -51,7 +51,7 @@ function AppRoutes() {
 
       {/* Header 미포함 구간: Signup, MyPage */}
       <Route element={<MainLayout />}>
-        {routes.map(route => (
+        {routes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
         {/* <Route path="/signin" element={<Login />} />
@@ -69,7 +69,7 @@ function AppRoutes() {
 
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
-  );
+  )
 }
 
-export default AppRoutes;
+export default AppRoutes
