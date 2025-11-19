@@ -12,12 +12,11 @@ interface LoginFormValues {
 export function LoginForm() {
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
-    register, // onChange 등의 이벤트 객체 생성 : input에 “이 필드는 폼의 어떤 이름이다”라고 연결해주는 함수
-    watch, // register를 통해 받은 모든 값 확인
+    register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     formState: { errors }, // errors: register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<LoginFormValues>() // 폼에서 관리할 필드들의 타입(이름) 정의.
 
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = () => {
     console.log('제출')
   }
 
