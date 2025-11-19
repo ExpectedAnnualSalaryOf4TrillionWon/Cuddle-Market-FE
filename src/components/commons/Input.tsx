@@ -8,9 +8,10 @@ interface InputProps {
   border?: boolean
   borderColor?: string
   backgroundColor?: string
-  value?: string
+  value?: string | number
   size?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  [key: string]: any // register에서 전달하는 다른 props들을 받기 위해
 }
 
 export function Input({
@@ -23,11 +24,12 @@ export function Input({
   value,
   size = 'text-base',
   onChange,
+  ...rest // 나머지 모든 props (register가 전달하는 ref, name 등)
 }: InputProps) {
   return (
     <div
       className={cn(
-        'relative flex w-full h-full items-center overflow-hidden rounded-lg transition-colors',
+        'relative flex h-full w-full items-center overflow-hidden rounded-lg transition-colors',
         border && 'focus-within:border-primary-500 border',
         border && borderColor,
         backgroundColor,
@@ -51,6 +53,7 @@ export function Input({
           Icon ? 'pl-0' : 'px-3',
           size
         )}
+        {...rest}
       />
     </div>
   )
