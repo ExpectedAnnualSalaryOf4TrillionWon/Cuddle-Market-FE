@@ -12,15 +12,20 @@ interface InputFieldProps {
   backgroundColor?: string
   size?: string
   error?: FieldError
+  checkResult?: { status: string; message: string }
   classname?: string
   registration: UseFormRegisterReturn
+  id?: string
 }
 
-export function InputField({ error, registration, classname, ...inputProps }: InputFieldProps) {
+export function InputField({ error, checkResult, registration, classname, id, ...inputProps }: InputFieldProps) {
   return (
     <div className={cn('flex flex-col gap-1', classname)}>
-      <Input {...inputProps} {...registration} />
+      <Input {...inputProps} {...registration} id={id} />
       {error && <p className="text-danger-500 text-xs font-semibold">{error.message}</p>}
+      {checkResult && (
+        <p className={cn('text-xs font-semibold', checkResult.status === 'error' ? 'text-danger-500' : 'text-[#22c55e]')}>{checkResult.message}</p>
+      )}
     </div>
   )
 }
