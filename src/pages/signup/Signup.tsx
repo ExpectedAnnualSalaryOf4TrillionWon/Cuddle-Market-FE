@@ -143,14 +143,14 @@ function Signup() {
         const data: CreateUserResponse = await response.json()
         console.log('📍 응답 데이터:', data)
 
-        updateUserProfile({
-          nickname: data.nickname,
-          name: data.name,
-          birthday: data.birthday,
-          state_name: data.state_name,
-          city_name: data.city_name,
-          profile_completed: true,
-        })
+        // updateUserProfile({
+        //   nickname: data.nickname,
+        //   name: data.name,
+        //   birthDate: data.birthday,
+        //   state_name: data.state_name,
+        //   city_name: data.city_name,
+        //   profile_completed: true,
+        // })
 
         if (redirectUrl) {
           const targetUrl = redirectUrl

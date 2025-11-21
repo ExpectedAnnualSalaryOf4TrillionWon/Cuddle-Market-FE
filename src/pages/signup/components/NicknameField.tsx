@@ -1,7 +1,7 @@
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { InputWithButton } from '@src/components/commons/InputWithButton'
 import type { SignUpFormValues } from './SignUpForm'
-import { type UseFormRegister, type FieldErrors, type UseFormWatch } from 'react-hook-form'
+import { type UseFormRegister, type FieldErrors, type UseFormWatch, type UseFormClearErrors } from 'react-hook-form'
 import { signupValidationRules } from '../validationRules'
 import { checkNickname } from '@src/api/auth'
 import { useState } from 'react'
@@ -10,9 +10,11 @@ interface NicknameFieldProps {
   watch: UseFormWatch<SignUpFormValues>
   register: UseFormRegister<SignUpFormValues>
   errors: FieldErrors<SignUpFormValues>
+  setIsNicknameVerified: (verified: boolean) => void
+  clearErrors: UseFormClearErrors<SignUpFormValues>
 }
 
-export function NicknameField({ register, errors, watch }: NicknameFieldProps) {
+export function NicknameField({ register, errors, watch, setIsNicknameVerified, clearErrors }: NicknameFieldProps) {
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
     message: string
@@ -30,18 +32,22 @@ export function NicknameField({ register, errors, watch }: NicknameFieldProps) {
           status: 'success',
           message: response.message, // "사용 가능한 닉네임입니다."
         })
+        setIsNicknameVerified(true)
+        clearErrors('nickname')
       } else {
         // 중복 (data: false)
         setCheckResult({
           status: 'error',
           message: response.message, // "이미 사용 중인 닉네임입니다."
         })
+        setIsNicknameVerified(false)
       }
     } catch {
       setCheckResult({
         status: 'error',
         message: '닉네임 확인 중 오류가 발생했습니다.',
       })
+      setIsNicknameVerified(false)
     }
   }
 

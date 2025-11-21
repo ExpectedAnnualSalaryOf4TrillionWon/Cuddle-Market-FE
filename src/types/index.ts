@@ -1,23 +1,15 @@
+import type { Province } from '@src/constants/cities'
+
 // ========== 유저 관련 타입 ==========
 export interface User {
   id: number
-  provider?: string
   email?: string
   name: string
   nickname: string
-  profile_image?: string
-  birthday: string
-  is_active: boolean
-  is_staff: boolean
-  is_superuser: boolean
-  profile_completed: boolean
-  last_login: string
-  created_at: string
-
-  state_name?: string // 시/도
-  city_name?: string
-  seller_products?: Product[]
-  seller_images?: string
+  birthDate: string
+  profile_completed?: boolean
+  addressSido: string
+  addressGugun: string
 }
 
 // ========== 인증 관련 타입 ==========
@@ -51,12 +43,9 @@ export interface NicknameCheckResponse {
 }
 
 export interface EmailCheckResponse {
-  code: {
-    code: number
-    message: string
-  }
+  code: string
   message: string
-  data: boolean // true: 사용 가능, false: 중복
+  data: string
 }
 
 export interface EmailValidCodeResponse {
@@ -66,6 +55,59 @@ export interface EmailValidCodeResponse {
   }
   message: string
   data: boolean // true: 사용 가능, false: 중복
+}
+
+export interface SignUpRequestData {
+  email: string
+  password: string
+  name: string
+  nickname: string
+  birthDate: string
+  addressSido: Province | ''
+  addressGugun: string
+}
+
+export interface SignUpResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    id: number
+    email: string
+    name: string
+    nickname: string
+    birthDate: string
+    addressSido: string
+    addressGugun: string
+  }
+}
+
+export interface LoginRequestData {
+  email: string
+  password: string
+}
+
+export interface LoginResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    accessToken: string
+    refreshToken: string
+    user: {
+      id: number
+      email: string
+      name: string
+      nickname: string
+      birthDate: string
+      addressSido: string
+      addressGugun: string
+    }
+  }
 }
 
 // ========== 필터링 관련 타입 ==========
