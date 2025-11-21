@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
 import { useForm } from 'react-hook-form'
 import { InputField } from '@src/components/commons/InputField'
+import { login } from '@src/api/auth'
 
 interface LoginFormValues {
   email: string
@@ -10,14 +11,22 @@ interface LoginFormValues {
 }
 
 export function LoginForm() {
+  const navigate = useNavigate()
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     formState: { errors }, // errors: register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<LoginFormValues>() // 폼에서 관리할 필드들의 타입(이름) 정의.
 
-  const onSubmit = () => {
+  const onSubmit = async (data: LoginFormValues) => {
     console.log('제출')
+    try {
+      const response = await login(data)
+      console.log('로그인 성공:', response)
+      navigate('/')
+    } catch (error) {
+      console.error('로그인 실패:', error)
+    }
   }
 
   return (
@@ -67,8 +76,8 @@ export function LoginForm() {
             비밀번호를 잊으셨나요?
           </Link>
         </div>
-        <Button size="md" className="bg-primary-300 w-full text-white" type="submit">
-          일반회원 로그인
+        <Button size="md" className="bg-primary-300 w-full cursor-pointer text-white" type="submit">
+          로그인
         </Button>
       </fieldset>
     </form>
