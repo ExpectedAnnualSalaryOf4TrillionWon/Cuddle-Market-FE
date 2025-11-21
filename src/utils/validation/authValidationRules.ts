@@ -1,0 +1,33 @@
+import type { RegisterOptions } from 'react-hook-form'
+
+/**
+ * 인증 관련 폼(로그인, 회원가입)에서 공통으로 사용되는 validation 규칙
+ */
+export const authValidationRules = {
+  email: {
+    required: '이메일을 입력해주세요',
+    pattern: {
+      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      message: '이메일 형식이 올바르지 않습니다',
+    },
+  } satisfies RegisterOptions,
+
+  password: {
+    required: '비밀번호를 입력해주세요',
+    minLength: {
+      value: 10,
+      message: '비밀번호는 최소 10자 이상이어야 합니다',
+    },
+    maxLength: {
+      value: 30,
+      message: '비밀번호는 최대 30자까지 가능합니다',
+    },
+    pattern: {
+      value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).+$/,
+      message: '영문 대소문자, 숫자, 특수문자를 모두 포함해야 합니다',
+    },
+  } satisfies RegisterOptions,
+  emailCode: {
+    required: '전송된 코드를 입력해주세요',
+  } satisfies RegisterOptions,
+} as const

@@ -10,6 +10,7 @@ interface InputProps {
   backgroundColor?: string
   value?: string | number
   size?: string
+  id?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   [key: string]: any // register에서 전달하는 다른 props들을 받기 위해
 }
@@ -24,6 +25,7 @@ export function Input({
   value,
   size = 'text-base',
   onChange,
+  id,
   ...rest // 나머지 모든 props (register가 전달하는 ref, name 등)
 }: InputProps) {
   return (
@@ -38,17 +40,18 @@ export function Input({
     >
       {Icon && (
         <div className="absolute left-0 flex h-full w-9 items-center justify-center">
-          <Icon className="h-4 w-4 text-gray-400" strokeWidth={1.3} />
+          <Icon className="h-4 w-4 text-gray-400" strokeWidth={2} />
         </div>
       )}
       <input
+        id={id}
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         aria-label={placeholder}
         className={cn(
-          'w-full py-[13px] placeholder:text-gray-400 focus:border-transparent focus:outline-none',
+          'w-full py-3 placeholder:text-gray-400 focus:border-transparent focus:outline-none',
           backgroundColor,
           Icon ? 'pl-0' : 'px-3',
           size

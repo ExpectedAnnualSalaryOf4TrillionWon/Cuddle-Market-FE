@@ -15,7 +15,7 @@ interface SearchBarProps {
 export function SearchBar({
   value = '',
   // onSearch,
-  placeholder = '원하는 반려동물 ',
+  placeholder = '원하는 반려동물 용품을 검색해보세요',
   // delay = 500,
   className,
 }: SearchBarProps) {
@@ -27,7 +27,7 @@ export function SearchBar({
   //   onSearch(debouncedKeyword)
   // }, [debouncedKeyword, onSearch])
   return (
-    <div className={cn('h-10 min-w-[700px]', className)}>
+    <div className={cn('h-10 max-w-[700px] flex-1', className)}>
       <Input
         type="text"
         value={keyword}

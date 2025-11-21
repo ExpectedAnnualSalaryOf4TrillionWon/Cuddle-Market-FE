@@ -4,7 +4,7 @@ import MyList from '@src/components/layouts/myList';
 import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
 import { useUserStore } from '@store/userStore';
 import { useEffect, useState } from 'react';
-import { CiCalendar, CiLocationOn } from 'react-icons/ci';
+import { CiLocationOn } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { apiFetch } from '../api/apiFetch';
 
@@ -17,10 +17,10 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]['id'];
 
-const formatJoinDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
-};
+// const formatJoinDate = (dateString: string): string => {
+//   const date = new Date(dateString);
+//   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 가입`;
+// };
 
 function MyPage() {
   const { user: storeUser } = useUserStore();
@@ -143,16 +143,16 @@ function MyPage() {
               <div className="flex items-center gap-sm">
                 <CiLocationOn />
                 <span className="bodySmall text-text-primary">
-                  {currentUser.state_name} {currentUser.city_name}
+                  {currentUser.addressSido} {currentUser.addressGugun}
                 </span>
               </div>
               {/* 가입일 */}
-              <div className="flex items-center gap-sm">
+              {/* <div className="flex items-center gap-sm">
                 <CiCalendar />
                 <span className="bodySmall text-text-primary">
                   가입일 : {currentUser.created_at ? formatJoinDate(currentUser.created_at) : ''}
                 </span>
-              </div>
+              </div> */}
             </div>
             <Link
               to="/profile-update"

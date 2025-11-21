@@ -6,14 +6,9 @@ import Navigation from './components/Navigation'
 
 function Header() {
   return (
-    <header
-      className={cn(
-        'sticky top-0 flex h-24 w-full items-center justify-center bg-primary-200',
-        `${Z_INDEX.HEADER}`
-      )}
-    >
-      <div className="max-w-7xl w-full px-2.5">
-        <div className="flex items-center justify-between gap-lg">
+    <header className={cn('bg-primary-200 sticky top-0 flex h-24 w-full items-center justify-center', `${Z_INDEX.HEADER}`)}>
+      <div className="w-full max-w-7xl px-2.5">
+        <div className="gap-lg flex items-center justify-between">
           <Logo />
           <SearchBar />
           <Navigation />
