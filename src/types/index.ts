@@ -41,6 +41,83 @@ export interface CreateUserResponse {
   city_name: string;
 }
 
+export interface NicknameCheckResponse {
+  code: {
+    code: number;
+    message: string;
+  };
+  message: string;
+  data: boolean; // true: 사용 가능, false: 중복
+}
+
+export interface EmailCheckResponse {
+  code: string;
+  message: string;
+  data: string;
+}
+
+export interface EmailValidCodeResponse {
+  code: {
+    code: number;
+    message: string;
+  };
+  message: string;
+  data: boolean; // true: 사용 가능, false: 중복
+}
+
+export interface SignUpRequestData {
+  email: string;
+  password: string;
+  name: string;
+  nickname: string;
+  birthDate: string;
+  addressSido: string;
+  addressGugun: string;
+}
+
+export interface SignUpResponse {
+  code: {
+    code: number;
+    message: string;
+  };
+  message: string;
+  data: {
+    id: number;
+    email: string;
+    name: string;
+    nickname: string;
+    birthDate: string;
+    addressSido: string;
+    addressGugun: string;
+  };
+}
+
+export interface LoginRequestData {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  code: {
+    code: number;
+    message: string;
+  };
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      id: number;
+      email: string;
+      name: string;
+      nickname: string;
+      birthDate: string;
+      addressSido: string;
+      addressGugun: string;
+    };
+  };
+}
+
 // ========== 필터링 관련 타입 ==========
 export interface FilterApiResponse {
   categories: CategoryData[];
