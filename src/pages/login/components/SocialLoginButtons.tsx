@@ -1,14 +1,14 @@
 import { Button } from '@src/components/commons/button/Button'
 import kakao from '@assets/images/kakao.svg'
 import google from '@assets/images/google.svg'
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useUserStore } from '@src/store/userStore'
-const REDIRECT_URI: string = import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`
+// import { useEffect } from 'react'
+// import { useLocation } from 'react-router-dom'
+// import { useUserStore } from '@src/store/userStore'
+// const REDIRECT_URI: string = import.meta.env.VITE_KAKAO_REDIRECT_URI || `${window.location.origin}/oauth/kakao/callback`
 
 export function SocialLoginButtons() {
-  const location = useLocation()
-  const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
+  // const location = useLocation()
+  // const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
   // const handleKakaoLogin = (): void => {
   //   console.log('카카오 로그인 시작')
 

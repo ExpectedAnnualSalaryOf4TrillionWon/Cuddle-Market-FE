@@ -1,5 +1,5 @@
 import { Button } from '@src/components/commons/button/Button'
-import { useRef } from 'react'
+// import { useRef } from 'react'
 // import { useOutsideClick } from '@src/hooks/useOutsideClick'
 // import Icon from '@components/commons/Icon'
 import { Bell as BellIcon } from 'lucide-react'
@@ -14,24 +14,24 @@ interface NotificationButtonProps {
 }
 
 export default function NotificationButton({
-  isNotificationOpen,
-  setIsNotificationOpen,
-  isUserMenuOpen,
-  setIsUserMenuOpen,
+  isNotificationOpen: _isNotificationOpen,
+  setIsNotificationOpen: _setIsNotificationOpen,
+  isUserMenuOpen: _isUserMenuOpen,
+  setIsUserMenuOpen: _setIsUserMenuOpen,
 }: NotificationButtonProps) {
   // const { unreadCount } = useUnreadCountQuery()
 
   // const notificationsDropdownRef = useRef<HTMLDivElement>(null)
-  const notificationButtonRef = useRef<HTMLDivElement>(null)
+  // const notificationButtonRef = useRef<HTMLDivElement>(null)
 
-  const handleNotificationToggle = () => {
-    // 마이페이지 ui가 열려있다면 마이페이지 ui 닫기
-    if (isUserMenuOpen) {
-      setIsUserMenuOpen(false)
-    }
-    // 알림드롭다운 토글
-    setIsNotificationOpen(!isNotificationOpen)
-  }
+  // const handleNotificationToggle = () => {
+  //   // 마이페이지 ui가 열려있다면 마이페이지 ui 닫기
+  //   if (isUserMenuOpen) {
+  //     setIsUserMenuOpen(false)
+  //   }
+  //   // 알림드롭다운 토글
+  //   setIsNotificationOpen(!isNotificationOpen)
+  // }
 
   // useOutsideClick(
   //   isNotificationOpen, // 드롭다운이 열려있는지

@@ -3,7 +3,7 @@ import { Z_INDEX } from '@constants/ui'
 // import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { cn } from '@utils/cn'
 import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
-import { useRef } from 'react'
+// import { useRef } from 'react'
 // import { EXTERNAL } from '@src/constants/external'
 // import { logoutHard } from '@src/store/auth'
 import { ROUTES } from '@src/constants/routes'
@@ -18,9 +18,9 @@ interface UserMenuProps {
   userNickname?: string
 }
 
-export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen, userNickname }: UserMenuProps) {
-  const userMenuButtonRef = useRef<HTMLDivElement>(null)
-  const userMenuPanelRef = useRef<HTMLDivElement>(null)
+export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
+  // const userMenuButtonRef = useRef<HTMLDivElement>(null)
+  // const userMenuPanelRef = useRef<HTMLDivElement>(null)
 
   const { getUserNickname } = useUserStore()
   const nickname = getUserNickname()
@@ -54,7 +54,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
       <p className="text-base text-gray-700">{nickname}</p>
       {isUserMenuOpen && (
         <div
-          ref={userMenuPanelRef}
           className={cn(
             'absolute top-12 right-0 flex w-48 flex-col divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white py-2 shadow-lg',
             `${Z_INDEX.DROPDOWN}`
