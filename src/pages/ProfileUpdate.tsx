@@ -19,8 +19,8 @@ function ProfileUpdate() {
   //TODO 전역상태로 현재 유저가 전에 설정한 정보 불러와서 디폴트로 연결하기.
   //디폴트값 대체. 연동되면 지우기.
   const currentNickname = user?.nickname || '';
-  const currentSelectedState = user?.state_name || '';
-  const currentSelectedCity = user?.city_name || '';
+  const currentSelectedState = user?.addressSido || '';
+  const currentSelectedCity = user?.addressGugun || '';
 
   const [selectedState, setSelectedState] = useState<StateCode | string>('');
   const [showStateDropdown, setShowStateDropdown] = useState(false);
@@ -151,8 +151,8 @@ function ProfileUpdate() {
       } else {
         updateUserProfile({
           nickname: formData.nickname,
-          state_name: formData.state,
-          city_name: formData.city,
+          addressSido: formData.state,
+          addressGugun: formData.city,
           profile_image: data.profile_image || imagePreview,
         });
       }

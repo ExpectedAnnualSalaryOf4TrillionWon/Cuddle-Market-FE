@@ -143,16 +143,16 @@ function MyPage() {
               <div className="flex items-center gap-sm">
                 <CiLocationOn />
                 <span className="bodySmall text-text-primary">
-                  {currentUser.state_name} {currentUser.city_name}
+                  {currentUser.addressSido} {currentUser.addressGugun}
                 </span>
               </div>
               {/* 가입일 */}
-              <div className="flex items-center gap-sm">
+              {/* <div className="flex items-center gap-sm">
                 <CiCalendar />
                 <span className="bodySmall text-text-primary">
                   가입일 : {currentUser.created_at ? formatJoinDate(currentUser.created_at) : ''}
                 </span>
-              </div>
+              </div> */}
             </div>
             <Link
               to="/profile-update"

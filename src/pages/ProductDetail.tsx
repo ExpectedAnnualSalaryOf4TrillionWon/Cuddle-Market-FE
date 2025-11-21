@@ -261,7 +261,7 @@ function ProductDetail() {
                   <div className="flex items-center gap-sm mb-sm">
                     <div className="w-12 h-12 overflow-hidden rounded-full">
                       <img
-                        src={product.seller_info.seller_images ?? ''}
+                        src={product.seller_info.profile_image ?? ''}
                         alt={product.seller_info?.nickname}
                         className="block w-full h-full object-cover"
                       />
