@@ -23,7 +23,11 @@
 .react-datepicker__header {
   padding: 0;
 }
-
+.react-datepicker__header {
+  background-color: #fff;
+  border-bottom: none;
+  padding-bottom: 4px;
+}
 /* 헤더 스타일 (년월) */
 .react-datepicker__current-month {
   font-weight: 700;

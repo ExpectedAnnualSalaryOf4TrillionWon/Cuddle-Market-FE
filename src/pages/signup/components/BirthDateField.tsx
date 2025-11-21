@@ -4,9 +4,10 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './BirthDateField.css'
 import { forwardRef } from 'react'
 import { Controller, type Control } from 'react-hook-form'
-import { ChevronLeft as LeftArrow, Calendar } from 'lucide-react'
+import { Calendar, ChevronLeft as LeftArrow } from 'lucide-react'
 import { ko } from 'date-fns/locale'
 import type { SignUpFormValues } from './SignUpForm'
+import { Button } from '@src/components/commons/button/Button'
 
 interface CustomInputProps {
   className?: string
@@ -41,19 +42,61 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(({ value, onC
 
 CustomInput.displayName = 'CustomInput'
 
-const renderCustomHeader = ({ date, decreaseMonth }: { date: Date; decreaseMonth: () => void; increaseMonth: () => void }) => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
+const renderCustomHeader = ({
+  date,
+  changeYear,
+  changeMonth,
+  decreaseMonth,
+  increaseMonth,
+  prevMonthButtonDisabled,
+  nextMonthButtonDisabled,
+}: {
+  date: Date
+  changeYear: (year: number) => void
+  changeMonth: (month: number) => void
+  decreaseMonth: () => void
+  increaseMonth: () => void
+  prevMonthButtonDisabled: boolean
+  nextMonthButtonDisabled: boolean
+}) => {
+  const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i)
+  const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
 
   return (
-    <div className="flex items-center justify-between">
-      <button type="button" onClick={decreaseMonth} className="flex h-8 w-8 items-center justify-center rounded hover:bg-gray-100">
-        <LeftArrow className="h-6 w-6 text-gray-400" strokeWidth={2} />
-      </button>
-      <div className="text-base font-bold text-gray-900">
-        {year}년 {month}월
+    <div className="flex items-center justify-between gap-2 px-2 py-2">
+      <Button
+        type="button"
+        icon={LeftArrow}
+        size="xs"
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className="h-8 w-8 rounded hover:bg-gray-100"
+      />
+      <div className="flex gap-2">
+        <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(Number(value))} className="py-1 text-sm">
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}년
+            </option>
+          ))}
+        </select>
+
+        <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(Number(value))} className="py-1 text-sm">
+          {months.map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
       </div>
-      <div className="h-8 w-8" />
+      <Button
+        type="button"
+        icon={LeftArrow}
+        size="xs"
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className="h-8 w-8 rotate-180 rounded hover:bg-gray-100"
+      />
     </div>
   )
 }
