@@ -1,6 +1,6 @@
 import type { SignUpFormValues } from './SignUpForm'
 import { type Control, Controller, type UseFormWatch, type UseFormSetValue } from 'react-hook-form'
-import { CITIES, type Province, PROVINCES } from '@src/constants/cities'
+import { CITIES, PROVINCES } from '@src/constants/cities'
 import { CustomSelect } from '../../../components/commons/CustomSelect'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { signupValidationRules } from '../validationRules'
@@ -13,7 +13,7 @@ interface AddressFieldProps {
 
 export function AddressField({ control, watch, setValue }: AddressFieldProps) {
   const selectedSido = watch('addressSido')
-  const availableGugun = selectedSido ? CITIES[selectedSido] : []
+  const availableGugun = selectedSido ? CITIES[selectedSido] || [] : []
 
   // 시/도가 변경되면 시/군/구 초기화
   useEffect(() => {

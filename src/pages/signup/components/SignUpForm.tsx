@@ -1,7 +1,7 @@
 import { Button } from '@src/components/commons/button/Button'
 import { useForm } from 'react-hook-form'
 import { type Province } from '@src/constants/cities'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { NameField } from './NameField'
 import { NicknameField } from './NicknameField'
 import { AddressField } from './AddressField'

@@ -10,6 +10,12 @@ export interface User {
   profile_completed?: boolean
   addressSido: string
   addressGugun: string
+  profile_image?: string
+  state_name?: string
+  city_name?: string
+  seller_products?: Product[]
+  seller_images?: string[]
+  created_at?: string
 }
 
 // ========== 인증 관련 타입 ==========
