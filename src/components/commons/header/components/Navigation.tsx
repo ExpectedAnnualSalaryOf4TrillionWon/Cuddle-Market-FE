@@ -2,13 +2,14 @@ import UserMenu from '../components/user-section/UserMenu'
 import AuthMenu from '../components/user-section/AuthMenu'
 import NotificationButton from '../components/notification-section/NotificationButton'
 import { useState } from 'react'
+import { useUserStore } from '@src/store/userStore'
 // import { useAuth } from '@src/store/auth'
 
 export default function Navigation() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-
-  const isLoggedIn = false
+  const { isLogin } = useUserStore()
+  // const isLoggedIn = false
   // const isLoggedIn = useAuth((state) => state.isLoggedIn())
   // const userNickname = useAuth((state) => state.user?.nickname ?? '사용자')
   // const bootstrapped = useAuth((state) => state.bootstrapped)
@@ -23,8 +24,8 @@ export default function Navigation() {
   // }
 
   return (
-    <div className="flex items-center gap-4">
-      {isLoggedIn ? (
+    <div className="flex items-center gap-2">
+      {isLogin() ? (
         <>
           <NotificationButton
             isNotificationOpen={isNotificationOpen}

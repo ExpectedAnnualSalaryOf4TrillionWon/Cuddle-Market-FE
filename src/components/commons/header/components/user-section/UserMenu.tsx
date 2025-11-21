@@ -3,10 +3,12 @@ import { Z_INDEX } from '@constants/ui'
 // import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { cn } from '@utils/cn'
 import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
-import { useRef } from 'react'
+// import { useRef } from 'react'
 // import { EXTERNAL } from '@src/constants/external'
 // import { logoutHard } from '@src/store/auth'
 import { ROUTES } from '@src/constants/routes'
+import { useUserStore } from '@src/store/userStore'
+import { Button } from '@src/components/commons/button/Button'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -16,9 +18,12 @@ interface UserMenuProps {
   userNickname?: string
 }
 
-export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen, userNickname }: UserMenuProps) {
-  const userMenuButtonRef = useRef<HTMLDivElement>(null)
-  const userMenuPanelRef = useRef<HTMLDivElement>(null)
+export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
+  // const userMenuButtonRef = useRef<HTMLDivElement>(null)
+  // const userMenuPanelRef = useRef<HTMLDivElement>(null)
+
+  const { getUserNickname } = useUserStore()
+  const nickname = getUserNickname()
   const handleAvatarToggle = () => {
     // 알림드롭다운 ui 가 열려있다면 알림드롭다운 닫기
     if (isNotificationOpen) {
@@ -36,15 +41,19 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
   // )
 
   return (
-    <div ref={userMenuButtonRef} className="relative flex cursor-pointer items-center gap-2" onClick={handleAvatarToggle}>
+    <Button
+      // ref={userMenuButtonRef}
+      className="relative flex cursor-pointer items-center gap-2"
+      size="md"
+      onClick={handleAvatarToggle}
+    >
       <div className="bg-primary-100 flex h-8 w-8 items-center justify-center rounded-full">
         {/* <Icon icon={UserRoundIcon} size="sm" className={`stroke-primary-600`} /> */}
       </div>
 
-      <p className="text-base text-gray-700">{userNickname}</p>
+      <p className="text-base text-gray-700">{nickname}</p>
       {isUserMenuOpen && (
         <div
-          ref={userMenuPanelRef}
           className={cn(
             'absolute top-12 right-0 flex w-48 flex-col divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white py-2 shadow-lg',
             `${Z_INDEX.DROPDOWN}`
@@ -63,6 +72,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
           </button>
         </div>
       )}
-    </div>
+    </Button>
   )
 }
