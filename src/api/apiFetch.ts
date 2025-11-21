@@ -1,6 +1,6 @@
 // utils/apiFetch.ts
 import { useUserStore } from '@store/userStore'
-import axios from 'axios'
+// import axios from 'axios'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 // 리프레시 토큰으로 액세스토큰 재발급 요청

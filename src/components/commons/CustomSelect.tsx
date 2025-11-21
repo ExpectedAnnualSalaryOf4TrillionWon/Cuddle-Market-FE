@@ -12,7 +12,7 @@ interface CustomSelectProps {
   id?: string
 }
 
-export function CustomSelect({ value, onChange, options, placeholder, disabled = false, className, id }: CustomSelectProps) {
+export function CustomSelect({ value, onChange, options, placeholder, disabled = false, id }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef<HTMLDivElement>(null)
 

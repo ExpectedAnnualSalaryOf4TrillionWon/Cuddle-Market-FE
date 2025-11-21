@@ -1,5 +1,5 @@
 import type { NicknameCheckResponse, EmailCheckResponse, SignUpRequestData, SignUpResponse, LoginRequestData, LoginResponse } from '../types'
-import { apiFetch } from './apiFetch'
+// import { apiFetch } from './apiFetch'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
