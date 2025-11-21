@@ -1,4 +1,4 @@
-import type { NicknameCheckResponse, EmailCheckResponse } from '../types'
+import type { NicknameCheckResponse, EmailCheckResponse, SignUpRequestData, SignUpResponse, LoginRequestData, LoginResponse } from '../types'
 import { apiFetch } from './apiFetch'
 import axios from 'axios'
 
@@ -17,7 +17,29 @@ export const checkEmail = async (email: string): Promise<EmailCheckResponse> => 
 }
 
 export const sendEmailValidCode = async (email: string): Promise<EmailCheckResponse> => {
-  const response = await axios.post(`${API_BASE_URL}/auth/${email}/verification/send`)
+  const response = await axios.post(`${API_BASE_URL}/auth/email/verification/send`, { email })
   console.log(response)
+  console.log(response.data)
+
+  return response.data
+}
+export const checkEmailValidCode = async (email: string, code: string): Promise<EmailCheckResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/email/verification/verify`, { email, verificationCode: code })
+  console.log(response)
+  console.log(response.data)
+  return response.data
+}
+
+export const signup = async (requestData: SignUpRequestData): Promise<SignUpResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/signup`, requestData)
+  console.log(response)
+  console.log(response.data)
+  return response.data
+}
+
+export const login = async (requestData: LoginRequestData): Promise<LoginResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/login`, requestData)
+  console.log(response)
+  console.log(response.data)
   return response.data
 }
