@@ -1,4 +1,4 @@
-import type { CategoryData, PetTypeData } from 'src/types';
+import type { CategoryData, PetTypeData } from 'src/types'
 
 // ========== 반려동물 관련 상수 ==========
 export const PETS: PetTypeData[] = [
@@ -128,18 +128,24 @@ export const PETS: PetTypeData[] = [
       },
     ],
   },
-] as const;
-export type PetTypeCode = (typeof PETS)[number]['code'];
-export const PET_DETAILS: Array<{ code: string; name: string; categoryCode?: string }> = [];
-PETS.forEach(category => {
-  category.details.forEach(pet => {
+] as const
+export const PET_DETAILS: Array<{ code: string; name: string; categoryCode?: string }> = []
+PETS.forEach((category) => {
+  category.details.forEach((pet) => {
     PET_DETAILS.push({
       code: pet.code,
       name: pet.name,
-    });
-  });
-});
-export type PetDetailCode = (typeof PETS)[number]['details'][number]['code'];
+    })
+  })
+})
+
+// ========== 상품 상태 관련 상수 ==========
+export const CONDITION_ITEMS: Array<{ value: string; title: string; subtitle: string }> = [
+  { value: 'NEW', title: '새 상품', subtitle: '미사용 상품' },
+  { value: 'LIKE_NEW', title: '거의 새것', subtitle: '사용감 거의 없음' },
+  { value: 'USED', title: '사용감 있음', subtitle: '일반적인 사용흔적' },
+  { value: 'NEEDS_REPAIR', title: '수리 필요', subtitle: '수리 후 사용가능' },
+]
 
 // ========== 상품 카테고리 관련 상수 ==========
 export const PRODUCT_CATEGORIES: CategoryData[] = [
@@ -153,22 +159,20 @@ export const PRODUCT_CATEGORIES: CategoryData[] = [
   { code: 'CLEANING', name: '청소용품' },
   { code: 'TRAINING', name: '훈련용품' },
   { code: 'ETC', name: '기타' },
-] as const;
-export type ProductCategoryCode = (typeof PRODUCT_CATEGORIES)[number]['code'];
+] as const
 
-// ========== 상품 상태 관련 상수 ==========
-export type ConditionCode = 'NEW' | 'LIKE_NEW' | 'USED' | 'NEEDS_REPAIR';
-export interface ConditionItem {
-  value: ConditionCode;
-  title: string;
-  subtitle: string;
+// ========== 거래상태 관련 상수 ==========
+export const STATUS_EN_TO_KO: Array<{ value: string; name: string; bgColor: string }> = [
+  { value: 'SELLING', name: '판매중', bgColor: 'bg-onsale' },
+  { value: 'RESERVED', name: '예약중', bgColor: 'bg-reserved' },
+  { value: 'COMPLETED', name: '판매완료', bgColor: 'bg-complete' },
+]
+export type TransactionStatus = 'SELLING' | 'RESERVED' | 'COMPLETED'
+export const stateStyleMap: Record<TransactionStatus, string> = {
+  SELLING: 'bg-sale border-sale',
+  RESERVED: 'bg-reserved border-reserved',
+  COMPLETED: 'bg-complete border-complete',
 }
-export const CONDITION_ITEMS: ReadonlyArray<ConditionItem> = [
-  { value: 'NEW', title: '새 상품', subtitle: '미사용 상품' },
-  { value: 'LIKE_NEW', title: '거의 새것', subtitle: '사용감 거의 없음' },
-  { value: 'USED', title: '사용감 있음', subtitle: '일반적인 사용흔적' },
-  { value: 'NEEDS_REPAIR', title: '수리 필요', subtitle: '수리 후 사용가능' },
-];
 
 // ========== 지역 관련 상수 ==========
 export const LOCATIONS = [
@@ -1185,45 +1189,24 @@ export const LOCATIONS = [
     name: '세종특별자치시',
     cities: [],
   },
-] as const;
-export type StateCode = (typeof LOCATIONS)[number]['code'];
-export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code'];
+] as const
+export type StateCode = (typeof LOCATIONS)[number]['code']
+export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
 
 // ========== 탭 관련 상수 ==========
 export const PRODUCT_POST_TABS = [
   { id: 'sales', label: '판매' },
   { id: 'purchases', label: '판매요청' },
-] as const;
-export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id'];
-
-// ========== 거래상태 관련 상수 ==========
-export type TransactionStatus = 'SELLING' | 'RESERVED' | 'SOLD';
-export const STATUS_EN_TO_KO: Record<TransactionStatus, string> = {
-  SELLING: '판매중',
-  RESERVED: '예약중',
-  SOLD: '판매완료',
-};
-export const stateStyleMap: Record<TransactionStatus, string> = {
-  SELLING: 'bg-sale border-sale',
-  RESERVED: 'bg-reserved border-reserved',
-  SOLD: 'bg-complete border-complete',
-};
+] as const
+export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
 
 // ========== 상품상태 관련 상수 ==========
-export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR';
+export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
 export const CONDITION_EN_TO_KO: Record<TransactionConditaion, string> = {
   MINT: '새 상품',
   EXCELLENT: '거의 새것',
   GOOD: '사용감 있음',
   FAIR: '수리 필요',
-};
+}
 
-export const ALLOWED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/gif',
-  'image/webp',
-  'image/svg+xml',
-  'image/bmp',
-];
+export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp']

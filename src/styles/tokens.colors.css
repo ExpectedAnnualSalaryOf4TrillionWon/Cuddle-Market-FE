@@ -21,9 +21,9 @@
   --color-light: #f7fafc;
 
   /* 상태 컬러 */
-  --color-sale: #00c951;
-  --color-complete: #6a7282;
-  --color-reserved: #ff6900;
+  /* --color-sale: #00c951; */
+  /* --color-complete: #6a7282; */
+  /* --color-reserved: #ff6900; */
 
   /* 알림 */
   --color-alert: #fc8181;
@@ -62,7 +62,7 @@
 
   /* 시스템 컬러 */
   --color-onsale: #48bb78;
-  --color-soldout: #a0aec0;
+  --color-complete: #a0aec0;
   --color-reserved: #ed8936;
   --color-notification: #facc15;
 
