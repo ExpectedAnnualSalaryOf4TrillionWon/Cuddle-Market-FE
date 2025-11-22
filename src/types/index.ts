@@ -169,27 +169,36 @@ export interface LikeApiResponse {
 // }
 
 // ========== 상품 관련 타입 ==========
-export interface Product {
-  id: number
-  title: string
-  price: number
-  description?: string
-  state_code?: string
-  city_code?: string
-  category_code?: string
-  thumbnail: string
-  pet_type_code: string
-  pet_type_detail_code: string
-  condition_status: 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
-  transaction_status: 'SELLING' | 'RESERVED' | 'SOLD'
-  like_count: number
-  view_count?: number
-  elapsed_time: string
-  is_liked?: boolean
+export interface ProductResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    page: number
+    size: number
+    total: number
+    content: Product[]
+    totalPages: 8
+    hasNext: true
+    hasPrevious: false
+    totalElements: 150
+    numberOfElements: 20
+  }
 }
 
-export interface ProductsResponse {
-  product_list: Product[]
+export interface Product {
+  id: number
+  mainImageUrl: string
+  petDetailType: string
+  productStatus: string
+  tradeStatus: string
+  title: string
+  price: number
+  createdAt: string
+  favoriteCount: number
+  isFavorite: boolean
 }
 // export type Product = ProductBase;
 
@@ -198,6 +207,18 @@ export interface ProductDetailItem extends Product {
   seller_info: User
   images?: string[]
   seller_products?: Product[]
+  // 추가 필드 (하위 호환성)
+  description?: string
+  thumbnail?: string
+  pet_type_code?: string
+  pet_type_detail_code?: string
+  category_code?: string
+  condition_status?: string
+  state_code?: string
+  city_code?: string
+  elapsed_time?: string
+  view_count?: number
+  like_count?: number
 }
 
 // export interface UserProduct {
