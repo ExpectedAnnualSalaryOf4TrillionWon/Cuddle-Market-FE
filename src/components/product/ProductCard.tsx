@@ -1,6 +1,6 @@
 import { CONDITION_ITEMS, PET_DETAILS, STATUS_EN_TO_KO } from '@constants/constants'
-import { CiClock2 } from 'react-icons/ci'
-import { GoHeart } from 'react-icons/go'
+// import { CiClock2 } from 'react-icons/ci'
+// import { GoHeart } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import type { Product } from '../../types'
 import { ProductThumbnail } from './ProductThumbnail'

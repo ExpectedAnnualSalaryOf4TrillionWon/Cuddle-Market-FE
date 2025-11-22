@@ -21,7 +21,7 @@ export function ProductThumbnail({
   productStatusName,
   tradeStatus,
   productTradeColor,
-  onLikeClick,
+  // onLikeClick,
 }: ProductThumbnailProps) {
   return (
     <div className="relative overflow-hidden pb-[75%]">

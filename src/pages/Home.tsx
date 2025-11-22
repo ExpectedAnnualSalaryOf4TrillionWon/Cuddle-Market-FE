@@ -1,6 +1,6 @@
 import CategoryFilter from '@src/components/layouts/CategoryFilter'
 import ProductCard from '@src/components/product/ProductCard'
-import { useUserStore } from '@store/userStore'
+// import { useUserStore } from '@store/userStore'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { fetchAllProducts } from '../api/products'
@@ -8,9 +8,9 @@ import type { FilterState } from '../types'
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
 
 function Home() {
-  const { accessToken } = useUserStore()
+  // const { accessToken } = useUserStore()
 
-  const [filters, setFilters] = useState<FilterState>({
+  const [_filters, setFilters] = useState<FilterState>({
     selectedPetType: null,
     selectedPetDetails: [],
     selectedCategories: [],
