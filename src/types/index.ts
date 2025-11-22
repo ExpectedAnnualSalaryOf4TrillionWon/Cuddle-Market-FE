@@ -207,6 +207,18 @@ export interface ProductDetailItem extends Product {
   seller_info: User
   images?: string[]
   seller_products?: Product[]
+  // 추가 필드 (하위 호환성)
+  description?: string
+  thumbnail?: string
+  pet_type_code?: string
+  pet_type_detail_code?: string
+  category_code?: string
+  condition_status?: string
+  state_code?: string
+  city_code?: string
+  elapsed_time?: string
+  view_count?: number
+  like_count?: number
 }
 
 // export interface UserProduct {
