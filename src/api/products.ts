@@ -13,8 +13,17 @@ import axios from 'axios'
 import { apiFetch } from './apiFetch'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
-export const fetchAllProducts = async (page: number = 0, size: number = 20) => {
-  const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?page=${page}&size=${size}`)
+export const fetchAllProducts = async (page: number = 0, size: number = 20, productType?: string) => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  })
+
+  if (productType) {
+    params.append('productType', productType)
+  }
+
+  const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)
   console.log(response)
 
   return {

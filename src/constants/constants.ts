@@ -1194,6 +1194,14 @@ export type StateCode = (typeof LOCATIONS)[number]['code']
 export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
 
 // ========== 탭 관련 상수 ==========
+export const PRODUCT_TYPE_TABS = [
+  { id: 'tab-all', label: '전체' },
+  { id: 'tab-sales', label: '판매' },
+  { id: 'tab-purchases', label: '판매요청' },
+] as const
+export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
+
+// 상품 등록용 탭 (기존 호환성)
 export const PRODUCT_POST_TABS = [
   { id: 'sales', label: '판매' },
   { id: 'purchases', label: '판매요청' },
