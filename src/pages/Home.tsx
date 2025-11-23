@@ -6,9 +6,12 @@ import { useState } from 'react'
 import { fetchAllProducts } from '../api/products'
 import type { FilterState } from '../types'
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
+import { Button } from '@src/components/commons/button/Button'
+import { PRODUCT_TYPE_TABS, type ProductTypeTabId } from '@src/constants/constants'
 
 function Home() {
   // const { accessToken } = useUserStore()
+  const [activeTab, setActiveTab] = useState<ProductTypeTabId>('tab-all')
 
   const [_filters, setFilters] = useState<FilterState>({
     selectedPetType: null,
@@ -22,12 +25,27 @@ function Home() {
     },
   })
 
+  // activeTab에 따른 productType 매핑
+  const getProductType = (tab: ProductTypeTabId): string | undefined => {
+    switch (tab) {
+      case 'tab-all':
+        return undefined // 전체는 productType 없음
+      case 'tab-sales':
+        return 'SELL'
+      case 'tab-purchases':
+        return 'REQUEST'
+      default:
+        return undefined
+    }
+  }
+
   // useInfiniteQuery로 무한 스크롤 구현
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
-    queryKey: ['products'],
+    queryKey: ['products', activeTab], // activeTab을 queryKey에 추가
     queryFn: ({ pageParam = 0 }) => {
-      console.log('API 호출 - 페이지:', pageParam)
-      return fetchAllProducts(pageParam, 20)
+      const productType = getProductType(activeTab)
+      console.log('API 호출 - 페이지:', pageParam, 'productType:', productType)
+      return fetchAllProducts(pageParam, 20, productType)
     },
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage.data.data.page
@@ -58,6 +76,8 @@ function Home() {
       allProducts.push(...page.data.data.content)
     }
   }
+
+  // 판매상품을 하나의 배열로 합치기
 
   // 전체 상품 개수 (API에서 제공)
   const totalElements = data?.pages?.[0]?.total || 0
@@ -97,6 +117,20 @@ function Home() {
     <div className="bg-bg pb-4xl">
       <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
         <CategoryFilter onFilterChange={setFilters} />
+
+        <div role="tablist" aria-label="상품 타입 분류" className="border-b-primary-200 flex gap-2.5 border-b-2 pb-1">
+          {PRODUCT_TYPE_TABS.map((tab) => (
+            <Button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              size="md"
+              className={`flex-1 cursor-pointer rounded-2xl text-base ${activeTab === tab.id ? 'bg-primary-300 font-bold text-white' : 'hover:bg-primary-100 text-gray-900'}`}
+            >
+              {tab.label}
+            </Button>
+          ))}
+        </div>
         <div className="pt-3xl pb-lg">
           <h2 className="heading4 text-text-primary">전체 상품</h2>
           <p className="mt-xs bodySmall text-text-secondary">{`총 ${totalElements}개의 상품`}</p>
