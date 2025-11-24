@@ -85,7 +85,7 @@ export const PETS: PetTypeData[] = [
     ],
   },
   {
-    code: 'AQUATIC',
+    code: 'FISH',
     name: '수생동물',
     details: [
       {
@@ -107,7 +107,7 @@ export const PETS: PetTypeData[] = [
     ],
   },
   {
-    code: 'INSECT_ARTHROPOD',
+    code: 'AMPHIBIAN',
     name: '곤충/절지동물',
     details: [
       {
@@ -129,6 +129,18 @@ export const PETS: PetTypeData[] = [
     ],
   },
 ] as const
+
+export const PET_TYPE_TABS = [
+  { id: 'tab-all', label: '전체', code: 'ALL' },
+  { id: 'tab-mammal', label: '포유류', code: 'MAMMAL' },
+  { id: 'tab-bird', label: '조류', code: 'BIRD' },
+  { id: 'tab-reptile', label: '파충류', code: 'REPTILE' },
+  { id: 'tab-fish', label: '수생동물', code: 'FISH' },
+  { id: 'tab-amphibian', label: '곤충/절지동물', code: 'AMPHIBIAN' },
+  { id: 'tab-etc', label: '기타', code: 'ETC' },
+] as const
+export type PetTypeTabId = (typeof PET_TYPE_TABS)[number]['id']
+
 export const PET_DETAILS: Array<{ code: string; name: string; categoryCode?: string }> = []
 PETS.forEach((category) => {
   category.details.forEach((pet) => {
@@ -144,20 +156,18 @@ export const CONDITION_ITEMS: Array<{ value: string; title: string; subtitle: st
   { value: 'NEW', title: '새 상품', subtitle: '미사용 상품' },
   { value: 'LIKE_NEW', title: '거의 새것', subtitle: '사용감 거의 없음' },
   { value: 'USED', title: '사용감 있음', subtitle: '일반적인 사용흔적' },
-  { value: 'NEEDS_REPAIR', title: '수리 필요', subtitle: '수리 후 사용가능' },
+  { value: 'NEED_REPAIR', title: '수리 필요', subtitle: '수리 후 사용가능' },
 ]
 
 // ========== 상품 카테고리 관련 상수 ==========
 export const PRODUCT_CATEGORIES: CategoryData[] = [
   { code: 'FOOD', name: '사료/간식' },
-  { code: 'TOYS', name: '장난감' },
-  { code: 'HOUSING', name: '사육장/하우스' },
+  { code: 'TOY', name: '장난감' },
+  { code: 'HOUSE', name: '사육장/하우스' },
   { code: 'HEALTH', name: '건강/위생' },
-  { code: 'ACCESSORIES', name: '의류/악세사리' },
-  { code: 'EQUIPMENT', name: '사육장비' },
-  { code: 'CARRIER', name: '이동장/목줄' },
-  { code: 'CLEANING', name: '청소용품' },
-  { code: 'TRAINING', name: '훈련용품' },
+  { code: 'CLOTHING', name: '의류/악세사리' },
+  { code: 'WALKING', name: '이동장/목줄' },
+  { code: 'GROOMING', name: '미용용품' },
   { code: 'ETC', name: '기타' },
 ] as const
 
@@ -173,6 +183,41 @@ export const stateStyleMap: Record<TransactionStatus, string> = {
   RESERVED: 'bg-reserved border-reserved',
   COMPLETED: 'bg-complete border-complete',
 }
+
+// ========== 탭 관련 상수 ==========
+export const PRODUCT_TYPE_TABS = [
+  { id: 'tab-all', label: '전체', code: 'ALL' },
+  { id: 'tab-sales', label: '판매', code: 'SELL' },
+  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
+] as const
+export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
+
+// 상품 등록용 탭 (기존 호환성)
+export const PRODUCT_POST_TABS = [
+  { id: 'sales', label: '판매' },
+  { id: 'purchases', label: '판매요청' },
+] as const
+export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
+
+// ========== 가격대 관련 상수 ==========
+export const PRICE_TYPE = [
+  { value: { min: 0, max: 10000 }, title: '1만원 이하' },
+  { value: { min: 10000, max: 50000 }, title: '1만원~5만원' },
+  { value: { min: 50000, max: 100000 }, title: '5만원~10만원' },
+  { value: { min: 100000, max: null }, title: '10만원 이상' },
+]
+
+export interface PriceRange {
+  min: number
+  max: number | null
+}
+
+export interface LocationFilter {
+  sido: string | null
+  gugun: string | null
+}
+
+export type CategoryFilter = string | null
 
 // ========== 지역 관련 상수 ==========
 export const LOCATIONS = [
@@ -1190,23 +1235,8 @@ export const LOCATIONS = [
     cities: [],
   },
 ] as const
-export type StateCode = (typeof LOCATIONS)[number]['code']
+export type StateCode = (typeof LOCATIONS)[number]['name']
 export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
-
-// ========== 탭 관련 상수 ==========
-export const PRODUCT_TYPE_TABS = [
-  { id: 'tab-all', label: '전체', code: 'ALL' },
-  { id: 'tab-sales', label: '판매', code: 'SELL' },
-  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
-] as const
-export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
-
-// 상품 등록용 탭 (기존 호환성)
-export const PRODUCT_POST_TABS = [
-  { id: 'sales', label: '판매' },
-  { id: 'purchases', label: '판매요청' },
-] as const
-export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
 
 // ========== 상품상태 관련 상수 ==========
 export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
