@@ -4,6 +4,7 @@ import { CITIES, PROVINCES } from '@src/constants/cities'
 import { cn } from '@src/utils/cn'
 import type { Province } from '@src/constants/cities'
 import type { LocationFilter as LocationFilterType } from '@src/constants/constants'
+import { useSearchParams } from 'react-router-dom'
 
 interface LocationFilterProps {
   headingClassName?: string
@@ -11,13 +12,27 @@ interface LocationFilterProps {
 }
 
 export function LocationFilter({ headingClassName, onLocationChange }: LocationFilterProps) {
-  const [selectedSido, setSelectedSido] = useState<Province | ''>('')
-  const [selectedGugun, setSelectedGugun] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // URL에서 초기값 읽기
+  const initialSido = searchParams.get('addressSido') || ''
+  const initialGugun = searchParams.get('addressGugun') || ''
+
+  const [selectedSido, setSelectedSido] = useState<Province | ''>(initialSido as Province | '')
+  const [selectedGugun, setSelectedGugun] = useState(initialGugun)
+
+  // URL이 변경될 때 state 동기화 (뒤로가기 대응)
+  useEffect(() => {
+    const urlSido = searchParams.get('addressSido') || ''
+    const urlGugun = searchParams.get('addressGugun') || ''
+    setSelectedSido(urlSido as Province | '')
+    setSelectedGugun(urlGugun)
+  }, [searchParams])
 
   // 선택된 시/도에 따른 구/군 목록
   const availableGugun = selectedSido ? CITIES[selectedSido] || [] : []
 
-  // 시/도나 구/군이 변경되면 부모에게 알림
+  // 시/도나 구/군이 변경되면 부모에게 알림 + URL 업데이트
   useEffect(() => {
     if (selectedSido) {
       // 시/도가 있으면 필터 전달 (구/군은 선택 안 했을 수도 있음)
@@ -25,11 +40,29 @@ export function LocationFilter({ headingClassName, onLocationChange }: LocationF
         sido: selectedSido,
         gugun: selectedGugun || null,
       })
+
+      // URL 업데이트
+      setSearchParams((prev) => {
+        prev.set('addressSido', selectedSido)
+        if (selectedGugun) {
+          prev.set('addressGugun', selectedGugun)
+        } else {
+          prev.delete('addressGugun')
+        }
+        return prev
+      })
     } else {
       // 시/도가 없으면 null 전달
       onLocationChange?.(null)
+
+      // URL에서 제거
+      setSearchParams((prev) => {
+        prev.delete('addressSido')
+        prev.delete('addressGugun')
+        return prev
+      })
     }
-  }, [selectedSido, selectedGugun, onLocationChange])
+  }, [selectedSido, selectedGugun, onLocationChange, setSearchParams])
 
   // 시/도가 변경되면 구/군 초기화
   const handleSidoChange = (value: string) => {

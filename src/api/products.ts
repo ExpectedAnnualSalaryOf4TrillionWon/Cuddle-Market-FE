@@ -25,13 +25,17 @@ export const fetchAllProducts = async (
   addressGugun?: string | null,
   selectedCategory?: string | null,
   petType?: string | null,
-  selectedDetailPet?: string | null
+  selectedDetailPet?: string | null,
+  keyword?: string | null
 ) => {
   const params = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
   })
 
+  if (keyword) {
+    params.append('keyword', keyword)
+  }
   if (petType) {
     params.append('petType', petType)
   }
@@ -67,13 +71,16 @@ export const fetchAllProducts = async (
 
   const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)
 
-  console.log(response.data.data.content)
-
   return {
     data: response.data,
     total: response.data.data.totalElements,
   }
 }
+
+// export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
+//   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
+//   return data
+// }
 
 export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
