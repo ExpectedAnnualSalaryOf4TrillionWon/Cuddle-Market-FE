@@ -1,6 +1,6 @@
 // import Header from '@src/components/commons/header/Header';
 // import AlarmPage from '@pages/AlarmPage';
-import Home from '@pages/Home'
+import Home from '@src/pages/home/Home'
 
 import KakaoCallback from '@pages/KakaoCallback'
 
