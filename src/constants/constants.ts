@@ -1195,9 +1195,9 @@ export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
 
 // ========== 탭 관련 상수 ==========
 export const PRODUCT_TYPE_TABS = [
-  { id: 'tab-all', label: '전체' },
-  { id: 'tab-sales', label: '판매' },
-  { id: 'tab-purchases', label: '판매요청' },
+  { id: 'tab-all', label: '전체', code: 'ALL' },
+  { id: 'tab-sales', label: '판매', code: 'SELL' },
+  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
 ] as const
 export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
 
