@@ -1238,21 +1238,6 @@ export const LOCATIONS = [
 export type StateCode = (typeof LOCATIONS)[number]['name']
 export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
 
-// ========== 탭 관련 상수 ==========
-export const PRODUCT_TYPE_TABS = [
-  { id: 'tab-all', label: '전체', code: 'ALL' },
-  { id: 'tab-sales', label: '판매', code: 'SELL' },
-  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
-] as const
-export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
-
-// 상품 등록용 탭 (기존 호환성)
-export const PRODUCT_POST_TABS = [
-  { id: 'sales', label: '판매' },
-  { id: 'purchases', label: '판매요청' },
-] as const
-export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
-
 // ========== 상품상태 관련 상수 ==========
 export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
 export const CONDITION_EN_TO_KO: Record<TransactionConditaion, string> = {
