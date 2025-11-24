@@ -3,6 +3,7 @@ import { Button } from '../commons/button/Button'
 import { Heart } from 'lucide-react'
 import { Badge } from '../commons/badge/Badge'
 import bowl from '@assets/images/bowl.jpg'
+import { cn } from '@src/utils/cn'
 
 interface ProductThumbnailProps {
   imageUrl: string
@@ -35,7 +36,7 @@ export function ProductThumbnail({
           size="xs"
         />
       </div>
-      <Badge className={`bottom-sm right-sm absolute z-1 text-white ${productTradeColor}`}>{tradeStatus}</Badge>
+      <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{tradeStatus}</Badge>
       <img
         src={imageUrl || bowl}
         alt={title}

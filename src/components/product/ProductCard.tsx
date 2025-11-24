@@ -1,7 +1,7 @@
 import { CONDITION_ITEMS, PET_DETAILS, STATUS_EN_TO_KO } from '@constants/constants'
 // import { CiClock2 } from 'react-icons/ci'
 // import { GoHeart } from 'react-icons/go'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { Product } from '../../types'
 import { ProductThumbnail } from './ProductThumbnail'
 import { ProductInfo } from './ProductInfo'
@@ -35,6 +35,9 @@ const getTradeStatusColor = (tradeStatus: string) => {
 function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   const navigate = useNavigate()
 
+  // TODO: 상품 클릭 시 상세 페이지로 이동 기능 구현 예정
+  void navigate
+
   if (!data) return null
 
   const { id, title, price, mainImageUrl, petDetailType, productStatus, tradeStatus, createdAt, favoriteCount } = data
@@ -43,29 +46,29 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   const productTradeName = getTradeStatus(tradeStatus)
   const productTradeColor = getTradeStatusColor(tradeStatus)
 
-  const handleCardClick = () => {
-    navigate(`/products/${id}`)
-  }
+  // const handleCardClick = () => {
+  //   navigate(`/products/${id}`)
+  // }
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      ;(e.currentTarget as HTMLDivElement).click()
-    }
-  }
+  // const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  //   if (e.key === 'Enter' || e.key === ' ') {
+  //     e.preventDefault()
+  //     ;(e.currentTarget as HTMLDivElement).click()
+  //   }
+  // }
 
   return (
-    <div
-      className="group border-border bg-bg text-text-primary flex cursor-pointer flex-col-reverse overflow-hidden rounded-xl border shadow-md transition-shadow duration-200 hover:shadow-xl"
-      onClick={handleCardClick}
-      role="button"
+    <Link
+      className="border-border bg-bg text-text-primary flex cursor-pointer flex-col-reverse overflow-hidden rounded-xl border shadow-md transition-shadow duration-200 hover:shadow-xl"
+      // onClick={handleCardClick}
       data-index={dataIndex}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
+      aria-label={`${title}, ${price}원, ${productStatusName}, ${petTypeName}, ${productTradeName}`}
+      // onKeyDown={handleKeyDown}
+      to={`/products/${id}`}
     >
       <ProductInfo title={title} price={price} createdAt={createdAt} favoriteCount={favoriteCount} />
       <ProductThumbnail
@@ -77,7 +80,7 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
         productTradeColor={productTradeColor}
         onLikeClick={handleLikeClick}
       />
-    </div>
+    </Link>
   )
 }
 

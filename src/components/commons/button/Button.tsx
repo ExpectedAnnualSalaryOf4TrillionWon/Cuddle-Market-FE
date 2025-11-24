@@ -22,6 +22,12 @@ export function Button({ children, icon: Icon, iconSrc, size = 'md', disabled = 
       type={type}
       disabled={disabled ?? false}
       className={cn(buttonVariants({ size, iconPosition, disabled: disabled || undefined }), className)}
+<<<<<<< HEAD
+=======
+      // id={id}
+      // role={role}
+      // onClick={onClick}
+>>>>>>> 251ea47 (refactor: 웹 접근성 및 ARIA 속성 개선(#159))
       {...rest}
     >
       {Icon && <Icon size={iconSize} />}
