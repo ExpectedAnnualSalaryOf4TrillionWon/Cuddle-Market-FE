@@ -1,5 +1,12 @@
 import type { Province } from '@src/constants/cities'
 
+// ========== 공통 폼 타입 ==========
+// 주소 필드를 포함하는 폼 타입 (AddressField 컴포넌트용)
+export interface FormWithAddress {
+  addressSido: Province | ''
+  addressGugun: string
+}
+
 // ========== 유저 관련 타입 ==========
 export interface User {
   id: number
@@ -111,6 +118,39 @@ export interface LoginResponse {
   }
 }
 
+// ========== 상품 관련 타입 ==========
+export interface ProductResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    page: number
+    size: number
+    total: number
+    content: Product[]
+    totalPages: 8
+    hasNext: true
+    hasPrevious: false
+    totalElements: 150
+    numberOfElements: 20
+  }
+}
+
+export interface Product {
+  id: number
+  mainImageUrl: string
+  petDetailType: string
+  productStatus: string
+  tradeStatus: string
+  title: string
+  price: number
+  createdAt: string
+  favoriteCount: number
+  isFavorite: boolean
+}
+
 // ========== 필터링 관련 타입 ==========
 export interface FilterApiResponse {
   categories: CategoryData[]
@@ -168,38 +208,6 @@ export interface LikeApiResponse {
 //   total_products: number;
 // }
 
-// ========== 상품 관련 타입 ==========
-export interface ProductResponse {
-  code: {
-    code: number
-    message: string
-  }
-  message: string
-  data: {
-    page: number
-    size: number
-    total: number
-    content: Product[]
-    totalPages: 8
-    hasNext: true
-    hasPrevious: false
-    totalElements: 150
-    numberOfElements: 20
-  }
-}
-
-export interface Product {
-  id: number
-  mainImageUrl: string
-  petDetailType: string
-  productStatus: string
-  tradeStatus: string
-  title: string
-  price: number
-  createdAt: string
-  favoriteCount: number
-  isFavorite: boolean
-}
 // export type Product = ProductBase;
 
 /** 상세용: 판매자/다른상품/서브이미지 포함 */

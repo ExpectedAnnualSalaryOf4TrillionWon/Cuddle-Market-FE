@@ -7,24 +7,67 @@ import type {
   ProductDetailItem,
   ProductResponse,
 } from '../types'
+import { apiFetch } from './apiFetch'
 
 import axios from 'axios'
 
-import { apiFetch } from './apiFetch'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
-export const fetchAllProducts = async (page: number = 0, size: number = 20, productType?: string) => {
+// 상품 목록 조회
+export const fetchAllProducts = async (
+  page: number = 0,
+  size: number = 20,
+  productType?: string,
+  selectedProductStatus?: string | null,
+  minPrice?: number | null,
+  maxPrice?: number | null,
+  addressSido?: string | null,
+  addressGugun?: string | null,
+  selectedCategory?: string | null,
+  petType?: string | null,
+  selectedDetailPet?: string | null
+) => {
   const params = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
   })
 
+  if (petType) {
+    params.append('petType', petType)
+  }
+  if (selectedDetailPet) {
+    params.append('petDetailType', selectedDetailPet)
+  }
   if (productType) {
     params.append('productType', productType)
   }
 
+  if (selectedProductStatus) {
+    params.append('productStatuses', selectedProductStatus)
+  }
+
+  if (minPrice !== null && minPrice !== undefined) {
+    params.append('minPrice', minPrice.toString())
+  }
+
+  if (maxPrice !== null && maxPrice !== undefined) {
+    params.append('maxPrice', maxPrice.toString())
+  }
+
+  if (addressSido) {
+    params.append('addressSido', addressSido)
+  }
+
+  if (addressGugun) {
+    params.append('addressGugun', addressGugun)
+  }
+  if (selectedCategory) {
+    params.append('categories', selectedCategory)
+  }
+
   const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)
-  console.log(response)
+
+  console.log(response.data.data.content)
 
   return {
     data: response.data,
@@ -36,11 +79,6 @@ export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
   return data
 }
-
-// export const fetchAllProducts = async (): Promise<ProductsResponse> => {
-//   const data = await apiFetch(`${API_BASE_URL}/products`);
-//   return data;
-// };
 
 // 상품 상세 조회
 export const fetchProductById = async (productId: string): Promise<ProductDetailItem> => {
