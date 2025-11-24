@@ -64,7 +64,7 @@ export function LocationFilter({ headingClassName, onLocationChange }: LocationF
           </span>
           <SelectDropdown
             value={selectedGugun}
-            onChange={(value) => setSelectedGugun(value)}
+            onChange={(value: string) => setSelectedGugun(value)}
             options={availableGugun.map((gugun) => ({
               value: gugun,
               label: gugun,
