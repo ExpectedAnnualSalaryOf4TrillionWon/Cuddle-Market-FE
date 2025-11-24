@@ -24,7 +24,7 @@ export function ProductMeta({ createdAt, favoriteCount }: ProductMetaProps) {
   return (
     <div className="flex w-full justify-between">
       <div className="flex items-center gap-1 text-gray-400">
-        <Clock size={16} />
+        <Clock size={16} aria-hidden="true" />
         <span>{getTimeAgo(createdAt)}</span>
       </div>
       <div className="flex items-center gap-1 text-gray-400">
