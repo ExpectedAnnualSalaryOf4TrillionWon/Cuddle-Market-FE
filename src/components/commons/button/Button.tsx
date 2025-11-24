@@ -3,16 +3,14 @@ import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { buttonVariants, iconSizeMap, type ButtonVariants } from './buttonClass'
 
-interface ButtonProps extends ButtonVariants {
+interface ButtonProps extends Omit<React.ComponentPropsWithoutRef<'button'>, 'disabled'>, ButtonVariants {
   children?: ReactNode
   icon?: LucideIcon
   iconSrc?: string
-  type?: 'button' | 'submit' | 'reset'
-  onClick?: () => void
-  className?: string
+  disabled?: boolean
 }
 
-export function Button({ children, icon: Icon, iconSrc, size = 'md', disabled = false, type = 'button', onClick, className }: ButtonProps) {
+export function Button({ children, icon: Icon, iconSrc, size = 'md', disabled = false, type = 'button', className, ...rest }: ButtonProps) {
   // 아이콘 위치 결정
   const iconPosition = (Icon || iconSrc) && !children ? 'only' : (Icon || iconSrc) && children ? 'left' : 'none'
 
@@ -22,9 +20,9 @@ export function Button({ children, icon: Icon, iconSrc, size = 'md', disabled = 
   return (
     <button
       type={type}
-      onClick={onClick}
       disabled={disabled ?? false}
       className={cn(buttonVariants({ size, iconPosition, disabled: disabled || undefined }), className)}
+      {...rest}
     >
       {Icon && <Icon size={iconSize} />}
       {iconSrc && <img src={iconSrc} alt="" className="h-4 w-4 object-contain" />}
