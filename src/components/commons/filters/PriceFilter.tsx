@@ -1,6 +1,7 @@
 import { Button } from '../button/Button'
 import { PRICE_TYPE, type PriceRange } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
+import { useSearchParams } from 'react-router-dom'
 
 interface PriceFilterProps {
   headingClassName?: string
@@ -9,10 +10,29 @@ interface PriceFilterProps {
 }
 
 export function PriceFilter({ headingClassName, selectedPriceRange, onMinPriceChange }: PriceFilterProps) {
+  const [, setSearchParams] = useSearchParams()
   const handleMinPrice = (e: React.MouseEvent, priceRange: PriceRange) => {
     e.stopPropagation() // 이벤트 버블링 방지
+
     // 같은 가격대 클릭 시 선택 해제, 다른 가격대 클릭 시 선택
-    onMinPriceChange?.(selectedPriceRange?.min === priceRange.min && selectedPriceRange?.max === priceRange.max ? null : priceRange)
+    const isDeselecting = selectedPriceRange?.min === priceRange.min && selectedPriceRange?.max === priceRange.max
+
+    setSearchParams((prev) => {
+      if (isDeselecting) {
+        prev.delete('minPrice')
+        prev.delete('maxPrice')
+      } else {
+        prev.set('minPrice', priceRange.min.toString())
+        if (priceRange.max !== null) {
+          prev.set('maxPrice', priceRange.max.toString())
+        } else {
+          prev.delete('maxPrice')
+        }
+      }
+      return prev
+    })
+
+    onMinPriceChange?.(isDeselecting ? null : priceRange)
   }
   return (
     <div className="flex flex-col gap-2">
@@ -26,10 +46,10 @@ export function PriceFilter({ headingClassName, selectedPriceRange, onMinPriceCh
             type="button"
             size="sm"
             className={cn(
-              'bg-primary-100 cursor-pointer',
+              'bg-primary-50 cursor-pointer',
               selectedPriceRange?.min === item.value.min && selectedPriceRange?.max === item.value.max
                 ? 'bg-primary-300 font-bold text-white'
-                : 'hover:bg-primary-100 text-gray-900'
+                : 'hover:bg-primary-300 text-gray-900 hover:text-white'
             )}
             onClick={(e) => handleMinPrice(e, item.value)}
             aria-pressed={selectedPriceRange?.min === item.value.min && selectedPriceRange?.max === item.value.max}

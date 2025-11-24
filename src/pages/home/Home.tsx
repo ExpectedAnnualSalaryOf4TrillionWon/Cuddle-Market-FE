@@ -1,40 +1,34 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState, useCallback } from 'react'
-// import CategoryFilter from '@src/components/layouts/CategoryFilter'
 import { ProductTypeTabs } from '@src/pages/home/components/ProductTypeTabs'
 import { DetailFilter } from '@src/pages/home/components/DetailFilter'
 import { ProductList } from '@src/pages/home/components/ProductList'
 import { fetchAllProducts } from '../../api/products'
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
-import { PRODUCT_TYPE_TABS, PET_TYPE_TABS } from '@src/constants/constants'
-import type { ProductTypeTabId, PriceRange, LocationFilter, CategoryFilter as CategoryFilterType, PetTypeTabId } from '@src/constants/constants'
+import {
+  PRODUCT_TYPE_TABS,
+  PET_TYPE_TABS,
+  type ProductTypeTabId,
+  type PriceRange,
+  type LocationFilter,
+  type PetTypeTabId,
+  type CategoryFilter as CategoryFilterType,
+} from '@src/constants/constants'
 import { PetTypeFilter } from './components/PetTypeFilter'
 import { CategoryFilter } from './components/CategoryFilter'
-// import { useUserStore } from '@store/userStore'
+import { useSearchParams } from 'react-router-dom'
 
 function Home() {
-  // const { accessToken } = useUserStore()
-  // 현재 선택된 탭 상태 ('tab-all' | 'tab-sales' | 'tab-purchases')
+  const [searchParams] = useSearchParams()
+  const keyword = searchParams.get('keyword') || ''
+
   const [activePetTypeTab, setActivePetTypeTab] = useState<PetTypeTabId>('tab-all')
-
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
-
-  // 상품 상태 필터
   const [selectedProductStatus, setSelectedProductStatus] = useState<string | null>(null)
-
-  // 가격 필터
   const [selectedProductPrice, setSelectedProductPrice] = useState<PriceRange | null>(null)
-
-  // 지역 필터
   const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
-
-  // 카테고리 필터
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType | null>(null)
-
-  // 반려동물 세부종류 필터
   const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(null)
-
-  // 세부 필터 열림/닫힘 상태
   const [isDetailFilterOpen, setIsDetailFilterOpen] = useState(false)
 
   // 세부 필터 토글 함수 메모이제이션
@@ -67,18 +61,6 @@ function Home() {
     setSelectedDetailPet(pet)
   }, [])
 
-  // const [_filters, setFilters] = useState<FilterState>({
-  //   selectedPetType: null,
-  //   selectedPetDetails: [],
-  //   selectedCategories: [],
-  //   selectedConditions: [],
-  //   selectedPriceRanges: [],
-  //   selectedLocation: {
-  //     state: null,
-  //     city: null,
-  //   },
-  // })
-
   /**
    * 무한 스크롤을 위한 React Query 설정
    * - queryKey: ['products', activeTab, selectedProductStatus] - 필터 변경 시 새로운 쿼리로 인식하여 데이터 refetch
@@ -97,6 +79,7 @@ function Home() {
       selectedLocation,
       selectedCategory,
       activePetTypeTab,
+      keyword,
     ],
 
     // 각 페이지 데이터를 가져오는 함수
@@ -121,7 +104,8 @@ function Home() {
         selectedLocation?.gugun ?? null,
         selectedCategory,
         petType,
-        selectedDetailPet
+        selectedDetailPet,
+        keyword
       )
     },
 
@@ -200,7 +184,7 @@ function Home() {
               activeTab={activePetTypeTab}
               onTabChange={setActivePetTypeTab}
               selectedDetailPet={selectedDetailPet}
-              onCategoryChange={handlePetDetailTypeChange}
+              onPetDetailTypeChange={handlePetDetailTypeChange}
             />
             <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
             <DetailFilter
