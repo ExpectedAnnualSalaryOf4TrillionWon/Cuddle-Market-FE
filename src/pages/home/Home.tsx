@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { ProductTypeTabs } from '@src/pages/home/components/ProductTypeTabs'
 import { DetailFilter } from '@src/pages/home/components/DetailFilter'
 import { ProductList } from '@src/pages/home/components/ProductList'
@@ -23,13 +23,21 @@ function Home() {
   const keyword = searchParams.get('keyword') || ''
 
   const [activePetTypeTab, setActivePetTypeTab] = useState<PetTypeTabId>('tab-all')
-  const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
-  const [selectedProductStatus, setSelectedProductStatus] = useState<string | null>(null)
-  const [selectedProductPrice, setSelectedProductPrice] = useState<PriceRange | null>(null)
-  const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType | null>(null)
-  const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(null)
+  const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(searchParams.get('petDetailType'))
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType | null>(searchParams.get('categories'))
   const [isDetailFilterOpen, setIsDetailFilterOpen] = useState(false)
+  const [selectedProductStatus, setSelectedProductStatus] = useState<string | null>(searchParams.get('productStatuses'))
+  const [selectedProductPrice, setSelectedProductPrice] = useState<PriceRange | null>(() => {
+    const minPrice = searchParams.get('minPrice')
+    const maxPrice = searchParams.get('maxPrice')
+    if (!minPrice) return null
+    return {
+      min: Number(minPrice),
+      max: maxPrice ? Number(maxPrice) : null,
+    }
+  })
+  const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
+  const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
 
   // 세부 필터 토글 함수 메모이제이션
   const handleDetailFilterToggle = useCallback((isOpen: boolean) => {
@@ -152,6 +160,18 @@ function Home() {
 
   // 전체 상품 개수 (API에서 제공)
   const totalElements = data?.pages?.[0]?.total || 0
+
+  // URL의 DetailFilter 필터들을 체크하는 로직
+  useEffect(() => {
+    const hasDetailFilter =
+      searchParams.has('productStatuses') || // ProductStateFilter
+      searchParams.has('minPrice') || // PriceFilter
+      searchParams.has('addressSido') // LocationFilter
+
+    if (hasDetailFilter) {
+      setIsDetailFilterOpen(true) // DetailFilter 안의 필터가 있으면 열기
+    }
+  }, [searchParams])
 
   // 로딩 상태
   if (isLoading && !data) {

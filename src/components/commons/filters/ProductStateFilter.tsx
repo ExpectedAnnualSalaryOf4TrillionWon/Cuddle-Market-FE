@@ -3,13 +3,13 @@ import { CONDITION_ITEMS } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 import { useSearchParams } from 'react-router-dom'
 
-interface ConditionFilterProps {
+interface ProductStateFilterProps {
   headingClassName?: string
   selectedProductStatus?: string | null
   onProductStatusChange?: (status: string | null) => void
 }
 
-export function ConditionFilter({ headingClassName, selectedProductStatus, onProductStatusChange }: ConditionFilterProps) {
+export function ProductStateFilter({ headingClassName, selectedProductStatus, onProductStatusChange }: ProductStateFilterProps) {
   const [, setSearchParams] = useSearchParams()
 
   const handleProductStatuses = (e: React.MouseEvent, value: string) => {
@@ -18,9 +18,9 @@ export function ConditionFilter({ headingClassName, selectedProductStatus, onPro
     const isDeselecting = selectedProductStatus === value
     setSearchParams((prev) => {
       if (isDeselecting) {
-        prev.delete('categories') // 선택 해제 시 URL에서 제거
+        prev.delete('productStatuses') // 선택 해제 시 URL에서 제거
       } else {
-        prev.set('categories', value) // 선택 시 URL에 추가
+        prev.set('productStatuses', value) // 선택 시 URL에 추가
       }
       return prev
     })
