@@ -77,13 +77,20 @@ function SelectOptions({ options, selectedValue, onSelect, placeholder, optionCl
   const listboxRef = useRef<HTMLDivElement>(null)
   const selectedOptionRef = useRef<HTMLButtonElement>(null)
 
-  // 드롭다운이 열릴 때 선택된 옵션으로 스크롤
+  // 드롭다운이 열릴 때 선택된 옵션을 중앙에 배치
   useEffect(() => {
     if (selectedOptionRef.current && listboxRef.current) {
-      selectedOptionRef.current.scrollIntoView({
-        block: 'center',
-        inline: 'nearest',
-      })
+      // 드롭다운 내부에서만 스크롤, 페이지 전체는 스크롤하지 않음
+      const listbox = listboxRef.current
+      const selectedOption = selectedOptionRef.current
+
+      const listboxHeight = listbox.clientHeight
+      const optionHeight = selectedOption.clientHeight
+      const optionTop = selectedOption.offsetTop
+
+      // 선택된 옵션을 드롭다운 중앙에 배치
+      const centerPosition = optionTop - listboxHeight / 2 + optionHeight / 2
+      listbox.scrollTop = centerPosition
     }
   }, [])
 
@@ -92,7 +99,7 @@ function SelectOptions({ options, selectedValue, onSelect, placeholder, optionCl
       ref={listboxRef}
       role="listbox"
       aria-label={placeholder}
-      className="absolute top-full left-0 z-40 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md"
+      className="absolute top-full left-0 z-2 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md"
     >
       {options.map((option) => {
         const isSelected = selectedValue === option.value

@@ -228,7 +228,7 @@ function Home() {
   }
 
   return (
-    <div className="bg-bg pb-4xl">
+    <div className="bg-bg pb-4xl pt-8">
       <div className="px-lg mx-auto max-w-[var(--container-max-width)]">
         <div className="flex flex-col gap-12">
           <div className="flex flex-col gap-7">
@@ -249,16 +249,18 @@ function Home() {
               onLocationChange={handleLocationChange}
             />
           </div>
-          <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
+          <div className="flex flex-col gap-5">
+            <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
+            <ProductsSection
+              products={allProducts}
+              totalElements={totalElements}
+              activeTab={activeProductTypeTab}
+              selectedSort={selectedSort as SORT_LABELS}
+              setSelectedSort={setSelectedSort}
+              // onSortChange={handleSortChange}
+            />
+          </div>
         </div>
-        <ProductsSection
-          products={allProducts}
-          totalElements={totalElements}
-          activeTab={activeProductTypeTab}
-          selectedSort={selectedSort as SORT_LABELS}
-          setSelectedSort={setSelectedSort}
-          // onSortChange={handleSortChange}
-        />
         {/* 무한 스크롤 감지용 요소 */}
         <div ref={targetRef} className="h-10" aria-hidden="true" />
 

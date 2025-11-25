@@ -10,7 +10,7 @@ interface ProductListHeaderProps {
 
 function ProductListHeader({ totalElements }: ProductListHeaderProps) {
   return (
-    <div className="pt-3xl pb-lg">
+    <div>
       <h2 id="product-list-title" className="heading4 text-text-primary">
         전체 상품
       </h2>
@@ -83,17 +83,21 @@ export function ProductsSection({
   }
 
   return (
-    <section role="tabpanel" id={`panel-${activeTabCode}`} aria-labelledby={activeTab}>
-      <ProductListHeader totalElements={totalElements} />
-      <SelectDropdown
-        value={selectedSort}
-        onChange={handleSortChange}
-        options={SORT_TYPE.map((sort) => ({
-          value: sort.label,
-          label: sort.label,
-        }))}
-        buttonClassName="border-0 bg-primary-50 text-gray-900 px-3 py-2"
-      />
+    <section role="tabpanel" id={`panel-${activeTabCode}`} aria-labelledby={activeTab} className="flex flex-col gap-5">
+      <div className="flex items-center justify-between">
+        <ProductListHeader totalElements={totalElements} />
+        <div className="w-36">
+          <SelectDropdown
+            value={selectedSort}
+            onChange={handleSortChange}
+            options={SORT_TYPE.map((sort) => ({
+              value: sort.label,
+              label: sort.label,
+            }))}
+            buttonClassName="border-0 bg-primary-50 text-gray-900 px-3 py-2"
+          />
+        </div>
+      </div>
       <ProductList products={products} />
     </section>
   )
