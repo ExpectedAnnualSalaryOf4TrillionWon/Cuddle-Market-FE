@@ -149,6 +149,7 @@ export interface Product {
   createdAt: string
   favoriteCount: number
   isFavorite: boolean
+  productType: string
 }
 
 // ========== 필터링 관련 타입 ==========
