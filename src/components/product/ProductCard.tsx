@@ -1,4 +1,4 @@
-import { CONDITION_ITEMS, PET_DETAILS, STATUS_EN_TO_KO } from '@constants/constants'
+import { CONDITION_ITEMS, PET_DETAILS, PRODUCT_TYPE_TABS, STATUS_EN_TO_KO } from '@constants/constants'
 // import { CiClock2 } from 'react-icons/ci'
 // import { GoHeart } from 'react-icons/go'
 import { Link } from 'react-router-dom'
@@ -26,6 +26,11 @@ const getTradeStatus = (tradeStatus: string) => {
   return condition?.name || tradeStatus
 }
 
+const getProductType = (productType: string) => {
+  const type = PRODUCT_TYPE_TABS.find((type) => type.code === productType)
+  return type?.label || productType
+}
+
 const getTradeStatusColor = (tradeStatus: string) => {
   const condition = STATUS_EN_TO_KO.find((status) => status.value === tradeStatus)
   return condition?.bgColor || 'bg-sale'
@@ -34,10 +39,11 @@ const getTradeStatusColor = (tradeStatus: string) => {
 function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   if (!data) return null
 
-  const { id, title, price, mainImageUrl, petDetailType, productStatus, tradeStatus, createdAt, favoriteCount } = data
+  const { id, title, price, mainImageUrl, petDetailType, productStatus, tradeStatus, createdAt, favoriteCount, productType } = data
   const petTypeName = getPetTypeName(petDetailType)
   const productStatusName = getProductStatus(productStatus)
   const productTradeName = getTradeStatus(tradeStatus)
+  const productTypeName = getProductType(productType)
   const productTradeColor = getTradeStatusColor(tradeStatus)
 
   const handleLikeClick = (e: React.MouseEvent) => {
@@ -60,7 +66,7 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
       // onKeyDown={handleKeyDown}
       to={`/products/${id}`}
     >
-      <ProductInfo title={title} price={price} createdAt={createdAt} favoriteCount={favoriteCount} />
+      <ProductInfo title={title} price={price} createdAt={createdAt} favoriteCount={favoriteCount} productTypeName={productTypeName} />
       <ProductThumbnail
         imageUrl={mainImageUrl}
         title={title}
