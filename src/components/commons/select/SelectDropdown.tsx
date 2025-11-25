@@ -10,7 +10,7 @@ interface SelectProps {
   id?: string
   buttonClassName?: string
   selectedLabel?: string
-  placeholder: string
+  placeholder?: string
 }
 
 function Select({ isOpen, disabled, onClick, id, buttonClassName, selectedLabel, placeholder }: SelectProps) {
@@ -69,7 +69,7 @@ interface SelectOptionsProps {
   options: { value: string; label: string }[]
   selectedValue: string
   onSelect: (value: string) => void
-  placeholder: string
+  placeholder?: string
   optionClassName?: string
 }
 
@@ -115,7 +115,7 @@ interface SelectDropdownProps {
   value: string
   onChange: (value: string) => void
   options: { value: string; label: string }[]
-  placeholder: string
+  placeholder?: string
   disabled?: boolean
   className?: string
   id?: string

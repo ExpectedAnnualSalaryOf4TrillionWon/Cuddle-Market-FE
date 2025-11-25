@@ -1,7 +1,7 @@
 import { Button } from '@src/components/commons/button/Button'
 import { PET_DETAILS, PET_TYPE_TABS, PETS, type PetTypeTabId } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
-import { ProductPetTypeTabs } from './ProductPetTypeTabs'
+import { ProductPetTypeTabs } from '../tab/ProductPetTypeTabs'
 import { useSearchParams } from 'react-router-dom'
 
 interface PetTypeFilterProps {

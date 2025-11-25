@@ -26,7 +26,9 @@ export const fetchAllProducts = async (
   selectedCategory?: string | null,
   petType?: string | null,
   selectedDetailPet?: string | null,
-  keyword?: string | null
+  keyword?: string | null,
+  sortBy?: string | null,
+  sortOrder?: string | null
 ) => {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -67,6 +69,12 @@ export const fetchAllProducts = async (
   }
   if (selectedCategory) {
     params.append('categories', selectedCategory)
+  }
+  if (sortBy) {
+    params.append('sortBy', sortBy)
+  }
+  if (sortOrder) {
+    params.append('sortOrder', sortOrder)
   }
 
   const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)

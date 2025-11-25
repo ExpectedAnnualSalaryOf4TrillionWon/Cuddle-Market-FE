@@ -1,8 +1,8 @@
 import { memo } from 'react'
-import { DetailFilterButton } from './DetailFilterButton'
-import { ProductStateFilter } from '../../../components/commons/filters/ProductStateFilter'
-import { PriceFilter } from '../../../components/commons/filters/PriceFilter'
-import { LocationFilter } from '../../../components/commons/filters/LocationFilter'
+import { DetailFilterButton } from '../DetailFilterButton'
+import { ProductStateFilter } from '../../../../components/commons/filters/ProductStateFilter'
+import { PriceFilter } from '../../../../components/commons/filters/PriceFilter'
+import { LocationFilter } from '../../../../components/commons/filters/LocationFilter'
 import type { PriceRange, LocationFilter as LocationFilterType } from '@src/constants/constants'
 
 interface DetailFilterProps {

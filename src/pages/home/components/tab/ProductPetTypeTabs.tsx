@@ -1,4 +1,4 @@
-import { Button } from '../../../components/commons/button/Button'
+import { Button } from '../../../../components/commons/button/Button'
 import { PET_TYPE_TABS, type PetTypeTabId } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 

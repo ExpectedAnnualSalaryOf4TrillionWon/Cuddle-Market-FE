@@ -1,4 +1,4 @@
-import { Button } from '../../../components/commons/button/Button'
+import { Button } from '../../../../components/commons/button/Button'
 import { PRODUCT_TYPE_TABS, type ProductTypeTabId } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 

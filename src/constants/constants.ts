@@ -170,6 +170,7 @@ export const PRODUCT_CATEGORIES: CategoryData[] = [
   { code: 'GROOMING', name: '미용용품' },
   { code: 'ETC', name: '기타' },
 ] as const
+export type CategoryFilter = string | null
 
 // ========== 거래상태 관련 상수 ==========
 export const STATUS_EN_TO_KO: Array<{ value: string; name: string; bgColor: string }> = [
@@ -211,13 +212,6 @@ export interface PriceRange {
   min: number
   max: number | null
 }
-
-export interface LocationFilter {
-  sido: string | null
-  gugun: string | null
-}
-
-export type CategoryFilter = string | null
 
 // ========== 지역 관련 상수 ==========
 export const LOCATIONS = [
@@ -1235,16 +1229,25 @@ export const LOCATIONS = [
     cities: [],
   },
 ] as const
+
 export type StateCode = (typeof LOCATIONS)[number]['name']
+
 export type CityCode = (typeof LOCATIONS)[number]['cities'][number]['code']
 
-// ========== 상품상태 관련 상수 ==========
-export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
-export const CONDITION_EN_TO_KO: Record<TransactionConditaion, string> = {
-  MINT: '새 상품',
-  EXCELLENT: '거의 새것',
-  GOOD: '사용감 있음',
-  FAIR: '수리 필요',
+export interface LocationFilter {
+  sido: string | null
+  gugun: string | null
 }
+
+// ========== 상품상태 관련 상수 ==========
+// export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
+export const SORT_TYPE = [
+  { id: 'createdAt', label: '최신순' },
+  { id: 'orderedLowPriced', label: '가격 낮은순' },
+  { id: 'orderedHighPriced', label: '가격 높은순' },
+  { id: 'favoriteCount', label: '찜 많은순' },
+]
+export type SORT_LABELS = (typeof SORT_TYPE)[number]['label']
+// const SORT_LABELS = SORT_TYPE.map(sort => sort.label);
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp']

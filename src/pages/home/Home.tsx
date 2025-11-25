@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState, useCallback, useEffect } from 'react'
-import { ProductTypeTabs } from '@src/pages/home/components/ProductTypeTabs'
-import { DetailFilter } from '@src/pages/home/components/DetailFilter'
-import { ProductList } from '@src/pages/home/components/ProductList'
+import { ProductTypeTabs } from '@src/pages/home/components/tab/ProductTypeTabs'
+import { DetailFilter } from '@src/pages/home/components/filter/DetailFilter'
+import { ProductsSection } from '@src/pages/home/components/product-list/ProductsSection'
 import { fetchAllProducts } from '../../api/products'
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import {
@@ -13,14 +13,18 @@ import {
   type LocationFilter,
   type PetTypeTabId,
   type CategoryFilter as CategoryFilterType,
+  SORT_TYPE,
+  type SORT_LABELS,
 } from '@src/constants/constants'
-import { PetTypeFilter } from './components/PetTypeFilter'
-import { CategoryFilter } from './components/CategoryFilter'
+import { PetTypeFilter } from './components/filter/PetTypeFilter'
+import { CategoryFilter } from './components/filter/CategoryFilter'
 import { useSearchParams } from 'react-router-dom'
 
 function Home() {
   const [searchParams] = useSearchParams()
   const keyword = searchParams.get('keyword') || ''
+  const sortBy = searchParams.get('sortBy')
+  const sortOrder = searchParams.get('sortOrder')
 
   const [activePetTypeTab, setActivePetTypeTab] = useState<PetTypeTabId>('tab-all')
   const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(searchParams.get('petDetailType'))
@@ -38,6 +42,17 @@ function Home() {
   })
   const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
+  const [selectedSort, setSelectedSort] = useState<string>(() => {
+    // sortBy와 sortOrder로 SORT_TYPE에서 찾기
+    const sortItem = SORT_TYPE.find((sort) => {
+      if (sortBy === 'price') {
+        return sortOrder === 'asc' ? sort.id === 'orderedLowPriced' : sort.id === 'orderedHighPriced'
+      }
+      return sort.id === sortBy
+    })
+
+    return sortItem?.label || '최신순' // 기본값: 최신순 label
+  })
 
   // 세부 필터 토글 함수 메모이제이션
   const handleDetailFilterToggle = useCallback((isOpen: boolean) => {
@@ -69,6 +84,13 @@ function Home() {
     setSelectedDetailPet(pet)
   }, [])
 
+  // const handleSortChange = useCallback((label: string | null) => {
+  //   const sortId = SORT_TYPE.find((sort) => sort.label === label)?.id
+  //   if (sortId) {
+  //     setSelectedSortId(sortId)
+  //   }
+  // }, [])
+
   /**
    * 무한 스크롤을 위한 React Query 설정
    * - queryKey: ['products', activeTab, selectedProductStatus] - 필터 변경 시 새로운 쿼리로 인식하여 데이터 refetch
@@ -88,6 +110,9 @@ function Home() {
       selectedCategory,
       activePetTypeTab,
       keyword,
+      sortBy,
+      sortOrder,
+      // selectedSort,
     ],
 
     // 각 페이지 데이터를 가져오는 함수
@@ -99,6 +124,10 @@ function Home() {
       // 'ALL'은 undefined로 변환 (API에 파라미터 전달하지 않음)
       const productType = productTypeCode === 'ALL' ? undefined : productTypeCode
       const petType = petTypeCode === 'ALL' ? undefined : petTypeCode
+
+      // selectedSort(label)를 id로 변환
+      // const sortItem = SORT_TYPE.find((sort) => sort.label === selectedSort)
+      // const sortId = sortItem?.id === 'orderedLowPriced' ? 'asc' : sortItem?.id === 'orderedHighPriced' ? 'desc' : 'createdAt'
 
       // API 호출: 페이지 번호, 페이지 크기(20), productType 필터, productStatus 필터, 가격 필터, 지역 필터
       return fetchAllProducts(
@@ -113,7 +142,10 @@ function Home() {
         selectedCategory,
         petType,
         selectedDetailPet,
-        keyword
+        keyword,
+        sortBy,
+        sortOrder
+        // sortId
       )
     },
 
@@ -197,7 +229,7 @@ function Home() {
 
   return (
     <div className="bg-bg pb-4xl">
-      <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
+      <div className="px-lg mx-auto max-w-[var(--container-max-width)]">
         <div className="flex flex-col gap-12">
           <div className="flex flex-col gap-7">
             <PetTypeFilter
@@ -219,7 +251,14 @@ function Home() {
           </div>
           <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
         </div>
-        <ProductList products={allProducts} totalElements={totalElements} activeTab={activeProductTypeTab} />
+        <ProductsSection
+          products={allProducts}
+          totalElements={totalElements}
+          activeTab={activeProductTypeTab}
+          selectedSort={selectedSort as SORT_LABELS}
+          setSelectedSort={setSelectedSort}
+          // onSortChange={handleSortChange}
+        />
         {/* 무한 스크롤 감지용 요소 */}
         <div ref={targetRef} className="h-10" aria-hidden="true" />
 

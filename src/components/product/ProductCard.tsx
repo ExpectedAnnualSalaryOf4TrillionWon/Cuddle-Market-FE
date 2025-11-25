@@ -31,13 +31,7 @@ const getTradeStatusColor = (tradeStatus: string) => {
   return condition?.bgColor || 'bg-sale'
 }
 
-// Main component
 function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
-  const navigate = useNavigate()
-
-  // TODO: 상품 클릭 시 상세 페이지로 이동 기능 구현 예정
-  void navigate
-
   if (!data) return null
 
   const { id, title, price, mainImageUrl, petDetailType, productStatus, tradeStatus, createdAt, favoriteCount } = data
@@ -45,10 +39,6 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   const productStatusName = getProductStatus(productStatus)
   const productTradeName = getTradeStatus(tradeStatus)
   const productTradeColor = getTradeStatusColor(tradeStatus)
-
-  // const handleCardClick = () => {
-  //   navigate(`/products/${id}`)
-  // }
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation()
