@@ -11,6 +11,7 @@ interface PriceFilterProps {
 
 export function PriceFilter({ headingClassName, selectedPriceRange, onMinPriceChange }: PriceFilterProps) {
   const [, setSearchParams] = useSearchParams()
+
   const handleMinPrice = (e: React.MouseEvent, priceRange: PriceRange) => {
     e.stopPropagation() // 이벤트 버블링 방지
 
