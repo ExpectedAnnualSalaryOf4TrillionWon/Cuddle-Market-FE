@@ -1,5 +1,5 @@
+import ProductList from '@src/components/commons/product/ProductList'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
-import ProductCard from '@src/components/product/ProductCard'
 import { PRODUCT_TYPE_TABS, SORT_TYPE, type ProductTypeTabId, type SORT_LABELS } from '@src/constants/constants'
 import type { Product } from '@src/types'
 import { useSearchParams } from 'react-router-dom'
@@ -18,22 +18,6 @@ function ProductListHeader({ totalElements }: ProductListHeaderProps) {
         {`총 ${totalElements}개의 상품`}
       </p>
     </div>
-  )
-}
-
-interface ProductListProps {
-  products: Product[]
-}
-
-function ProductList({ products }: ProductListProps) {
-  return (
-    <ul className="grid grid-cols-4 gap-4">
-      {products.map((product, index) => (
-        <li key={product.id}>
-          <ProductCard data-index={index} data={product} />
-        </li>
-      ))}
-    </ul>
   )
 }
 

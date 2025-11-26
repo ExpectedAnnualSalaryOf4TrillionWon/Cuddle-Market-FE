@@ -1,5 +1,7 @@
+import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { ProductHeading } from './ProductHeading'
-import { ProductMeta } from './ProductMeta'
+import { Clock, Heart } from 'lucide-react'
+import { ProductMetaItem } from '../commons/product/ProductMetaItem'
 
 interface ProductInfoProps {
   title: string
@@ -13,7 +15,10 @@ export function ProductInfo({ title, price, createdAt, favoriteCount, productTyp
   return (
     <div className="flex h-full flex-col justify-between gap-5 p-3">
       <ProductHeading title={title} price={price} productTypeName={productTypeName} />
-      <ProductMeta createdAt={createdAt} favoriteCount={favoriteCount} />
+      <div className="flex w-full justify-between">
+        <ProductMetaItem icon={Clock} label={getTimeAgo(createdAt)} className="text-gray-400" />
+        <ProductMetaItem icon={Heart} label={favoriteCount} className="text-gray-400" />
+      </div>
     </div>
   )
 }

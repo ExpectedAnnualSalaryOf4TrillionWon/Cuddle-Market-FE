@@ -14,12 +14,14 @@ import Signup from '@src/pages/signup/Signup'
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from '@src/components/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
+import ProductDetail from '@src/pages/product-detail/ProductDetail'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
   { path: ROUTES.LOGIN, element: <Login /> },
   { path: ROUTES.SIGNUP, element: <Signup /> },
   { path: ROUTES.MYPAGE, element: <MyPage /> },
+  { path: ROUTES.DETAIL, element: <ProductDetail /> },
   // { path: '/test/UI', element: <TestUIPage /> },
 ]
 // const WithHeaderLayout = () => (

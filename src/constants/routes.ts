@@ -2,11 +2,13 @@ export const ROUTES = {
   HOME: '/',
   COURSES: '/courses',
   MYPAGE: '/mypage',
+  DETAIL: `/products/:id`,
+  DETAIL_ID: (id: string | number) => `/products/${id}`,
 
-  // // Study Group
-  // STUDY_GROUP: '/study-group',
-  // STUDY_GROUP_ID: (id: string | number) => `/study-group/${id}`,
-  // STUDY_GROUP_DETAIL: '/study-group/:id',
+  // Community
+  FREE: '/free',
+  SHARE: '/share',
+  QNA: '/qna',
   // STUDY_GROUP_CREATE: '/study-group/create',
 
   // // Recruitment
@@ -24,4 +26,4 @@ export const ROUTES = {
   SIGNUP: '/auth/signup',
   FIND_EMAIL: '/auth/find-email',
   FIND_PASSWORD: '/auth/find-password',
-} as const;
+} as const

@@ -140,57 +140,16 @@ export interface ProductResponse {
 
 export interface Product {
   id: number
-  mainImageUrl: string
+  productType: string
+  tradeStatus: string
   petDetailType: string
   productStatus: string
-  tradeStatus: string
   title: string
   price: number
+  mainImageUrl: string
   createdAt: string
   favoriteCount: number
   isFavorite: boolean
-  productType: string
-}
-
-// ========== 필터링 관련 타입 ==========
-export interface FilterApiResponse {
-  categories: CategoryData[]
-  petTypes: PetTypeData[]
-}
-
-export interface CategoryData {
-  code: string
-  name: string
-}
-export interface PetTypeData {
-  code: string
-  name: string
-  details: PetTypeDetail[]
-}
-export interface PetTypeDetail {
-  code: string
-  name: string
-}
-export interface LocationData {
-  code: string
-  name: string
-  cities: CityData[]
-}
-export interface CityData {
-  code: string
-  name: string
-}
-
-export interface FilterState {
-  selectedPetType: string | null
-  selectedPetDetails: string[]
-  selectedCategories: string[]
-  selectedConditions: string[]
-  selectedPriceRanges: string[]
-  selectedLocation: {
-    state: string | null
-    city: string | null
-  }
 }
 
 // ========== 찜하기 관련 타입 ==========
@@ -200,34 +159,26 @@ export interface LikeApiResponse {
   is_liked: boolean
 }
 
-//!!!!!!!!!!!!!!!!!!!!
-// export interface UserWithProducts extends User {
-//   state: string;
-//   city: string;
-//   created_at: string;
-//   seller_products: UserProduct[];
-//   total_products: number;
-// }
-
-// export type Product = ProductBase;
-
 /** 상세용: 판매자/다른상품/서브이미지 포함 */
 export interface ProductDetailItem extends Product {
-  seller_info: User
-  images?: string[]
-  seller_products?: Product[]
-  // 추가 필드 (하위 호환성)
-  description?: string
-  thumbnail?: string
-  pet_type_code?: string
-  pet_type_detail_code?: string
-  category_code?: string
-  condition_status?: string
-  state_code?: string
-  city_code?: string
-  elapsed_time?: string
-  view_count?: number
-  like_count?: number
+  category: string
+  description: string
+  subImageUrls: string[]
+  addressSido: string
+  addressGugun: string
+  viewCount: number
+  sellerInfo: {
+    sellerId: number
+    sellerNickname: string
+    sellerProfileImageUrl: string
+  }
+  sellerOtherProducts: Product[]
+}
+
+export interface ProductDetailItemResponse {
+  code: string
+  message: string
+  data: ProductDetailItem
 }
 
 // export interface UserProduct {
