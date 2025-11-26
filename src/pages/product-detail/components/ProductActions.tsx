@@ -11,7 +11,7 @@ interface ProductActionsProps {
   }
 }
 export default function ProductActions({ isFavorite, sellerInfo }: ProductActionsProps) {
-  const { user, accessToken, redirectUrl, setRedirectUrl } = useUserStore()
+  const { user } = useUserStore()
   const isMyProduct = user?.id === sellerInfo?.sellerId
   return (
     <div className="gap-sm flex">
