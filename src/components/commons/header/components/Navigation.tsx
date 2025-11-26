@@ -9,6 +9,8 @@ export default function Navigation() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const { isLogin } = useUserStore()
+  console.log(isLogin)
+
   // const isLoggedIn = false
   // const isLoggedIn = useAuth((state) => state.isLoggedIn())
   // const userNickname = useAuth((state) => state.user?.nickname ?? '사용자')

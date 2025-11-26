@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { InputField } from '@src/components/commons/InputField'
 import { login } from '@src/api/auth'
 import { authValidationRules } from '@src/utils/validation/authValidationRules'
+import { useUserStore } from '@src/store/userStore'
 
 interface LoginFormValues {
   email: string
@@ -18,11 +19,12 @@ export function LoginForm() {
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     formState: { errors }, // errors: register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<LoginFormValues>() // 폼에서 관리할 필드들의 타입(이름) 정의.
-
+  const handleLogin = useUserStore((state) => state.handleLogin)
   const onSubmit = async (data: LoginFormValues) => {
     console.log('제출')
     try {
       const response = await login(data)
+      handleLogin(response.data.user, response.data.accessToken)
       console.log('로그인 성공:', response)
       navigate('/')
     } catch (error) {

@@ -1,39 +1,17 @@
-import { CONDITION_ITEMS, PET_DETAILS, PRODUCT_TYPE_TABS, STATUS_EN_TO_KO } from '@constants/constants'
-// import { CiClock2 } from 'react-icons/ci'
-// import { GoHeart } from 'react-icons/go'
 import { Link } from 'react-router-dom'
 import type { Product } from '../../types'
 import { ProductThumbnail } from './ProductThumbnail'
 import { ProductInfo } from './ProductInfo'
+import { ROUTES } from '@src/constants/routes'
+import { getTradeStatus } from '@src/utils/getTradeStatus'
+import { getPetTypeName } from '@src/utils/getPetTypeName'
+import { getProductStatus } from '@src/utils/getProductStatus'
+import { getProductType } from '@src/utils/getProductType'
+import { getTradeStatusColor } from '@src/utils/getTradeStatusColor'
 
 export interface ProductCardProps {
   data: Product
   'data-index'?: number
-}
-
-const getPetTypeName = (petDetailCode: string) => {
-  const detail = PET_DETAILS.find((detail) => detail.code === petDetailCode)
-  return detail?.name || petDetailCode
-}
-
-const getProductStatus = (productStatus: string) => {
-  const condition = CONDITION_ITEMS.find((status) => status.value === productStatus)
-  return condition?.title || productStatus
-}
-
-const getTradeStatus = (tradeStatus: string) => {
-  const condition = STATUS_EN_TO_KO.find((status) => status.value === tradeStatus)
-  return condition?.name || tradeStatus
-}
-
-const getProductType = (productType: string) => {
-  const type = PRODUCT_TYPE_TABS.find((type) => type.code === productType)
-  return type?.label || productType
-}
-
-const getTradeStatusColor = (tradeStatus: string) => {
-  const condition = STATUS_EN_TO_KO.find((status) => status.value === tradeStatus)
-  return condition?.bgColor || 'bg-sale'
 }
 
 function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
@@ -49,6 +27,10 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   // const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
   //   if (e.key === 'Enter' || e.key === ' ') {
@@ -60,11 +42,11 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   return (
     <Link
       className="border-border bg-bg text-text-primary flex cursor-pointer flex-col-reverse overflow-hidden rounded-xl border shadow-md transition-shadow duration-200 hover:shadow-xl"
-      // onClick={handleCardClick}
+      onClick={handleCardClick}
       data-index={dataIndex}
       aria-label={`${title}, ${price}원, ${productStatusName}, ${petTypeName}, ${productTradeName}`}
       // onKeyDown={handleKeyDown}
-      to={`/products/${id}`}
+      to={ROUTES.DETAIL_ID(id)}
     >
       <ProductInfo title={title} price={price} createdAt={createdAt} favoriteCount={favoriteCount} productTypeName={productTypeName} />
       <ProductThumbnail

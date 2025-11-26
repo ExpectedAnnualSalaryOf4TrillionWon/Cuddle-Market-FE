@@ -1,7 +1,5 @@
-import type { CategoryData, PetTypeData } from 'src/types'
-
 // ========== 반려동물 관련 상수 ==========
-export const PETS: PetTypeData[] = [
+export const PETS = [
   {
     code: 'MAMMAL',
     name: '포유류',
@@ -160,7 +158,7 @@ export const CONDITION_ITEMS: Array<{ value: string; title: string; subtitle: st
 ]
 
 // ========== 상품 카테고리 관련 상수 ==========
-export const PRODUCT_CATEGORIES: CategoryData[] = [
+export const PRODUCT_CATEGORIES = [
   { code: 'FOOD', name: '사료/간식' },
   { code: 'TOY', name: '장난감' },
   { code: 'HOUSE', name: '사육장/하우스' },

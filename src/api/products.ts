@@ -1,10 +1,11 @@
+import { useUserStore } from '@store/userStore'
 import type {
   CreateProductRequest,
   CreateProductResponse,
-  FilterApiResponse,
+  // FilterApiResponse,
   LikesResponse,
   MyPageData,
-  ProductDetailItem,
+  ProductDetailItemResponse,
   ProductResponse,
 } from '../types'
 import { apiFetch } from './apiFetch'
@@ -90,17 +91,22 @@ export const fetchAllProducts = async (
 //   return data
 // }
 
-export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
-  const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
-  return data
-}
-
 // 상품 상세 조회
-export const fetchProductById = async (productId: string): Promise<ProductDetailItem> => {
-  const data = await apiFetch(`${API_BASE_URL}/products/${productId}`)
+export const fetchProductById = async (productId: string) => {
+  const accessToken = useUserStore.getState().accessToken
+  const response = await axios.get<ProductDetailItemResponse>(`${API_BASE_URL}/products/${productId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
 
-  return data
+  return response.data.data
 }
+// export const fetchProductById = async (productId: string): Promise<ProductDetailItem> => {
+//   const data = await apiFetch(`${API_BASE_URL}/products/${productId}`)
+
+//   return data
+// }
 
 // 판매자 프로필 조회
 // export const fetchSellerById = async (sellerId: string): Promise<UserWithProducts> => {
