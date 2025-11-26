@@ -1,6 +1,6 @@
 import { Z_INDEX } from '@constants/ui'
 import { cn } from '@utils/cn'
-import Logo from './components/Logo'
+import Logo from '../Logo'
 import { SearchBar } from './components/SearchBar'
 import Navigation from './components/Navigation'
 
