@@ -1,4 +1,4 @@
-import Logo from '../header/components/Logo'
+import Logo from '../Logo'
 import { ROUTES } from '@src/constants/routes'
 import { Link } from 'react-router-dom'
 

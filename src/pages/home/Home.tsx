@@ -2,9 +2,9 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState, useCallback, useEffect } from 'react'
 import { ProductTypeTabs } from '@src/pages/home/components/tab/ProductTypeTabs'
 import { DetailFilter } from '@src/pages/home/components/filter/DetailFilter'
-import { ProductsSection } from '@src/pages/home/components/product-list/ProductsSection'
+import { ProductsSection } from '@src/pages/home/components/product-section/ProductsSection'
 import { fetchAllProducts } from '../../api/products'
-import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
+import { useIntersectionObserver } from '../../components/hook/useIntersectionObserver'
 import {
   PRODUCT_TYPE_TABS,
   PET_TYPE_TABS,

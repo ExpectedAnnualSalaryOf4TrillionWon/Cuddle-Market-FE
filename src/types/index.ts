@@ -152,14 +152,6 @@ export interface Product {
   isFavorite: boolean
 }
 
-// ========== 찜하기 관련 타입 ==========
-export interface LikeApiResponse {
-  message: string
-  product_id: number
-  is_liked: boolean
-}
-
-/** 상세용: 판매자/다른상품/서브이미지 포함 */
 export interface ProductDetailItem extends Product {
   category: string
   description: string
@@ -181,19 +173,11 @@ export interface ProductDetailItemResponse {
   data: ProductDetailItem
 }
 
-// export interface UserProduct {
-//   id: number;
-//   title: string;
-//   price: number;
-//   thumbnail: string;
-//   pet_type_code: string;
-//   pet_type_detail_code: string;
-//   transaction_status: '판매중' | '예약중' | '판매완료';
-//   condition_status: '새 상품' | '거의 새것' | '사용감 있음' | '수리 필요';
-//   elapsed_time: string;
-//   like_count?: number;
-//   view_count?: number;
-//   is_liked?: boolean;
+// ========== 찜하기 관련 타입 ==========
+// export interface FavoriteResponse {
+//   message: string
+//   product_id: number
+//   is_liked: boolean
 // }
 
 export interface State {
