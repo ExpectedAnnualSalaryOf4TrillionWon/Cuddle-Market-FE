@@ -1,4 +1,3 @@
-import { useUserStore } from '@store/userStore'
 import type {
   CreateProductRequest,
   CreateProductResponse,
@@ -9,6 +8,7 @@ import type {
   ProductResponse,
 } from '../types'
 import { apiFetch } from './apiFetch'
+import { api } from './api'
 
 import axios from 'axios'
 
@@ -86,25 +86,22 @@ export const fetchAllProducts = async (
   }
 }
 
-// export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
-//   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
-//   return data
-// }
-
 // 상품 상세 조회
+// api를 사용하면 자동으로:
+// 1. Authorization 헤더에 access token 추가
+// 2. 401 에러 시 토큰 갱신 후 재요청
 export const fetchProductById = async (productId: string) => {
-  const accessToken = useUserStore.getState().accessToken
-  const response = await axios.get<ProductDetailItemResponse>(`${API_BASE_URL}/products/${productId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
-
+  const response = await api.get<ProductDetailItemResponse>(`/products/${productId}`)
   return response.data.data
 }
-// export const fetchProductById = async (productId: string): Promise<ProductDetailItem> => {
-//   const data = await apiFetch(`${API_BASE_URL}/products/${productId}`)
 
+// 찜 추가
+export const addFavorite = async (productId: number): Promise<void> => {
+  await api.post(`/products/${productId}/favorite`)
+}
+
+// export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
+//   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
 //   return data
 // }
 
@@ -220,19 +217,4 @@ export const fetchMyLikes = async (): Promise<LikesResponse> => {
     throw new Error('찜한 상품 데이터를 불러오는데 실패했습니다.')
   }
   return response.json()
-}
-
-export const addLike = async (productId: number): Promise<void> => {
-  console.log('addLike 호출, productId:', productId)
-  const res = await fetch(`${API_BASE_URL}/likes`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ product_id: productId }),
-  })
-  if (!res.ok) throw new Error('찜 추가 실패')
-}
-
-export const removeLike = async (productId: number): Promise<void> => {
-  const res = await fetch(`${API_BASE_URL}/likes/${productId}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error('찜 취소 실패')
 }
