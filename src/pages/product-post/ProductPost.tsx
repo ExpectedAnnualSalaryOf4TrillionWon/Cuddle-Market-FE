@@ -1,6 +1,6 @@
 import { SimpleHeader } from '@src/components/layouts/SimpleHeader'
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import type { ProductTypeTabId } from '../../constants/constants'
 import { ProductTypeTabs } from '../home/components/tab/ProductTypeTabs'
 import { ProductPostForm } from './components/ProductPostForm'
@@ -8,9 +8,8 @@ import { ProductRequestForm } from './components/ProductRequestForm'
 
 function ProductPost() {
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-sales')
-  const location = useLocation()
-  const isEditMode = location.pathname.includes('/edit')
-
+  const { id } = useParams()
+  const isEditMode = !!id
   return (
     <>
       <SimpleHeader title={isEditMode ? '상품 수정' : '상품 등록'} />
@@ -18,7 +17,7 @@ function ProductPost() {
         <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
           <div className="gap-2xl flex w-full flex-col">
             <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} hideAllTab />
-            {activeProductTypeTab === 'tab-sales' && <ProductPostForm />}
+            {activeProductTypeTab === 'tab-sales' && <ProductPostForm isEditMode={isEditMode} productId={id} />}
             {activeProductTypeTab === 'tab-purchases' && <ProductRequestForm />}
           </div>
         </div>
