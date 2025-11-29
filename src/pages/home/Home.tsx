@@ -18,10 +18,13 @@ import {
 } from '@src/constants/constants'
 import { PetTypeFilter } from './components/filter/PetTypeFilter'
 import { CategoryFilter } from './components/filter/CategoryFilter'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Plus } from 'lucide-react'
+import { Button } from '@src/components/commons/button/Button'
 
 function Home() {
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const keyword = searchParams.get('keyword') || ''
   const sortBy = searchParams.get('sortBy')
   const sortOrder = searchParams.get('sortOrder')
@@ -43,7 +46,6 @@ function Home() {
   const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
   const [selectedSort, setSelectedSort] = useState<string>(() => {
-    // sortBy와 sortOrder로 SORT_TYPE에서 찾기
     const sortItem = SORT_TYPE.find((sort) => {
       if (sortBy === 'price') {
         return sortOrder === 'asc' ? sort.id === 'orderedLowPriced' : sort.id === 'orderedHighPriced'
@@ -51,45 +53,32 @@ function Home() {
       return sort.id === sortBy
     })
 
-    return sortItem?.label || '최신순' // 기본값: 최신순 label
+    return sortItem?.label || '최신순'
   })
 
-  // 세부 필터 토글 함수 메모이제이션
   const handleDetailFilterToggle = useCallback((isOpen: boolean) => {
     setIsDetailFilterOpen(isOpen)
   }, [])
 
-  // 상품 상태 변경 함수 메모이제이션
   const handleProductStatusChange = useCallback((status: string | null) => {
     setSelectedProductStatus(status)
   }, [])
 
-  // 가격 범위 변경 함수 메모이제이션
   const handleMinPriceChange = useCallback((priceRange: PriceRange | null) => {
     setSelectedProductPrice(priceRange)
   }, [])
 
-  // 지역 변경 함수 메모이제이션
   const handleLocationChange = useCallback((location: LocationFilter | null) => {
     setSelectedLocation(location)
   }, [])
 
-  // 카테고리 변경 함수 메모이제이션
   const handleCategoryChange = useCallback((category: string | null) => {
     setSelectedCategory(category)
   }, [])
 
-  // 반려동물 세부종류 변경 함수 메모이제이션
   const handlePetDetailTypeChange = useCallback((pet: string | null) => {
     setSelectedDetailPet(pet)
   }, [])
-
-  // const handleSortChange = useCallback((label: string | null) => {
-  //   const sortId = SORT_TYPE.find((sort) => sort.label === label)?.id
-  //   if (sortId) {
-  //     setSelectedSortId(sortId)
-  //   }
-  // }, [])
 
   /**
    * 무한 스크롤을 위한 React Query 설정
@@ -190,22 +179,21 @@ function Home() {
     threshold: 0.5,
   })
 
-  // 전체 상품 개수 (API에서 제공)
+  const toGoProductPostPage = (e: React.MouseEvent) => {
+    e.preventDefault()
+    navigate('/product-post')
+  }
+
   const totalElements = data?.pages?.[0]?.total || 0
 
-  // URL의 DetailFilter 필터들을 체크하는 로직
   useEffect(() => {
-    const hasDetailFilter =
-      searchParams.has('productStatuses') || // ProductStateFilter
-      searchParams.has('minPrice') || // PriceFilter
-      searchParams.has('addressSido') // LocationFilter
+    const hasDetailFilter = searchParams.has('productStatuses') || searchParams.has('minPrice') || searchParams.has('addressSido')
 
     if (hasDetailFilter) {
-      setIsDetailFilterOpen(true) // DetailFilter 안의 필터가 있으면 열기
+      setIsDetailFilterOpen(true)
     }
   }, [searchParams])
 
-  // 로딩 상태
   if (isLoading && !data) {
     return (
       <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
@@ -216,7 +204,6 @@ function Home() {
     )
   }
 
-  // 에러 상태
   if (error) {
     return (
       <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
@@ -228,49 +215,57 @@ function Home() {
   }
 
   return (
-    <div className="bg-bg pb-4xl pt-8">
-      <div className="px-lg mx-auto max-w-[var(--container-max-width)]">
-        <div className="flex flex-col gap-12">
-          <div className="flex flex-col gap-7">
-            <PetTypeFilter
-              activeTab={activePetTypeTab}
-              onTabChange={setActivePetTypeTab}
-              selectedDetailPet={selectedDetailPet}
-              onPetDetailTypeChange={handlePetDetailTypeChange}
-            />
-            <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
-            <DetailFilter
-              isOpen={isDetailFilterOpen}
-              onToggle={handleDetailFilterToggle}
-              selectedProductStatus={selectedProductStatus}
-              onProductStatusChange={handleProductStatusChange}
-              selectedPriceRange={selectedProductPrice}
-              onMinPriceChange={handleMinPriceChange}
-              onLocationChange={handleLocationChange}
-            />
+    <>
+      <div className="bg-bg pb-4xl pt-8">
+        <div className="px-lg mx-auto max-w-[var(--container-max-width)]">
+          <div className="flex flex-col gap-12">
+            <div className="flex flex-col gap-7">
+              <PetTypeFilter
+                activeTab={activePetTypeTab}
+                onTabChange={setActivePetTypeTab}
+                selectedDetailPet={selectedDetailPet}
+                onPetDetailTypeChange={handlePetDetailTypeChange}
+              />
+              <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
+              <DetailFilter
+                isOpen={isDetailFilterOpen}
+                onToggle={handleDetailFilterToggle}
+                selectedProductStatus={selectedProductStatus}
+                onProductStatusChange={handleProductStatusChange}
+                selectedPriceRange={selectedProductPrice}
+                onMinPriceChange={handleMinPriceChange}
+                onLocationChange={handleLocationChange}
+              />
+            </div>
+            <div className="flex flex-col gap-5">
+              <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
+              <ProductsSection
+                products={allProducts}
+                totalElements={totalElements}
+                activeTab={activeProductTypeTab}
+                selectedSort={selectedSort as SORT_LABELS}
+                setSelectedSort={setSelectedSort}
+                // onSortChange={handleSortChange}
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-5">
-            <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
-            <ProductsSection
-              products={allProducts}
-              totalElements={totalElements}
-              activeTab={activeProductTypeTab}
-              selectedSort={selectedSort as SORT_LABELS}
-              setSelectedSort={setSelectedSort}
-              // onSortChange={handleSortChange}
-            />
-          </div>
-        </div>
-        {/* 무한 스크롤 감지용 요소 */}
-        <div ref={targetRef} className="h-10" aria-hidden="true" />
+          {/* 무한 스크롤 감지용 요소 */}
+          <div ref={targetRef} className="h-10" aria-hidden="true" />
 
-        {isFetchingNextPage && (
-          <div className="flex items-center justify-center py-8">
-            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" aria-label="상품 로딩 중" role="status"></div>
-          </div>
-        )}
+          {isFetchingNextPage && (
+            <div className="flex items-center justify-center py-8">
+              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" aria-label="상품 로딩 중" role="status"></div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      {/* <ChatButton /> */}
+      <div className="fixed right-10 bottom-5 z-50">
+        <Button size="lg" className="bg-primary-300 cursor-pointer text-white" icon={Plus} onClick={toGoProductPostPage}>
+          상품등록
+        </Button>
+      </div>
+    </>
   )
 }
 
