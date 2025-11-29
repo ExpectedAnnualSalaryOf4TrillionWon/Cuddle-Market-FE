@@ -63,7 +63,6 @@ export function CascadingSelectField<T extends FieldValues>({
       </RequiredLabel>
 
       <div className="flex gap-2.5">
-        {/* Primary 선택 */}
         <Controller
           name={primaryName}
           control={control}

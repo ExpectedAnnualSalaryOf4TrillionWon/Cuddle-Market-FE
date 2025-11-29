@@ -23,7 +23,7 @@ import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
 
 function Home() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const keyword = searchParams.get('keyword') || ''
   const sortBy = searchParams.get('sortBy')
@@ -101,7 +101,6 @@ function Home() {
       keyword,
       sortBy,
       sortOrder,
-      // selectedSort,
     ],
 
     // 각 페이지 데이터를 가져오는 함수
@@ -179,6 +178,21 @@ function Home() {
     threshold: 0.5,
   })
 
+  const filterReset = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      setSearchParams({})
+      setActivePetTypeTab('tab-all')
+      setSelectedDetailPet(null)
+      setSelectedCategory(null)
+      setSelectedProductStatus(null)
+      setSelectedProductPrice(null)
+      setSelectedLocation(null)
+      setSelectedSort('최신순')
+    },
+    [setSearchParams]
+  )
+
   const toGoProductPostPage = (e: React.MouseEvent) => {
     e.preventDefault()
     navigate('/product-post')
@@ -235,6 +249,7 @@ function Home() {
                 selectedPriceRange={selectedProductPrice}
                 onMinPriceChange={handleMinPriceChange}
                 onLocationChange={handleLocationChange}
+                filterReset={filterReset}
               />
             </div>
             <div className="flex flex-col gap-5">
