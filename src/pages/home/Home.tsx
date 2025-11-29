@@ -21,11 +21,8 @@ import { CategoryFilter } from './components/filter/CategoryFilter'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
-import { useUserStore } from '@src/store/userStore'
 
 function Home() {
-  const { isLogin } = useUserStore()
-  const isLoggedIn = isLogin()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const keyword = searchParams.get('keyword') || ''
@@ -278,13 +275,11 @@ function Home() {
         </div>
       </div>
       {/* <ChatButton /> */}
-      {isLoggedIn && (
-        <div className="fixed right-10 bottom-5 z-50">
-          <Button size="lg" className="bg-primary-300 cursor-pointer text-white" icon={Plus} onClick={toGoProductPostPage}>
-            상품등록
-          </Button>
-        </div>
-      )}
+      <div className="fixed right-10 bottom-5 z-50">
+        <Button size="lg" className="bg-primary-300 cursor-pointer text-white" icon={Plus} onClick={toGoProductPostPage}>
+          상품등록
+        </Button>
+      </div>
     </>
   )
 }

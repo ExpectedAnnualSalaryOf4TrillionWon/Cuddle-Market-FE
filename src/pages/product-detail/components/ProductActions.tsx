@@ -4,7 +4,6 @@ import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addFavorite } from '@src/api/products'
-import { useNavigate } from 'react-router-dom'
 
 interface ProductActionsProps {
   isFavorite: boolean
@@ -18,7 +17,6 @@ interface ProductActionsProps {
 export default function ProductActions({ id, isFavorite: initialIsFavorite, sellerInfo }: ProductActionsProps) {
   const { user } = useUserStore()
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
 
   const { mutate: toggleFavorite, isPending } = useMutation({
@@ -36,15 +34,6 @@ export default function ProductActions({ id, isFavorite: initialIsFavorite, sell
   }
 
   const isMyProduct = user?.id === sellerInfo?.sellerId
-
-  const handleEdit = (productId: number) => {
-    navigate(`/products/${productId}/edit`)
-  }
-
-  const handleChat = () => {
-    console.log('채팅')
-  }
-
   return (
     <div className="gap-sm flex">
       <Button
@@ -57,7 +46,11 @@ export default function ProductActions({ id, isFavorite: initialIsFavorite, sell
         className="cursor-pointer border border-gray-300 bg-white"
         onClick={handleToggleFavorite}
       />
-      <Button size="md" className="bg-primary-400 flex-1 cursor-pointer text-white" onClick={isMyProduct ? () => handleEdit(id) : handleChat}>
+      <Button
+        size="md"
+        className="bg-primary-400 flex-1 cursor-pointer text-white"
+        // onClick={isMyProduct ? handleEdit : handleChat}
+      >
         {isMyProduct ? '수정하기' : '채팅하기'}
       </Button>
     </div>

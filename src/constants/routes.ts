@@ -13,7 +13,6 @@ export const ROUTES = {
 
   // Product
   PRODUCT_POST: '/product-post',
-  PRODUCT_EDIT: '/products/:id/edit',
   // RECRUITMENT_ID: (id: string | number) => `/recruitment/${id}`,
   // RECRUITMENT_DETAIL: '/recruitment/:uuid',
   // RECRUITMENT_CREATE: '/recruitment/create',

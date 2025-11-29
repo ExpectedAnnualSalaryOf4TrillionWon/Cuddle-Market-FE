@@ -142,7 +142,6 @@ export interface Product {
   id: number
   productType: string
   tradeStatus: string
-  petType?: string
   petDetailType: string
   productStatus: string
   title: string
@@ -151,8 +150,6 @@ export interface Product {
   createdAt: string
   favoriteCount: number
   isFavorite: boolean
-  isDeliveryAvailable?: boolean
-  preferredMeetingPlace?: string
 }
 
 export interface ProductDetailItem extends Product {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
@@ -22,10 +22,9 @@ interface DropzoneAreaProps {
   setValue: UseFormSetValue<ProductPostFormValues>
   setError: UseFormSetError<ProductPostFormValues>
   clearErrors: UseFormClearErrors<ProductPostFormValues>
-  initialImages?: string[]
 }
 
-export default function DropzoneArea({ setValue, setError, clearErrors, initialImages }: DropzoneAreaProps) {
+export default function DropzoneArea({ setValue, setError, clearErrors }: DropzoneAreaProps) {
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -92,11 +91,6 @@ export default function DropzoneArea({ setValue, setError, clearErrors, initialI
       setValue('subImageUrls', newUrls.slice(1))
     }
   }
-  useEffect(() => {
-    if (initialImages && initialImages.length > 0) {
-      setPreviewUrls(initialImages)
-    }
-  }, [initialImages])
 
   return (
     <div {...getRootProps()} className="cursor-pointer rounded-lg border border-dashed border-gray-400 px-6 py-10">

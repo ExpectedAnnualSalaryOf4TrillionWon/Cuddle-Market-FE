@@ -6,10 +6,9 @@ import ProductImageUpload from './imageUploadField/ImageUploadField'
 import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
 import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
-import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
+import type { ProductPostRequestData } from '@src/types'
 import { postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
-import { useEffect, useMemo } from 'react'
 
 export interface ProductPostFormValues {
   petType: string
@@ -27,13 +26,7 @@ export interface ProductPostFormValues {
   preferredMeetingPlace?: string
 }
 
-interface ProductPostFormProps {
-  isEditMode?: boolean
-  productId?: string
-  initialData?: ProductDetailItem | null
-}
-
-export function ProductPostForm({ isEditMode, productId: id, initialData }: ProductPostFormProps) {
+export function ProductPostForm() {
   const {
     control,
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
@@ -42,7 +35,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
     setValue,
     setError,
     clearErrors,
-    reset,
     formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<ProductPostFormValues>({
     mode: 'onChange',
@@ -64,13 +56,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
 
-  const initialImages = useMemo(() => {
-    if (initialData) {
-      return [initialData.mainImageUrl, ...(initialData.subImageUrls || [])].filter(Boolean)
-    }
-    return []
-  }, [initialData])
-
   const onSubmit = async (data: ProductPostFormValues) => {
     const requestData: ProductPostRequestData = {
       petType: data.petType,
@@ -88,33 +73,20 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
       preferredMeetingPlace: data.preferredMeetingPlace ?? '',
     }
 
+    console.log('전송할 데이터:', requestData)
+
     try {
-      await postProduct(requestData)
-      navigate(`/products/${id}`)
-    } catch {
-      alert('상품 등록에 실패했습니다.')
+      const response = await postProduct(requestData)
+      console.log('상품 등록 성공:', response)
+      navigate('/')
+    } catch (error) {
+      console.error('상품 등록 실패:', error)
+      if (error instanceof Error && 'response' in error) {
+        const axiosError = error as { response?: { data?: unknown } }
+        console.error('서버 응답:', axiosError.response?.data)
+      }
     }
   }
-  useEffect(() => {
-    if (isEditMode && initialData) {
-      reset({
-        title: initialData.title,
-        description: initialData.description,
-        price: initialData.price,
-        petType: initialData.petType,
-        petDetailType: initialData.petDetailType,
-        category: initialData.category,
-        productStatus: initialData.productStatus,
-        mainImageUrl: initialData.mainImageUrl,
-        subImageUrls: initialData.subImageUrls ?? [],
-        addressSido: initialData.addressSido as Province | '',
-        addressGugun: initialData.addressGugun,
-        isDeliveryAvailable: initialData.isDeliveryAvailable ?? false,
-        preferredMeetingPlace: initialData.preferredMeetingPlace ?? '',
-      })
-    }
-  }, [isEditMode, initialData, reset])
-
   return (
     <div role="tabpanel">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -123,7 +95,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
           <div className="flex flex-col gap-5">
             <BasicInfoSection control={control} setValue={setValue} register={register} errors={errors} titleLength={watch('title')?.length ?? 0} />
             <PriceAndStatusSection control={control} register={register} errors={errors} />
-            <ProductImageUpload initialImages={initialImages} setValue={setValue} errors={errors} setError={setError} clearErrors={clearErrors} />
+            <ProductImageUpload setValue={setValue} errors={errors} setError={setError} clearErrors={clearErrors} />
             <TradeInfoSection control={control} setValue={setValue} register={register} />
           </div>
           <div className="flex items-center gap-4">
