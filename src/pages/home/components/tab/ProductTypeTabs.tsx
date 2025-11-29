@@ -5,12 +5,15 @@ import { cn } from '@src/utils/cn'
 interface ProductTypeTabsProps {
   activeTab: ProductTypeTabId
   onTabChange: (tabId: ProductTypeTabId) => void
+  hideAllTab?: boolean
 }
 
-export function ProductTypeTabs({ activeTab, onTabChange }: ProductTypeTabsProps) {
+export function ProductTypeTabs({ activeTab, onTabChange, hideAllTab = false }: ProductTypeTabsProps) {
+  const tabs = hideAllTab ? PRODUCT_TYPE_TABS.filter((tab) => tab.id !== 'tab-all') : PRODUCT_TYPE_TABS
+
   return (
     <div role="tablist" aria-label="상품 타입 분류" className={cn('border-b-primary-200 flex gap-2.5 border-b-2 pb-1')}>
-      {PRODUCT_TYPE_TABS.map((tab) => (
+      {tabs.map((tab) => (
         <Button
           key={tab.id}
           id={tab.id}

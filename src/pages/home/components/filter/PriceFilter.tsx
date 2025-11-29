@@ -1,4 +1,4 @@
-import { Button } from '../button/Button'
+import { Button } from '../../../../components/commons/button/Button'
 import { PRICE_TYPE, type PriceRange } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 import { useSearchParams } from 'react-router-dom'
