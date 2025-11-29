@@ -1,75 +1,61 @@
-import { useEffect } from 'react'
-import { Controller, type Control, type UseFormWatch, type UseFormSetValue } from 'react-hook-form'
+import { type Control, type UseFormSetValue, type FieldValues, type Path } from 'react-hook-form'
 import { CITIES, PROVINCES } from '@src/constants/cities'
-import { SelectDropdown } from '../../../components/commons/select/SelectDropdown'
-import { RequiredLabel } from '../../../components/commons/RequiredLabel'
-import type { SignUpFormValues } from './SignUpForm'
+import { CascadingSelectField, type SelectOption } from '@src/components/commons/select/CascadingSelectField'
 
-interface AddressFieldProps {
-  control: Control<SignUpFormValues>
-  watch: UseFormWatch<SignUpFormValues>
-  setValue: UseFormSetValue<SignUpFormValues>
+// 시/도 옵션 생성
+const provinceOptions: SelectOption[] = PROVINCES.map((province) => ({
+  value: province,
+  label: province,
+}))
+
+// 시/도별 구/군 옵션 맵 생성
+const cityOptionsMap: Record<string, SelectOption[]> = Object.fromEntries(
+  Object.entries(CITIES).map(([province, cities]) => [province, cities.map((city) => ({ value: city, label: city }))])
+)
+
+interface AddressFieldProps<T extends FieldValues> {
+  control: Control<T>
+  setValue: UseFormSetValue<T>
+  primaryName: Path<T>
+  secondaryName: Path<T>
+  label?: string
+  labelClass?: string
+  layoutClass?: string
 }
 
-export function AddressField({ control, watch, setValue }: AddressFieldProps) {
-  const selectedSido = watch('addressSido')
-  const availableGugun = selectedSido ? CITIES[selectedSido] || [] : []
-
-  // 시/도가 변경되면 구/군 초기화
-  useEffect(() => {
-    if (selectedSido) {
-      setValue('addressGugun', '')
-    }
-  }, [selectedSido, setValue])
+export function AddressField<T extends FieldValues>({
+  control,
+  setValue,
+  primaryName,
+  secondaryName,
+  label = '거주지',
+  labelClass,
+  layoutClass,
+}: AddressFieldProps<T>) {
+  const handlePrimaryChange = () => {
+    // 시/도가 변경되면 구/군 초기화
+    setValue(secondaryName, '' as T[typeof secondaryName])
+  }
 
   return (
-    <div className="flex flex-col gap-2.5">
-      <RequiredLabel htmlFor="address-sido">거주지</RequiredLabel>
-
-      <div className="flex gap-2.5">
-        {/* 시/도 선택 */}
-        <Controller
-          name="addressSido"
-          control={control}
-          rules={{ required: '시/도를 선택해주세요' }}
-          render={({ field, fieldState }) => (
-            <div className="flex flex-1 flex-col gap-1">
-              <SelectDropdown
-                {...field}
-                options={PROVINCES.map((province) => ({
-                  value: province,
-                  label: province,
-                }))}
-                placeholder="시/도를 선택해주세요"
-                id="address-sido"
-              />
-              {fieldState.error && <p className="text-xs font-semibold text-red-500">{fieldState.error.message}</p>}
-            </div>
-          )}
-        />
-
-        {/* 시/군/구 선택 */}
-        <Controller
-          name="addressGugun"
-          control={control}
-          rules={{ required: '구/군을 선택해주세요' }}
-          render={({ field, fieldState }) => (
-            <div className="flex flex-1 flex-col gap-1">
-              <SelectDropdown
-                {...field}
-                options={availableGugun.map((gugun) => ({
-                  value: gugun,
-                  label: gugun,
-                }))}
-                placeholder={selectedSido ? '시/군/구 를 선택해주세요' : '먼저 시/도를 선택해주세요'}
-                disabled={!selectedSido}
-                id="address-gugun"
-              />
-              {fieldState.error && <p className="text-xs font-semibold text-red-500">{fieldState.error.message}</p>}
-            </div>
-          )}
-        />
-      </div>
-    </div>
+    <CascadingSelectField
+      control={control}
+      primaryName={primaryName}
+      primaryOptions={provinceOptions}
+      primaryPlaceholder="시/도를 선택해주세요"
+      primaryId="address-sido"
+      primaryRule="시/도를 선택해주세요"
+      secondaryName={secondaryName}
+      secondaryOptionsMap={cityOptionsMap}
+      secondaryPlaceholder="시/군/구 를 선택해주세요"
+      secondaryPlaceholderDisabled="먼저 시/도를 선택해주세요"
+      secondaryId="address-gugun"
+      secondaryRule="구/군을 선택해주세요"
+      label={label}
+      labelClass={labelClass}
+      layoutClass={layoutClass}
+      labelHtmlFor="address-sido"
+      onPrimaryChange={handlePrimaryChange}
+    />
   )
 }
