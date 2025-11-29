@@ -33,16 +33,19 @@ let tokenRefreshPromise: Promise<string | null> | null = null
 // refresh token(쿠키)을 사용해서 새로운 access token을 발급받음
 async function fetchNewAccessToken(): Promise<string | null> {
   try {
-    // 일반 axios를 사용 (api 인스턴스를 사용하면 무한 루프 발생 가능)
+    const refreshToken = useUserStore.getState().refreshToken
+
+    if (!refreshToken) {
+      throw new Error('No refresh token')
+    }
     // refresh token은 쿠키에 저장되어 있으므로 withCredentials: true 필요
-    const response = await axios.post<{ access: string }>(
-      `${API_BASE_URL}/users/token-refresh/`,
-      {}, // body는 비어있음 (refresh token은 쿠키로 전송)
-      { withCredentials: true }
+    const response = await axios.post(
+      `${API_BASE_URL}/auth/refresh`,
+      { refreshToken } // body에 담아서 전송
     )
 
     // 서버에서 새로운 access token을 응답으로 받음
-    const newAccessToken = response.data?.access ?? null
+    const newAccessToken = response.data?.data?.accessToken ?? null
 
     // zustand store에 새 토큰 저장
     // getState()를 사용하면 React 컴포넌트 외부에서도 store에 접근 가능
@@ -88,11 +91,19 @@ api.interceptors.request.use(
     // zustand store에서 현재 access token을 가져옴
     const accessToken = useUserStore.getState().accessToken
 
+    // 디버깅: 토큰 확인
+    console.log('[API Request]', config.url, '토큰 존재:', !!accessToken)
+
     // 토큰이 존재하면 Authorization 헤더에 추가
     // Bearer 스킴: OAuth 2.0에서 사용하는 표준 인증 방식
     if (accessToken) {
       config.headers = config.headers ?? {}
       config.headers.Authorization = `Bearer ${accessToken}`
+    }
+
+    // FormData 전송 시 Content-Type을 삭제하여 axios가 자동으로 multipart/form-data 설정하도록 함
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
     }
 
     // 수정된 config를 반환 (필수!)
@@ -105,7 +116,7 @@ api.interceptors.request.use(
 
 // ========== 응답 인터셉터 (Response Interceptor) ==========
 // 서버로부터 응답을 받은 후 실행되는 함수
-// 401 에러(인증 실패) 발생 시 토큰 갱신을 시도
+// 401/302 에러(인증 실패) 발생 시 토큰 갱신을 시도
 api.interceptors.response.use(
   // 성공 핸들러: 2xx 상태 코드인 경우 → 응답을 그대로 반환
   (response) => response,
@@ -116,9 +127,12 @@ api.interceptors.response.use(
     // _retry: 이 요청이 이미 재시도된 것인지 확인하는 커스텀 플래그
     const originalRequest = error.config as (AxiosRequestConfig & { _retry?: boolean }) | undefined
 
-    // 401 에러이고, 원래 요청이 있고, 아직 재시도하지 않은 경우
+    const status = error.response?.status
+
+    // 401 또는 302 에러이고, 원래 요청이 있고, 아직 재시도하지 않은 경우
     // 401 = Unauthorized (인증 실패, 주로 토큰 만료)
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    // 302 = 리다이렉트 (서버가 인증 실패 시 로그인 페이지로 리다이렉트하는 경우)
+    if ((status === 401 || status === 302) && originalRequest && !originalRequest._retry) {
       // 재시도 플래그 설정 (무한 루프 방지)
       originalRequest._retry = true
 
@@ -133,7 +147,7 @@ api.interceptors.response.use(
       }
     }
 
-    // 401 외의 에러 또는 토큰 갱신 실패 시 에러 전달
+    // 401/302 외의 에러 또는 토큰 갱신 실패 시 에러 전달
     return Promise.reject(error)
   }
 )

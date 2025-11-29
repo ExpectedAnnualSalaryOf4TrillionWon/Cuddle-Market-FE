@@ -105,7 +105,7 @@ export function SignUpForm() {
         email: data.email,
         password: data.password,
       })
-      handleLogin(loginResponse.data.user, loginResponse.data.accessToken)
+      handleLogin(loginResponse.data.user, loginResponse.data.accessToken, loginResponse.data.refreshToken)
 
       navigate('/')
     } catch (error) {
