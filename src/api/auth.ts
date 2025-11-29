@@ -38,7 +38,9 @@ export const signup = async (requestData: SignUpRequestData): Promise<SignUpResp
 }
 
 export const login = async (requestData: LoginRequestData): Promise<LoginResponse> => {
-  const response = await axios.post(`${API_BASE_URL}/auth/login`, requestData)
+  const response = await axios.post(`${API_BASE_URL}/auth/login`, requestData, {
+    withCredentials: true,
+  })
   console.log(response)
   console.log(response.data)
   return response.data

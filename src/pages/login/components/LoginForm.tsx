@@ -24,7 +24,7 @@ export function LoginForm() {
     console.log('제출')
     try {
       const response = await login(data)
-      handleLogin(response.data.user, response.data.accessToken)
+      handleLogin(response.data.user, response.data.accessToken, response.data.refreshToken)
       console.log('로그인 성공:', response)
       navigate('/')
     } catch (error) {
