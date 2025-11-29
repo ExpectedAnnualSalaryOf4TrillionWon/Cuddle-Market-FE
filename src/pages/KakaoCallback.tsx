@@ -11,7 +11,8 @@ interface KakaoAuthResponse {
 function KakaoCallback() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
-  const { handleLogin, redirectUrl, setRedirectUrl } = useUserStore();
+  // TODO: 소셜 로그인 구현 시 handleLogin 사용 필요
+  const { redirectUrl, setRedirectUrl } = useUserStore();
 
   const code: string | null = searchParams.get('code');
   const error: string | null = searchParams.get('error');
@@ -36,7 +37,8 @@ function KakaoCallback() {
       console.log('응답 데이터:', data);
 
       if (data.access && data.user) {
-        handleLogin(data.user, data.access);
+        // TODO: 소셜 로그인 구현 시 refreshToken 처리 필요
+        // handleLogin(data.user, data.access, data.refresh);
         console.log('사용자 정보 저장 완료');
       }
 
