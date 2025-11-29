@@ -11,8 +11,8 @@ export const ROUTES = {
   QNA: '/qna',
   // STUDY_GROUP_CREATE: '/study-group/create',
 
-  // // Recruitment
-  // RECRUITMENT: '/recruitment',
+  // Product
+  PRODUCT_POST: '/product-post',
   // RECRUITMENT_ID: (id: string | number) => `/recruitment/${id}`,
   // RECRUITMENT_DETAIL: '/recruitment/:uuid',
   // RECRUITMENT_CREATE: '/recruitment/create',

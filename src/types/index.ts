@@ -173,6 +173,71 @@ export interface ProductDetailItemResponse {
   data: ProductDetailItem
 }
 
+// ========== 상품 등록 요청 타입 ==========
+export interface ProductPostRequestData {
+  petType: string
+  petDetailType: string
+  category: string
+  title: string
+  description: string
+  price: number
+  productStatus: string
+  mainImageUrl: string
+  subImageUrls: string[]
+  addressSido: string
+  addressGugun: string
+  isDeliveryAvailable: boolean
+  preferredMeetingPlace: string
+}
+
+export interface ProductPostResponse {
+  id: number
+  sellerId: number
+  productType: string
+  petType: string
+  petDetailType: string
+  category: string
+  title: string
+  description: string
+  price: number
+  productStatus: string
+  tradeStatus: string
+  mainImageUrl: string
+  subImageUrls: string[]
+  addressSido: string
+  addressGugun: string
+  isDeliveryAvailable: boolean
+  preferredMeetingPlace: string
+  viewCount: number
+  favoriteCount: number
+  isFavorite: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface RequestProductPostRequestData {
+  petType: string
+  petDetailType: string
+  category: string
+  title: string
+  description: string
+  desiredPrice: number
+  mainImageUrl: string
+  subImageUrls: string[]
+  addressSido: string
+  addressGugun: string
+}
+
+export interface ImageUploadResponse {
+  code: { code: number; message: string }
+  message: string
+  data: {
+    imageUrls: string[]
+    mainImageUrl: string
+    subImageUrls: string[]
+  }
+}
+
 // ========== 찜하기 관련 타입 ==========
 // export interface FavoriteResponse {
 //   message: string

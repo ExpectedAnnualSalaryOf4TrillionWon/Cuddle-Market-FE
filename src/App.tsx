@@ -1,16 +1,9 @@
 // import './App.css';
 // vim 사용예시 커밋 작성
 
-import ChatButton from './features/chat/ChatButton'
 import AppRoutes from './routes/index'
 function App() {
-  return (
-    <>
-      <AppRoutes />
-      {/* <Footer /> */}
-      <ChatButton />
-    </>
-  )
+  return <AppRoutes />
 }
 
 export default App

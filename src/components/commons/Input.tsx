@@ -11,6 +11,7 @@ interface InputProps {
   value?: string | number
   size?: string
   id?: string
+  inputClass?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   [key: string]: any // register에서 전달하는 다른 props들을 받기 위해
 }
@@ -26,6 +27,7 @@ export function Input({
   size = 'text-base',
   onChange,
   id,
+  inputClass,
   ...rest // 나머지 모든 props (register가 전달하는 ref, name 등)
 }: InputProps) {
   return (
@@ -54,7 +56,8 @@ export function Input({
           'w-full py-3 placeholder:text-gray-400 focus:border-transparent focus:outline-none',
           backgroundColor,
           Icon ? 'pl-0' : 'px-3',
-          size
+          size,
+          inputClass
         )}
         {...rest}
       />

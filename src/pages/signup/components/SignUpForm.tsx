@@ -105,7 +105,7 @@ export function SignUpForm() {
         email: data.email,
         password: data.password,
       })
-      handleLogin(loginResponse.data.user, loginResponse.data.accessToken)
+      handleLogin(loginResponse.data.user, loginResponse.data.accessToken, loginResponse.data.refreshToken)
 
       navigate('/')
     } catch (error) {
@@ -120,7 +120,7 @@ export function SignUpForm() {
         <div className="flex flex-col gap-6">
           <NameField register={register} errors={errors} />
           <NicknameField register={register} errors={errors} watch={watch} setIsNicknameVerified={setIsNicknameVerified} clearErrors={clearErrors} />
-          <AddressField control={control} watch={watch} setValue={setValue} />
+          <AddressField<SignUpFormValues> control={control} setValue={setValue} primaryName="addressSido" secondaryName="addressGugun" />
           <BirthDateField control={control} />
           <EmailValidCode
             register={register}

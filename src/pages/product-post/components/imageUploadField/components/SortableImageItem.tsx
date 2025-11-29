@@ -1,0 +1,38 @@
+import { CSS } from '@dnd-kit/utilities'
+import { Button } from '@src/components/commons/button/Button'
+import { X } from 'lucide-react'
+import { Badge } from '@src/components/commons/badge/Badge'
+import { useSortable } from '@dnd-kit/sortable'
+
+interface SortableImageItemProps {
+  url: string
+  index: number
+  onRemove: () => void
+}
+
+export default function SortableImageItem({ url, index, onRemove }: SortableImageItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: url })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} className="relative h-40 w-40 overflow-hidden rounded-lg">
+      <Button
+        icon={X}
+        size="xs"
+        className="bg-danger-500 absolute top-1 right-1 z-10 cursor-pointer rounded-full"
+        iconProps={{ color: 'white', strokeWidth: 3 }}
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          onRemove()
+        }}
+      />
+      <img src={url} alt={`preview-${index}`} className="h-full w-full cursor-grab object-cover active:cursor-grabbing" {...listeners} />
+      {index === 0 && <Badge className="absolute top-1 left-1 bg-gray-900 text-white">대표</Badge>}
+    </div>
+  )
+}

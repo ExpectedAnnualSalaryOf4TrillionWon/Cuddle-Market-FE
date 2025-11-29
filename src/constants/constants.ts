@@ -169,6 +169,7 @@ export const PRODUCT_CATEGORIES = [
   { code: 'ETC', name: '기타' },
 ] as const
 export type CategoryFilter = string | null
+export type CategoryName = (typeof PRODUCT_CATEGORIES)[number]['name']
 
 // ========== 거래상태 관련 상수 ==========
 export const STATUS_EN_TO_KO: Array<{ value: string; name: string; bgColor: string }> = [
@@ -193,8 +194,8 @@ export type ProductTypeTabId = (typeof PRODUCT_TYPE_TABS)[number]['id']
 
 // 상품 등록용 탭 (기존 호환성)
 export const PRODUCT_POST_TABS = [
-  { id: 'sales', label: '판매' },
-  { id: 'purchases', label: '판매요청' },
+  { id: 'tab-sales', label: '판매', code: 'SELL' },
+  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
 ] as const
 export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
 
@@ -1249,3 +1250,5 @@ export type SORT_LABELS = (typeof SORT_TYPE)[number]['label']
 // const SORT_LABELS = SORT_TYPE.map(sort => sort.label);
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp']
+
+export const MAX_FILES = 5

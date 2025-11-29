@@ -1,24 +1,26 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import type { User } from '../types/index';
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
+import type { User } from '../types/index'
 
 interface UserState {
-  user: User | null;
-  accessToken: string | null;
-  redirectUrl: string | null;
-  setUser: (user: User | null) => void;
-  setAccessToken: (token: string | null) => void;
-  setRedirectUrl: (url: string | null) => void;
-  updateUserProfile: (updates: Partial<User>) => void;
-  handleLogin: (user: User, accessToken: string) => void;
-  clearAll: () => void;
-  clearRegistrationToken: () => void;
-  isLogin: () => boolean;
-  isProfileCompleted: () => boolean;
-  getUserNickname: () => string;
-  getUserId: () => number | null;
-  created_at: string | null;
+  user: User | null
+  accessToken: string | null
+  redirectUrl: string | null
+  setUser: (user: User | null) => void
+  setAccessToken: (token: string | null) => void
+  setRedirectUrl: (url: string | null) => void
+  updateUserProfile: (updates: Partial<User>) => void
+  handleLogin: (user: User, accessToken: string, refreshToken: string) => void
+  clearAll: () => void
+  clearRegistrationToken: () => void
+  isLogin: () => boolean
+  isProfileCompleted: () => boolean
+  getUserNickname: () => string
+  getUserId: () => number | null
+  created_at: string | null
   // refreshAccessToken: () => Promise<string | null>;
+  refreshToken: string | null
+  setRefreshToken: (token: string | null) => void
 }
 
 export const useUserStore = create<UserState>()(
@@ -44,10 +46,12 @@ export const useUserStore = create<UserState>()(
       redirectUrl: null,
 
       created_at: null,
+
+      refreshToken: null,
       // ===== 액션 구현 =====
 
       // user만 변경
-      setUser: user => set({ user }),
+      setUser: (user) => set({ user }),
       // 풀어쓰면:
       // setUser: (user) => {
       //   set({ user: user })
@@ -58,17 +62,17 @@ export const useUserStore = create<UserState>()(
       //      3. localStorage 자동 저장
 
       // 토큰만 변경
-      setAccessToken: token => set({ accessToken: token }),
+      setAccessToken: (token) => set({ accessToken: token }),
       // 실행: setAccessToken("abc123")
       // 동작: accessToken만 변경, token 구독 컴포넌트만 리렌더링
 
       // redirectUrl만 변경
-      setRedirectUrl: url => set({ redirectUrl: url }),
+      setRedirectUrl: (url) => set({ redirectUrl: url }),
       // localStorage에는 저장 안함 (partialize에서 제외)
 
       // 프로필 수정
-      updateUserProfile: updates =>
-        set(state => ({
+      updateUserProfile: (updates) =>
+        set((state) => ({
           // 현재 상태를 받아옴
           //    있으면?        기존 유저 복사, 새 값 덮어쓰기
           //                                              없으면 null
@@ -86,11 +90,11 @@ export const useUserStore = create<UserState>()(
       // 결과: user = { name: "홍길동", age: 21 }
 
       // 여러 상태를 한번에 변경!
-      handleLogin: (user, accessToken) => {
+      handleLogin: (user, accessToken, refreshToken) => {
         // set({ user: user, accessToken: accessToken }) 의 축약형
         // userStore의 두 상태를 한번에 변경
         // 한번에 여러 상태 변경 (1회 리렌더링)
-        set({ user, accessToken });
+        set({ user, accessToken, refreshToken })
 
         // 다른 스토어의 함수도 실행!
         // getState(): 컴포넌트 밖에서 스토어 접근하는 방법
@@ -107,40 +111,42 @@ export const useUserStore = create<UserState>()(
         set({
           user: null,
           accessToken: null,
+          refreshToken: null,
           redirectUrl: null,
-        });
+        })
       },
 
       clearRegistrationToken: () => {
-        set({ redirectUrl: null });
+        set({ redirectUrl: null })
         // redirectUrl만 초기화
         // 이름이 맞지 않음 (registrationToken이 없어서)
       },
 
       isLogin: () => {
-        const { user, accessToken } = get();
-        return Boolean(user && accessToken);
+        const { user, accessToken } = get()
+        return Boolean(user && accessToken)
       },
 
       isProfileCompleted: () => {
-        const user = get().user;
+        const user = get().user
         // get(): 현재 상태를 읽어옴
-        return user?.profile_completed ?? false;
+        return user?.profile_completed ?? false
         // user가 있으면 profile_completed 값, 없으면 false
         // ?. : 옵셔널 체이닝 (user가 null이어도 에러 안남)
         // ?? : null 병합 연산자 (앞이 null/undefined면 뒤 값 사용)
       },
 
       getUserNickname: () => {
-        return get().user?.nickname || '';
+        return get().user?.nickname || ''
         //nickname이 없으면 빈 문자열
       },
 
       getUserId: () => {
-        return get().user?.id || null;
+        return get().user?.id || null
         //number | null 반환
       },
 
+      setRefreshToken: (token) => set({ refreshToken: token }),
       // refreshAccessToken: async () => {
       //   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -203,12 +209,13 @@ export const useUserStore = create<UserState>()(
       storage: createJSONStorage(() => localStorage),
 
       // 전체 상태 중 일부만 저장하고 싶을 때
-      partialize: state => ({
+      partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         // redirectUrl은 저장 안 함 (임시값이라서)
       }),
       // 새로고침 후 user와 token은 복원, redirectUrl은 null
-    },
-  ),
-);
+    }
+  )
+)
