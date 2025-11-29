@@ -24,6 +24,7 @@ const routes = [
   { path: ROUTES.MYPAGE, element: <MyPage /> },
   { path: ROUTES.DETAIL, element: <ProductDetail /> },
   { path: ROUTES.PRODUCT_POST, element: <ProductPost /> },
+  { path: ROUTES.PRODUCT_EDIT, element: <ProductPost /> },
 ]
 // const WithHeaderLayout = () => (
 //   <div className="min-h-screen ">
