@@ -1,5 +1,6 @@
 import type { RegisterOptions } from 'react-hook-form'
 import type { SignUpFormValues } from './components/SignUpForm'
+import type { ProductPostFormValues } from '../product-post/components/ProductPostForm'
 
 /**
  * 회원가입 폼 전용 validation 규칙
@@ -42,4 +43,50 @@ export const signupValidationRules = {
   addressGugun: {
     required: '지역을 선택해주세요',
   } satisfies RegisterOptions<SignUpFormValues, 'addressGugun'>,
+} as const
+
+export const productPostValidationRules = {
+  name: {
+    required: '상품명을 입력해주세요',
+    minLength: {
+      value: 2,
+      message: '상품명은 2~ 50자 이상이어야 합니다.',
+    },
+    maxLength: {
+      value: 50,
+      message: '상품명은 2~ 50자 이상이어야 합니다.',
+    },
+  } satisfies RegisterOptions<ProductPostFormValues, 'title'>,
+
+  description: {
+    required: '상품설명을 입력해주세요',
+    minLength: {
+      value: 2,
+      message: '상품설명은 2~ 1000자 이상이어야 합니다.',
+    },
+    maxLength: {
+      value: 1000,
+      message: '상품설명은 2~ 1000자 이하이어야 합니다.',
+    },
+  } satisfies RegisterOptions<ProductPostFormValues, 'description'>,
+
+  price: {
+    required: '가격을 입력해주세요',
+    min: {
+      value: 0,
+      message: '가격은 0원 이상이어야 합니다',
+    },
+  } satisfies RegisterOptions<ProductPostFormValues, 'price'>,
+
+  addressGugun: {
+    required: '지역을 선택해주세요',
+  } satisfies RegisterOptions<SignUpFormValues, 'addressGugun'>,
+} as const
+
+export const productPostApiErrors = {
+  imageUpload: {
+    INVALID_FILE_TYPE: '지원하지 않는 파일 형식입니다.',
+    FILE_SIZE_EXCEEDED: '파일 크기는 5MB를 초과할 수 없습니다.',
+    INTERNAL_SERVER_ERROR: '이미지 업로드에 실패했습니다.',
+  },
 } as const

@@ -15,6 +15,7 @@ import { Route, Routes } from 'react-router-dom'
 import MainLayout from '@src/components/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
 import ProductDetail from '@src/pages/product-detail/ProductDetail'
+import ProductPost from '@src/pages/product-post/ProductPost'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -22,7 +23,7 @@ const routes = [
   { path: ROUTES.SIGNUP, element: <Signup /> },
   { path: ROUTES.MYPAGE, element: <MyPage /> },
   { path: ROUTES.DETAIL, element: <ProductDetail /> },
-  // { path: '/test/UI', element: <TestUIPage /> },
+  { path: ROUTES.PRODUCT_POST, element: <ProductPost /> },
 ]
 // const WithHeaderLayout = () => (
 //   <div className="min-h-screen ">

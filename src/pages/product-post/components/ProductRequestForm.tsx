@@ -1,0 +1,122 @@
+import { Button } from '@src/components/commons/button/Button'
+import { useForm } from 'react-hook-form'
+import { type Province } from '@src/constants/cities'
+import { useNavigate } from 'react-router-dom'
+import ProductImageUpload from './imageUploadField/ImageUploadField'
+import BasicInfoSection from './basicInfoSection/BasicInfoSection'
+import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
+import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
+import type { RequestProductPostRequestData } from '@src/types'
+import { requestPostProduct } from '@src/api/products'
+import { cn } from '@src/utils/cn'
+
+export interface ProductRequestFormValues {
+  petType: string
+  petDetailType: string
+  category: string
+  title: string
+  description: string
+  price: number
+  productStatus: string
+  mainImageUrl: string
+  subImageUrls?: string[]
+  addressSido: Province | ''
+  addressGugun: string
+  isDeliveryAvailable?: boolean
+  preferredMeetingPlace?: string
+}
+
+export function ProductRequestForm() {
+  const {
+    control,
+    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
+    register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors, isValid }, // errors: register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
+  } = useForm<ProductRequestFormValues>({
+    mode: 'onChange',
+    defaultValues: {
+      petType: '',
+      petDetailType: '',
+      category: '',
+      title: '',
+      description: '',
+      price: 0,
+      productStatus: '',
+      mainImageUrl: '',
+      subImageUrls: [],
+      addressSido: '',
+      addressGugun: '',
+    },
+  }) // 폼에서 관리할 필드들의 타입(이름) 정의.
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: ProductRequestFormValues) => {
+    const requestData: RequestProductPostRequestData = {
+      petType: data.petType,
+      petDetailType: data.petDetailType,
+      category: data.category,
+      title: data.title,
+      description: data.description,
+      desiredPrice: Number(data.price),
+      mainImageUrl: data.mainImageUrl,
+      subImageUrls: data.subImageUrls ?? [],
+      addressSido: data.addressSido,
+      addressGugun: data.addressGugun,
+    }
+
+    console.log('전송할 데이터:', requestData)
+
+    try {
+      const response = await requestPostProduct(requestData)
+      console.log('상품 등록 성공:', response)
+      navigate('/')
+    } catch (error) {
+      console.error('상품 등록 실패:', error)
+      if (error instanceof Error && 'response' in error) {
+        const axiosError = error as { response?: { data?: unknown } }
+        console.error('서버 응답:', axiosError.response?.data)
+      }
+    }
+  }
+  return (
+    <div role="tabpanel">
+      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+        <fieldset className="flex flex-col gap-5">
+          <legend className="sr-only">회원가입폼</legend>
+          <div className="flex flex-col gap-5">
+            <BasicInfoSection
+              control={control}
+              setValue={setValue}
+              register={register}
+              errors={errors}
+              productNameLabel="찾고 있는 상품명"
+              productDescriptionLabel="상세 요청사항"
+              productDescriptionPlaceHolder="어떤 상품을 찾고 있는지, 원하는 조건(가격대, 상태 등)을 자세히 적어주세요"
+            />
+            <PriceAndStatusSection
+              register={register}
+              control={control}
+              errors={errors}
+              showProductStateFilter={false}
+              priceLabel="희망 가격"
+              heading="가격"
+            />
+            <ProductImageUpload setValue={setValue} errors={errors} setError={setError} clearErrors={clearErrors} />
+            <TradeInfoSection control={control} setValue={setValue} showProductTradeFilter={false} register={register} />
+          </div>
+          <div className="flex items-center gap-4">
+            <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-200')} type="submit">
+              등록
+            </Button>
+            <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
+              취소
+            </Button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  )
+}

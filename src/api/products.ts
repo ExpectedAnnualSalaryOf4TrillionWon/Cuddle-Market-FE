@@ -1,11 +1,14 @@
 import type {
   CreateProductRequest,
   CreateProductResponse,
+  ImageUploadResponse,
   // FilterApiResponse,
   LikesResponse,
   MyPageData,
   ProductDetailItemResponse,
+  ProductPostRequestData,
   ProductResponse,
+  RequestProductPostRequestData,
 } from '../types'
 import { apiFetch } from './apiFetch'
 import { api } from './api'
@@ -98,6 +101,28 @@ export const fetchProductById = async (productId: string) => {
 // 찜 추가
 export const addFavorite = async (productId: number): Promise<void> => {
   await api.post(`/products/${productId}/favorite`)
+}
+
+// 판매 상품 등록
+export const postProduct = async (requestData: ProductPostRequestData): Promise<void> => {
+  await api.post(`/products`, requestData)
+}
+
+// 판매요청 상품 등록
+export const requestPostProduct = async (requestData: RequestProductPostRequestData): Promise<void> => {
+  await api.post(`/products/requests`, requestData)
+}
+
+// 이미지 업로드
+export const uploadImage = async (files: File[]): Promise<ImageUploadResponse['data']> => {
+  const formData = new FormData()
+
+  files.forEach((file) => {
+    formData.append('files', file)
+  })
+  // FormData를 전달하면 axios가 자동으로 Content-Type: multipart/form-data를 설정함
+  const response = await api.post<ImageUploadResponse>('/images', formData)
+  return response.data.data
 }
 
 // export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
