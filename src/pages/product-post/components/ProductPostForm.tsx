@@ -6,10 +6,10 @@ import ProductImageUpload from './imageUploadField/ImageUploadField'
 import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
 import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
-import type { ProductPostRequestData } from '@src/types'
-import { fetchProductById, postProduct } from '@src/api/products'
+import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
+import { postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 export interface ProductPostFormValues {
   petType: string
@@ -30,9 +30,10 @@ export interface ProductPostFormValues {
 interface ProductPostFormProps {
   isEditMode?: boolean
   productId?: string
+  initialData?: ProductDetailItem | null
 }
 
-export function ProductPostForm({ isEditMode, productId: id }: ProductPostFormProps) {
+export function ProductPostForm({ isEditMode, productId: id, initialData }: ProductPostFormProps) {
   const {
     control,
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
@@ -62,7 +63,14 @@ export function ProductPostForm({ isEditMode, productId: id }: ProductPostFormPr
     },
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
-  const [initialImages, setInitialImages] = useState<string[]>([])
+
+  const initialImages = useMemo(() => {
+    if (initialData) {
+      return [initialData.mainImageUrl, ...(initialData.subImageUrls || [])].filter(Boolean)
+    }
+    return []
+  }, [initialData])
+
   const onSubmit = async (data: ProductPostFormValues) => {
     const requestData: ProductPostRequestData = {
       petType: data.petType,
@@ -82,37 +90,30 @@ export function ProductPostForm({ isEditMode, productId: id }: ProductPostFormPr
 
     try {
       await postProduct(requestData)
-      navigate('/')
+      navigate(`/products/${id}`)
     } catch {
       alert('상품 등록에 실패했습니다.')
     }
   }
   useEffect(() => {
-    const loadProduct = async () => {
-      if (isEditMode && id) {
-        const data = await fetchProductById(id)
-        const images = [data.mainImageUrl, ...(data.subImageUrls || [])]
-        setInitialImages(images)
-        // react-hook-form의 reset으로 폼 초기값 설정
-        reset({
-          title: data.title,
-          description: data.description,
-          price: data.price,
-          petType: data.petType,
-          petDetailType: data.petDetailType,
-          category: data.category,
-          productStatus: data.productStatus,
-          mainImageUrl: data.mainImageUrl,
-          subImageUrls: data.subImageUrls ?? [],
-          addressSido: data.addressSido as Province | '',
-          addressGugun: data.addressGugun,
-          isDeliveryAvailable: data.isDeliveryAvailable ?? false,
-          preferredMeetingPlace: data.preferredMeetingPlace ?? '',
-        })
-      }
+    if (isEditMode && initialData) {
+      reset({
+        title: initialData.title,
+        description: initialData.description,
+        price: initialData.price,
+        petType: initialData.petType,
+        petDetailType: initialData.petDetailType,
+        category: initialData.category,
+        productStatus: initialData.productStatus,
+        mainImageUrl: initialData.mainImageUrl,
+        subImageUrls: initialData.subImageUrls ?? [],
+        addressSido: initialData.addressSido as Province | '',
+        addressGugun: initialData.addressGugun,
+        isDeliveryAvailable: initialData.isDeliveryAvailable ?? false,
+        preferredMeetingPlace: initialData.preferredMeetingPlace ?? '',
+      })
     }
-    loadProduct()
-  }, [id, isEditMode, reset])
+  }, [isEditMode, initialData, reset])
 
   return (
     <div role="tabpanel">
