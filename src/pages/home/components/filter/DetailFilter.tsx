@@ -13,6 +13,7 @@ interface DetailFilterProps {
   selectedPriceRange?: PriceRange | null
   onMinPriceChange?: (priceRange: PriceRange | null) => void
   onLocationChange?: (location: LocationFilterType | null) => void
+  filterReset: (e: React.MouseEvent) => void
 }
 
 export const DetailFilter = memo(function DetailFilterSection({
@@ -23,10 +24,11 @@ export const DetailFilter = memo(function DetailFilterSection({
   selectedPriceRange,
   onMinPriceChange,
   onLocationChange,
+  filterReset,
 }: DetailFilterProps) {
   return (
     <div className="flex flex-col gap-2.5">
-      <DetailFilterButton isOpen={isOpen} onClick={() => onToggle(!isOpen)} ariaControls="detail-filter-content" />
+      <DetailFilterButton isOpen={isOpen} onClick={() => onToggle(!isOpen)} ariaControls="detail-filter-content" filterReset={filterReset} />
       {isOpen && (
         <div className="bg-primary-100 flex gap-10 rounded-lg px-3 py-2.5" role="group" id="detail-filter-content" aria-label="세부 필터 옵션">
           <ProductStateFilter selectedProductStatus={selectedProductStatus} onProductStatusChange={onProductStatusChange} useUrlSync />

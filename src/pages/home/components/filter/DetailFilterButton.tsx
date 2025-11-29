@@ -1,13 +1,16 @@
 import { Funnel as FilterIcon, ChevronDown as DownArrow } from 'lucide-react'
 import { cn } from '@src/utils/cn'
+import { Button } from '@src/components/commons/button/Button'
+import { useSearchParams } from 'react-router-dom'
 
 interface DetailFilterToggleProps {
   isOpen: boolean
   onClick: () => void
   ariaControls?: string
+  filterReset: (e: React.MouseEvent) => void
 }
 
-export function DetailFilterButton({ isOpen, onClick, ariaControls }: DetailFilterToggleProps) {
+export function DetailFilterButton({ isOpen, onClick, ariaControls, filterReset }: DetailFilterToggleProps) {
   return (
     <button
       type="button"
@@ -24,7 +27,12 @@ export function DetailFilterButton({ isOpen, onClick, ariaControls }: DetailFilt
           상품상태 · 가격대 · 지역
         </p>
       </div>
-      <DownArrow className={cn('h-6 w-6 text-gray-900 transition-transform', isOpen && 'rotate-180')} strokeWidth={2} aria-hidden="true" />
+      <div className="flex items-center gap-4">
+        <Button size="xs" type="button" className="bg-primary-50 cursor-pointer" onClick={filterReset}>
+          필터 초기화
+        </Button>
+        <DownArrow className={cn('h-6 w-6 text-gray-900 transition-transform', isOpen && 'rotate-180')} strokeWidth={2} aria-hidden="true" />
+      </div>
     </button>
   )
 }
