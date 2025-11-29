@@ -12,9 +12,11 @@ interface DetailFilterToggleProps {
 
 export function DetailFilterButton({ isOpen, onClick, ariaControls, filterReset }: DetailFilterToggleProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
       onClick={onClick}
+      onKeyDown={(e) => e.key === 'Enter' && onClick()}
+      tabIndex={0}
       aria-expanded={isOpen}
       aria-controls={ariaControls}
       aria-label={isOpen ? '세부 필터 닫기' : '세부 필터 열기'}
@@ -33,6 +35,6 @@ export function DetailFilterButton({ isOpen, onClick, ariaControls, filterReset 
         </Button>
         <DownArrow className={cn('h-6 w-6 text-gray-900 transition-transform', isOpen && 'rotate-180')} strokeWidth={2} aria-hidden="true" />
       </div>
-    </button>
+    </div>
   )
 }
