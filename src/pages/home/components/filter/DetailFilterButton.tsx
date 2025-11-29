@@ -1,7 +1,6 @@
 import { Funnel as FilterIcon, ChevronDown as DownArrow } from 'lucide-react'
 import { cn } from '@src/utils/cn'
 import { Button } from '@src/components/commons/button/Button'
-import { useSearchParams } from 'react-router-dom'
 
 interface DetailFilterToggleProps {
   isOpen: boolean
