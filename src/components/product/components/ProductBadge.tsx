@@ -1,4 +1,4 @@
-import { Badge } from '../commons/badge/Badge'
+import { Badge } from '@src/components/commons/badge/Badge'
 
 interface ProductBadgeProps {
   petTypeName: string

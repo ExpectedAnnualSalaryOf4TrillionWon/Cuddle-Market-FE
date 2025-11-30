@@ -1,6 +1,6 @@
 import { Clock, Heart, MapPin, Eye } from 'lucide-react'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
-import { ProductMetaItem } from '@src/components/commons/product/ProductMetaItem'
+import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 
 interface productMetadataListProps {
   addressSido: string

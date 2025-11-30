@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { CONDITION_ITEMS } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 import { useSearchParams } from 'react-router-dom'
-import { RequiredLabel } from '../RequiredLabel'
+import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 
 interface ProductStateFilterProps {
   headingClassName?: string

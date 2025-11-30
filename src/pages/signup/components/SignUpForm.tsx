@@ -1,5 +1,5 @@
 import { Button } from '@src/components/commons/button/Button'
-import { AddressField } from '@src/pages/signup/components/AddressField'
+import { AddressField } from '@src/components/commons/AddressField'
 import { useForm } from 'react-hook-form'
 import { type Province } from '@src/constants/cities'
 import { useState } from 'react'

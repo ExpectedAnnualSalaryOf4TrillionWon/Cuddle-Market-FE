@@ -1,7 +1,7 @@
-import { SimpleHeader } from '@src/components/layouts/SimpleHeader';
+import { SimpleHeader } from '@src/components/header/SimpleHeader'
 // import { useEffect, useState } from 'react';
-import { BsChat } from 'react-icons/bs';
-import { CiCalendar, CiLocationOn } from 'react-icons/ci';
+import { BsChat } from 'react-icons/bs'
+import { CiCalendar, CiLocationOn } from 'react-icons/ci'
 // import { GrView } from 'react-icons/gr';
 // import { useNavigate, useParams } from 'react-router-dom';
 // import type { UserWithProducts } from 'src/types';
@@ -66,12 +66,12 @@ function UserPage() {
       {/* 헤더영역 => 컴포넌트화 */}
       <SimpleHeader title={'판매자 프로필 페이지'} />
 
-      <div className="max-w-[var(--container-max-width)] mx-auto flex flex-col tablet:flex-row gap-xl px-lg py-xl">
+      <div className="tablet:flex-row gap-xl px-lg py-xl mx-auto flex max-w-[var(--container-max-width)] flex-col">
         {/* 좌측: 사용자 카드 */}
-        <div className="tablet:w-[300px] tablet:h-[375px] flex flex-col gap-xl rounded-xl border border-border p-xl">
-          <div className="sticky top-24 flex flex-col gap-xl rounded-xl  text-text-primary">
+        <div className="tablet:w-[300px] tablet:h-[375px] gap-xl border-border p-xl flex flex-col rounded-xl border">
+          <div className="gap-xl text-text-primary sticky top-24 flex flex-col rounded-xl">
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 mx-auto mb-lg rounded-full overflow-hidden">
+              <div className="mb-lg mx-auto h-24 w-24 overflow-hidden rounded-full">
                 {/* <img
                   src={seller.profile_image}
                   alt={seller.nickname}
@@ -81,28 +81,19 @@ function UserPage() {
               {/* <h2 className="heading4 text-text-primary mb-sm font-bold">{seller.nickname}</h2> */}
             </div>
 
-            <div className="flex flex-col gap-sm">
-              <div className="flex items-center gap-sm">
+            <div className="gap-sm flex flex-col">
+              <div className="gap-sm flex items-center">
                 <CiLocationOn />
-                <span className="bodySmall text-text-primary">
-                  {/* {seller.state} {seller.city} */}
-                </span>
+                <span className="bodySmall text-text-primary">{/* {seller.state} {seller.city} */}</span>
               </div>
-              <div className="flex items-center gap-sm">
+              <div className="gap-sm flex items-center">
                 <CiCalendar />
-                <span className="bodySmall text-text-primary">
-                  {/* {seller.created_at ? formatJoinDate(seller.created_at) : ''} */}
-                </span>
+                <span className="bodySmall text-text-primary">{/* {seller.created_at ? formatJoinDate(seller.created_at) : ''} */}</span>
               </div>
             </div>
 
-            <div className="mt-lg flex flex-col gap-sm">
-              <button
-                className="
-                    flex items-center justify-center gap-sm font-bold
-                    h-10 rounded-md px-xl bg-dark text-bg shadow-sm cursor-pointer hover:shadow-lg hover:bg-dark-point/30 hover:text-text-primary transition-all duration-300 ease-in-out
-                  "
-              >
+            <div className="mt-lg gap-sm flex flex-col">
+              <button className="gap-sm px-xl bg-dark text-bg hover:bg-dark-point/30 hover:text-text-primary flex h-10 cursor-pointer items-center justify-center rounded-md font-bold shadow-sm transition-all duration-300 ease-in-out hover:shadow-lg">
                 <BsChat />
                 <span>채팅하기</span>
               </button>
@@ -111,27 +102,16 @@ function UserPage() {
         </div>
 
         {/* 우측: 탭 + 목록 */}
-        <div className="flex-1 tablet:col-span-2">
-          <div className="flex flex-col gap-sm w-full">
+        <div className="tablet:col-span-2 flex-1">
+          <div className="gap-sm flex w-full flex-col">
             {/* 탭 리스트 */}
-            <div
-              role="tablist"
-              aria-label="사용자 탭"
-              className="mb-lg px-sm py-sm border-b border-gray-200"
-            >
-              <h3 className="heading4 text-text-primary font-bold">
-                {/* {seller.nickname}님 상품 ({seller.total_products}개) */}
-              </h3>
+            <div role="tablist" aria-label="사용자 탭" className="mb-lg px-sm py-sm border-b border-gray-200">
+              <h3 className="heading4 text-text-primary font-bold">{/* {seller.nickname}님 상품 ({seller.total_products}개) */}</h3>
             </div>
 
             {/* 탭 패널: 상품 */}
-            <div
-              role="tabpanel"
-              id="panel-products"
-              aria-labelledby="tab-products"
-              className={`flex-1 outline-none`}
-            >
-              <div className="flex flex-col gap-md">
+            <div role="tabpanel" id="panel-products" aria-labelledby="tab-products" className={`flex-1 outline-none`}>
+              <div className="gap-md flex flex-col">
                 {/* {seller.seller_products.map(item => (
                   <div
                     key={item.product_id}
@@ -185,7 +165,7 @@ function UserPage() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default UserPage;
+export default UserPage

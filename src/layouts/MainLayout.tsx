@@ -1,4 +1,4 @@
-import Header from '@components/commons/header/Header'
+import Header from '@components/header/Header'
 // import ChatFloatButton from '@src/components/commons/chat/ChatFloatButton';
 import { Outlet } from 'react-router-dom'
 

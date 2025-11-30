@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchProductById } from '../../api/products'
 import { useQuery } from '@tanstack/react-query'
-import Footer from '@src/components/commons/footer/Footer'
+import Footer from '@src/components/footer/Footer'
 import MainImage from './components/MainImage'
 import SubImages from './components/SubImages'
 import SellerProfileCard from './components/SellerProfileCard'

@@ -1,7 +1,7 @@
 import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { ProductHeading } from './ProductHeading'
 import { Clock, Heart } from 'lucide-react'
-import { ProductMetaItem } from '../commons/product/ProductMetaItem'
+import { ProductMetaItem } from '../ProductMetaItem'
 
 interface ProductInfoProps {
   title: string

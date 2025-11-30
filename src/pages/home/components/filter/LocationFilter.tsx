@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { SelectDropdown } from '../select/SelectDropdown'
+import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { CITIES, PROVINCES } from '@src/constants/cities'
 import { cn } from '@src/utils/cn'
 import type { Province } from '@src/constants/cities'

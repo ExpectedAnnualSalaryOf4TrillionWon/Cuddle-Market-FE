@@ -1,7 +1,7 @@
 import type { Product } from '@src/types'
 import { Package } from 'lucide-react'
-import ProductList from '@src/components/commons/product/ProductList'
-import { EmptyState } from '@src/components/commons/EmptyState'
+import ProductList from '@src/components/product/ProductList'
+import { EmptyState } from '@src/components/EmptyState'
 
 interface SellerOtherProductsProps {
   sellerOtherProducts: Product[]
