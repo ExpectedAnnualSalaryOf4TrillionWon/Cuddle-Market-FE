@@ -9,6 +9,7 @@ import type {
   MyPageProductResponse,
   ProductDetailItemResponse,
   ProductPostRequestData,
+  ProductPostResponse,
   ProductResponse,
   RequestProductPostRequestData,
 } from '../types'
@@ -16,6 +17,7 @@ import { apiFetch } from './apiFetch'
 import { api } from './api'
 
 import axios from 'axios'
+import type { TransactionStatus } from '@src/constants/constants'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
@@ -151,9 +153,21 @@ export const fetchMyFavoriteData = async () => {
   return response.data.data
 }
 
+// 내가 차단한 유저 조회
 export const fetchMyBlockedData = async () => {
   const response = await api.get<MyBlockedUsersResponse>(`/profile/me/blocked-users?&size=10`)
   return response.data.data.blockedUsers
+}
+
+// 상품 거래상태 변경
+export const patchProductTradeStatus = async (id: number, requestData: TransactionStatus) => {
+  const response = await api.patch<ProductPostResponse>(`/products/${id}/trade-status`, { tradeStatus: requestData })
+  return response.data
+}
+
+export const deleteProduct = async (id: number) => {
+  const response = await api.delete<ProductPostResponse>(`/products/${id}`)
+  return response.data
 }
 
 // export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
@@ -167,59 +181,6 @@ export const fetchMyBlockedData = async () => {
 //   if (!res.ok) throw new Error('사용자를 찾을 수 없습니다.');
 //   return res.json();
 // };
-
-// 상품 등록
-export const createProduct = async (productData: CreateProductRequest): Promise<CreateProductResponse> => {
-  const formData = new FormData()
-
-  // 텍스트 데이터 추가
-  formData.append('title', productData.title)
-  formData.append('description', productData.description)
-  formData.append('price', productData.price.toString())
-  formData.append('pet_type_code', productData.pet_type_code)
-  formData.append('pet_type_detail_code', productData.pet_type_detail_code)
-  formData.append('category_code', productData.category_code)
-  formData.append('state_code', productData.state_code)
-  formData.append('city_code', productData.city_code)
-
-  const conditionMap: Record<string, string> = {
-    NEW: 'MINT', // 또는 백엔드가 실제로 기대하는 값
-    LIKE_NEW: 'EXCELLENT',
-    USED: 'GOOD',
-    NEEDS_REPAIR: 'FAIR',
-  }
-  formData.append('condition_status', conditionMap[productData.condition_status] || productData.condition_status)
-  // 이미지 파일 추가
-  // if (productData.images && productData.images.length > 0) {
-  //   productData.images.forEach((image, index) => {
-  //     formData.append(`images[${index}]`, image);
-  //   });
-  // }
-  // 첫 번째 이미지는 메인
-  if (productData.images && productData.images.length > 0) {
-    // 첫 번째 이미지는 메인 (복수형으로 변경)
-    formData.append('main_images', productData.images[0])
-
-    // 나머지는 서브 이미지
-    productData.images.slice(1).forEach((image) => {
-      formData.append('sub_images', image)
-    })
-  }
-
-  try {
-    const data = await apiFetch(`${API_BASE_URL}/products/`, {
-      method: 'POST',
-      body: formData, // FormData 직접 전달
-    })
-
-    return data
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error
-    }
-    throw new Error('상품 등록에 실패했습니다.')
-  }
-}
 
 // 상품 수정
 export const updateProduct = async (productId: string, productData: CreateProductRequest): Promise<CreateProductResponse> => {
@@ -256,12 +217,4 @@ export const updateProduct = async (productId: string, productData: CreateProduc
     }
     throw new Error('상품 수정에 실패했습니다.')
   }
-}
-
-export const fetchMyLikes = async (): Promise<LikesResponse> => {
-  const response = await fetch(`${API_BASE_URL}/likes`)
-  if (!response.ok) {
-    throw new Error('찜한 상품 데이터를 불러오는데 실패했습니다.')
-  }
-  return response.json()
 }

@@ -1,4 +1,12 @@
-import type { NicknameCheckResponse, EmailCheckResponse, SignUpRequestData, SignUpResponse, LoginRequestData, LoginResponse } from '../types'
+import type {
+  NicknameCheckResponse,
+  EmailCheckResponse,
+  SignUpRequestData,
+  SignUpResponse,
+  LoginRequestData,
+  LoginResponse,
+  WithDrawRequestData,
+} from '../types'
 // import { apiFetch } from './apiFetch'
 import axios from 'axios'
 
@@ -41,6 +49,13 @@ export const login = async (requestData: LoginRequestData): Promise<LoginRespons
   const response = await axios.post(`${API_BASE_URL}/auth/login`, requestData, {
     withCredentials: true,
   })
+  console.log(response)
+  console.log(response.data)
+  return response.data
+}
+
+export const withDraw = async (requestData: WithDrawRequestData): Promise<LoginResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/withdraw`, requestData)
   console.log(response)
   console.log(response.data)
   return response.data

@@ -118,6 +118,11 @@ export interface LoginResponse {
   }
 }
 
+export interface WithDrawRequestData {
+  reason: string
+  detailReason: string
+}
+
 // ========== 상품 관련 타입 ==========
 export interface ProductResponse {
   code: {
@@ -300,6 +305,10 @@ export interface MyBlockedUsersResponse {
       numberOfElements: number
     }
   }
+}
+
+export interface ProductTradeStatusRequest {
+  tradeStatus: string
 }
 
 // ========== 찜하기 관련 타입 ==========

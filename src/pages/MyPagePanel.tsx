@@ -14,6 +14,7 @@ interface MyPagePanelProps {
   myRequestData?: { content: Product[]; total: number }
   myFavoriteData?: { content: Product[]; total: number }
   myBlockedData?: { content: BlockedUser[]; total: number }
+  handleConfirmModal: (id: number, title: string, price: number, mainImageUrl: string) => void
 }
 
 const TAB_CONFIG: {
@@ -61,6 +62,7 @@ export default function MyPagePanel({
   myRequestData,
   myFavoriteData,
   myBlockedData,
+  handleConfirmModal,
 }: MyPagePanelProps) {
   const getProductData = () => {
     switch (activeMyPageTab) {
@@ -74,7 +76,6 @@ export default function MyPagePanel({
         return undefined
     }
   }
-
   const productData = getProductData()
   const config = activeMyPageTab !== 'tab-blocked' ? TAB_CONFIG[activeMyPageTab] : null
 
@@ -86,7 +87,13 @@ export default function MyPagePanel({
       className="border-border p-lg flex flex-col gap-6 rounded-xl border"
     >
       {config ? (
-        <MyPageTitle heading={config.heading} count={productData?.total} description={config.description} buttonLabel={config.buttonLabel} navigateTo={config.navigateTo} />
+        <MyPageTitle
+          heading={config.heading}
+          count={productData?.total}
+          description={config.description}
+          buttonLabel={config.buttonLabel}
+          navigateTo={config.navigateTo}
+        />
       ) : (
         <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedData?.total ?? 0}명`} />
       )}
@@ -96,7 +103,7 @@ export default function MyPagePanel({
           productData?.content?.length ? (
             <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
               {productData.content.map((product) => (
-                <MyList key={product.id} {...product} />
+                <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
               ))}
             </ul>
           ) : (
