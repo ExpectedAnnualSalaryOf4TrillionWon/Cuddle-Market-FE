@@ -1,7 +1,7 @@
 import { useUserStore } from '@store/userStore'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { MapPin, Calendar, Settings } from 'lucide-react'
@@ -48,41 +48,61 @@ function MyPage() {
     queryFn: () => fetchMyPageData(),
   })
   const {
-    data: MyProductData,
+    data: myProductsData,
+    fetchNextPage: fetchNextProducts,
+    hasNextPage: hasNextProducts,
+    isFetchingNextPage: isFetchingNextProducts,
     isLoading: isLoadingMyProductData,
     error: errorMyProductData,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ['myProducts', user?.id],
-    queryFn: () => fetchMyProductData(),
+    queryFn: ({ pageParam }) => fetchMyProductData(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
   })
 
   const {
-    data: MyRequestData,
+    data: myRequestData,
+    fetchNextPage: fetchNextRequests,
+    hasNextPage: hasNextRequests,
+    isFetchingNextPage: isFetchingNextRequests,
     isLoading: isLoadingMyRequestData,
     error: errorMyRequestData,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ['myRequest', user?.id],
-    queryFn: () => fetchMyRequestData(),
+    queryFn: ({ pageParam }) => fetchMyRequestData(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
     enabled: activeMyPageTab === 'tab-purchases',
   })
 
   const {
-    data: MyFavoriteData,
+    data: myFavoriteData,
+    fetchNextPage: fetchNextFavorites,
+    hasNextPage: hasNextFavorites,
+    isFetchingNextPage: isFetchingNextFavorites,
     isLoading: isLoadingMyFavoriteData,
     error: errorMyFavoritetData,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ['myFavorite', user?.id],
-    queryFn: () => fetchMyFavoriteData(),
+    queryFn: ({ pageParam }) => fetchMyFavoriteData(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
     enabled: activeMyPageTab === 'tab-wishlist',
   })
 
   const {
-    data: MyBlockedData,
+    data: myBlockedData,
+    fetchNextPage: fetchNextBlocked,
+    hasNextPage: hasNextBlocked,
+    isFetchingNextPage: isFetchingNextBlocked,
     isLoading: isLoadingMyFBlockedData,
     error: errorMyFBlockedData,
-  } = useQuery({
+  } = useInfiniteQuery({
     queryKey: ['myBlocked', user?.id],
-    queryFn: () => fetchMyBlockedData(),
+    queryFn: ({ pageParam }) => fetchMyBlockedData(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
     enabled: activeMyPageTab === 'tab-blocked',
   })
 
@@ -193,10 +213,41 @@ function MyPage() {
             <MyPagePanel
               activeTabCode={activeTabCode}
               activeMyPageTab={activeMyPageTab}
-              myProductsData={MyProductData}
-              myRequestData={MyRequestData}
-              myFavoriteData={MyFavoriteData}
-              myBlockedData={MyBlockedData}
+              myProductsData={myProductsData?.pages.flatMap((page) => page.content)}
+              myProductsTotal={myProductsData?.pages[0]?.total}
+              myRequestData={myRequestData?.pages.flatMap((page) => page.content)}
+              myRequestTotal={myRequestData?.pages[0]?.total}
+              myFavoriteData={myFavoriteData?.pages.flatMap((page) => page.content)}
+              myFavoriteTotal={myFavoriteData?.pages[0]?.total}
+              myBlockedData={myBlockedData?.pages.flatMap((page) => page.content)}
+              myBlockedTotal={myBlockedData?.pages[0]?.total}
+              fetchNextPage={
+                activeMyPageTab === 'tab-sales'
+                  ? fetchNextProducts
+                  : activeMyPageTab === 'tab-purchases'
+                    ? fetchNextRequests
+                    : activeMyPageTab === 'tab-wishlist'
+                      ? fetchNextFavorites
+                      : fetchNextBlocked
+              }
+              hasNextPage={
+                activeMyPageTab === 'tab-sales'
+                  ? hasNextProducts
+                  : activeMyPageTab === 'tab-purchases'
+                    ? hasNextRequests
+                    : activeMyPageTab === 'tab-wishlist'
+                      ? hasNextFavorites
+                      : hasNextBlocked
+              }
+              isFetchingNextPage={
+                activeMyPageTab === 'tab-sales'
+                  ? isFetchingNextProducts
+                  : activeMyPageTab === 'tab-purchases'
+                    ? isFetchingNextRequests
+                    : activeMyPageTab === 'tab-wishlist'
+                      ? isFetchingNextFavorites
+                      : isFetchingNextBlocked
+              }
               handleConfirmModal={handleConfirmModal}
             />
           </section>
