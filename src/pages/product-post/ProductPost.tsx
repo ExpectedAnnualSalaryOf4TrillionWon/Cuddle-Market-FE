@@ -36,7 +36,7 @@ function ProductPost() {
       if (isEditMode && id) {
         const data = await fetchProductById(id)
         setProductData(data)
-        const tabId = data.productType === 'SALES' ? 'tab-sales' : 'tab-purchases'
+        const tabId = data.productType === 'SELL' ? 'tab-sales' : 'tab-purchases'
         setActiveProductTypeTab(tabId)
       }
     }

@@ -1,14 +1,15 @@
 import { useUserStore } from '@store/userStore'
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { MapPin, Calendar, Settings } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { Tabs } from '@src/components/Tabs'
 import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
 import MyPagePanel from './MyPagePanel'
+import ConfirmModal from '@src/components/modal/ConfirmModal'
 
 const formatJoinDate = (dateString: string): string => {
   const date = new Date(dateString)
@@ -17,12 +18,26 @@ const formatJoinDate = (dateString: string): string => {
 
 function MyPage() {
   const { user } = useUserStore()
-  // const [currentUser, setCurrentUser] = useState(storeUser)
-  // const [isLoading, setIsLoading] = useState(true)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>('tab-sales')
-  const activeTabCode = MY_PAGE_TABS.find((tab) => tab.id === activeMyPageTab)?.code ?? 'SELL'
+  const tabParam = searchParams.get('tab') as MyPageTabId | null
+  const initialTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>(initialTab)
 
+  // URL 파라미터 변경 시 (뒤로가기/앞으로가기) 탭 상태 동기화
+  useEffect(() => {
+    const currentTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+    setActiveMyPageTab(currentTab)
+  }, [tabParam])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<{
+    id: number
+    title: string
+    price: number
+    mainImageUrl: string
+  } | null>(null)
+  const activeTabCode = MY_PAGE_TABS.find((tab) => tab.id === activeMyPageTab)?.code ?? 'SELL'
 
   const {
     data: myData,
@@ -43,32 +58,63 @@ function MyPage() {
 
   const {
     data: MyRequestData,
-    isLoading: isLoadingMyRequestData, // enabled가 false여도 이 값은 존재함
+    isLoading: isLoadingMyRequestData,
     error: errorMyRequestData,
   } = useQuery({
     queryKey: ['myRequest', user?.id],
     queryFn: () => fetchMyRequestData(),
-    enabled: activeMyPageTab === 'tab-purchases', // 조건부 실행
+    enabled: activeMyPageTab === 'tab-purchases',
   })
 
   const {
     data: MyFavoriteData,
-    isLoading: isLoadingMyFavoriteData, // enabled가 false여도 이 값은 존재함
+    isLoading: isLoadingMyFavoriteData,
     error: errorMyFavoritetData,
   } = useQuery({
     queryKey: ['myFavorite', user?.id],
     queryFn: () => fetchMyFavoriteData(),
-    enabled: activeMyPageTab === 'tab-wishlist', // 조건부 실행
+    enabled: activeMyPageTab === 'tab-wishlist',
   })
+
   const {
     data: MyBlockedData,
-    isLoading: isLoadingMyFBlockedData, // enabled가 false여도 이 값은 존재함
+    isLoading: isLoadingMyFBlockedData,
     error: errorMyFBlockedData,
   } = useQuery({
     queryKey: ['myBlocked', user?.id],
     queryFn: () => fetchMyBlockedData(),
-    enabled: activeMyPageTab === 'tab-blocked', // 조건부 실행
+    enabled: activeMyPageTab === 'tab-blocked',
   })
+
+  const { mutate: deleteProductMutate } = useMutation({
+    mutationFn: (id: number) => deleteProduct(id),
+    onSuccess: () => {
+      // 삭제 성공 시 상품 목록 다시 불러오기
+      queryClient.invalidateQueries({ queryKey: ['myProducts'] })
+      setIsModalOpen(false)
+      setSelectedProduct(null)
+    },
+  })
+
+  const handleTabChange = (tabId: string) => {
+    setActiveMyPageTab(tabId as MyPageTabId)
+    setSearchParams({ tab: tabId }, { replace: true })
+  }
+
+  const handleConfirmModal = (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSelectedProduct({ id, title, price, mainImageUrl })
+    setIsModalOpen(true)
+  }
+
+  const handleDelete = (id: number | undefined) => {
+    if (!id) return
+    deleteProductMutate(id)
+  }
+  const withDraw = () => {
+    console.log('회원탈퇴')
+  }
 
   if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
     return (
@@ -131,7 +177,7 @@ function MyPage() {
               </div>
 
               {/* TODO: 회원탈퇴 기능 구현 필요 */}
-              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button">
+              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button" onClick={withDraw}>
                 회원탈퇴
               </button>
             </div>
@@ -141,7 +187,7 @@ function MyPage() {
             <Tabs
               tabs={MY_PAGE_TABS}
               activeTab={activeMyPageTab}
-              onTabChange={(tabId) => setActiveMyPageTab(tabId as MyPageTabId)}
+              onTabChange={(tabId) => handleTabChange(tabId as MyPageTabId)}
               ariaLabel="마이페이지 메뉴"
             />
             <MyPagePanel
@@ -151,11 +197,20 @@ function MyPage() {
               myRequestData={MyRequestData}
               myFavoriteData={MyFavoriteData}
               myBlockedData={MyBlockedData}
+              handleConfirmModal={handleConfirmModal}
             />
           </section>
         </div>
       </div>
-      {/* <ConfirmModal isOpen={isModalOpen} message={modalMessage} subMessage={subMessage} onConfirm={handleModalConfirm} onCancel={handleModalCancel} /> */}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        type="delete"
+        heading="상품 삭제"
+        description="정말로 이 상품을 삭제하시겠습니까?"
+        product={selectedProduct}
+        onConfirm={handleDelete}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </>
   )
 }
