@@ -199,6 +199,15 @@ export const PRODUCT_POST_TABS = [
 ] as const
 export type ProductPostTabId = (typeof PRODUCT_POST_TABS)[number]['id']
 
+// 마이페이지 용 탭
+export const MY_PAGE_TABS = [
+  { id: 'tab-sales', label: '판매상품', code: 'SELL' },
+  { id: 'tab-purchases', label: '판매요청', code: 'REQUEST' },
+  { id: 'tab-wishlist', label: '찜한 상품', code: 'favorites' },
+  { id: 'tab-blocked', label: '차단 유저', code: 'blocked-users' },
+] as const
+export type MyPageTabId = (typeof MY_PAGE_TABS)[number]['id']
+
 // ========== 가격대 관련 상수 ==========
 export const PRICE_TYPE = [
   { value: { min: 0, max: 10000 }, title: '1만원 이하' },
