@@ -14,7 +14,7 @@ interface MyPagePanelProps {
   myRequestData?: { content: Product[]; total: number }
   myFavoriteData?: { content: Product[]; total: number }
   myBlockedData?: { content: BlockedUser[]; total: number }
-  handleConfirmModal: (id: number, title: string, price: number, mainImageUrl: string) => void
+  handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
 }
 
 const TAB_CONFIG: {

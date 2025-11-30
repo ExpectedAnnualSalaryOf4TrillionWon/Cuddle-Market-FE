@@ -1,5 +1,5 @@
 import { useUserStore } from '@store/userStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
@@ -18,10 +18,18 @@ const formatJoinDate = (dateString: string): string => {
 
 function MyPage() {
   const { user } = useUserStore()
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>('tab-sales')
+  const tabParam = searchParams.get('tab') as MyPageTabId | null
+  const initialTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>(initialTab)
+
+  // URL 파라미터 변경 시 (뒤로가기/앞으로가기) 탭 상태 동기화
+  useEffect(() => {
+    const currentTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+    setActiveMyPageTab(currentTab)
+  }, [tabParam])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<{
     id: number
@@ -93,7 +101,9 @@ function MyPage() {
     setSearchParams({ tab: tabId }, { replace: true })
   }
 
-  const handleConfirmModal = (id: number, title: string, price: number, mainImageUrl: string) => {
+  const handleConfirmModal = (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => {
+    e.preventDefault()
+    e.stopPropagation()
     setSelectedProduct({ id, title, price, mainImageUrl })
     setIsModalOpen(true)
   }
