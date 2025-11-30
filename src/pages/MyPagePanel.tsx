@@ -23,6 +23,8 @@ const TAB_CONFIG: {
     emptyIcon: LucideIcon
     emptyTitle: string
     emptyDescription?: string
+    buttonLabel?: string
+    navigateTo?: string
   }
 } = {
   'tab-sales': {
@@ -31,6 +33,8 @@ const TAB_CONFIG: {
     emptyIcon: Package,
     emptyTitle: '등록한 상품이 없습니다',
     emptyDescription: '상품을 등록해보세요',
+    buttonLabel: '상품등록',
+    navigateTo: '/product-post?tab=tab-sales',
   },
   'tab-purchases': {
     heading: '내가 등록한 상품',
@@ -38,6 +42,8 @@ const TAB_CONFIG: {
     emptyIcon: Package,
     emptyTitle: '등록한 구매 요청이 없습니다',
     emptyDescription: '구매 요청을 등록해보세요',
+    buttonLabel: '판매요청 등록',
+    navigateTo: '/product-post?tab=tab-purchases',
   },
   'tab-wishlist': {
     heading: '내가 찜한 상품',
@@ -80,7 +86,7 @@ export default function MyPagePanel({
       className="border-border p-lg flex flex-col gap-6 rounded-xl border"
     >
       {config ? (
-        <MyPageTitle heading={config.heading} count={productData?.total} description={config.description} />
+        <MyPageTitle heading={config.heading} count={productData?.total} description={config.description} buttonLabel={config.buttonLabel} navigateTo={config.navigateTo} />
       ) : (
         <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedData?.total ?? 0}명`} />
       )}
@@ -96,25 +102,23 @@ export default function MyPagePanel({
           ) : (
             config && <EmptyState icon={config.emptyIcon} title={config.emptyTitle} description={config.emptyDescription} />
           )
-        ) : (
-          myBlockedData?.content?.length ? (
-            <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
-              {myBlockedData.content.map((user) => (
-                <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
-                  <div className="flex items-center gap-4">
-                    <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
-                      <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
-                    </div>
-                    <span className="font-medium">{user.nickname}</span>
+        ) : myBlockedData?.content?.length ? (
+          <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
+            {myBlockedData.content.map((user) => (
+              <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
+                <div className="flex items-center gap-4">
+                  <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
+                    <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
                   </div>
-                  <Button size="sm" className="border border-gray-300">
-                    차단 해제
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          ) : null
-        )}
+                  <span className="font-medium">{user.nickname}</span>
+                </div>
+                <Button size="sm" className="border border-gray-300">
+                  차단 해제
+                </Button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </div>
   )
