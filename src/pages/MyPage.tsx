@@ -1,15 +1,10 @@
-import ConfirmModal from '@src/components/modal/ConfirmModal'
-import userDefaultImage from '@assets/images/userDefault.svg'
-import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { useUserStore } from '@store/userStore'
-import { useEffect, useState } from 'react'
-import { CiLocationOn } from 'react-icons/ci'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { apiFetch } from '../api/apiFetch'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
-import { Clock, Heart, MapPin, Eye, Calendar, Settings } from 'lucide-react'
+import { MapPin, Calendar, Settings } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { Tabs } from '@src/components/Tabs'
 import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
@@ -28,13 +23,6 @@ function MyPage() {
   const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>('tab-sales')
   const activeTabCode = MY_PAGE_TABS.find((tab) => tab.id === activeMyPageTab)?.code ?? 'SELL'
 
-  const [counts, setCounts] = useState({ products: 0, wishlist: 0 })
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalMessage, setModalMessage] = useState('')
-  const [modalAction, setModalAction] = useState<'exit' | 'delete' | null>(null)
-  const [deleteItemId, setDeleteItemId] = useState<number | undefined>()
-  const [subMessage, setSubMessage] = useState('')
 
   const {
     data: myData,
@@ -81,13 +69,6 @@ function MyPage() {
     queryFn: () => fetchMyBlockedData(),
     enabled: activeMyPageTab === 'tab-blocked', // 조건부 실행
   })
-
-  const handleExit = () => {
-    setModalMessage('정말로 회원탈퇴 하시겠습니까?')
-    setSubMessage('탈퇴후에는 복구할 수 없습니다')
-    setModalAction('exit')
-    setIsModalOpen(true)
-  }
 
   if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
     return (
@@ -149,7 +130,8 @@ function MyPage() {
                 </div>
               </div>
 
-              <button onClick={handleExit} className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button">
+              {/* TODO: 회원탈퇴 기능 구현 필요 */}
+              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button">
                 회원탈퇴
               </button>
             </div>
