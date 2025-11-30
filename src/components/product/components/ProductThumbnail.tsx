@@ -13,6 +13,7 @@ interface ProductThumbnailProps {
   productStatusName: string
   tradeStatus: string
   productTradeColor: string
+  isFavorite: boolean
   onLikeClick: (e: React.MouseEvent) => void
 }
 
@@ -23,7 +24,8 @@ export function ProductThumbnail({
   productStatusName,
   tradeStatus,
   productTradeColor,
-  // onLikeClick,
+  isFavorite,
+  onLikeClick,
 }: ProductThumbnailProps) {
   return (
     <div className="relative overflow-hidden pb-[75%]">
@@ -34,7 +36,12 @@ export function ProductThumbnail({
           className="z-1 flex cursor-pointer items-center justify-center rounded-full bg-gray-100"
           aria-label="찜하기"
           icon={Heart}
+          iconProps={{
+            color: isFavorite ? '#fc8181' : undefined,
+            fill: isFavorite ? '#fc8181' : 'none',
+          }}
           size="xs"
+          onClick={onLikeClick}
         />
       </div>
       <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{tradeStatus}</Badge>

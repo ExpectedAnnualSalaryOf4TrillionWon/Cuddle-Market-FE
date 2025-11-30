@@ -1,19 +1,26 @@
 import { Button } from '@src/components/commons/button/Button'
-import { PRODUCT_TYPE_TABS, type ProductTypeTabId } from '@src/constants/constants'
 import { cn } from '@src/utils/cn'
 
-interface ProductTypeTabsProps {
-  activeTab: ProductTypeTabId
-  onTabChange: (tabId: ProductTypeTabId) => void
-  hideAllTab?: boolean
+interface Tab {
+  id: string
+  label: string
+  code: string
 }
 
-export function ProductTypeTabs({ activeTab, onTabChange, hideAllTab = false }: ProductTypeTabsProps) {
-  const tabs = hideAllTab ? PRODUCT_TYPE_TABS.filter((tab) => tab.id !== 'tab-all') : PRODUCT_TYPE_TABS
+interface TabsProps {
+  tabs: readonly Tab[]
+  activeTab: string
+  onTabChange: (tabId: string) => void
+  ariaLabel: string
+  excludeTabId?: string
+}
+
+export function Tabs({ tabs, activeTab, onTabChange, ariaLabel, excludeTabId }: TabsProps) {
+  const filteredTabs = excludeTabId ? tabs.filter((tab) => tab.id !== excludeTabId) : tabs
 
   return (
-    <div role="tablist" aria-label="상품 타입 분류" className={cn('border-b-primary-200 flex gap-2.5 border-b-2 pb-1')}>
-      {tabs.map((tab) => (
+    <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex gap-2.5 border-b-2 pb-1')}>
+      {filteredTabs.map((tab) => (
         <Button
           key={tab.id}
           id={tab.id}

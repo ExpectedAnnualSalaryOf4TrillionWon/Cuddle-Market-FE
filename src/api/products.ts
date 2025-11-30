@@ -4,7 +4,9 @@ import type {
   ImageUploadResponse,
   // FilterApiResponse,
   LikesResponse,
-  MyPageData,
+  MyBlockedUsersResponse,
+  MyPageDataResponse,
+  MyPageProductResponse,
   ProductDetailItemResponse,
   ProductPostRequestData,
   ProductResponse,
@@ -125,6 +127,35 @@ export const uploadImage = async (files: File[]): Promise<ImageUploadResponse['d
   return response.data.data
 }
 
+// 마이페이지 조회
+export const fetchMyPageData = async () => {
+  const response = await api.get<MyPageDataResponse>(`/profile/me`)
+  return response.data.data
+}
+
+// 내가 등록한 판매상품 조회
+export const fetchMyProductData = async () => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/products?&size=10`)
+  return response.data.data
+}
+
+// 내가 등록한 판매요청 상품 조회
+export const fetchMyRequestData = async () => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/purchase-requests?&size=10`)
+  return response.data.data
+}
+
+// 내가 찜한 상품 조회
+export const fetchMyFavoriteData = async () => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/favorites?&size=10`)
+  return response.data.data
+}
+
+export const fetchMyBlockedData = async () => {
+  const response = await api.get<MyBlockedUsersResponse>(`/profile/me/blocked-users?&size=10`)
+  return response.data.data.blockedUsers
+}
+
 // export const fetchAllCategory = async (): Promise<FilterApiResponse> => {
 //   const data = await apiFetch(`${API_BASE_URL}/categories/all-get`)
 //   return data
@@ -136,15 +167,6 @@ export const uploadImage = async (files: File[]): Promise<ImageUploadResponse['d
 //   if (!res.ok) throw new Error('사용자를 찾을 수 없습니다.');
 //   return res.json();
 // };
-
-// 내 상품과 찜상품 목록 조회
-export const fetchMyPageData = async (): Promise<MyPageData> => {
-  const response = await fetch(`${API_BASE_URL}/likes/`, {})
-  if (!response.ok) {
-    throw new Error('마이페이지 데이터를 불러오는데 실패했습니다.')
-  }
-  return response.json()
-}
 
 // 상품 등록
 export const createProduct = async (productData: CreateProductRequest): Promise<CreateProductResponse> => {

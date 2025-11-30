@@ -8,6 +8,7 @@ import { getPetTypeName } from '@src/utils/getPetTypeName'
 import { getProductStatus } from '@src/utils/getProductStatus'
 import { getProductType } from '@src/utils/getProductType'
 import { getTradeStatusColor } from '@src/utils/getTradeStatusColor'
+import { useFavorite } from '@src/hooks/useFavorite'
 
 export interface ProductCardProps {
   data: Product
@@ -15,6 +16,11 @@ export interface ProductCardProps {
 }
 
 function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
+  const { isFavorite, handleToggleFavorite } = useFavorite({
+    productId: data?.id,
+    initialIsFavorite: data?.isFavorite ?? false,
+  })
+
   if (!data) return null
 
   const { id, title, price, mainImageUrl, petDetailType, productStatus, tradeStatus, createdAt, favoriteCount, productType } = data
@@ -23,10 +29,6 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
   const productTradeName = getTradeStatus(tradeStatus)
   const productTypeName = getProductType(productType)
   const productTradeColor = getTradeStatusColor(tradeStatus)
-
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-  }
   const handleCardClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -56,7 +58,8 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
         productStatusName={productStatusName}
         tradeStatus={productTradeName}
         productTradeColor={productTradeColor}
-        onLikeClick={handleLikeClick}
+        isFavorite={isFavorite}
+        onLikeClick={handleToggleFavorite}
       />
     </Link>
   )

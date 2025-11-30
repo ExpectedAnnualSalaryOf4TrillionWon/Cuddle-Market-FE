@@ -116,7 +116,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
   }, [isEditMode, initialData, reset])
 
   return (
-    <div role="tabpanel">
+    <div role="tabpanel" id="panel-SELL" aria-labelledby="tab-sales">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="flex flex-col gap-5">
           <legend className="sr-only">상품 등록폼</legend>

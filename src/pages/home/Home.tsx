@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState, useCallback, useEffect } from 'react'
-import { ProductTypeTabs } from '@src/components/ProductTypeTabs'
+import { Tabs } from '@src/components/Tabs'
 import { DetailFilter } from '@src/pages/home/components/filter/DetailFilter'
 import { ProductsSection } from '@src/pages/home/components/product-section/ProductsSection'
 import { fetchAllProducts } from '../../api/products'
@@ -256,7 +256,7 @@ function Home() {
               />
             </div>
             <div className="flex flex-col gap-5">
-              <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} />
+              <Tabs tabs={PRODUCT_TYPE_TABS} activeTab={activeProductTypeTab} onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)} ariaLabel="상품 타입 분류" />
               <ProductsSection
                 products={allProducts}
                 totalElements={totalElements}

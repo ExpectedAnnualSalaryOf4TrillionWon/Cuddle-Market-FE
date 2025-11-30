@@ -1,8 +1,8 @@
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import type { ProductTypeTabId } from '../../constants/constants'
-import { ProductTypeTabs } from '@src/components/ProductTypeTabs'
+import { PRODUCT_TYPE_TABS, type ProductTypeTabId } from '../../constants/constants'
+import { Tabs } from '@src/components/Tabs'
 import { ProductPostForm } from './components/ProductPostForm'
 import { ProductRequestForm } from './components/ProductRequestForm'
 import { fetchProductById } from '@src/api/products'
@@ -32,7 +32,7 @@ function ProductPost() {
       <div className="bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
           <div className="gap-2xl flex w-full flex-col">
-            <ProductTypeTabs activeTab={activeProductTypeTab} onTabChange={setActiveProductTypeTab} hideAllTab />
+            <Tabs tabs={PRODUCT_TYPE_TABS} activeTab={activeProductTypeTab} onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)} ariaLabel="상품 타입" excludeTabId="tab-all" />
             {activeProductTypeTab === 'tab-sales' && <ProductPostForm isEditMode={isEditMode} productId={id} initialData={productData} />}
             {activeProductTypeTab === 'tab-purchases' && <ProductRequestForm isEditMode={isEditMode} productId={id} initialData={productData} />}
           </div>

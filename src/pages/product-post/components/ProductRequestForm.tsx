@@ -111,7 +111,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
     }
   }, [isEditMode, initialData, reset])
   return (
-    <div role="tabpanel">
+    <div role="tabpanel" id="panel-REQUEST" aria-labelledby="tab-purchases">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="flex flex-col gap-5">
           <legend className="sr-only">회원가입폼</legend>
