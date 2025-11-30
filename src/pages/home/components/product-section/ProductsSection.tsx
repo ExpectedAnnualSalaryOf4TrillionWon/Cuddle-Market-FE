@@ -1,4 +1,4 @@
-import ProductList from '@src/components/commons/product/ProductList'
+import ProductList from '@src/components/product/ProductList'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { PRODUCT_TYPE_TABS, SORT_TYPE, type ProductTypeTabId, type SORT_LABELS } from '@src/constants/constants'
 import type { Product } from '@src/types'

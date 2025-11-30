@@ -1,4 +1,4 @@
-import { AddressField } from '@src/pages/signup/components/AddressField'
+import { AddressField } from '@src/components/commons/AddressField'
 import type { ProductPostFormValues } from '../ProductPostForm'
 import type { Control, UseFormSetValue, UseFormRegister } from 'react-hook-form'
 import FormSectionHeader from '../FormSectionHeader'

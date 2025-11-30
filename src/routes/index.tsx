@@ -12,7 +12,7 @@ import MyPage from '@pages/MyPage'
 import Signup from '@src/pages/signup/Signup'
 // import UserPage from '@pages/UserPage';
 import { Route, Routes } from 'react-router-dom'
-import MainLayout from '@src/components/layouts/MainLayout'
+import MainLayout from '@src/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
 import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
