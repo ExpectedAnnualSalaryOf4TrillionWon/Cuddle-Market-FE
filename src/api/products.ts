@@ -3,7 +3,6 @@ import type {
   CreateProductResponse,
   ImageUploadResponse,
   // FilterApiResponse,
-  LikesResponse,
   MyBlockedUsersResponse,
   MyPageDataResponse,
   MyPageProductResponse,

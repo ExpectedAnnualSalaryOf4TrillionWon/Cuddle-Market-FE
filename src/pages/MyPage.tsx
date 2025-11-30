@@ -1,7 +1,7 @@
 import { useUserStore } from '@store/userStore'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { MapPin, Calendar, Settings } from 'lucide-react'
