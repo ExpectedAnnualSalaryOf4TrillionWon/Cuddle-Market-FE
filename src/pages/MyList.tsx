@@ -88,7 +88,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                     value: sort.name,
                     label: sort.name,
                   }))}
-                  buttonClassName="border-primary-50 border bg-primary-50 text-gray-900 px-3 py-2"
+                  buttonClassName="border-0 bg-primary-50 text-gray-900 px-3 py-2"
                 />
               </div>
             )}

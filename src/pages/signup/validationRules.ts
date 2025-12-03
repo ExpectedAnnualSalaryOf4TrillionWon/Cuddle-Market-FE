@@ -90,3 +90,17 @@ export const productPostApiErrors = {
     INTERNAL_SERVER_ERROR: '이미지 업로드에 실패했습니다.',
   },
 } as const
+
+export const WithDrawApiErrors = {
+  detailReason: {
+    required: '상세 사유를 입력해주세요',
+    minLength: {
+      value: 2,
+      message: '상세사유는 2~ 500자 이상이어야 합니다.',
+    },
+    maxLength: {
+      value: 500,
+      message: '상세사유는 2~ 500자 이상이어야 합니다.',
+    },
+  },
+} as const

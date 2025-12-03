@@ -9,7 +9,9 @@ import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { Tabs } from '@src/components/Tabs'
 import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
 import MyPagePanel from './MyPagePanel'
-import ConfirmModal from '@src/components/modal/ConfirmModal'
+import DeleteConfirmModal from '@src/components/modal/DeleteConfirmModal'
+import WithdrawModal, { type WithDrawFormValues } from '@src/components/modal/WithdrawModal'
+import { withDraw } from '@src/api/profile'
 
 const formatJoinDate = (dateString: string): string => {
   const date = new Date(dateString)
@@ -17,7 +19,7 @@ const formatJoinDate = (dateString: string): string => {
 }
 
 function MyPage() {
-  const { user } = useUserStore()
+  const { user, clearAll } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -31,6 +33,7 @@ function MyPage() {
     setActiveMyPageTab(currentTab)
   }, [tabParam])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<{
     id: number
     title: string
@@ -46,6 +49,7 @@ function MyPage() {
   } = useQuery({
     queryKey: ['mypage', user?.id],
     queryFn: () => fetchMyPageData(),
+    enabled: !!user,
   })
   const {
     data: myProductsData,
@@ -59,6 +63,7 @@ function MyPage() {
     queryFn: ({ pageParam }) => fetchMyProductData(pageParam),
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     initialPageParam: 0,
+    enabled: !!user,
   })
 
   const {
@@ -128,12 +133,27 @@ function MyPage() {
     setIsModalOpen(true)
   }
 
-  const handleDelete = (id: number | undefined) => {
-    if (!id) return
+  const handleDelete = (id: number) => {
     deleteProductMutate(id)
   }
-  const withDraw = () => {
-    console.log('회원탈퇴')
+
+  const handleWithdrawModal = () => {
+    setIsWithdrawModalOpen(true)
+  }
+
+  const handleWithdraw = async (data: WithDrawFormValues) => {
+    // withDraw(data)
+    // setIsWithdrawModalOpen(false)
+    // navigate('/')
+
+    try {
+      await withDraw(data)
+      clearAll() // 모든 사용자 상태 초기화 (user, accessToken, refreshToken, redirectUrl)
+      // 로그인 페이지로 이동
+      navigate('/')
+    } catch (error) {
+      console.error('회원탈퇴 실패:', error)
+    }
   }
 
   if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
@@ -197,7 +217,7 @@ function MyPage() {
               </div>
 
               {/* TODO: 회원탈퇴 기능 구현 필요 */}
-              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button" onClick={withDraw}>
+              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button" onClick={handleWithdrawModal}>
                 회원탈퇴
               </button>
             </div>
@@ -253,15 +273,8 @@ function MyPage() {
           </section>
         </div>
       </div>
-      <ConfirmModal
-        isOpen={isModalOpen}
-        type="delete"
-        heading="상품 삭제"
-        description="정말로 이 상품을 삭제하시겠습니까?"
-        product={selectedProduct}
-        onConfirm={handleDelete}
-        onCancel={() => setIsModalOpen(false)}
-      />
+      <DeleteConfirmModal isOpen={isModalOpen} product={selectedProduct} onConfirm={handleDelete} onCancel={() => setIsModalOpen(false)} />
+      <WithdrawModal isOpen={isWithdrawModalOpen} onConfirm={handleWithdraw} onCancel={() => setIsWithdrawModalOpen(false)} />
     </>
   )
 }

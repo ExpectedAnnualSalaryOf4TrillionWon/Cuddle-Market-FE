@@ -9,93 +9,15 @@ import type {
   ProductPostResponse,
   ProductResponse,
   RequestProductPostRequestData,
+  WithDrawRequest,
+  WithDrawResponse,
 } from '../types'
 import { api } from './api'
 
-import axios from 'axios'
 import type { TransactionStatus } from '@src/constants/constants'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
-
-// 상품 목록 조회
-export const fetchAllProducts = async (
-  page: number = 0,
-  size: number = 20,
-  productType?: string,
-  selectedProductStatus?: string | null,
-  minPrice?: number | null,
-  maxPrice?: number | null,
-  addressSido?: string | null,
-  addressGugun?: string | null,
-  selectedCategory?: string | null,
-  petType?: string | null,
-  selectedDetailPet?: string | null,
-  keyword?: string | null,
-  sortBy?: string | null,
-  sortOrder?: string | null
-) => {
-  const params = new URLSearchParams({
-    page: page.toString(),
-    size: size.toString(),
-  })
-
-  if (keyword) {
-    params.append('keyword', keyword)
-  }
-  if (petType) {
-    params.append('petType', petType)
-  }
-  if (selectedDetailPet) {
-    params.append('petDetailType', selectedDetailPet)
-  }
-  if (productType) {
-    params.append('productType', productType)
-  }
-
-  if (selectedProductStatus) {
-    params.append('productStatuses', selectedProductStatus)
-  }
-
-  if (minPrice !== null && minPrice !== undefined) {
-    params.append('minPrice', minPrice.toString())
-  }
-
-  if (maxPrice !== null && maxPrice !== undefined) {
-    params.append('maxPrice', maxPrice.toString())
-  }
-
-  if (addressSido) {
-    params.append('addressSido', addressSido)
-  }
-
-  if (addressGugun) {
-    params.append('addressGugun', addressGugun)
-  }
-  if (selectedCategory) {
-    params.append('categories', selectedCategory)
-  }
-  if (sortBy) {
-    params.append('sortBy', sortBy)
-  }
-  if (sortOrder) {
-    params.append('sortOrder', sortOrder)
-  }
-
-  const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)
-
-  return {
-    data: response.data,
-    total: response.data.data.totalElements,
-  }
-}
-
-// 상품 상세 조회
-// api를 사용하면 자동으로:
-// 1. Authorization 헤더에 access token 추가
-// 2. 401 에러 시 토큰 갱신 후 재요청
-export const fetchProductById = async (productId: string) => {
-  const response = await api.get<ProductDetailItemResponse>(`/products/${productId}`)
-  return response.data.data
+export const withDraw = async (requestData: WithDrawRequest) => {
+  await api.delete<WithDrawResponse>(`/auth/withdraw`, { data: requestData })
 }
 
 // 찜 추가
