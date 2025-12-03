@@ -1248,7 +1248,6 @@ export interface LocationFilter {
 }
 
 // ========== 상품상태 관련 상수 ==========
-// export type TransactionConditaion = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR'
 export const SORT_TYPE = [
   { id: 'createdAt', label: '최신순' },
   { id: 'orderedLowPriced', label: '가격 낮은순' },
@@ -1256,8 +1255,28 @@ export const SORT_TYPE = [
   { id: 'favoriteCount', label: '찜 많은순' },
 ]
 export type SORT_LABELS = (typeof SORT_TYPE)[number]['label']
-// const SORT_LABELS = SORT_TYPE.map(sort => sort.label);
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp']
 
 export const MAX_FILES = 5
+
+// ========== 회원탈퇴 이유 관련 상수 ==========
+export const WiTH_DRAW_REASON = [
+  { id: 'SERVICE_DISSATISFACTION', label: '서비스 불만족' },
+  { id: 'PRIVACY_CONCERN', label: '개인정보 우려' },
+  { id: 'LOW_USAGE', label: '사용 빈도 낮음' },
+  { id: 'COMPETITOR', label: '경쟁 서비스 이용' },
+  { id: 'OTHER', label: '기타' },
+]
+export type WiTH_DRAW_LABEL = (typeof WiTH_DRAW_REASON)[number]['label']
+
+// ========== 모달 주의사항 항목들 상수 ==========
+
+export const WITH_DRAW_ALERT_LIST = [
+  '등록한 모든 상품이 삭제됩니다',
+  '거래 내역과 채팅 기록이 모두 삭제됩니다',
+  '찜한 상품 목록이 삭제됩니다',
+  '진행 중인 거래가 있다면 먼저 완료해 주세요',
+]
+
+export const PRODUCT_DELETE_ALERT_LIST = ['삭제된 상품은 복구할 수 없습니다']

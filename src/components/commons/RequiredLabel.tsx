@@ -1,7 +1,7 @@
 import { cn } from '@src/utils/cn'
 
 interface RequiredLabelProps {
-  htmlFor: string
+  htmlFor?: string
   children: string
   labelClass?: string
 }
