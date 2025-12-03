@@ -1,12 +1,4 @@
-import type {
-  NicknameCheckResponse,
-  EmailCheckResponse,
-  SignUpRequestData,
-  SignUpResponse,
-  LoginRequestData,
-  LoginResponse,
-  WithDrawRequestData,
-} from '../types'
+import type { NicknameCheckResponse, EmailCheckResponse, SignUpRequestData, SignUpResponse, LoginRequestData, LoginResponse } from '../types'
 // import { apiFetch } from './apiFetch'
 import axios from 'axios'
 
