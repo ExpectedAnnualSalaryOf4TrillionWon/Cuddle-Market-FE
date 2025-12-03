@@ -126,6 +126,7 @@
    git checkout develop && git pull
    git checkout -b 새브랜치명
    ```
-3. **작업 완료 후 PR은 `develop` 브랜치를 base로 생성**
-4. **PR 생성은 Claude Code가 수행** (`.github/PULL_REQUEST_TEMPLATE.md` 템플릿 사용)
-5. **머지는 사용자가 직접 수행**
+3. **작업 완료 후 commit-push 및 PR 생성까지 진행**
+   - PR은 `develop` 브랜치를 base로 생성
+   - PR 템플릿은 `.github/PULL_REQUEST_TEMPLATE.md` 사용
+4. **머지는 사용자가 직접 수행**
