@@ -4,13 +4,14 @@ interface RequiredLabelProps {
   htmlFor?: string
   children: string
   labelClass?: string
+  required?: boolean
 }
 
-export function RequiredLabel({ htmlFor, children, labelClass }: RequiredLabelProps) {
+export function RequiredLabel({ htmlFor, children, labelClass, required = true }: RequiredLabelProps) {
   return (
     <label htmlFor={htmlFor} className={cn('text-gray-900', labelClass)}>
       <span>{children}</span>
-      <span className="text-danger-500">*</span>
+      {required && <span className="text-danger-500">*</span>}
     </label>
   )
 }

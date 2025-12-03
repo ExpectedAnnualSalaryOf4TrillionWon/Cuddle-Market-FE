@@ -16,6 +16,7 @@ import MainLayout from '@src/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
 import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
+import ProfileUpdate from '@src/pages/ProfileUpdate'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -25,52 +26,17 @@ const routes = [
   { path: ROUTES.DETAIL, element: <ProductDetail /> },
   { path: ROUTES.PRODUCT_POST, element: <ProductPost /> },
   { path: ROUTES.PRODUCT_EDIT, element: <ProductPost /> },
+  { path: ROUTES.PROFILE_UPDATE, element: <ProfileUpdate /> },
 ]
-// const WithHeaderLayout = () => (
-//   <div className="min-h-screen ">
-//     <Header />
-//     <Outlet />
-//   </div>
-// );
-
-// const NoHeaderLayout = () => {
-//   const location = useLocation();
-//   const pathName = location.pathname;
-
-//   return (
-//     <div className={`min-h-screen ${pathName === '/signin' ? 'bg-primary' : ''}`}>
-//       <Outlet />
-//     </div>
-//   );
-// };
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* Header 포함 구간: Home, ProductDetail */}
-      {/* <Route element={<WithHeaderLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-      </Route> */}
-
-      {/* Header 미포함 구간: Signup, MyPage */}
       <Route element={<MainLayout />}>
         {routes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
-        {/* <Route path="/signin" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/user/:id" element={<UserPage />} />
-        <Route path="/alarm" element={<AlarmPage />} />
-        <Route path="/profile-update" element={<ProfileUpdate />} />
-        <Route element={<ProductPost />}>
-          <Route path="/product-post" />
-          <Route path="/products/:id/edit" />
-        </Route> */}
-        {/* 같은 element를 갖는 라우트를 묶자는 멘토링 내용 반영 */}
       </Route>
-
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
     </Routes>
   )

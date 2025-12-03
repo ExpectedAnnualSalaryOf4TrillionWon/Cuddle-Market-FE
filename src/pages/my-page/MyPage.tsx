@@ -1,37 +1,21 @@
 import { useUserStore } from '@store/userStore'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
-import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
-import { MapPin, Calendar, Settings } from 'lucide-react'
-import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import { Tabs } from '@src/components/Tabs'
 import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
 import MyPagePanel from './components/MyPagePanel'
 import DeleteConfirmModal from '@src/components/modal/DeleteConfirmModal'
 import WithdrawModal, { type WithDrawFormValues } from '@src/components/modal/WithdrawModal'
 import { withDraw } from '@src/api/profile'
-
-const formatJoinDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월`
-}
+import ProfileData from './components/ProfileData'
 
 function MyPage() {
   const { user, clearAll } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const tabParam = searchParams.get('tab') as MyPageTabId | null
-  const initialTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
-  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>(initialTab)
-
-  // URL 파라미터 변경 시 (뒤로가기/앞으로가기) 탭 상태 동기화
-  useEffect(() => {
-    const currentTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
-    setActiveMyPageTab(currentTab)
-  }, [tabParam])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<{
@@ -40,17 +24,11 @@ function MyPage() {
     price: number
     mainImageUrl: string
   } | null>(null)
+  const tabParam = searchParams.get('tab') as MyPageTabId | null
+  const initialTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+  const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>(initialTab)
   const activeTabCode = MY_PAGE_TABS.find((tab) => tab.id === activeMyPageTab)?.code ?? 'SELL'
 
-  const {
-    data: myData,
-    isLoading: isLoadingMyData,
-    error: errorMyData,
-  } = useQuery({
-    queryKey: ['mypage', user?.id],
-    queryFn: () => fetchMyPageData(),
-    enabled: !!user,
-  })
   const {
     data: myProductsData,
     fetchNextPage: fetchNextProducts,
@@ -137,10 +115,6 @@ function MyPage() {
     deleteProductMutate(id)
   }
 
-  const handleWithdrawModal = () => {
-    setIsWithdrawModalOpen(true)
-  }
-
   const handleWithdraw = async (data: WithDrawFormValues) => {
     // withDraw(data)
     // setIsWithdrawModalOpen(false)
@@ -156,7 +130,12 @@ function MyPage() {
     }
   }
 
-  if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
+  useEffect(() => {
+    const currentTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
+    setActiveMyPageTab(currentTab)
+  }, [tabParam])
+
+  if (isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
@@ -164,7 +143,7 @@ function MyPage() {
     )
   }
 
-  if (errorMyData || errorMyProductData || errorMyRequestData || errorMyFavoritetData || errorMyFBlockedData) {
+  if (errorMyProductData || errorMyRequestData || errorMyFavoritetData || errorMyFBlockedData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -180,49 +159,7 @@ function MyPage() {
     <>
       <div className="bg-bg pb-4xl pt-8">
         <div className="px-lg mx-auto flex max-w-[var(--container-max-width)] gap-8">
-          <section className="border-border flex h-fit min-w-72 flex-col rounded-xl border p-5">
-            <div className="text-text-primary sticky top-24 flex flex-col rounded-xl">
-              <div className="flex flex-col gap-6 border-b border-gray-300 pb-8">
-                <div className="flex flex-col items-center gap-3.5 pb-7">
-                  <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#FACC15]">
-                    {myData?.profileImageUrl ? (
-                      <img src={myData.profileImageUrl ?? CuddleMarketLogo} alt={myData.nickname} className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="heading-h4">{myData?.nickname.charAt(0).toUpperCase()}</div>
-                    )}
-                  </div>
-                  <h3 className="heading-h5 text-text-primary mb-sm">{myData?.nickname}</h3>
-                  <p className="w-full text-sm font-semibold text-gray-500">
-                    {myData?.introduction ? myData.introduction : '소개글을을 작성해주세요'}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3.5">
-                  <div className="flex flex-col gap-2.5">
-                    <ProductMetaItem icon={MapPin} iconSize={17} label={`${myData?.addressSido} ${myData?.addressGugun}`} className="gap-2" />
-                    <ProductMetaItem
-                      icon={Calendar}
-                      iconSize={17}
-                      label={`가입일: ${myData?.createdAt ? formatJoinDate(myData.createdAt) : ''}`}
-                      className="gap-2"
-                    />
-                  </div>
-                  <Link
-                    to="/profile-update"
-                    className="bg-primary-200 text-bg flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 transition-all"
-                  >
-                    <Settings size={19} />
-                    <span>내 정보 수정</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* TODO: 회원탈퇴 기능 구현 필요 */}
-              <button className="w-full cursor-pointer pt-8 text-left text-sm text-gray-500" type="button" onClick={handleWithdrawModal}>
-                회원탈퇴
-              </button>
-            </div>
-          </section>
-
+          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} />
           <section className="flex flex-1 flex-col gap-7">
             <Tabs
               tabs={MY_PAGE_TABS}
