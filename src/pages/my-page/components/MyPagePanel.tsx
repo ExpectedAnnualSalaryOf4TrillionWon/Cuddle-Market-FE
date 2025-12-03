@@ -99,7 +99,7 @@ export default function MyPagePanel({
       role="tabpanel"
       id={`panel-${activeTabCode}`}
       aria-labelledby={activeMyPageTab}
-      className="border-border p-lg flex flex-col gap-6 rounded-xl border"
+      className="border-border flex flex-col gap-6 rounded-xl border p-5"
     >
       {config ? (
         <MyPageTitle

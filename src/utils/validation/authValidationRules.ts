@@ -1,3 +1,5 @@
+import type { ProfileUpdateBaseFormValues } from '@src/pages/ProfileUpdateBaseForm'
+import type { ProfileUpdatePasswordFormValues } from '@src/pages/ProfileUpdatePasswordForm'
 import type { RegisterOptions } from 'react-hook-form'
 
 /**
@@ -30,4 +32,49 @@ export const authValidationRules = {
   emailCode: {
     required: '전송된 코드를 입력해주세요',
   } satisfies RegisterOptions,
+} as const
+
+export const profileValidationRules = {
+  nickname: {
+    minLength: {
+      value: 2,
+      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+    },
+    maxLength: {
+      value: 10,
+      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+    },
+  } satisfies RegisterOptions<ProfileUpdateBaseFormValues, 'nickname'>,
+  introduction: {
+    minLength: {
+      value: 2,
+      message: '자기소개는 2~ 100자 이상이어야 합니다.',
+    },
+    maxLength: {
+      value: 1000,
+      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+    },
+  } satisfies RegisterOptions<ProfileUpdateBaseFormValues, 'introduction'>,
+
+  password: {
+    required: '비밀번호를 입력해주세요',
+    minLength: {
+      value: 10,
+      message: '비밀번호는 최소 10자 이상이어야 합니다',
+    },
+    maxLength: {
+      value: 30,
+      message: '비밀번호는 최대 30자까지 가능합니다',
+    },
+    pattern: {
+      value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).+$/,
+      message: '영문 대소문자, 숫자, 특수문자를 모두 포함해야 합니다',
+    },
+  } satisfies RegisterOptions,
+
+  passwordConfirm: (password: string) =>
+    ({
+      required: '비밀번호 확인을 입력해주세요',
+      validate: (value) => value === password || '비밀번호가 일치하지 않습니다',
+    }) satisfies RegisterOptions<ProfileUpdatePasswordFormValues, 'passwordConfirm'>,
 } as const

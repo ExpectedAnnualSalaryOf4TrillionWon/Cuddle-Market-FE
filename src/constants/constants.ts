@@ -1270,7 +1270,7 @@ export const WiTH_DRAW_REASON = [
 ]
 export type WiTH_DRAW_LABEL = (typeof WiTH_DRAW_REASON)[number]['label']
 
-// ========== 모달 주의사항 항목들 상수 ==========
+// ========== 주의사항 항목들 상수 ==========
 
 export const WITH_DRAW_ALERT_LIST = [
   '등록한 모든 상품이 삭제됩니다',
@@ -1280,3 +1280,9 @@ export const WITH_DRAW_ALERT_LIST = [
 ]
 
 export const PRODUCT_DELETE_ALERT_LIST = ['삭제된 상품은 복구할 수 없습니다']
+
+export const PASSWORD_UPDATE_ALERT_LIST = [
+  '영문 대/소문자, 숫자, 특수문자를 조합하세요',
+  '개인정보(이름, 생일 등)는 사용하지 마세요',
+  '다른 사이트와 같은 비밀번호를 사용하지 마세요',
+]

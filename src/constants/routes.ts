@@ -9,12 +9,13 @@ export const ROUTES = {
   FREE: '/free',
   SHARE: '/share',
   QNA: '/qna',
-  // STUDY_GROUP_CREATE: '/study-group/create',
 
   // Product
   PRODUCT_POST: '/product-post',
   PRODUCT_EDIT: '/products/:id/edit',
-  // RECRUITMENT_ID: (id: string | number) => `/recruitment/${id}`,
+
+  // Profile
+  PROFILE_UPDATE: `/profile-update`,
   // RECRUITMENT_DETAIL: '/recruitment/:uuid',
   // RECRUITMENT_CREATE: '/recruitment/create',
   // RECRUITMENT_MANAGE: '/recruitment/manage',

@@ -33,6 +33,7 @@ interface CascadingSelectFieldProps<T extends FieldValues> {
   label: string
   labelHtmlFor: string
   onPrimaryChange?: (value: string) => void
+  required?: boolean
 }
 
 export function CascadingSelectField<T extends FieldValues>({
@@ -55,10 +56,11 @@ export function CascadingSelectField<T extends FieldValues>({
   label,
   labelHtmlFor,
   onPrimaryChange,
+  required,
 }: CascadingSelectFieldProps<T>) {
   return (
     <div className={cn('flex flex-col gap-2.5', layoutClass)}>
-      <RequiredLabel htmlFor={labelHtmlFor} labelClass={labelClass}>
+      <RequiredLabel htmlFor={labelHtmlFor} labelClass={labelClass} required={required}>
         {label}
       </RequiredLabel>
 
