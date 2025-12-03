@@ -10,10 +10,17 @@ import { Package, Heart, type LucideIcon } from 'lucide-react'
 interface MyPagePanelProps {
   activeTabCode: string
   activeMyPageTab: MyPageTabId
-  myProductsData?: { content: Product[]; total: number }
-  myRequestData?: { content: Product[]; total: number }
-  myFavoriteData?: { content: Product[]; total: number }
-  myBlockedData?: { content: BlockedUser[]; total: number }
+  myProductsData?: Product[]
+  myProductsTotal?: number
+  myRequestData?: Product[]
+  myRequestTotal?: number
+  myFavoriteData?: Product[]
+  myFavoriteTotal?: number
+  myBlockedData?: BlockedUser[]
+  myBlockedTotal?: number
+  fetchNextPage: () => void
+  hasNextPage?: boolean
+  isFetchingNextPage: boolean
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
 }
 
@@ -59,23 +66,31 @@ export default function MyPagePanel({
   activeTabCode,
   activeMyPageTab,
   myProductsData,
+  myProductsTotal,
   myRequestData,
+  myRequestTotal,
   myFavoriteData,
+  myFavoriteTotal,
   myBlockedData,
+  myBlockedTotal,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
   handleConfirmModal,
 }: MyPagePanelProps) {
   const getProductData = () => {
     switch (activeMyPageTab) {
       case 'tab-sales':
-        return myProductsData
+        return { content: myProductsData, total: myProductsTotal }
       case 'tab-purchases':
-        return myRequestData
+        return { content: myRequestData, total: myRequestTotal }
       case 'tab-wishlist':
-        return myFavoriteData
+        return { content: myFavoriteData, total: myFavoriteTotal }
       default:
         return undefined
     }
   }
+
   const productData = getProductData()
   const config = activeMyPageTab !== 'tab-blocked' ? TAB_CONFIG[activeMyPageTab] : null
 
@@ -95,36 +110,58 @@ export default function MyPagePanel({
           navigateTo={config.navigateTo}
         />
       ) : (
-        <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedData?.total ?? 0}명`} />
+        <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedTotal ?? 0}명`} />
       )}
 
-      <div className="gap-lg flex flex-col overflow-y-auto">
+      <div className="gap-lg flex max-h-[60vh] flex-col overflow-y-auto">
         {activeMyPageTab !== 'tab-blocked' ? (
           productData?.content?.length ? (
-            <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
-              {productData.content.map((product) => (
-                <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
-              ))}
-            </ul>
+            <>
+              <ul className="flex flex-col items-center justify-start gap-2.5">
+                {productData.content.map((product) => (
+                  <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
+                ))}
+              </ul>
+              {hasNextPage && (
+                <button
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
+                >
+                  {isFetchingNextPage ? '로딩중...' : '더보기'}
+                </button>
+              )}
+            </>
           ) : (
             config && <EmptyState icon={config.emptyIcon} title={config.emptyTitle} description={config.emptyDescription} />
           )
-        ) : myBlockedData?.content?.length ? (
-          <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
-            {myBlockedData.content.map((user) => (
-              <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
-                <div className="flex items-center gap-4">
-                  <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
-                    <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
+        ) : myBlockedData?.length ? (
+          <>
+            <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
+              {myBlockedData.map((user) => (
+                <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
+                  <div className="flex items-center gap-4">
+                    <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
+                      <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
+                    </div>
+                    <span className="font-medium">{user.nickname}</span>
                   </div>
-                  <span className="font-medium">{user.nickname}</span>
-                </div>
-                <Button size="sm" className="border border-gray-300">
-                  차단 해제
-                </Button>
-              </li>
-            ))}
-          </ul>
+                  <Button size="sm" className="border border-gray-300">
+                    차단 해제
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            {hasNextPage && (
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
+              >
+                {isFetchingNextPage ? '로딩중...' : '더보기'}
+              </button>
+            )}
+          </>
         ) : null}
       </div>
     </div>

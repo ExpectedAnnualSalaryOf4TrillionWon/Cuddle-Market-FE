@@ -135,26 +135,26 @@ export const fetchMyPageData = async () => {
 }
 
 // 내가 등록한 판매상품 조회
-export const fetchMyProductData = async () => {
-  const response = await api.get<MyPageProductResponse>(`/profile/me/products?&size=10`)
+export const fetchMyProductData = async (page: number = 0) => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/products?page=${page}&size=10`)
   return response.data.data
 }
 
 // 내가 등록한 판매요청 상품 조회
-export const fetchMyRequestData = async () => {
-  const response = await api.get<MyPageProductResponse>(`/profile/me/purchase-requests?&size=10`)
+export const fetchMyRequestData = async (page: number = 0) => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/purchase-requests?page=${page}&size=10`)
   return response.data.data
 }
 
 // 내가 찜한 상품 조회
-export const fetchMyFavoriteData = async () => {
-  const response = await api.get<MyPageProductResponse>(`/profile/me/favorites?&size=10`)
+export const fetchMyFavoriteData = async (page: number = 0) => {
+  const response = await api.get<MyPageProductResponse>(`/profile/me/favorites?page=${page}&size=10`)
   return response.data.data
 }
 
 // 내가 차단한 유저 조회
-export const fetchMyBlockedData = async () => {
-  const response = await api.get<MyBlockedUsersResponse>(`/profile/me/blocked-users?&size=10`)
+export const fetchMyBlockedData = async (page: number = 0) => {
+  const response = await api.get<MyBlockedUsersResponse>(`/profile/me/blocked-users?page=${page}&size=10`)
   return response.data.data.blockedUsers
 }
 

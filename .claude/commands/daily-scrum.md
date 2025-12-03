@@ -1,0 +1,62 @@
+# DAILY SCRUM 페이지 생성
+
+오늘 날짜로 DAILY SCRUM 데이터베이스에 새로운 페이지를 생성하고 내용을 채워주세요.
+
+## 작업 순서
+
+1. **오늘 날짜 확인**: 오늘이 몇 월 몇 일인지 확인
+
+2. **DAILY SCRUM 데이터베이스에 페이지 생성**
+   - Database ID: `29826170-466f-8063-81b4-fabbc250652a`
+   - 페이지 제목: `YYYY년 MM월 DD일` 형식 (예: `2025년 12월 3일`)
+   - 작성일시: 오늘 날짜 (YYYY-MM-DD 형식)
+   - 참여자: 강주현 (ID: `7c32774b-0096-4545-a9fe-7cfec90faa15`)
+   - 구분: "개발" 선택
+
+3. **Git 로그 분석**
+   - 어제 날짜의 커밋 내역 조회: `git log --since="어제 00:00" --until="어제 23:59" --oneline`
+   - 오늘 날짜의 커밋 내역 조회: `git log --since="오늘 00:00" --oneline`
+   - 커밋 메시지에서 작업 내용 추출
+
+4. **페이지 내용 채우기**
+
+   페이지에 다음 블록들을 추가:
+
+   a. **전일 업무 진행상황 보고** 섹션
+      - Heading 2: "전일 업무 진행상황 보고" (purple_background)
+      - Divider
+      - Table 블록 생성:
+        - `table_width: 2`
+        - `has_column_header: false`
+        - `has_row_header: false`
+        - 첫 번째 행: ["강주현", "어제의 git 커밋 내용을 간략하게 요약"]
+
+   b. **금일 예정 업무 보고** 섹션
+      - Heading 2: "금일 예정 업무 보고" (purple_background)
+      - Divider
+      - Table 블록 생성:
+        - `table_width: 2`
+        - `has_column_header: false`
+        - `has_row_header: false`
+        - 첫 번째 행: ["강주현", "오늘의 git 커밋 내용 또는 작업 예정 사항"]
+
+   c. **회의 안건** 섹션
+      - Heading 2: "회의 안건" (purple_background)
+      - Divider
+      - Bulleted list item: "-"
+
+   d. **추가 논의사항** 섹션
+      - Heading 2: "추가 논의사항 (ex. 이슈, 휴가 사용 예정 공유)" (purple_background)
+      - Divider
+      - Bulleted list item: "-"
+
+## 참고사항
+
+- 11월 14일 페이지 (ID: `2ab26170-466f-80be-a95a-e51bfba4b584`)의 구조를 참고
+- 테이블 헤더는 사용하지 않음 (`has_column_header: false`)
+- 커밋 메시지가 없는 경우, 사용자에게 수동으로 입력할 내용을 물어보기
+
+## Notion API 정보
+
+- DAILY SCRUM Database ID: `29826170-466f-8063-81b4-fabbc250652a`
+- User ID (강주현): `7c32774b-0096-4545-a9fe-7cfec90faa15`
