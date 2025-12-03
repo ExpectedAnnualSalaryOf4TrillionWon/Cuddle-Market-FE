@@ -113,17 +113,21 @@ export default function MyPagePanel({
         <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedTotal ?? 0}명`} />
       )}
 
-      <div className="gap-lg flex flex-col overflow-y-auto">
+      <div className="gap-lg flex max-h-[60vh] flex-col overflow-y-auto">
         {activeMyPageTab !== 'tab-blocked' ? (
           productData?.content?.length ? (
             <>
-              <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
+              <ul className="flex flex-col items-center justify-start gap-2.5">
                 {productData.content.map((product) => (
                   <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
                 ))}
               </ul>
               {hasNextPage && (
-                <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage} className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100">
+                <button
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
+                >
                   {isFetchingNextPage ? '로딩중...' : '더보기'}
                 </button>
               )}
@@ -149,7 +153,11 @@ export default function MyPagePanel({
               ))}
             </ul>
             {hasNextPage && (
-              <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage} className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100">
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
+              >
                 {isFetchingNextPage ? '로딩중...' : '더보기'}
               </button>
             )}
