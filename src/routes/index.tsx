@@ -5,7 +5,7 @@ import Home from '@src/pages/home/Home'
 import KakaoCallback from '@pages/KakaoCallback'
 
 import Login from '@src/pages/login/Login'
-import MyPage from '@pages/MyPage'
+import MyPage from '@src/pages/my-page/MyPage'
 // import ProductDetail from '@pages/ProductDetail';
 // import ProductPost from '@pages/ProductPost';
 // import ProfileUpdate from '@pages/ProfileUpdate';
