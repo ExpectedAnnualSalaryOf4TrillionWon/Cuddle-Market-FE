@@ -1,11 +1,8 @@
-import PlaceholderImage from '@assets/images/placeholder.png'
-import { formatPrice } from '@src/utils/formatPrice'
-import { PRODUCT_DELETE_ALERT_LIST } from '@src/constants/constants'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { InputWithButton } from '@src/components/commons/InputWithButton'
 import { AddressField } from '@src/components/commons/AddressField'
 import type { Province } from '@src/constants/cities'
-import { useForm, type Control, type UseFormRegisterReturn, type UseFormSetValue } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { profileValidationRules } from '@src/utils/validation/authValidationRules'
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
@@ -21,13 +18,13 @@ export interface ProfileUpdateBaseFormValues {
 export default function ProfileUpdateBaseForm() {
   const {
     control,
-    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
+    // handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
-    watch, // 특정 필드 값을 실시간으로 구독
+    // watch, // 특정 필드 값을 실시간으로 구독
     setValue,
-    setError,
-    clearErrors,
-    reset,
+    // setError,
+    // clearErrors,
+    // reset,
     // formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<ProfileUpdateBaseFormValues>({
     mode: 'onChange',
