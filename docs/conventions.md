@@ -122,3 +122,4 @@
    git checkout -b 새브랜치명
    ```
 3. **작업 완료 후 PR은 `develop` 브랜치를 base로 생성**
+4. **PR 생성은 사용자가 직접 수행** (Claude Code는 commit-push까지만 진행)
