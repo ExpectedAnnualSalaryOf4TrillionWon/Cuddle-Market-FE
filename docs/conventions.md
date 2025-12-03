@@ -2,7 +2,7 @@
 
 ## 1. 브랜치 컨벤션
 
-- 브랜치 네이밍은 전부 소문자
+- 브랜치 네이밍은 전부 소문자(종류/이슈번호--브랜치 이름)
   `ex) feature/24--modal-ui`
 
 | 종류     | 설명                                       | 예시                          |
@@ -22,8 +22,10 @@
 
 ## 2. 커밋 컨벤션
 
+- 커밋 타입(소문자): 한글로 된 내용
 - 타입: 커밋 내용(#이슈번호)
   `ex) feat: 로그인 ui 작업(#32)`
+- 세부내용 필요하면 - 를 사용하면서 vim 으로 적기
 
 | Type     | 설명                                            |
 | -------- | ----------------------------------------------- |
@@ -45,6 +47,29 @@
 
 - 타입: 이슈 내용
   `ex) feat: 로그인 ui 작업`
+
+### 📌 개요
+
+- 내용
+
+### 🔧 작업 내용
+
+- 작업 내용
+
+### 📎 관련 이슈
+
+- Close #이슈번호
+
+### 📸 스크린샷 (선택)
+
+| 변경 전 | 변경 후 |
+| ------- | ------- |
+| 이미지  | 이미지  |
+
+### 💬 리뷰어 참고 사항
+
+- 리뷰어가 중점적으로 봐주었으면 하는 부분
+- 추가 논의가 필요한 부분
 
 ---
 
@@ -75,3 +100,25 @@
 | style     | dot notation (tokens.colors.css, tokens.spacing.css) |
 | type      | camelCase (user.ts, productType.ts)                  |
 | constant  | kebab-case (ui-constants.ts, api-constants.ts)       |
+
+---
+
+## 6. Git 워크플로우
+
+### 브랜치 전략
+
+- 모든 기능 브랜치는 `develop`에서 분기하고 `develop`으로 머지
+- `main` 브랜치는 분기별로 `develop`에서 머지
+
+### commit-push 전 체크리스트
+
+1. **현재 브랜치가 이미 머지되었는지 확인**
+   ```bash
+   git log --oneline origin/develop | grep "현재 브랜치명"
+   ```
+2. **이미 머지된 브랜치라면 `develop`으로 전환 후 새 브랜치 생성**
+   ```bash
+   git checkout develop && git pull
+   git checkout -b 새브랜치명
+   ```
+3. **작업 완료 후 PR은 `develop` 브랜치를 base로 생성**
