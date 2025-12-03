@@ -5,7 +5,7 @@ import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMyPageData } from '@src/api/products'
 import { useUserStore } from '@src/store/userStore'
-import { useState, type Dispatch, type SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 
 interface ProfileDataProps {
   setIsWithdrawModalOpen: Dispatch<SetStateAction<boolean>>
