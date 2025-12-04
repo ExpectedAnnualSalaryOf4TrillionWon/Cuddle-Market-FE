@@ -7,7 +7,7 @@ import { login } from '@src/api/auth'
 import { authValidationRules } from '@src/utils/validation/authValidationRules'
 import { useUserStore } from '@src/store/userStore'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 interface LoginFormValues {
   email: string
