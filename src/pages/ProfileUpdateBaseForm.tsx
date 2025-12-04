@@ -10,7 +10,6 @@ import type { MyPageData } from './my-page/components/ProfileData'
 import { formatBirthDate } from '@src/utils/formatBirthDate'
 import { checkNickname } from '@src/api/auth'
 import { useState, useEffect } from 'react'
-import type { ProfileUpdateRequestData } from '@src/types'
 import { profileUpdate } from '@src/api/profile'
 import { useUserStore } from '@src/store/userStore'
 import { useDropzone } from 'react-dropzone'
@@ -131,6 +130,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
       const response = await profileUpdate(data)
       if (response.code === 'SUCCESS') {
         updateUserProfile(data)
+        setCheckResult({ status: 'idle', message: '' })
         await queryClient.refetchQueries({ queryKey: ['mypage', user?.id] })
       }
     } catch (error) {
