@@ -59,7 +59,7 @@ async function fetchNewAccessToken(): Promise<string | null> {
     useUserStore.getState().clearAll()
 
     // 로그인 페이지로 리다이렉트
-    window.location.href = '/login'
+    window.location.href = '/auth/login'
 
     return null
   }

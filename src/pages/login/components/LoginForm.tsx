@@ -6,6 +6,8 @@ import { InputField } from '@src/components/commons/InputField'
 import { login } from '@src/api/auth'
 import { authValidationRules } from '@src/utils/validation/authValidationRules'
 import { useUserStore } from '@src/store/userStore'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 interface LoginFormValues {
   email: string
@@ -18,19 +20,37 @@ export function LoginForm() {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     formState: { errors }, // errors: register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
+    setError,
+    clearErrors,
+    watch,
   } = useForm<LoginFormValues>() // 폼에서 관리할 필드들의 타입(이름) 정의.
   const handleLogin = useUserStore((state) => state.handleLogin)
+  const email = watch('email')
+  const password = watch('password')
   const onSubmit = async (data: LoginFormValues) => {
-    console.log('제출')
     try {
       const response = await login(data)
       handleLogin(response.data.user, response.data.accessToken, response.data.refreshToken)
       console.log('로그인 성공:', response)
       navigate('/')
     } catch (error) {
-      console.error('로그인 실패:', error)
+      // console.error('로그인 실패:', error)
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          // root 에러로 설정 (특정 필드가 아닌 폼 전체 에러)
+          setError('root', {
+            type: 'manual',
+            message: '이메일 또는 비밀번호가 일치하지 않습니다.',
+          })
+        }
+      }
     }
   }
+  useEffect(() => {
+    if (errors.root) {
+      clearErrors('root')
+    }
+  }, [email, password, errors.root, clearErrors])
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -54,6 +74,7 @@ export function LoginForm() {
               error={errors.password}
               registration={register('password', authValidationRules.password)}
             />
+            {errors.root && <p className="text-danger-500 text-sm">{errors.root.message}</p>}
           </div>
           <Link to={ROUTES.FIND_PASSWORD} className="text-primary-300 text-sm font-medium">
             비밀번호를 잊으셨나요?
