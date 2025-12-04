@@ -44,7 +44,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
     setError,
     clearErrors,
     reset,
-    formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
+    formState: { errors }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<ProfileUpdateBaseFormValues>({
     mode: 'onChange',
     defaultValues: {
@@ -93,11 +93,6 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
       })
       setIsNicknameVerified(false)
     }
-  }
-
-  const getChangedFields = (data: ProfileUpdateBaseFormValues): ProfileUpdateRequestData => {
-    const changedEntries = Object.entries(data).filter(([key, value]) => value !== myData?.[key as keyof MyPageData])
-    return Object.fromEntries(changedEntries) as ProfileUpdateRequestData
   }
 
   const { getRootProps, getInputProps } = useDropzone({

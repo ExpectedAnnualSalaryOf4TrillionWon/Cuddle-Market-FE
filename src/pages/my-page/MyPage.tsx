@@ -166,7 +166,7 @@ function MyPage() {
     )
   }
 
-  if (errorMyProductData || errorMyRequestData || errorMyFavoritetData || errorMyFBlockedData) {
+  if (errorMyData || errorMyProductData || errorMyRequestData || errorMyFavoritetData || errorMyFBlockedData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
