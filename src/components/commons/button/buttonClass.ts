@@ -6,7 +6,7 @@ export const buttonVariants = cva('flex items-center justify-center rounded-lg f
       xs: 'px-3 py-2 text-sm',
       sm: 'px-3 py-2 text-sm',
       md: 'px-4 py-2.5 text-base',
-      lg: 'px-6 py-3 text-lg',
+      lg: 'px-6 py-3 text-base',
     },
     iconPosition: {
       none: '',

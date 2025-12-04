@@ -2,6 +2,7 @@
 import { Z_INDEX } from '@constants/ui'
 // import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { cn } from '@utils/cn'
+import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
 // import { useRef } from 'react'
 // import { EXTERNAL } from '@src/constants/external'
@@ -18,26 +19,14 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
-  // const userMenuButtonRef = useRef<HTMLDivElement>(null)
-  // const userMenuPanelRef = useRef<HTMLDivElement>(null)
+  const { user } = useUserStore()
 
-  const { getUserNickname } = useUserStore()
-  const nickname = getUserNickname()
   const handleAvatarToggle = () => {
-    // 알림드롭다운 ui 가 열려있다면 알림드롭다운 닫기
     if (isNotificationOpen) {
       setIsNotificationOpen(false)
     }
-    // 마이페이지 ui 토글
     setIsUserMenuOpen(!isUserMenuOpen)
   }
-
-  // const handleLogout = async () => {
-  //   await logoutHard()
-  // }
-  // useOutsideClick(isUserMenuOpen, [userMenuButtonRef, userMenuPanelRef], () =>
-  //   setIsUserMenuOpen(false)
-  // )
 
   return (
     <div
@@ -45,11 +34,11 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
       className="relative flex cursor-pointer items-center gap-2"
       onClick={handleAvatarToggle}
     >
-      <div className="bg-primary-100 flex h-8 w-8 items-center justify-center rounded-full">
-        {/* <Icon icon={UserRoundIcon} size="sm" className={`stroke-primary-600`} /> */}
+      <div className="bg-primary-100 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
+        <img src={user?.profileImageUrl ?? CuddleMarketLogo} alt={user?.nickname} className="h-full w-full object-cover" />
       </div>
 
-      <p className="text-base text-gray-700">{nickname}</p>
+      <p className="text-base text-gray-700">{user?.nickname}</p>
       {isUserMenuOpen && (
         <div
           className={cn(

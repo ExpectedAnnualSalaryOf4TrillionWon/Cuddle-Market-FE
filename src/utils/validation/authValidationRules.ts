@@ -52,11 +52,26 @@ export const profileValidationRules = {
     },
     maxLength: {
       value: 1000,
-      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+      message: '자기소개는 2~ 1000자 이상이어야 합니다.',
     },
   } satisfies RegisterOptions<ProfileUpdateBaseFormValues, 'introduction'>,
 
-  password: {
+  currentPassword: {
+    required: '비밀번호를 입력해주세요',
+    minLength: {
+      value: 10,
+      message: '비밀번호는 최소 10자 이상이어야 합니다',
+    },
+    maxLength: {
+      value: 30,
+      message: '비밀번호는 최대 30자까지 가능합니다',
+    },
+    pattern: {
+      value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()]).+$/,
+      message: '영문 대소문자, 숫자, 특수문자를 모두 포함해야 합니다',
+    },
+  } satisfies RegisterOptions,
+  newPassword: {
     required: '비밀번호를 입력해주세요',
     minLength: {
       value: 10,
@@ -72,9 +87,9 @@ export const profileValidationRules = {
     },
   } satisfies RegisterOptions,
 
-  passwordConfirm: (password: string) =>
+  confirmPassword: (password: string) =>
     ({
       required: '비밀번호 확인을 입력해주세요',
       validate: (value) => value === password || '비밀번호가 일치하지 않습니다',
-    }) satisfies RegisterOptions<ProfileUpdatePasswordFormValues, 'passwordConfirm'>,
+    }) satisfies RegisterOptions<ProfileUpdatePasswordFormValues, 'confirmPassword'>,
 } as const

@@ -24,7 +24,7 @@ export function InputField({ error, checkResult, registration, classname, inputC
     <div className={cn('flex flex-col gap-1', classname)}>
       <Input {...inputProps} {...registration} inputClass={inputClass} id={id} />
       {error && <p className="text-danger-500 text-xs font-semibold">{error.message}</p>}
-      {checkResult && (
+      {checkResult?.message && (
         <p className={cn('text-xs font-semibold', checkResult.status === 'error' ? 'text-danger-500' : 'text-[#22c55e]')}>{checkResult.message}</p>
       )}
     </div>

@@ -1,8 +1,8 @@
 import { useUserStore } from '@store/userStore'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
+import { useMutation, useInfiniteQuery, useQueryClient, useQuery } from '@tanstack/react-query'
+import { deleteProduct, fetchMyBlockedData, fetchMyFavoriteData, fetchMyPageData, fetchMyProductData, fetchMyRequestData } from '@src/api/products'
 import { Tabs } from '@src/components/Tabs'
 import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
 import MyPagePanel from './components/MyPagePanel'
@@ -12,7 +12,7 @@ import { withDraw } from '@src/api/profile'
 import ProfileData from './components/ProfileData'
 
 function MyPage() {
-  const { user, clearAll } = useUserStore()
+  const { user, clearAll, updateUserProfile } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -28,6 +28,16 @@ function MyPage() {
   const initialTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
   const [activeMyPageTab, setActiveMyPageTab] = useState<MyPageTabId>(initialTab)
   const activeTabCode = MY_PAGE_TABS.find((tab) => tab.id === activeMyPageTab)?.code ?? 'SELL'
+
+  const {
+    data: myData,
+    isLoading: isLoadingMyData,
+    error: errorMyData,
+  } = useQuery({
+    queryKey: ['mypage', user?.id],
+    queryFn: () => fetchMyPageData(),
+    enabled: !!user,
+  })
 
   const {
     data: myProductsData,
@@ -116,10 +126,6 @@ function MyPage() {
   }
 
   const handleWithdraw = async (data: WithDrawFormValues) => {
-    // withDraw(data)
-    // setIsWithdrawModalOpen(false)
-    // navigate('/')
-
     try {
       await withDraw(data)
       clearAll() // 모든 사용자 상태 초기화 (user, accessToken, refreshToken, redirectUrl)
@@ -135,7 +141,24 @@ function MyPage() {
     setActiveMyPageTab(currentTab)
   }, [tabParam])
 
-  if (isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
+  useEffect(() => {
+    if (myData) {
+      updateUserProfile({
+        profileImageUrl: myData.profileImageUrl,
+        nickname: myData.nickname,
+        name: myData.name,
+        introduction: myData.introduction,
+        birthDate: myData.birthDate,
+        email: myData.email,
+        addressSido: myData.addressSido,
+        addressGugun: myData.addressGugun,
+        createdAt: myData.createdAt,
+        // ... 필요한 필드
+      })
+    }
+  }, [myData, updateUserProfile])
+
+  if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
@@ -162,7 +185,7 @@ function MyPage() {
     <>
       <div className="bg-bg pb-4xl pt-8">
         <div className="px-lg mx-auto flex max-w-[var(--container-max-width)] gap-8">
-          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} />
+          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} myData={myData!} />
           <section className="flex flex-1 flex-col gap-7">
             <Tabs
               tabs={MY_PAGE_TABS}

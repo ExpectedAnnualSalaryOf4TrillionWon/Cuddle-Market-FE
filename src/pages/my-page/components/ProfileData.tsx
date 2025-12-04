@@ -1,55 +1,30 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { MapPin, Calendar, Settings } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
-import { useQuery } from '@tanstack/react-query'
-import { fetchMyPageData } from '@src/api/products'
-import { useUserStore } from '@src/store/userStore'
 import { type Dispatch, type SetStateAction } from 'react'
+import { formatJoinDate } from '@src/utils/formatJoinDate'
+
+export interface MyPageData {
+  profileImageUrl: string
+  nickname: string
+  name: string
+  introduction: string
+  birthDate: string
+  email: string
+  addressSido: string
+  addressGugun: string
+  createdAt: string
+}
 
 interface ProfileDataProps {
+  myData?: MyPageData
   setIsWithdrawModalOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const formatJoinDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월`
-}
-
-export default function ProfileData({ setIsWithdrawModalOpen }: ProfileDataProps) {
-  const { user } = useUserStore()
-  const navigate = useNavigate()
-
+export default function ProfileData({ setIsWithdrawModalOpen, myData }: ProfileDataProps) {
   const handleWithdrawModal = () => {
     setIsWithdrawModalOpen(true)
-  }
-  const {
-    data: myData,
-    isLoading: isLoadingMyData,
-    error: errorMyData,
-  } = useQuery({
-    queryKey: ['mypage', user?.id],
-    queryFn: () => fetchMyPageData(),
-    enabled: !!user,
-  })
-  if (isLoadingMyData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
-
-  if (errorMyData) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
-            목록으로 돌아가기
-          </button>
-        </div>
-      </div>
-    )
   }
 
   return (
