@@ -1,5 +1,5 @@
-import type { ProfileUpdateBaseFormValues } from '@src/pages/ProfileUpdateBaseForm'
-import type { ProfileUpdatePasswordFormValues } from '@src/pages/ProfileUpdatePasswordForm'
+import type { ProfileUpdateBaseFormValues } from '@src/pages/profile-update/components/ProfileUpdateBaseForm'
+import type { ProfileUpdatePasswordFormValues } from '@src/pages/profile-update/components/ProfileUpdatePasswordForm'
 import type { RegisterOptions } from 'react-hook-form'
 
 /**
