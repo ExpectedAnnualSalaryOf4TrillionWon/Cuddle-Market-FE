@@ -5,7 +5,7 @@ import type { FieldError, UseFormRegisterReturn } from 'react-hook-form'
 interface InputWithButtonProps {
   id: string
   type: string
-  placeholder: string
+  placeholder?: string
   error?: FieldError
   checkResult?: { status: string; message: string }
   registration: UseFormRegisterReturn

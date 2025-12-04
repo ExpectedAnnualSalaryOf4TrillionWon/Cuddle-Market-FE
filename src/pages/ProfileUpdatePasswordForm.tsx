@@ -5,35 +5,77 @@ import { Button } from '@src/components/commons/button/Button'
 import { CircleAlert } from 'lucide-react'
 import { InputField } from '@src/components/commons/InputField'
 import AlertBox from '@src/components/modal/AlertBox'
+import { useEffect, useState } from 'react'
+import { changePassword } from '@src/api/profile'
 
 export interface ProfileUpdatePasswordFormValues {
-  password: string
-  passwordConfirm: string
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
 }
 
 export default function ProfileUpdatePasswordForm() {
   const {
-    // handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
+    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     watch, // 특정 필드 값을 실시간으로 구독
-    // setValue,
-    // setError,
-    // clearErrors,
-    // reset,
-    // formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
+    setError,
+    clearErrors,
+    reset,
+    formState: { errors },
   } = useForm<ProfileUpdatePasswordFormValues>({
     mode: 'onChange',
     defaultValues: {
-      password: '',
-      passwordConfirm: '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   })
 
+  const [checkResult, setCheckResult] = useState<{
+    status: 'idle' | 'success' | 'error'
+    message: string
+  }>({ status: 'idle', message: '' })
+  const password = watch('newPassword')
+  const passwordConfirm = watch('confirmPassword')
+
+  const onSubmit = async (requestData: ProfileUpdatePasswordFormValues) => {
+    try {
+      await changePassword({ ...requestData })
+      reset()
+    } catch (error) {
+      console.error('비밀번호 변경 실패:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (passwordConfirm && password) {
+      if (password === passwordConfirm) {
+        setCheckResult({
+          status: 'success',
+          message: '비밀번호가 일치합니다.',
+        })
+        clearErrors('confirmPassword')
+      } else {
+        setCheckResult({
+          status: 'idle',
+          message: '',
+        })
+        setError('confirmPassword', {
+          type: 'manual',
+          message: '비밀번호가 일치하지 않습니다.',
+        })
+      }
+    } else {
+      setCheckResult({
+        status: 'idle',
+        message: '',
+      })
+    }
+  }, [password, passwordConfirm, setError, clearErrors])
+
   return (
-    <form
-      className="border-border flex w-full flex-col gap-6 rounded-xl border p-7"
-      // onSubmit={handleSubmit(onSubmit)}
-    >
+    <form className="border-border flex w-full flex-col gap-6 rounded-xl border p-7" onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="flex flex-col gap-8">
         <legend className="sr-only">비밀번호 변경 폼</legend>
         <div className="flex flex-col gap-2">
@@ -45,13 +87,32 @@ export default function ProfileUpdatePasswordForm() {
           <div className="flex flex-col gap-8">
             <div className="flex flex-1 flex-col gap-1">
               <div className="flex flex-col gap-2">
-                <span className="font-medium text-gray-600">새 비밀번호</span>
+                <span className="font-medium text-gray-600">현재 비밀번호</span>
                 <InputField
+                  id="current-password"
                   type="password"
-                  placeholder="새 비밀번호를 입력하세요"
+                  placeholder="현재 비밀번호를 입력하세요"
+                  size="text-sm"
                   border
                   borderColor="border-gray-400"
-                  registration={register('password', profileValidationRules.password)}
+                  error={errors.currentPassword}
+                  registration={register('currentPassword', profileValidationRules.currentPassword)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-1 flex-col gap-1">
+              <div className="flex flex-col gap-2">
+                <span className="font-medium text-gray-600">새 비밀번호</span>
+                <InputField
+                  id="new-password"
+                  type="password"
+                  placeholder="새 비밀번호를 입력하세요"
+                  size="text-sm"
+                  border
+                  borderColor="border-gray-400"
+                  error={errors.newPassword}
+                  registration={register('newPassword', profileValidationRules.newPassword)}
                 />
               </div>
             </div>
@@ -60,11 +121,15 @@ export default function ProfileUpdatePasswordForm() {
               <div className="flex flex-col gap-2">
                 <span className="font-medium text-gray-600">새 비밀번호 확인</span>
                 <InputField
+                  id="confirm-password"
                   type="password"
-                  placeholder="새 비밀번호를 입력하세요"
+                  placeholder="새 비밀번호를 다시 입력하세요"
+                  size="text-sm"
                   border
                   borderColor="border-gray-400"
-                  registration={register('passwordConfirm', profileValidationRules.passwordConfirm(watch('password')))}
+                  error={errors.confirmPassword}
+                  checkResult={checkResult}
+                  registration={register('confirmPassword', profileValidationRules.confirmPassword(watch('newPassword')))}
                 />
               </div>
             </div>

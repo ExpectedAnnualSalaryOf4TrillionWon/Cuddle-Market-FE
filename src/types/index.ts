@@ -17,7 +17,9 @@ export interface User {
   profile_completed?: boolean
   addressSido: string
   addressGugun: string
-  profile_image?: string
+  profileImageUrl?: string
+  introduction?: string
+  createdAt?: string
 }
 
 // ========== 인증 관련 타입 ==========
@@ -305,6 +307,41 @@ export interface MyBlockedUsersResponse {
       numberOfElements: number
     }
   }
+}
+
+// ========== 프로필 수정 요청 타입 ==========
+export interface ProfileUpdateRequestData {
+  nickname?: string
+  addressSido?: string
+  addressGugun?: string
+  profileImageUrl?: string
+  introduction?: string
+}
+export interface ProfileUpdateResponse {
+  code: string
+  message: string
+  data: {
+    id: number
+    email: string
+    name: string
+    nickname: string
+    birthDate: string
+    addressSido: string
+    addressGugun: string
+  }
+}
+export interface ChangePasswordRequestData {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+export interface ChangePasswordResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: string
 }
 
 // ========== 회원탈퇴 요청 타입 ==========

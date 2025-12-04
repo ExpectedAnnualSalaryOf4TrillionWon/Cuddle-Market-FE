@@ -50,7 +50,8 @@ export function LoginForm() {
     if (errors.root) {
       clearErrors('root')
     }
-  }, [email, password, errors.root, clearErrors])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, password, clearErrors])
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
