@@ -154,6 +154,9 @@ function MyPage() {
       </div>
     )
   }
+  if (!user?.id) {
+    navigate('/auth/login')
+  }
 
   return (
     <>
