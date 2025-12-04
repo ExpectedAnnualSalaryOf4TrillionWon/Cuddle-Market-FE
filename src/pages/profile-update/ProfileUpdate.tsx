@@ -1,10 +1,10 @@
-import ProfileData from './my-page/components/ProfileData'
+import ProfileData from '../my-page/components/ProfileData'
 import { useEffect, useState } from 'react'
-import ProfileUpdateBaseForm from './ProfileUpdateBaseForm'
-import ProfileUpdatePasswordForm from './ProfileUpdatePasswordForm'
+import ProfileUpdateBaseForm from './components/ProfileUpdateBaseForm'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMyPageData } from '@src/api/products'
 import { useUserStore } from '@src/store/userStore'
+import ProfileUpdatePasswordForm from './components/ProfileUpdatePasswordForm'
 
 function ProfileUpdate() {
   const [, setIsWithdrawModalOpen] = useState(false)

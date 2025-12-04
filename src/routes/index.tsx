@@ -16,7 +16,7 @@ import MainLayout from '@src/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
 import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
-import ProfileUpdate from '@src/pages/ProfileUpdate'
+import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
