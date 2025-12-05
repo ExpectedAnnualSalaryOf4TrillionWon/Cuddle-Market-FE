@@ -257,6 +257,7 @@ export interface MyPageDataResponse {
   }
   message: string
   data: {
+    id: number
     profileImageUrl: string
     nickname: string
     name: string
@@ -357,6 +358,42 @@ export interface WithDrawResponse {
   message: string
   data: string
 }
+
+// ========== 유저 프로필 데이터 응답 타입 ==========\
+export interface UserProfileResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    id: number
+    profileImageUrl: string
+    addressSido: string
+    addressGugun: string
+    nickname: string
+    createdAt: string
+    introduction: string
+    products: Product[]
+  }
+}
+
+export interface UserProductResponse {
+  code: string
+  message: string
+  data: {
+    page: number
+    size: number
+    total: number
+    content: Product[]
+    totalPages: number
+    hasNext: boolean
+    hasPrevious: boolean
+    totalElements: number
+    numberOfElements: number
+  }
+}
+
 // ====================
 // ====================
 // ====================

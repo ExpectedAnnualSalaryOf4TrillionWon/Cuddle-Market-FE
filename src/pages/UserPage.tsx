@@ -1,118 +1,80 @@
-import { SimpleHeader } from '@src/components/header/SimpleHeader'
-// import { useEffect, useState } from 'react';
-import { BsChat } from 'react-icons/bs'
-import { CiCalendar, CiLocationOn } from 'react-icons/ci'
-// import { GrView } from 'react-icons/gr';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import type { UserWithProducts } from 'src/types';
-// import { fetchSellerById } from '../api/products';
+import ProfileData from './my-page/components/ProfileData'
+import { useState } from 'react'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import { fetchUserData, fetchUserProductData } from '@src/api/profile'
+import { ProductListItem } from '@src/components/product/ProductListItem'
+import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
+import { EmptyState } from '@src/components/EmptyState'
+import { Package } from 'lucide-react'
 
 function UserPage() {
-  // const [seller, setSeller] = useState(null)(null);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
-  // const navigate = useNavigate();
-  // const { id } = useParams<{ id: string }>();
+  const [, setIsWithdrawModalOpen] = useState(false)
+  const { id } = useParams()
+  const { data: userData, isLoading: isLoadingUserData } = useQuery({
+    queryKey: ['userPage'],
+    queryFn: () => fetchUserData(Number(id)),
+    enabled: !!id,
+  })
 
-  // const formatJoinDate = (dateString: string): string => {
-  //   const date = new Date(dateString);
+  const {
+    data: userProductData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingUserProductData,
+  } = useInfiniteQuery({
+    queryKey: ['userProducts', id],
+    queryFn: ({ pageParam }) => fetchUserProductData(id!, pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
+    enabled: !!id,
+  })
 
-  //   const year = date.getFullYear();
-  //   const month = date.getMonth() + 1;
-
-  //   return `${year}년 ${month}월 가입`;
-  // };
-
-  // const goToProductDetail = () => {
-  //   navigate(`/products/${id}`);
-  // };
-
-  // const loadSellerData = async () => {
-  //   // if (!id) return;
-
-  //   try {
-  //     setLoading(true);
-
-  //     // 상품 상세 정보 가져오기
-  //     // const productData = await fetchSellerById(id);
-  //     // console.log(productData);
-
-  //     // setSeller(productData);
-  //     // setError(null);
-  //   } catch (err) {
-  //     console.error('Error loading product:', err);
-  //     // setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   loadSellerData();
-  // }, [id]);
-
-  // if (loading) {
-  //   return <div className="min-h-screen flex items-center justify-center">로딩중…</div>;
-  // }
-  // if (error || !seller) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <p className="text-red-600">{error ?? '사용자를 찾을 수 없습니다.'}</p>
-  //     </div>
-  //   );
-  // }
+  if (isLoadingUserData || isLoadingUserProductData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+  if (!userData || !userProductData) return
 
   return (
-    <>
-      {/* 헤더영역 => 컴포넌트화 */}
-      <SimpleHeader title={'판매자 프로필 페이지'} />
-
-      <div className="tablet:flex-row gap-xl px-lg py-xl mx-auto flex max-w-[var(--container-max-width)] flex-col">
-        {/* 좌측: 사용자 카드 */}
-        <div className="tablet:w-[300px] tablet:h-[375px] gap-xl border-border p-xl flex flex-col rounded-xl border">
-          <div className="gap-xl text-text-primary sticky top-24 flex flex-col rounded-xl">
-            <div className="flex flex-col items-center">
-              <div className="mb-lg mx-auto h-24 w-24 overflow-hidden rounded-full">
-                {/* <img
-                  src={seller.profile_image}
-                  alt={seller.nickname}
-                  className="block w-full h-full object-cover"
-                /> */}
-              </div>
-              {/* <h2 className="heading4 text-text-primary mb-sm font-bold">{seller.nickname}</h2> */}
-            </div>
-
-            <div className="gap-sm flex flex-col">
-              <div className="gap-sm flex items-center">
-                <CiLocationOn />
-                <span className="bodySmall text-text-primary">{/* {seller.state} {seller.city} */}</span>
-              </div>
-              <div className="gap-sm flex items-center">
-                <CiCalendar />
-                <span className="bodySmall text-text-primary">{/* {seller.created_at ? formatJoinDate(seller.created_at) : ''} */}</span>
-              </div>
-            </div>
-
-            <div className="mt-lg gap-sm flex flex-col">
-              <button className="gap-sm px-xl bg-dark text-bg hover:bg-dark-point/30 hover:text-text-primary flex h-10 cursor-pointer items-center justify-center rounded-md font-bold shadow-sm transition-all duration-300 ease-in-out hover:shadow-lg">
-                <BsChat />
-                <span>채팅하기</span>
-              </button>
-            </div>
-          </div>
+    <div className="tablet:flex-row gap-xl px-lg py-xl mx-auto flex max-w-[var(--container-max-width)] flex-col">
+      <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={userData!} />
+      <section className="border-border flex w-full flex-col gap-6 rounded-xl border p-5">
+        <div className="flex justify-between">
+          <h4 className="flex items-center gap-2">{userData?.nickname}님의 판메상품 (6)</h4>
+          {/* {userData?.products.length !== 0 && <p>{count !== undefined ? `총 ${count}${description}` : description}</p>} */}
         </div>
-
-        {/* 우측: 탭 + 목록 */}
-        <div className="tablet:col-span-2 flex-1">
+        <div className="gap-lg flex max-h-[60vh] flex-col overflow-y-auto">
+          {userProductData?.pages?.flatMap((page) => page.content).length ? (
+            <>
+              <ul className="flex flex-col items-center justify-start gap-2.5">
+                {userProductData.pages
+                  .flatMap((page) => page.content)
+                  .map((product) => (
+                    <ProductListItem key={product.id} product={product} />
+                  ))}
+              </ul>
+              {hasNextPage && <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />}
+            </>
+          ) : (
+            <EmptyState icon={Package} title={'등록한 상품이 없습니다'} />
+          )}
+        </div>
+      </section>
+      {/* 우측: 탭 + 목록 */}
+      {/* <div className="tablet:col-span-2 flex-1">
           <div className="gap-sm flex w-full flex-col">
-            {/* 탭 리스트 */}
             <div role="tablist" aria-label="사용자 탭" className="mb-lg px-sm py-sm border-b border-gray-200">
-              <h3 className="heading4 text-text-primary font-bold">{/* {seller.nickname}님 상품 ({seller.total_products}개) */}</h3>
+              <h3 className="heading4 text-text-primary font-bold"></h3>
             </div>
 
-            {/* 탭 패널: 상품 */}
             <div role="tabpanel" id="panel-products" aria-labelledby="tab-products" className={`flex-1 outline-none`}>
               <div className="gap-md flex flex-col">
-                {/* {seller.seller_products.map(item => (
+              {seller.seller_products.map(item => (
                   <div
                     key={item.product_id}
                     className="
@@ -158,13 +120,12 @@ function UserPage() {
                       </span>
                     </div>
                   </div>
-                ))} */}
+                ))} 
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </>
+        </div> */}
+    </div>
   )
 }
 

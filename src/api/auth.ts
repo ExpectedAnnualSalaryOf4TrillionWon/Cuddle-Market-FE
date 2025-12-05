@@ -45,10 +45,3 @@ export const login = async (requestData: LoginRequestData): Promise<LoginRespons
   console.log(response.data)
   return response.data
 }
-
-// export const withDraw = async (requestData: WithDrawRequestData): Promise<LoginResponse> => {
-//   const response = await axios.delete(`${API_BASE_URL}/auth/withdraw`, requestData)
-//   console.log(response)
-//   console.log(response.data)
-//   return response.data
-// }

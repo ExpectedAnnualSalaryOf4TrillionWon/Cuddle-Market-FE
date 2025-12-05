@@ -43,7 +43,7 @@ function ProfileUpdate() {
   return (
     <div className="bg-bg pb-4xl pt-8">
       <div className="px-lg mx-auto flex max-w-[var(--container-max-width)] gap-8">
-        <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} myData={myData!} />
+        <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />
         <div className="flex w-full flex-col gap-8">
           <ProfileUpdateBaseForm myData={myData!} />
           <ProfileUpdatePasswordForm />

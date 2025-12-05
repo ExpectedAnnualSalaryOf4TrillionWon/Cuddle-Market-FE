@@ -17,6 +17,7 @@ import { ROUTES } from '@src/constants/routes'
 import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
 import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
+import UserPage from '@src/pages/UserPage'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -27,6 +28,7 @@ const routes = [
   { path: ROUTES.PRODUCT_POST, element: <ProductPost /> },
   { path: ROUTES.PRODUCT_EDIT, element: <ProductPost /> },
   { path: ROUTES.PROFILE_UPDATE, element: <ProfileUpdate /> },
+  { path: ROUTES.USER_PROFILE, element: <UserPage /> },
 ]
 
 function AppRoutes() {

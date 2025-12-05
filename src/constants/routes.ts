@@ -16,7 +16,8 @@ export const ROUTES = {
 
   // Profile
   PROFILE_UPDATE: `/profile-update`,
-  // RECRUITMENT_DETAIL: '/recruitment/:uuid',
+  USER_PROFILE: '/user-profile/:id',
+  USER_ID: (id: string | number) => `/user-profile/${id}`,
   // RECRUITMENT_CREATE: '/recruitment/create',
   // RECRUITMENT_MANAGE: '/recruitment/manage',
   // RECRUITMENT_EDIT: (uuid: string | number) => `/recruitment/${uuid}/edit`,
