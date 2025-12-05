@@ -18,7 +18,7 @@ export default function SellerProfileCard({ sellerInfo }: SellerProfileCardProps
       // setIsModalOpen(true)
       // setModalMessage('로그인이 필요한 서비스입니다.')
     } else {
-      navigate(`/user/${sellerId}`)
+      navigate(`/user-profile/${sellerId}`)
     }
   }
   return (

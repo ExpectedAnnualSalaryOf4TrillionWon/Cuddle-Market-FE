@@ -92,7 +92,7 @@ api.interceptors.request.use(
     const accessToken = useUserStore.getState().accessToken
 
     // 디버깅: 토큰 확인
-    console.log('[API Request]', config.url, '토큰 존재:', !!accessToken)
+    // console.log('[API Request]', config.url, '토큰 존재:', !!accessToken)
 
     // 토큰이 존재하면 Authorization 헤더에 추가
     // Bearer 스킴: OAuth 2.0에서 사용하는 표준 인증 방식

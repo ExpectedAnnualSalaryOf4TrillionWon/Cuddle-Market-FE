@@ -39,6 +39,8 @@ function MyPage() {
     enabled: !!user,
   })
 
+  console.log(myData)
+
   const {
     data: myProductsData,
     fetchNextPage: fetchNextProducts,
@@ -185,7 +187,7 @@ function MyPage() {
     <>
       <div className="bg-bg pb-4xl pt-8">
         <div className="px-lg mx-auto flex max-w-[var(--container-max-width)] gap-8">
-          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} myData={myData!} />
+          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />
           <section className="flex flex-1 flex-col gap-7">
             <Tabs
               tabs={MY_PAGE_TABS}

@@ -4,6 +4,7 @@ import MyPageTitle from './MyPageTitle'
 import MyList from './MyList'
 import PlaceholderImage from '@assets/images/placeholder.png'
 import { Button } from '@src/components/commons/button/Button'
+import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
 import { Package, Heart, type LucideIcon } from 'lucide-react'
 
@@ -123,13 +124,7 @@ export default function MyPagePanel({
                 ))}
               </ul>
               {hasNextPage && (
-                <button
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                  className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
-                >
-                  {isFetchingNextPage ? '로딩중...' : '더보기'}
-                </button>
+                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
               )}
             </>
           ) : (
@@ -153,13 +148,7 @@ export default function MyPagePanel({
               ))}
             </ul>
             {hasNextPage && (
-              <button
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                className="w-full rounded-lg border border-gray-300 py-2 hover:bg-gray-100"
-              >
-                {isFetchingNextPage ? '로딩중...' : '더보기'}
-              </button>
+              <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
             )}
           </>
         ) : null}

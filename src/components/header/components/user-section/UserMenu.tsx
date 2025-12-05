@@ -1,12 +1,9 @@
 // import Icon from '@components/commons/Icon'
 import { Z_INDEX } from '@constants/ui'
-// import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { cn } from '@utils/cn'
 import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.png'
 import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
-// import { useRef } from 'react'
-// import { EXTERNAL } from '@src/constants/external'
-// import { logoutHard } from '@src/store/auth'
+import { useState, useEffect } from 'react'
 import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
 
@@ -20,6 +17,11 @@ interface UserMenuProps {
 
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
   const { user } = useUserStore()
+  const [imgSrc, setImgSrc] = useState(user?.profileImageUrl || CuddleMarketLogo)
+
+  useEffect(() => {
+    setImgSrc(user?.profileImageUrl || CuddleMarketLogo)
+  }, [user?.profileImageUrl])
 
   const handleAvatarToggle = () => {
     if (isNotificationOpen) {
@@ -30,12 +32,18 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
 
   return (
     <div
-      // ref={userMenuButtonRef}
       className="relative flex cursor-pointer items-center gap-2"
       onClick={handleAvatarToggle}
     >
       <div className="bg-primary-100 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
-        <img src={user?.profileImageUrl ?? CuddleMarketLogo} alt={user?.nickname} className="h-full w-full object-cover" />
+        <img
+          src={imgSrc}
+          alt={user?.nickname}
+          className="h-full w-full object-cover"
+          onError={() => {
+            setImgSrc(CuddleMarketLogo)
+          }}
+        />
       </div>
 
       <p className="text-base text-gray-700">{user?.nickname}</p>
