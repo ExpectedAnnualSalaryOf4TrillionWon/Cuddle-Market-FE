@@ -1,9 +1,8 @@
 import { Button } from '../commons/button/Button'
-import { USER_REPORT_REASON, WiTH_DRAW_REASON } from '@src/constants/constants'
+import { USER_REPORT_REASON } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
 import { RequiredLabel } from '../commons/RequiredLabel'
 import { useForm } from 'react-hook-form'
-import ImageUploadField from '@src/pages/product-post/components/imageUploadField/ImageUploadField'
 import { ReportApiErrors } from '@src/pages/signup/validationRules'
 import { useNavigate } from 'react-router-dom'
 import { userReported } from '@src/api/profile'
@@ -17,20 +16,15 @@ export interface ReportFormValues {
 interface ReportModalProps {
   isOpen: boolean
   userNickname: string
-  onConfirm: (data: ReportFormValues) => void
   onCancel: () => void
   userId: number
 }
 
-export default function ReportModal({ isOpen, userNickname, onConfirm, onCancel, userId }: ReportModalProps) {
+export default function ReportModal({ isOpen, userNickname, onCancel, userId }: ReportModalProps) {
   const {
-    control,
     handleSubmit,
     register,
     watch,
-    setValue,
-    setError,
-    clearErrors,
     reset,
     formState: { errors, isValid },
   } = useForm<ReportFormValues>({
@@ -69,7 +63,7 @@ export default function ReportModal({ isOpen, userNickname, onConfirm, onCancel,
                 신고 사유
               </RequiredLabel>
               <div className="flex flex-col gap-1 rounded-lg border border-gray-300 px-3 py-2.5">
-                {USER_REPORT_REASON.map((reason) => (
+                {USER_REPORT_REASON.map((reason: { id: string; label: string }) => (
                   <div key={reason.id} className="flex items-center gap-3">
                     <input
                       type="radio"
@@ -101,20 +95,6 @@ export default function ReportModal({ isOpen, userNickname, onConfirm, onCancel,
               </div>
             </div>
 
-            <div className="flex w-full flex-col gap-3">
-              <ImageUploadField
-                setValue={setValue}
-                errors={errors}
-                setError={setError}
-                clearErrors={clearErrors}
-                mainImageField="imageFiles"
-                heading="신고 이미지 첨부 (선택항목)"
-                showSection={false}
-                maxFiles={3}
-                className="gap-1"
-                headingClassName="text-gray-900 font-semibold"
-              />
-            </div>
           </div>
 
           <div className="flex justify-end gap-3">
