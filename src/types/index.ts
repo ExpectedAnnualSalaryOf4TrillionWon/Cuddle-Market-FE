@@ -374,7 +374,8 @@ export interface UserProfileResponse {
     nickname: string
     createdAt: string
     introduction: string
-    products: Product[]
+    isBlocked: boolean
+    isReported: boolean
   }
 }
 
@@ -391,6 +392,43 @@ export interface UserProductResponse {
     hasPrevious: boolean
     totalElements: number
     numberOfElements: number
+  }
+}
+
+export interface UserBlockedResponse {
+  code: string
+  message: string
+  data: {
+    blockerId: 1
+    blockedUserId: 123
+    blockedNickname: string
+    blockedProfileImageUrl: string
+    createdAt: string
+  }
+}
+export interface UserUnBlockedResponse {
+  code: string
+  message: string
+  data: null
+}
+export interface UserReportedRequestData {
+  reasonCode: string
+  detailReason?: string
+  imageFiles?: string[]
+}
+export interface UserReportedResponse {
+  code: string
+  message: string
+  data: {
+    id: 1
+    reporterId: 1
+    targetType: string
+    targetId: 123
+    reasonCodes: string
+    detailReason: string
+    imageUrls: string[]
+    status: string
+    createdAt: string
   }
 }
 

@@ -3,8 +3,12 @@ import type {
   ChangePasswordResponse,
   ProfileUpdateRequestData,
   ProfileUpdateResponse,
+  UserBlockedResponse,
   UserProductResponse,
   UserProfileResponse,
+  UserReportedRequestData,
+  UserReportedResponse,
+  UserUnBlockedResponse,
   WithDrawRequest,
   WithDrawResponse,
 } from '../types'
@@ -30,6 +34,19 @@ export const fetchUserData = async (id: number) => {
 }
 
 export const fetchUserProductData = async (id: string | number, page: number = 0) => {
-  const response = await api.get<UserProductResponse>(`/profile/${id}/products?page=${page}&size=5`)
+  const response = await api.get<UserProductResponse>(`/profile/${id}/products?page=${page}&size=10`)
+  return response.data.data
+}
+
+export const userBlocked = async (blockedUserId: number) => {
+  const response = await api.post<UserBlockedResponse>(`/reports/blocks/users/${blockedUserId}`)
+  return response.data.data
+}
+export const userUnBlocked = async (blockedUserId: number) => {
+  await api.delete<UserUnBlockedResponse>(`/reports/blocks/users/${blockedUserId}`)
+}
+
+export const userReported = async (targetUserId: number, requestData: UserReportedRequestData) => {
+  const response = await api.post<UserReportedResponse>(`/reports/users/${targetUserId}`, requestData)
   return response.data.data
 }
