@@ -55,6 +55,7 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
         imageUrl={mainImageUrl}
         title={title}
         petTypeName={petTypeName}
+        productTypeName={productTypeName}
         productStatusName={productStatusName}
         tradeStatus={productTradeName}
         productTradeColor={productTradeColor}

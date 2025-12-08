@@ -11,6 +11,7 @@ interface ProductThumbnailProps {
   title: string
   petTypeName: string
   productStatusName: string
+  productTypeName: string
   tradeStatus: string
   productTradeColor: string
   isFavorite: boolean
@@ -23,10 +24,20 @@ export function ProductThumbnail({
   petTypeName,
   productStatusName,
   tradeStatus,
+  productTypeName,
   productTradeColor,
   isFavorite,
   onLikeClick,
 }: ProductThumbnailProps) {
+  const getDisplayTradeStatus = () => {
+    if (productTypeName === '판매요청') {
+      if (tradeStatus === '판매완료') return '요청완료'
+      if (tradeStatus === null || tradeStatus === '') return '요청중'
+    }
+    return tradeStatus
+  }
+  const displayTradeStatus = getDisplayTradeStatus()
+
   return (
     <div className="relative overflow-hidden pb-[75%]">
       <div className="top-sm px-sm absolute flex w-full justify-between">
@@ -44,7 +55,7 @@ export function ProductThumbnail({
           onClick={onLikeClick}
         />
       </div>
-      <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{tradeStatus}</Badge>
+      <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{displayTradeStatus}</Badge>
       <img
         src={imageUrl || PlaceholderImage}
         alt={title}
