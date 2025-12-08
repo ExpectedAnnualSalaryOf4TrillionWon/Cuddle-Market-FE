@@ -134,7 +134,15 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
               priceLabel="희망 가격"
               heading="가격"
             />
-            <ProductImageUpload initialImages={initialImages} setValue={setValue} errors={errors} setError={setError} clearErrors={clearErrors} />
+            <ProductImageUpload
+              initialImages={initialImages}
+              setValue={setValue}
+              errors={errors}
+              setError={setError}
+              clearErrors={clearErrors}
+              mainImageField="mainImageUrl"
+              subImagesField="subImageUrls"
+            />
             <TradeInfoSection control={control} setValue={setValue} showProductTradeFilter={false} register={register} />
           </div>
           <div className="flex items-center gap-4">
