@@ -39,8 +39,6 @@ function MyPage() {
     enabled: !!user,
   })
 
-  console.log(myData)
-
   const {
     data: myProductsData,
     fetchNextPage: fetchNextProducts,

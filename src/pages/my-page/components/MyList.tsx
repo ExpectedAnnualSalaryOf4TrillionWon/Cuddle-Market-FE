@@ -11,8 +11,8 @@ import { Eye } from 'lucide-react'
 import { getTradeStatus } from '@src/utils/getTradeStatus'
 import { getTradeStatusColor } from '@src/utils/getTradeStatusColor'
 import { cn } from '@src/utils/cn'
-import { useMutation } from '@tanstack/react-query'
-import { patchProductTradeStatus } from '@src/api/products'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { patchProductTradeStatus, addFavorite } from '@src/api/products'
 import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
 
@@ -25,8 +25,16 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
   const [selectedProductType, setSelectedProductType] = useState<TradeStatusKo>('판매중')
   const [localTradeStatus, setLocalTradeStatus] = useState(tradeStatus)
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (newStatus: TransactionStatus) => patchProductTradeStatus(id, newStatus),
+  })
+
+  const { mutate: cancelFavorite } = useMutation({
+    mutationFn: () => addFavorite(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myFavorite'] })
+    },
   })
 
   const handleProductType = (value: string) => {
@@ -54,6 +62,14 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
   const isCompleted = localTradeStatus === 'COMPLETED'
   const isSalesTab = activeTab === 'tab-sales'
   const isPurchasesTab = activeTab === 'tab-purchases'
+  const isWishlistTab = activeTab === 'tab-wishlist'
+  const isMyProductTab = isSalesTab || isPurchasesTab // 내가 등록한 상품 탭인지 (찜한 상품 탭 제외)
+
+  const handleCancelFavorite = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    cancelFavorite()
+  }
 
   return (
     <li id={id.toString()} className="w-full">
@@ -102,7 +118,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
               </Button>
             )}
             <div className="flex w-full min-w-32 gap-1">
-              {!isCompleted && (
+              {isMyProductTab && !isCompleted && (
                 <Button
                   size="sm"
                   className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
@@ -114,7 +130,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
               <Button
                 size="sm"
                 className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
-                onClick={(e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)}
+                onClick={isWishlistTab ? handleCancelFavorite : (e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)}
               >
                 삭제
               </Button>

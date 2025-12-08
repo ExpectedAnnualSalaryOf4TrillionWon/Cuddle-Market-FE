@@ -123,9 +123,7 @@ export default function MyPagePanel({
                   <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
                 ))}
               </ul>
-              {hasNextPage && (
-                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
-              )}
+              {hasNextPage && <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />}
             </>
           ) : (
             config && <EmptyState icon={config.emptyIcon} title={config.emptyTitle} description={config.emptyDescription} />
@@ -147,9 +145,7 @@ export default function MyPagePanel({
                 </li>
               ))}
             </ul>
-            {hasNextPage && (
-              <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
-            )}
+            {hasNextPage && <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />}
           </>
         ) : null}
       </div>
