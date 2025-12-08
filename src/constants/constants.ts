@@ -1271,18 +1271,6 @@ export const WiTH_DRAW_REASON = [
 ]
 export type WiTH_DRAW_LABEL = (typeof WiTH_DRAW_REASON)[number]['label']
 
-// ========== 회원신고 이유 관련 상수 ==========
-export const USER_REPORT_REASON = [
-  { id: 'HARASSMENT', label: '욕설, 비방, 괴롭힘' },
-  { id: 'FRAUD', label: '사기, 허위 거래 시도' },
-  { id: 'INAPPROPRIATE_CONTENT', label: '음람눌 또는 불건전 행위' },
-  { id: 'SPAM', label: '스팸/광고성 메시지' },
-  { id: 'OFFENSIVE_PROFILE', label: '불뫠한 사용자 정보 내용' },
-  { id: 'UNDERAGE', label: '만 14세 미만 유저' },
-  { id: 'OTHER', label: '기타' },
-]
-export type REPORT_LABEL = (typeof USER_REPORT_REASON)[number]['label']
-
 // ========== 주의사항 항목들 상수 ==========
 
 export const WITH_DRAW_ALERT_LIST = [
@@ -1298,6 +1286,18 @@ export const PASSWORD_UPDATE_ALERT_LIST = [
   '개인정보(이름, 생일 등)는 사용하지 마세요',
   '다른 사이트와 같은 비밀번호를 사용하지 마세요',
 ]
+
+// ========== 회원신고 이유 관련 상수 ==========
+export const USER_REPORT_REASON = [
+  { id: 'HARASSMENT', label: '욕설, 비방, 괴롭힘' },
+  { id: 'FRAUD', label: '사기, 허위 거래 시도' },
+  { id: 'INAPPROPRIATE_CONTENT', label: '음란물 또는 불건전 행위' },
+  { id: 'SPAM', label: '스팸/광고성 메시지' },
+  { id: 'OFFENSIVE_PROFILE', label: '불쾌한 사용자 정보 내용' },
+  { id: 'UNDERAGE', label: '만 14세 미만 유저' },
+  { id: 'OTHER', label: '기타' },
+]
+export type REPORT_LABEL = (typeof USER_REPORT_REASON)[number]['label']
 
 export const USER_BLOCK_ALERT_LIST = [
   '차단한 사용자는 더 이상 채팅을 보내거나 상품을 볼 수 없습니다',

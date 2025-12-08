@@ -104,3 +104,12 @@ export const WithDrawApiErrors = {
     },
   },
 } as const
+
+export const ReportApiErrors = {
+  detailReason: {
+    maxLength: {
+      value: 300,
+      message: '상세사유는 2~ 300자 이상이어야 합니다.',
+    },
+  },
+} as const
