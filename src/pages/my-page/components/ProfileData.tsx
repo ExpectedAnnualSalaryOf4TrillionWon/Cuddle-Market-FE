@@ -108,7 +108,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
         {isMyProfile ? (
           <button
             type="button"
-            className="w-full cursor-pointer pt-6 text-left text-sm text-gray-500 hover:underline"
+            className="w-full cursor-pointer rounded-lg pt-6 text-left text-sm text-gray-500 hover:underline"
             onClick={() => setIsWithdrawModalOpen?.(true)}
           >
             회원탈퇴
@@ -123,7 +123,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
             ) : (
               <button
                 type="button"
-                className="flex w-full cursor-pointer items-center justify-start gap-2 bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
+                className="flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
                 onClick={() => setIsReportModalOpen?.(true)}
               >
                 <Flag size={16} />
@@ -134,7 +134,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
             {!data?.isBlocked && (
               <button
                 type="button"
-                className="flex w-full cursor-pointer items-center justify-center gap-2 bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
                 onClick={() => setIsBlockModalOpen?.(true)}
               >
                 <Ban size={16} />
