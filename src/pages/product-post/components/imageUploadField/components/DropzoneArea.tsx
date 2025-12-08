@@ -2,14 +2,11 @@ import { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import type { UseFormSetValue, UseFormSetError, UseFormClearErrors } from 'react-hook-form'
-import type { ProductPostFormValues } from '../../ProductPostForm'
+import type { FieldValues, Path, UseFormSetValue, UseFormSetError, UseFormClearErrors } from 'react-hook-form'
 import { uploadImage } from '@src/api/products'
 import { MAX_FILES } from '@src/constants/constants'
 import DropzoneGuide from './DropzoneGuide'
 import SortableImageList from './SortableImageList'
-// import DropzoneGuide from './DropzoneGuide'
-// import SortableImageList from './SortableImageList'
 
 const IMAGE_UPLOAD_ERRORS = {
   'file-too-large': '파일 크기는 5MB를 초과할 수 없습니다.',
@@ -18,48 +15,63 @@ const IMAGE_UPLOAD_ERRORS = {
   'upload-failed': '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
 } as const
 
-interface DropzoneAreaProps {
-  setValue: UseFormSetValue<ProductPostFormValues>
-  setError: UseFormSetError<ProductPostFormValues>
-  clearErrors: UseFormClearErrors<ProductPostFormValues>
+interface DropzoneAreaProps<T extends FieldValues> {
+  setValue: UseFormSetValue<T>
+  setError: UseFormSetError<T>
+  clearErrors: UseFormClearErrors<T>
+  mainImageField: Path<T>
+  subImagesField?: Path<T>
   initialImages?: string[]
+  maxFiles?: number
 }
 
-export default function DropzoneArea({ setValue, setError, clearErrors, initialImages }: DropzoneAreaProps) {
+export default function DropzoneArea<T extends FieldValues>({
+  setValue,
+  setError,
+  clearErrors,
+  mainImageField,
+  subImagesField,
+  initialImages,
+  maxFiles = MAX_FILES,
+}: DropzoneAreaProps<T>) {
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
-    maxFiles: MAX_FILES,
+    maxFiles: maxFiles,
     maxSize: 5 * 1024 * 1024,
     onDrop: async (acceptedFiles, rejectedFiles) => {
-      clearErrors('mainImageUrl')
+      clearErrors(mainImageField)
 
       const totalCount = previewUrls.length + acceptedFiles.length
-      if (totalCount > MAX_FILES) {
-        setError('mainImageUrl', { type: 'manual', message: IMAGE_UPLOAD_ERRORS['too-many-files'] })
+      if (totalCount > maxFiles) {
+        setError(mainImageField, { type: 'manual', message: IMAGE_UPLOAD_ERRORS['too-many-files'] })
         return
       }
 
       if (rejectedFiles.length > 0) {
         const errorCode = rejectedFiles[0].errors[0].code as keyof typeof IMAGE_UPLOAD_ERRORS
         const message = IMAGE_UPLOAD_ERRORS[errorCode] || '파일 업로드에 실패했습니다.'
-        setError('mainImageUrl', { type: 'manual', message })
+        setError(mainImageField, { type: 'manual', message })
         return
       }
 
       if (acceptedFiles.length === 0) {
-        setError('mainImageUrl', { type: 'manual', message: '업로드할 파일을 선택해주세요.' })
+        setError(mainImageField, { type: 'manual', message: '업로드할 파일을 선택해주세요.' })
         return
       }
 
       try {
         const uploadedUrl = await uploadImage(acceptedFiles)
-        setValue('mainImageUrl', uploadedUrl.mainImageUrl)
-        setValue('subImageUrls', uploadedUrl.subImageUrls)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(mainImageField, uploadedUrl.mainImageUrl as any)
+        if (subImagesField) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setValue(subImagesField, uploadedUrl.subImageUrls as any)
+        }
         setPreviewUrls((prev) => [...prev, uploadedUrl.mainImageUrl, ...(uploadedUrl.subImageUrls || [])])
       } catch {
-        setError('mainImageUrl', {
+        setError(mainImageField, {
           type: 'manual',
           message: IMAGE_UPLOAD_ERRORS['upload-failed'],
         })
@@ -72,11 +84,19 @@ export default function DropzoneArea({ setValue, setError, clearErrors, initialI
     setPreviewUrls(updatedUrls)
 
     if (updatedUrls.length === 0) {
-      setValue('mainImageUrl', '')
-      setValue('subImageUrls', [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setValue(mainImageField, '' as any)
+      if (subImagesField) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(subImagesField, [] as any)
+      }
     } else {
-      setValue('mainImageUrl', updatedUrls[0])
-      setValue('subImageUrls', updatedUrls.slice(1))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setValue(mainImageField, updatedUrls[0] as any)
+      if (subImagesField) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(subImagesField, updatedUrls.slice(1) as any)
+      }
     }
   }
 
@@ -88,8 +108,12 @@ export default function DropzoneArea({ setValue, setError, clearErrors, initialI
       const newUrls = arrayMove(previewUrls, oldIndex, newIndex)
 
       setPreviewUrls(newUrls)
-      setValue('mainImageUrl', newUrls[0])
-      setValue('subImageUrls', newUrls.slice(1))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setValue(mainImageField, newUrls[0] as any)
+      if (subImagesField) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(subImagesField, newUrls.slice(1) as any)
+      }
     }
   }
   useEffect(() => {
@@ -102,7 +126,7 @@ export default function DropzoneArea({ setValue, setError, clearErrors, initialI
     <div {...getRootProps()} className="cursor-pointer rounded-lg border border-dashed border-gray-400 px-6 py-10">
       <input {...getInputProps()} />
       {previewUrls.length === 0 ? (
-        <DropzoneGuide />
+        <DropzoneGuide maxFiles={maxFiles} />
       ) : (
         <SortableImageList previewUrls={previewUrls} onDragEnd={handleDragEnd} onRemoveImage={handleRemoveImage} />
       )}

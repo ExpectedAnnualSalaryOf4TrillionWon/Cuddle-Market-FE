@@ -123,7 +123,16 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
           <div className="flex flex-col gap-5">
             <BasicInfoSection control={control} setValue={setValue} register={register} errors={errors} titleLength={watch('title')?.length ?? 0} />
             <PriceAndStatusSection control={control} register={register} errors={errors} />
-            <ProductImageUpload initialImages={initialImages} setValue={setValue} errors={errors} setError={setError} clearErrors={clearErrors} />
+            <ProductImageUpload
+              initialImages={initialImages}
+              setValue={setValue}
+              errors={errors}
+              setError={setError}
+              clearErrors={clearErrors}
+              mainImageField="mainImageUrl"
+              subImagesField="subImageUrls"
+              description="상품 이미지를 업로드 해주세요. 첫번째 이미지가 대표 이미지가 됩니다. (최대 5장)"
+            />
             <TradeInfoSection control={control} setValue={setValue} register={register} />
           </div>
           <div className="flex items-center gap-4">
