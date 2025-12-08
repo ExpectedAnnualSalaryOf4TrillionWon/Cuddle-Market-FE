@@ -1,13 +1,13 @@
 import ProfileData from './my-page/components/ProfileData'
 import { useState } from 'react'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
-import { fetchUserData, fetchUserProductData, withDraw } from '@src/api/profile'
+import { useParams } from 'react-router-dom'
+import { fetchUserData, fetchUserProductData } from '@src/api/profile'
 import { ProductListItem } from '@src/components/product/ProductListItem'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
 import { Package } from 'lucide-react'
-import ReportModal, { type ReportFormValues } from '@src/components/modal/ReportModal'
+import ReportModal from '@src/components/modal/ReportModal'
 import BlockModal from '@src/components/modal/BlockModal'
 
 function UserPage() {
@@ -15,7 +15,6 @@ function UserPage() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false)
   const { id } = useParams()
-  const navigate = useNavigate()
   const { data: userData, isLoading: isLoadingUserData } = useQuery({
     queryKey: ['userPage'],
     queryFn: () => fetchUserData(Number(id)),
@@ -36,27 +35,6 @@ function UserPage() {
     initialPageParam: 0,
     enabled: !!id,
   })
-
-  // const handleBlocked = async (data: ReportFormValues) => {
-  //   try {
-  //     await withDraw(data)
-  //     // clearAll() // 모든 사용자 상태 초기화 (user, accessToken, refreshToken, redirectUrl)
-  //     // 로그인 페이지로 이동
-  //     navigate('/')
-  //   } catch (error) {
-  //     console.error('회원탈퇴 실패:', error)
-  //   }
-  // }
-  const handleUserReport = async (data: ReportFormValues) => {
-    try {
-      // await withDraw(data)
-      // clearAll() // 모든 사용자 상태 초기화 (user, accessToken, refreshToken, redirectUrl)
-      // 로그인 페이지로 이동
-      navigate('/')
-    } catch (error) {
-      console.error('회원탈퇴 실패:', error)
-    }
-  }
 
   const totalProducts = userProductData?.pages[0]?.total ?? 0
   const allProducts = userProductData?.pages.flatMap((page) => page.content) ?? []
@@ -106,7 +84,6 @@ function UserPage() {
       </div>
       <ReportModal
         isOpen={isReportModalOpen}
-        onConfirm={handleUserReport}
         onCancel={() => setIsReportModalOpen(false)}
         userNickname={userData.nickname}
         userId={Number(id)}
