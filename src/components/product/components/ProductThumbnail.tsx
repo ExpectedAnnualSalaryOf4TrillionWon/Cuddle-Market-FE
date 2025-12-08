@@ -5,9 +5,6 @@ import { Badge } from '@src/components/commons/badge/Badge'
 // import bowl from '@assets/images/bowl.jpg'
 import PlaceholderImage from '@assets/images/placeholder.png'
 import { cn } from '@src/utils/cn'
-import { getProductStatus } from '@src/utils/getProductStatus'
-import { getProductType } from '@src/utils/getProductType'
-import { getTradeStatus } from '@src/utils/getTradeStatus'
 
 interface ProductThumbnailProps {
   imageUrl: string
@@ -40,7 +37,6 @@ export function ProductThumbnail({
     return tradeStatus
   }
   const displayTradeStatus = getDisplayTradeStatus()
-  console.log(displayTradeStatus)
 
   return (
     <div className="relative overflow-hidden pb-[75%]">
