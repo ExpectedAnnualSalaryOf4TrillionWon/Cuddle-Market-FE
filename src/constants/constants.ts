@@ -1279,7 +1279,6 @@ export const WITH_DRAW_ALERT_LIST = [
   '찜한 상품 목록이 삭제됩니다',
   '진행 중인 거래가 있다면 먼저 완료해 주세요',
 ]
-
 export const PRODUCT_DELETE_ALERT_LIST = ['삭제된 상품은 복구할 수 없습니다']
 
 export const PASSWORD_UPDATE_ALERT_LIST = [

@@ -2,6 +2,11 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export const buttonVariants = cva('flex items-center justify-center rounded-lg font-medium transition-colors', {
   variants: {
+    variant: {
+      default: '',
+      ghost: 'bg-transparent hover:bg-gray-100',
+      link: 'bg-transparent p-0 hover:underline',
+    },
     size: {
       xs: 'px-3 py-2 text-sm',
       sm: 'px-3 py-2 text-sm',
@@ -41,6 +46,7 @@ export const buttonVariants = cva('flex items-center justify-center rounded-lg f
     },
   ],
   defaultVariants: {
+    variant: 'default',
     size: 'md',
     iconPosition: 'none',
   },
