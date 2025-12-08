@@ -22,11 +22,8 @@ export function ProductListItem({ product, children }: ProductListItemProps) {
 
   return (
     <li id={id.toString()} className="w-full">
-      <Link
-        to={ROUTES.DETAIL_ID(id)}
-        className="flex w-full items-center justify-center gap-6 rounded-lg border border-gray-300 p-3.5"
-      >
-        <div className="aspect-square w-32 shrink-0 overflow-hidden rounded-lg">
+      <Link to={ROUTES.DETAIL_ID(id)} className="flex w-full items-center justify-center gap-6 rounded-lg border border-gray-300 p-3.5">
+        <div className="aspect-square w-[10%] shrink-0 overflow-hidden rounded-lg">
           <img
             src={mainImageUrl || PlaceholderImage}
             alt={title}
@@ -45,13 +42,7 @@ export function ProductListItem({ product, children }: ProductListItemProps) {
               <ProductMetaItem icon={Eye} label={`조회 ${viewCount}`} className="text-sm text-gray-400" />
             </div>
           </div>
-          {children ? (
-            children
-          ) : (
-            tradeStatus && (
-              <Badge className={cn('bg-[#48BB78] text-white', tradeStatusColor)}>{tradeStatusText}</Badge>
-            )
-          )}
+          {children ? children : tradeStatus && <Badge className={cn('bg-[#48BB78] text-white', tradeStatusColor)}>{tradeStatusText}</Badge>}
         </div>
       </Link>
     </li>
