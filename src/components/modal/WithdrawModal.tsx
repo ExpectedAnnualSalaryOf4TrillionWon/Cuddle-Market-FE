@@ -19,7 +19,7 @@ interface WithdrawModalProps {
   onCancel: () => void
 }
 
-function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawModalProps) {
+export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawModalProps) {
   const {
     control,
     handleSubmit,
@@ -125,5 +125,3 @@ function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawModalProps) {
     </div>
   )
 }
-
-export default WithdrawModal
