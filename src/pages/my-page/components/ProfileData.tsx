@@ -3,7 +3,6 @@ import { MapPin, Calendar, Settings, MessageCircle, Flag, Ban, LockOpen, ShieldA
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
 import { formatJoinDate } from '@src/utils/formatJoinDate'
-import type { Product } from '@src/types'
 import { useUserStore } from '@src/store/userStore'
 import { Button } from '@src/components/commons/button/Button'
 import { userUnBlocked } from '@src/api/profile'
@@ -107,13 +106,13 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
         </div>
 
         {isMyProfile ? (
-          <Button
-            variant="link"
-            className="w-full cursor-pointer justify-baseline pt-6 pb-0 pl-0 text-left text-sm text-gray-500"
+          <button
+            type="button"
+            className="w-full cursor-pointer pt-6 text-left text-sm text-gray-500 hover:underline"
             onClick={() => setIsWithdrawModalOpen?.(true)}
           >
             회원탈퇴
-          </Button>
+          </button>
         ) : (
           <div className="flex items-center justify-between pt-6">
             {data?.isReported ? (
@@ -122,27 +121,25 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                 <span>신고완료</span>
               </div>
             ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                icon={Flag}
-                className="w-full cursor-pointer justify-start text-left"
+              <button
+                type="button"
+                className="flex w-full cursor-pointer items-center justify-start gap-2 bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
                 onClick={() => setIsReportModalOpen?.(true)}
               >
+                <Flag size={16} />
                 신고하기
-              </Button>
+              </button>
             )}
 
             {!data?.isBlocked && (
-              <Button
-                variant="ghost"
-                size="sm"
-                icon={Ban}
-                className="w-full cursor-pointer justify-center text-left"
+              <button
+                type="button"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
                 onClick={() => setIsBlockModalOpen?.(true)}
               >
+                <Ban size={16} />
                 차단하기
-              </Button>
+              </button>
             )}
           </div>
         )}
