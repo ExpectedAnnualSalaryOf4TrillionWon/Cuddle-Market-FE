@@ -1,4 +1,4 @@
-import ProfileData from './my-page/components/ProfileData'
+import ProfileData from '@src/components/profile/ProfileData'
 import { useState } from 'react'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
