@@ -120,6 +120,17 @@ export interface LoginResponse {
   }
 }
 
+export interface ResettingPasswordResponse {
+  code: string
+  message: string
+  data: string
+}
+export interface ResettingPasswordRequestData {
+  email: string
+  newPassword: string
+  confirmPassword: string
+}
+
 export interface WithDrawRequestData {
   reason: string
   detailReason: string

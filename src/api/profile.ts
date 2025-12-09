@@ -1,8 +1,11 @@
 import type {
   ChangePasswordRequestData,
   ChangePasswordResponse,
+  EmailCheckResponse,
   ProfileUpdateRequestData,
   ProfileUpdateResponse,
+  ResettingPasswordRequestData,
+  ResettingPasswordResponse,
   UserBlockedResponse,
   UserProductResponse,
   UserProfileResponse,
@@ -13,6 +16,8 @@ import type {
   WithDrawResponse,
 } from '../types'
 import { api } from './api'
+import axios from 'axios'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 export const withDraw = async (requestData: WithDrawRequest) => {
   await api.delete<WithDrawResponse>(`/auth/withdraw`, { data: requestData })
@@ -42,6 +47,7 @@ export const userBlocked = async (blockedUserId: number) => {
   const response = await api.post<UserBlockedResponse>(`/reports/blocks/users/${blockedUserId}`)
   return response.data.data
 }
+
 export const userUnBlocked = async (blockedUserId: number) => {
   await api.delete<UserUnBlockedResponse>(`/reports/blocks/users/${blockedUserId}`)
 }
@@ -49,4 +55,24 @@ export const userUnBlocked = async (blockedUserId: number) => {
 export const userReported = async (targetUserId: number, requestData: UserReportedRequestData) => {
   const response = await api.post<UserReportedResponse>(`/reports/users/${targetUserId}`, requestData)
   return response.data.data
+}
+
+export const sendValidCode = async (email: string): Promise<EmailCheckResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/password/reset/send`, { email })
+  console.log(response)
+  console.log(response.data)
+
+  return response.data
+}
+
+export const checkValidCode = async (email: string, code: string): Promise<EmailCheckResponse> => {
+  const response = await axios.post(`${API_BASE_URL}/auth/password/reset/verify`, { email, verificationCode: code })
+  console.log(response)
+  console.log(response.data)
+  return response.data
+}
+
+export const reSettingPassword = async (requestData: ResettingPasswordRequestData) => {
+  const response = await api.patch<ResettingPasswordResponse>(`/auth/password/reset`, requestData)
+  return response.data
 }
