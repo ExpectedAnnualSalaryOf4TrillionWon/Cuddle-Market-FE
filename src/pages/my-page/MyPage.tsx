@@ -9,7 +9,7 @@ import MyPagePanel from './components/MyPagePanel'
 import DeleteConfirmModal from '@src/components/modal/DeleteConfirmModal'
 import WithdrawModal, { type WithDrawFormValues } from '@src/components/modal/WithdrawModal'
 import { withDraw } from '@src/api/profile'
-import ProfileData from './components/ProfileData'
+import ProfileData from '@src/components/profile/ProfileData'
 
 function MyPage() {
   const { user, clearAll, updateUserProfile } = useUserStore()

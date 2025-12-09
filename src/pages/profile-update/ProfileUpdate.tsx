@@ -1,4 +1,4 @@
-import ProfileData from '../my-page/components/ProfileData'
+import ProfileData from '@src/components/profile/ProfileData'
 import { useEffect, useState } from 'react'
 import ProfileUpdateBaseForm from './components/ProfileUpdateBaseForm'
 import { useQuery } from '@tanstack/react-query'
