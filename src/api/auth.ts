@@ -5,7 +5,6 @@ import type {
   SignUpResponse,
   LoginRequestData,
   LoginResponse,
-  LogoutResponse,
 } from '../types'
 // import { apiFetch } from './apiFetch'
 import axios from 'axios'
@@ -55,7 +54,7 @@ export const login = async (requestData: LoginRequestData): Promise<LoginRespons
   return response.data
 }
 
-export const logout = async (): Promise<LogoutResponse> => {
+export const logout = async (): Promise<void> => {
   const response = await api.post(`/auth/logout`)
   console.log(response)
   console.log(response.data)
