@@ -18,11 +18,13 @@ import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
 import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
 import UserPage from '@src/pages/UserPage'
+import FindPasswordPage from '@src/pages/FindPasswordPage'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
   { path: ROUTES.LOGIN, element: <Login /> },
   { path: ROUTES.SIGNUP, element: <Signup /> },
+  { path: ROUTES.FIND_PASSWORD, element: <FindPasswordPage /> },
   { path: ROUTES.MYPAGE, element: <MyPage /> },
   { path: ROUTES.DETAIL, element: <ProductDetail /> },
   { path: ROUTES.PRODUCT_POST, element: <ProductPost /> },

@@ -1,6 +1,6 @@
 import { Controller, type Control, type UseFormRegister, type FieldErrors } from 'react-hook-form'
 import type { ProductPostFormValues } from '../ProductPostForm'
-import { ProductStateFilter } from '@src/components/ProductStateFilter'
+import { ProductStateFilter } from '@src/components/product/ProductStateFilter'
 import { PriceField } from './components/PriceField'
 import FormSectionHeader from '../FormSectionHeader'
 

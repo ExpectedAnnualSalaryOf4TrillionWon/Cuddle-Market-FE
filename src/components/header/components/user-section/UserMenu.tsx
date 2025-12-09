@@ -6,6 +6,7 @@ import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
+import { logout } from '@src/api/auth'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -16,7 +17,7 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
-  const { user } = useUserStore()
+  const { user, clearAll } = useUserStore()
   const [imgSrc, setImgSrc] = useState(user?.profileImageUrl || CuddleMarketLogo)
 
   useEffect(() => {
@@ -30,11 +31,17 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
     setIsUserMenuOpen(!isUserMenuOpen)
   }
 
+  const handleLogout = async () => {
+    await logout()
+    clearAll()
+    if (isNotificationOpen) {
+      setIsNotificationOpen(false)
+    }
+    setIsUserMenuOpen(false)
+  }
+
   return (
-    <div
-      className="relative flex cursor-pointer items-center gap-2"
-      onClick={handleAvatarToggle}
-    >
+    <div className="relative flex cursor-pointer items-center gap-2" onClick={handleAvatarToggle}>
       <div className="bg-primary-100 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
         <img
           src={imgSrc}
@@ -59,7 +66,7 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
             마이페이지
           </a>
           <button
-            // onClick={handleLogout}
+            onClick={handleLogout}
             className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
           >
             <LogOutIcon className="h-5 w-5 rotate-180" />
