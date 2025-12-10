@@ -7,6 +7,7 @@ import { useUserStore } from '@src/store/userStore'
 import { Button } from '@src/components/commons/button/Button'
 import { userUnBlocked } from '@src/api/profile'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { ROUTES } from '@src/constants/routes'
 
 export interface MyPageData {
   id: number
@@ -72,7 +73,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                 />
               </div>
               <Link
-                to="/profile-update"
+                to={ROUTES.PROFILE_UPDATE}
                 className="bg-primary-200 flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
               >
                 <Settings size={19} />

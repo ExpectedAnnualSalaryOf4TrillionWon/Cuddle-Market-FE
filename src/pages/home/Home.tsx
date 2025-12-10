@@ -22,16 +22,18 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
+import LoginModal from '@src/components/modal/LoginModal'
 
 function Home() {
   const { isLogin } = useUserStore()
+  const { isLoginModalOpen, closeLoginModal } = useLoginModalStore()
   const isLoggedIn = isLogin()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const keyword = searchParams.get('keyword') || ''
   const sortBy = searchParams.get('sortBy')
   const sortOrder = searchParams.get('sortOrder')
-
   const [activePetTypeTab, setActivePetTypeTab] = useState<PetTypeTabId>('tab-all')
   const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(searchParams.get('petDetailType'))
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType | null>(searchParams.get('categories'))
@@ -256,7 +258,12 @@ function Home() {
               />
             </div>
             <div className="flex flex-col gap-5">
-              <Tabs tabs={PRODUCT_TYPE_TABS} activeTab={activeProductTypeTab} onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)} ariaLabel="상품 타입 분류" />
+              <Tabs
+                tabs={PRODUCT_TYPE_TABS}
+                activeTab={activeProductTypeTab}
+                onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)}
+                ariaLabel="상품 타입 분류"
+              />
               <ProductsSection
                 products={allProducts}
                 totalElements={totalElements}
@@ -285,6 +292,7 @@ function Home() {
           </Button>
         </div>
       )}
+      <LoginModal isOpen={isLoginModalOpen} onCancel={closeLoginModal} />
     </>
   )
 }
