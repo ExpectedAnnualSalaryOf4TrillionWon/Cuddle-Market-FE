@@ -22,12 +22,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
-import { useLoginModalStore } from '@src/store/modalStore'
-import LoginModal from '@src/components/modal/LoginModal'
+import ConfirmModal from '@src/components/modal/LoginModal'
 
 function Home() {
   const { isLogin } = useUserStore()
-  const { isLoginModalOpen, closeLoginModal } = useLoginModalStore()
   const isLoggedIn = isLogin()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -292,7 +290,7 @@ function Home() {
           </Button>
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onCancel={closeLoginModal} />
+      <ConfirmModal />
     </>
   )
 }

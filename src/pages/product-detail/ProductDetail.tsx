@@ -10,12 +10,10 @@ import ProductSummary from './components/ProductSummary'
 import ProductDescription from './components/ProductDescription'
 import ProductActions from './components/ProductActions'
 import SellerOtherProducts from './components/SellerOtherProducts'
-import LoginModal from '@src/components/modal/LoginModal'
-import { useLoginModalStore } from '@src/store/modalStore'
+import ConfirmModal from '@src/components/modal/LoginModal'
 
 function ProductDetail() {
   const navigate = useNavigate()
-  const { isLoginModalOpen, closeLoginModal } = useLoginModalStore()
   const { id } = useParams<{ id: string }>()
 
   const { data, isLoading, error } = useQuery({
@@ -71,7 +69,7 @@ function ProductDetail() {
         </div>
       </div>
       <Footer />
-      <LoginModal isOpen={isLoginModalOpen} onCancel={closeLoginModal} />
+      <ConfirmModal />
     </>
   )
 }
