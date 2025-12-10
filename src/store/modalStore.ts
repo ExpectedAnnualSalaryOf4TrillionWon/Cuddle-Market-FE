@@ -1,31 +1,62 @@
 import { create } from 'zustand'
 
-// ===== 로그인 모달 상태 타입 =====
-interface LoginModalState {
+// ===== 확인 모달 상태 타입 =====
+interface ConfirmModalState {
   // 모달 열림/닫힘 상태
-  isLoginModalOpen: boolean
+  isOpen: boolean
 
-  // 모달 열기
+  // 모달 타입: 'login' (로그인 유도) 또는 'logout' (로그아웃 확인)
+  modalType: 'login' | 'logout'
+
+  // 로그아웃 시 실행할 콜백 함수
+  onConfirm: (() => void) | null
+
+  // 로그인 모달 열기
   // 사용: openLoginModal()
-  // 결과: isLoginModalOpen이 true로 변경되어 모달이 화면에 표시됨
+  // 결과: 로그인 유도 모달이 화면에 표시됨
   openLoginModal: () => void
 
+  // 로그아웃 확인 모달 열기
+  // 사용: openLogoutModal(onLogout)
+  // 결과: 로그아웃 확인 모달이 화면에 표시되고, 확인 시 onLogout 실행
+  openLogoutModal: (onConfirm: () => void) => void
+
   // 모달 닫기
-  // 사용: closeLoginModal()
-  // 결과: isLoginModalOpen이 false로 변경되어 모달이 화면에서 사라짐
-  closeLoginModal: () => void
+  // 사용: closeModal()
+  // 결과: 모달이 화면에서 사라짐
+  closeModal: () => void
 }
 
-// ===== 로그인 모달 스토어 =====
-// 미로그인 상태에서 로그인이 필요한 기능 사용 시 LoginModal을 띄우기 위한 전역 상태
-// 어떤 페이지에서든 openLoginModal()을 호출하면 모달이 열림
-export const useLoginModalStore = create<LoginModalState>((set) => ({
-  // 초기 상태: 모달 닫힘
-  isLoginModalOpen: false,
+// ===== 확인 모달 스토어 =====
+// 로그인 유도, 로그아웃 확인 등 다양한 확인 모달에 사용
+// 어떤 페이지에서든 openLoginModal() 또는 openLogoutModal()을 호출하면 모달이 열림
+export const useLoginModalStore = create<ConfirmModalState>((set) => ({
+  // 초기 상태
+  isOpen: false,
+  modalType: 'login',
+  onConfirm: null,
 
-  // 모달 열기 액션
-  openLoginModal: () => set({ isLoginModalOpen: true }),
+  // 로그인 모달 열기 액션
+  openLoginModal: () =>
+    set({
+      isOpen: true,
+      modalType: 'login',
+      onConfirm: null,
+    }),
+
+  // 로그아웃 모달 열기 액션
+  // onConfirm: 확인 버튼 클릭 시 실행할 함수 (예: 로그아웃 API 호출)
+  openLogoutModal: (onConfirm) =>
+    set({
+      isOpen: true,
+      modalType: 'logout',
+      onConfirm,
+    }),
 
   // 모달 닫기 액션
-  closeLoginModal: () => set({ isLoginModalOpen: false }),
+  closeModal: () =>
+    set({
+      isOpen: false,
+      onConfirm: null,
+    }),
 }))

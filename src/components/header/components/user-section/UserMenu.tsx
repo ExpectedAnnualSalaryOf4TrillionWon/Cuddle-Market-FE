@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
 import { logout } from '@src/api/auth'
+import { useLoginModalStore } from '@src/store/modalStore'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -19,6 +20,7 @@ interface UserMenuProps {
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
   const { user, clearAll } = useUserStore()
   const [imgSrc, setImgSrc] = useState(user?.profileImageUrl || CuddleMarketLogo)
+  const { openLogoutModal } = useLoginModalStore()
 
   useEffect(() => {
     setImgSrc(user?.profileImageUrl || CuddleMarketLogo)
@@ -31,13 +33,17 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
     setIsUserMenuOpen(!isUserMenuOpen)
   }
 
-  const handleLogout = async () => {
+  // 로그아웃 실행 함수
+  const onLogout = async () => {
     await logout()
-    clearAll()
-    if (isNotificationOpen) {
-      setIsNotificationOpen(false)
-    }
     setIsUserMenuOpen(false)
+    clearAll()
+  }
+
+  // 로그아웃 버튼 클릭 시 확인 모달 열기
+  const handleLogoutClick = () => {
+    setIsUserMenuOpen(false)
+    openLogoutModal(onLogout)
   }
 
   return (
@@ -66,7 +72,7 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
             마이페이지
           </a>
           <button
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
           >
             <LogOutIcon className="h-5 w-5 rotate-180" />
