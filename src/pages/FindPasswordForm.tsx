@@ -52,12 +52,9 @@ export function FindPasswordForm() {
   const passwordConfirm = watch('passwordConfirm')
   const navigate = useNavigate()
 
-  const currentStep: 1 | 2 | 3 =
-    checkValidCodeResult.status !== 'idle' ? 3 : sendValidCodeResult.status !== 'idle' ? 2 : 1
+  const currentStep: 1 | 2 | 3 = checkValidCodeResult.status !== 'idle' ? 3 : sendValidCodeResult.status !== 'idle' ? 2 : 1
 
   const onSubmit = async () => {
-    console.log('인증코드 전송 호출')
-
     try {
       await sendValidCode(email)
       setSendValidCodeResult({
@@ -73,7 +70,6 @@ export function FindPasswordForm() {
   }
 
   const onVerifyCode = async () => {
-    console.log('인증하기 전송 호출')
     try {
       await checkValidCode(email, String(code))
       // 성공 시: 다음 단계로 이동 (비밀번호 재설정)
@@ -89,7 +85,6 @@ export function FindPasswordForm() {
     }
   }
   const onReSettingPassword = async () => {
-    console.log('비밀번호 변경 완료 전송 호출')
     try {
       await reSettingPassword({
         email,

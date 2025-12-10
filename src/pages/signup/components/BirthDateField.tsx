@@ -109,23 +109,40 @@ export function BirthDateField({ control }: BirthDateFieldProps) {
         <Controller
           name="birthDate"
           control={control}
-          render={({ field }) => (
-            <DatePicker
-              dateFormat="yyyy-MM-dd"
-              shouldCloseOnSelect
-              maxDate={new Date()}
-              selected={field.value && field.value !== '' ? new Date(field.value) : null}
-              onChange={(date) => {
-                // Date 객체를 'yyyy-MM-dd' 문자열로 변환
-                const formatted = date ? date.toISOString().split('T')[0] : ''
-                field.onChange(formatted)
-              }}
-              popperPlacement="bottom-start"
-              locale={ko}
-              placeholderText="YYYY-MM-DD"
-              customInput={<CustomInput className="example-custom-input" placeholder="YYYY-MM-DD" />}
-              renderCustomHeader={renderCustomHeader}
-            />
+          rules={{
+            required: '생년월일을 입력해주세요',
+            validate: (value) => {
+              const birthDate = new Date(value)
+              const today = new Date()
+              const age = today.getFullYear() - birthDate.getFullYear()
+              // 생일이 아직 안 지났으면 나이 -1
+              const isBeforeBirthday =
+                today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+              const actualAge = isBeforeBirthday ? age - 1 : age
+
+              return actualAge >= 14 || '만 14세 이상만 가입 가능합니다'
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <div className="flex flex-col gap-1">
+              <DatePicker
+                dateFormat="yyyy-MM-dd"
+                maxDate={new Date()}
+                shouldCloseOnSelect
+                selected={field.value && field.value !== '' ? new Date(field.value) : null}
+                onChange={(date) => {
+                  // Date 객체를 'yyyy-MM-dd' 문자열로 변환
+                  const formatted = date ? date.toISOString().split('T')[0] : ''
+                  field.onChange(formatted)
+                }}
+                popperPlacement="bottom-start"
+                locale={ko}
+                placeholderText="YYYY-MM-DD"
+                customInput={<CustomInput className="example-custom-input" placeholder="YYYY-MM-DD" />}
+                renderCustomHeader={renderCustomHeader}
+              />
+              {fieldState.error && <p className="text-danger-500 text-xs font-semibold">{fieldState.error.message}</p>}
+            </div>
           )}
         />
       </div>
