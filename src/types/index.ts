@@ -119,6 +119,11 @@ export interface LoginResponse {
     }
   }
 }
+export interface LogoutResponse {
+  code: string
+  message: string
+  data: string
+}
 
 export interface ResettingPasswordResponse {
   code: string
