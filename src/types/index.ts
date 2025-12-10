@@ -375,7 +375,7 @@ export interface WithDrawResponse {
   data: string
 }
 
-// ========== 유저 프로필 데이터 응답 타입 ==========\
+// ========== 유저 프로필 데이터 응답 타입 ==========
 export interface UserProfileResponse {
   code: {
     code: number
@@ -448,7 +448,59 @@ export interface UserReportedResponse {
   }
 }
 
-// ====================
+// ========== 커뮤니티 응답 타입 ==========
+
+export interface CommunityResponse {
+  code: {
+    code: number
+    message: string
+  }
+  message: string
+  data: {
+    page: number
+    size: number
+    total: number
+    content: CommunityItem[]
+    hasNext: boolean
+    hasPrevious: boolean
+    totalElements: number
+    numberOfElements: number
+  }
+}
+
+export interface CommunityItem {
+  id: number
+  title: string
+  authorNickname: string
+  boardType?: string
+  searchType: string
+  viewCount?: number
+  commentCount: number
+  createdAt: string
+  updatedAt: string
+  isModified: boolean
+}
+
+// export interface ProductDetailItem extends Product {
+//   category: string
+//   description: string
+//   subImageUrls: string[]
+//   addressSido: string
+//   addressGugun: string
+//   viewCount: number
+//   sellerInfo: {
+//     sellerId: number
+//     sellerNickname: string
+//     sellerProfileImageUrl: string
+//   }
+//   sellerOtherProducts: Product[]
+// }
+
+// export interface ProductDetailItemResponse {
+//   code: string
+//   message: string
+//   data: ProductDetailItem
+// }
 // ====================
 // ====================
 // ====================

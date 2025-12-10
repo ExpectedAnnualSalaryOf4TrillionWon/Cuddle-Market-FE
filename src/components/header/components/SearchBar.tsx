@@ -9,9 +9,10 @@ interface SearchBarProps {
   placeholder?: string
   delay?: number // 디바운스 시간 (ms)
   className?: string
+  borderColor?: string
 }
 
-export function SearchBar({ placeholder = '원하는 반려동물 용품을 검색해보세요', className }: SearchBarProps) {
+export function SearchBar({ placeholder = '원하는 반려동물 용품을 검색해보세요', borderColor = 'border-gray-100', className }: SearchBarProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentKeyword = searchParams.get('keyword') || ''
   const [keyword, setKeyword] = useState(currentKeyword)
@@ -41,7 +42,7 @@ export function SearchBar({ placeholder = '원하는 반려동물 용품을 검�
         onKeyDown={handleKeywordChange}
         icon={SearchIcon}
         border
-        borderColor="border-gray-100"
+        borderColor={borderColor}
         backgroundColor="bg-white"
       />
     </div>

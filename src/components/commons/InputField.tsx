@@ -25,7 +25,7 @@ export function InputField({ error, checkResult, registration, classname, inputC
       <Input {...inputProps} {...registration} inputClass={inputClass} id={id} />
       {error && <p className="text-danger-500 text-xs font-semibold">{error.message}</p>}
       {checkResult?.message && (
-        <p className={cn('text-xs font-semibold', checkResult.status === 'error' ? 'text-danger-500' : 'text-[#22c55e]')}>{checkResult.message}</p>
+        <p className={cn('text-xs font-semibold', checkResult.status === 'error' ? 'text-danger-500' : 'text-success-500')}>{checkResult.message}</p>
       )}
     </div>
   )

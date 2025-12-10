@@ -6,7 +6,8 @@ export const ROUTES = {
   DETAIL_ID: (id: string | number) => `/products/${id}`,
 
   // Community
-  FREE: '/free',
+  COMMUNITY: '/community',
+  COMMUNITY_POST: '/community-post',
   SHARE: '/share',
   QNA: '/qna',
 

@@ -19,6 +19,8 @@ import ProductPost from '@src/pages/product-post/ProductPost'
 import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
 import UserPage from '@src/pages/UserPage'
 import FindPasswordPage from '@src/pages/FindPasswordPage'
+import CommunityPage from '@src/pages/CommunityPage'
+import { CommunityPostForm } from '@src/pages/CommunityPostForm'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -31,6 +33,8 @@ const routes = [
   { path: ROUTES.PRODUCT_EDIT, element: <ProductPost /> },
   { path: ROUTES.PROFILE_UPDATE, element: <ProfileUpdate /> },
   { path: ROUTES.USER_PROFILE, element: <UserPage /> },
+  { path: ROUTES.COMMUNITY, element: <CommunityPage /> },
+  { path: ROUTES.COMMUNITY_POST, element: <CommunityPostForm /> },
 ]
 
 function AppRoutes() {

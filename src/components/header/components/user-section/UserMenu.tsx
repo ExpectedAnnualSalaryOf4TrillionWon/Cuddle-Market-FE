@@ -8,6 +8,7 @@ import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
 import { logout } from '@src/api/auth'
 import { useLoginModalStore } from '@src/store/modalStore'
+import { Link } from 'react-router-dom'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -67,10 +68,10 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
             `${Z_INDEX.DROPDOWN}`
           )}
         >
-          <a href={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
+          <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
             <UserRoundIcon className="h-5 w-5" />
             마이페이지
-          </a>
+          </Link>
           <button
             onClick={handleLogoutClick}
             className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"

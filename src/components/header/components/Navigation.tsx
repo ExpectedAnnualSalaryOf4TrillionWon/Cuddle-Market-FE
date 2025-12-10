@@ -3,7 +3,9 @@ import AuthMenu from '../components/user-section/AuthMenu'
 import NotificationButton from '../components/notification-section/NotificationButton'
 import { useState } from 'react'
 import { useUserStore } from '@src/store/userStore'
-// import { useAuth } from '@src/store/auth'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '@src/constants/routes'
+import { MessageSquare } from 'lucide-react'
 
 export default function Navigation() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
@@ -11,9 +13,12 @@ export default function Navigation() {
   const { isLogin } = useUserStore()
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4">
       {isLogin() ? (
         <>
+          <Link to={ROUTES.COMMUNITY}>
+            <MessageSquare />
+          </Link>
           <NotificationButton
             isNotificationOpen={isNotificationOpen}
             setIsNotificationOpen={setIsNotificationOpen}
