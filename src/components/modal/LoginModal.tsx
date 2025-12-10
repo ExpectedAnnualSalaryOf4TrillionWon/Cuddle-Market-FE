@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
 interface LoginModalProps {
