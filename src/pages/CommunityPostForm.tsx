@@ -2,13 +2,11 @@ import { Button } from '@src/components/commons/button/Button'
 import { useForm } from 'react-hook-form'
 import { type Province } from '@src/constants/cities'
 import { useNavigate } from 'react-router-dom'
-import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
+import type { ProductPostRequestData } from '@src/types'
 import { postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
-import { useEffect, useMemo } from 'react'
 import BasicInfoSection from './product-post/components/basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './product-post/components/priceAndStatusSection/PriceAndStatusSection'
-import ProductImageUpload from './product-post/components/imageUploadField/ImageUploadField'
 import TradeInfoSection from './product-post/components/tradeInfoSection/TradeInfoSection'
 export interface CommunityPostFormValues {
   petType: string
@@ -27,21 +25,16 @@ export interface CommunityPostFormValues {
 }
 
 interface CommunityPostFormProps {
-  isEditMode?: boolean
   productId?: string
-  initialData?: ProductDetailItem | null
 }
 
-export function CommunityPostForm({ isEditMode, productId: id, initialData }: CommunityPostFormProps) {
+export function CommunityPostForm({ productId: id }: CommunityPostFormProps) {
   const {
     control,
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     watch, // 특정 필드 값을 실시간으로 구독
     setValue,
-    setError,
-    clearErrors,
-    reset,
     formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<CommunityPostFormValues>({
     mode: 'onChange',

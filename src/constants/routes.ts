@@ -8,8 +8,6 @@ export const ROUTES = {
   // Community
   COMMUNITY: '/community',
   COMMUNITY_POST: '/community-post',
-  SHARE: '/share',
-  QNA: '/qna',
 
   // Product
   PRODUCT_POST: '/product-post',

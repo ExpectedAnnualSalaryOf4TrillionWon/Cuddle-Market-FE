@@ -16,13 +16,13 @@ function Footer() {
             <h4 className="font-semibold text-gray-500">커뮤니티</h4>
             <ul className="flex flex-col gap-3 text-gray-500">
               <li>
-                <Link to={ROUTES.FREE}>자유게시판</Link>
+                <Link to={`${ROUTES.COMMUNITY}?tab=tab-free`}>자유게시판</Link>
               </li>
               <li>
-                <Link to={ROUTES.SHARE}>정보 공유해요</Link>
+                <Link to={`${ROUTES.COMMUNITY}?tab=tab-info`}>정보 공유해요</Link>
               </li>
               <li>
-                <Link to={ROUTES.QNA}>질문 있어요</Link>
+                <Link to={`${ROUTES.COMMUNITY}?tab=tab-question`}>질문 있어요</Link>
               </li>
             </ul>
           </div>
@@ -31,7 +31,7 @@ function Footer() {
             <h4 className="font-semibold text-gray-500">고객센터</h4>
             <ul className="flex flex-col gap-3 text-gray-500">
               <li>
-                <Link to={ROUTES.QNA}>공지사항</Link>
+                <Link to={ROUTES.COMMUNITY}>공지사항</Link>
               </li>
               <li>
                 <a href="mailto:support@cuddlemarket.com?subject=허들마켓 1:1 문의">1:1 문의</a>
