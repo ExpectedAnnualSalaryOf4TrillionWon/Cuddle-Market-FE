@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { addFavorite } from '@src/api/products'
+import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
 
 interface UseFavoriteOptions {
   productId: number
@@ -8,23 +10,14 @@ interface UseFavoriteOptions {
 }
 
 export function useFavorite({ productId, initialIsFavorite }: UseFavoriteOptions) {
-  // 로컬 state로 즉시 UI 업데이트
+  const { isLogin } = useUserStore()
+  const { openLoginModal } = useLoginModalStore()
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
-
-  // props(서버 데이터)가 변경되면 로컬 state도 동기화
-  useEffect(() => {
-    setIsFavorite(initialIsFavorite)
-  }, [initialIsFavorite])
 
   const { mutate: toggleFavorite, isPending } = useMutation({
     mutationFn: () => addFavorite(productId),
-    onMutate: () => {
-      // 클릭 즉시 UI 업데이트
-      setIsFavorite((prev) => !prev)
-    },
     onSuccess: () => {},
     onError: () => {
-      // 실패 시 원래 상태로 롤백
       setIsFavorite(initialIsFavorite)
     },
   })
@@ -35,6 +28,13 @@ export function useFavorite({ productId, initialIsFavorite }: UseFavoriteOptions
       e.stopPropagation()
     }
     if (isPending) return
+
+    // 미로그인 시 로그인 모달 열기
+    if (!isLogin()) {
+      openLoginModal()
+      return
+    }
+
     toggleFavorite()
   }
 

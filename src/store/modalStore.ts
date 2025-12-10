@@ -1,35 +1,31 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
-// 모달이 전달할 상태별 타입지정
-type ModalState = {
-  isOpen: boolean;
-  message: string;
-  confirm: (message: string) => Promise<boolean>;
-  resolve: ((value: boolean) => void) | null;
-  handleConfirm: (result: boolean) => void;
-};
-// 모달창 활성화 여부 : 불리언
-// 모달창에 띄울 메세지 : 문자열
-// 사용자가 입력할 반환 타입 : 불리언
-// 모달창 닫힐 때 전달될 결과 타입 : 불리언
-// 결과를 저장할 타입 : 불리언
+// ===== 로그인 모달 상태 타입 =====
+interface LoginModalState {
+  // 모달 열림/닫힘 상태
+  isLoginModalOpen: boolean
 
-export const useModalStore = create<ModalState>((set, get) => ({
-  isOpen: false,
-  message: '',
-  resolve: null,
+  // 모달 열기
+  // 사용: openLoginModal()
+  // 결과: isLoginModalOpen이 true로 변경되어 모달이 화면에 표시됨
+  openLoginModal: () => void
 
-  confirm: (message: string) => {
-    return new Promise<boolean>(resolve => {
-      set({ isOpen: true, message, resolve });
-    });
-  },
+  // 모달 닫기
+  // 사용: closeLoginModal()
+  // 결과: isLoginModalOpen이 false로 변경되어 모달이 화면에서 사라짐
+  closeLoginModal: () => void
+}
 
-  handleConfirm: (result: boolean) => {
-    const { resolve } = get();
-    if (resolve) {
-      resolve(result);
-      set({ isOpen: false, message: '', resolve: null });
-    }
-  },
-}));
+// ===== 로그인 모달 스토어 =====
+// 미로그인 상태에서 로그인이 필요한 기능 사용 시 LoginModal을 띄우기 위한 전역 상태
+// 어떤 페이지에서든 openLoginModal()을 호출하면 모달이 열림
+export const useLoginModalStore = create<LoginModalState>((set) => ({
+  // 초기 상태: 모달 닫힘
+  isLoginModalOpen: false,
+
+  // 모달 열기 액션
+  openLoginModal: () => set({ isLoginModalOpen: true }),
+
+  // 모달 닫기 액션
+  closeLoginModal: () => set({ isLoginModalOpen: false }),
+}))

@@ -1,6 +1,7 @@
 import { Button } from '@src/components/commons/button/Button'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
 
 interface SellerProfileCardProps {
   sellerInfo: {
@@ -12,14 +13,14 @@ interface SellerProfileCardProps {
 
 export default function SellerProfileCard({ sellerInfo }: SellerProfileCardProps) {
   const { user, isLogin } = useUserStore()
+  const { openLoginModal } = useLoginModalStore()
   const navigate = useNavigate()
   const goToUserPage = (sellerId: number) => {
-    if (!isLogin) {
-      // setIsModalOpen(true)
-      // setModalMessage('로그인이 필요한 서비스입니다.')
-    } else {
-      navigate(`/user-profile/${sellerId}`)
+    if (!isLogin()) {
+      openLoginModal()
+      return
     }
+    navigate(`/user-profile/${sellerId}`)
   }
   return (
     sellerInfo?.sellerId !== user?.id && (

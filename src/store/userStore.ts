@@ -3,24 +3,24 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import type { User } from '../types/index'
 
 interface UserState {
+  // ===== 상태 =====
   user: User | null
   accessToken: string | null
+  refreshToken: string | null
   redirectUrl: string | null
+
+  // ===== 액션 =====
   setUser: (user: User | null) => void
   setAccessToken: (token: string | null) => void
+  setRefreshToken: (token: string | null) => void
   setRedirectUrl: (url: string | null) => void
   updateUserProfile: (updates: Partial<User>) => void
   handleLogin: (user: User, accessToken: string, refreshToken: string) => void
   clearAll: () => void
-  clearRegistrationToken: () => void
+
+  // ===== 계산된 값 (getter) =====
   isLogin: () => boolean
-  isProfileCompleted: () => boolean
-  getUserNickname: () => string
   getUserId: () => number | null
-  created_at: string | null
-  // refreshAccessToken: () => Promise<string | null>;
-  refreshToken: string | null
-  setRefreshToken: (token: string | null) => void
 }
 
 export const useUserStore = create<UserState>()(
@@ -45,9 +45,9 @@ export const useUserStore = create<UserState>()(
       // 돌아갈 URL도 없음
       redirectUrl: null,
 
-      created_at: null,
-
+      // 리프레시 토큰 (토큰 갱신용)
       refreshToken: null,
+
       // ===== 액션 구현 =====
 
       // user만 변경
@@ -65,6 +65,10 @@ export const useUserStore = create<UserState>()(
       setAccessToken: (token) => set({ accessToken: token }),
       // 실행: setAccessToken("abc123")
       // 동작: accessToken만 변경, token 구독 컴포넌트만 리렌더링
+
+      // 리프레시 토큰만 변경
+      setRefreshToken: (token) => set({ refreshToken: token }),
+      // 토큰 갱신 시 사용
 
       // redirectUrl만 변경
       setRedirectUrl: (url) => set({ redirectUrl: url }),
@@ -89,22 +93,16 @@ export const useUserStore = create<UserState>()(
       // updateUserProfile({ age: 21 })
       // 결과: user = { name: "홍길동", age: 21 }
 
-      // 여러 상태를 한번에 변경!
+      // 로그인 처리 - 여러 상태를 한번에 변경!
       handleLogin: (user, accessToken, refreshToken) => {
-        // set({ user: user, accessToken: accessToken }) 의 축약형
-        // userStore의 두 상태를 한번에 변경
+        // set({ user: user, accessToken: accessToken, refreshToken: refreshToken }) 의 축약형
         // 한번에 여러 상태 변경 (1회 리렌더링)
         set({ user, accessToken, refreshToken })
-
-        // 다른 스토어의 함수도 실행!
-        // getState(): 컴포넌트 밖에서 스토어 접근하는 방법
-        // authStore의 isLoggedIn을 true로
       },
       // 실행 흐름:
-      // 1. userStore의 user, accessToken 동시 변경
-      // 2. authStore의 isLoggedIn 변경
-      // 3. localStorage 자동 저장
-      // 4. 관련 컴포넌트들 리렌더링
+      // 1. user, accessToken, refreshToken 동시 변경
+      // 2. localStorage 자동 저장
+      // 3. 관련 컴포넌트들 리렌더링
 
       // 모든 상태를 초기값으로 되돌림 (로그아웃)
       clearAll: () => {
@@ -116,79 +114,20 @@ export const useUserStore = create<UserState>()(
         })
       },
 
-      clearRegistrationToken: () => {
-        set({ redirectUrl: null })
-        // redirectUrl만 초기화
-        // 이름이 맞지 않음 (registrationToken이 없어서)
-      },
+      // ===== 계산된 값 (getter) =====
 
+      // 로그인 여부 확인
       isLogin: () => {
         const { user, accessToken } = get()
         return Boolean(user && accessToken)
+        // user와 accessToken이 모두 있으면 true
       },
 
-      isProfileCompleted: () => {
-        const user = get().user
-        // get(): 현재 상태를 읽어옴
-        return user?.profile_completed ?? false
-        // user가 있으면 profile_completed 값, 없으면 false
-        // ?. : 옵셔널 체이닝 (user가 null이어도 에러 안남)
-        // ?? : null 병합 연산자 (앞이 null/undefined면 뒤 값 사용)
-      },
-
-      getUserNickname: () => {
-        return get().user?.nickname || ''
-        //nickname이 없으면 빈 문자열
-      },
-
+      // 유저 ID 조회
       getUserId: () => {
         return get().user?.id || null
-        //number | null 반환
+        // number | null 반환
       },
-
-      setRefreshToken: (token) => set({ refreshToken: token }),
-      // refreshAccessToken: async () => {
-      //   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-      //   try {
-      //     const response = await fetch(`${API_BASE_URL}/users/token-refresh/`, {
-      //       method: 'POST',
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //       // refresh token이 필요한 경우 body에 추가
-      //       // body: JSON.stringify({ refresh: get().refreshToken })
-      //     });
-
-      //     if (!response.ok) {
-      //       throw new Error('Token refresh failed');
-      //     }
-
-      //     const data = await response.json();
-
-      //     // 새로운 access token 저장
-      //     if (data.access) {
-      //       set({ accessToken: data.access });
-      //       return data.access;
-      //     }
-
-      //     // refresh token도 갱신되는 경우
-      //     // if (data.refresh) {
-      //     //   set({ refreshToken: data.refresh });
-      //     // }
-
-      //     return data.access || null;
-      //   } catch (error) {
-      //     console.error('Token refresh failed:', error);
-      //     // 토큰 갱신 실패 시 로그아웃 처리
-      //     set({
-      //       user: null,
-      //       accessToken: null,
-      //       redirectUrl: null,
-      //     });
-      //     return null;
-      //   }
-      // },
     }),
 
     // 스토어 정의 끝
