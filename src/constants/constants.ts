@@ -209,6 +209,14 @@ export const MY_PAGE_TABS = [
 ] as const
 export type MyPageTabId = (typeof MY_PAGE_TABS)[number]['id']
 
+// 커뮤니티 용 탭
+export const COMMUNITY_TABS = [
+  { id: 'tab-free', label: '자유게시판', code: 'FREE' },
+  { id: 'tab-question', label: '질문 있어요', code: 'QUESTION' },
+  { id: 'tab-info', label: '정보 공유', code: 'INFO' },
+] as const
+export type CommunityTabId = (typeof COMMUNITY_TABS)[number]['id']
+
 // ========== 가격대 관련 상수 ==========
 export const PRICE_TYPE = [
   { value: { min: 0, max: 10000 }, title: '1만원 이하' },
@@ -1256,6 +1264,21 @@ export const SORT_TYPE = [
   { id: 'favoriteCount', label: '찜 많은순' },
 ]
 export type SORT_LABELS = (typeof SORT_TYPE)[number]['label']
+
+export const COMMUNITY_SORT_TYPE = [
+  { id: 'latest', label: '최신순' },
+  { id: 'oldest', label: '오래된 순' },
+  { id: 'views', label: '조회수 많은 순' },
+  { id: 'comments', label: '댓글 많은 순' },
+]
+export type COMMUNITY_SORT_LABELS = (typeof COMMUNITY_SORT_TYPE)[number]['label']
+
+export const COMMUNITY_SEARCH_TYPE = [
+  { id: 'title', label: '제목' },
+  { id: 'title_content', label: '제목 + 내용' },
+  { id: 'writer', label: '작성자' },
+]
+export type COMMUNITY_SEARCH_LABELS = (typeof COMMUNITY_SEARCH_TYPE)[number]['label']
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/bmp']
 

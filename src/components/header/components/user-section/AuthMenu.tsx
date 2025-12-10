@@ -5,13 +5,24 @@ import { ROUTES } from '@src/constants/routes'
 // const returnTo = encodeURIComponent(window.location.href)
 export default function AuthMenu() {
   return (
-    <>
+    <div className="flex items-center gap-4">
+      <Link
+        to={ROUTES.COMMUNITY}
+        // variant="text"
+        // fontWeight="normal"
+        // link={`${ACCOUNT}/auth/login?return_to=${returnTo}`}
+        // size="lg"
+        className="text-lg font-bold text-white"
+      >
+        커뮤니티
+      </Link>
       <Link
         to={ROUTES.LOGIN}
         // variant="text"
         // fontWeight="normal"
         // link={`${ACCOUNT}/auth/login?return_to=${returnTo}`}
         // size="lg"
+        className="text-lg font-bold text-white"
       >
         로그인
       </Link>
@@ -25,6 +36,6 @@ export default function AuthMenu() {
       >
         회원가입
       </Link>
-    </>
+    </div>
   )
 }
