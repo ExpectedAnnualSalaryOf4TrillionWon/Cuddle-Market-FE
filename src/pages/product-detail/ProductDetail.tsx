@@ -10,7 +10,6 @@ import ProductSummary from './components/ProductSummary'
 import ProductDescription from './components/ProductDescription'
 import ProductActions from './components/ProductActions'
 import SellerOtherProducts from './components/SellerOtherProducts'
-import ConfirmModal from '@src/components/modal/LoginModal'
 
 function ProductDetail() {
   const navigate = useNavigate()
@@ -69,7 +68,6 @@ function ProductDetail() {
         </div>
       </div>
       <Footer />
-      <ConfirmModal />
     </>
   )
 }

@@ -22,7 +22,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
-import ConfirmModal from '@src/components/modal/LoginModal'
 
 function Home() {
   const { isLogin } = useUserStore()
@@ -290,7 +289,6 @@ function Home() {
           </Button>
         </div>
       )}
-      <ConfirmModal />
     </>
   )
 }

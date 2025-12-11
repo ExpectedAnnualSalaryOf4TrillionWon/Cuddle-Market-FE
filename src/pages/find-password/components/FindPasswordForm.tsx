@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { InputWithButton } from '@src/components/commons/InputWithButton'
 import { checkValidCode, reSettingPassword, sendValidCode } from '@src/api/profile'
-import { StepIndicator } from './find-password/components/StepIndicator'
-import { StepHeader } from './find-password/components/StepHeader'
+import { StepIndicator } from './StepIndicator'
+import { StepHeader } from './StepHeader'
 
 interface FindPasswordFormValues {
   email: string

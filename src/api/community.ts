@@ -1,24 +1,86 @@
-import type { CommunityResponse } from '../types'
+import type { CommunityPostRequestData, CommunityResponse } from '../types'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
-
+import { api } from './api'
 // 커뮤니티 자유게시판 목록 조회
-export const fetchFreeCommunity = async (page: number = 0) => {
-  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=FREE&page=${page}&size=10`)
+export const fetchFreeCommunity = async (
+  page: number = 0,
+  size: number = 10,
+  searchType?: string | null,
+  keyword?: string | null,
+  sortBy?: string | null
+) => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  })
+  if (searchType) {
+    params.append('searchType', searchType)
+  }
+  if (keyword) {
+    params.append('keyword', keyword)
+  }
+  if (sortBy) {
+    params.append('sortBy', sortBy)
+  }
+  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=FREE&${params.toString()}`)
   return response.data.data
 }
 
 // 커뮤니티 질문 있어요 목록 조회
-export const fetchQuestionCommunity = async (page: number = 0) => {
-  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=QUESTION&page=${page}&size=10`)
+export const fetchQuestionCommunity = async (
+  page: number = 0,
+  size: number = 10,
+  keyword?: string | null,
+  sortBy?: string | null,
+  searchType?: string | null
+) => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  })
+  if (searchType) {
+    params.append('searchType', searchType)
+  }
+  if (keyword) {
+    params.append('keyword', keyword)
+  }
+  if (sortBy) {
+    params.append('sortBy', sortBy)
+  }
+  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=QUESTION&${params.toString()}`)
   return response.data.data
 }
 
 // 커뮤니티 정보 공유 목록 조회
-export const fetchInfoCommunity = async (page: number = 0) => {
-  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=INFO&page=${page}&size=10`)
+export const fetchInfoCommunity = async (
+  page: number = 0,
+  size: number = 10,
+  keyword?: string | null,
+  sortBy?: string | null,
+  searchType?: string | null
+) => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  })
+  if (searchType) {
+    params.append('searchType', searchType)
+  }
+  if (keyword) {
+    params.append('keyword', keyword)
+  }
+  if (sortBy) {
+    params.append('sortBy', sortBy)
+  }
+  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=INFO&&${params.toString()}`)
   return response.data.data
+}
+
+// 커뮤니티 글 등록
+export const postCommunity = async (requestData: CommunityPostRequestData): Promise<void> => {
+  await api.post(`/community/posts`, requestData)
 }
 
 // 상품 상세 조회
