@@ -197,26 +197,28 @@ export default function CommunityPage() {
                   key={post.id}
                   className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
                 >
-                  <p className="font-semibold">{post.title}</p>
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
-                      <p>{post.authorNickname}</p>
+                  <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)}>
+                    <p className="font-semibold">{post.title}</p>
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
+                        <p>{post.authorNickname}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
+                        <p>{getTimeAgo(post.createdAt)}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
+                        <p>{post.commentCount}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500">
+                        <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
+                        <span>조회</span>
+                        <span>{post.viewCount}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
-                      <p>{getTimeAgo(post.createdAt)}</p>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
-                      <p>{post.commentCount}</p>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-500">
-                      <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
-                      <span>조회</span>
-                      <span>{post.viewCount}</span>
-                    </div>
-                  </div>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -139,7 +139,7 @@ export default function Markdown({ value, onChange, placeholder = DEFAULT_PLACEH
         )}
 
         {/* 미리보기 모드: 렌더링된 마크다운 */}
-        {currentTab === 'preview' && <MdPreview embedded value={value} height={height} />}
+        {currentTab === 'preview' && <MdPreview value={value} height={height} />}
 
         {/* 푸터: 마크다운 문법 안내 */}
         <MdFooter>

@@ -20,7 +20,8 @@ import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
 import UserPage from '@src/pages/UserPage'
 import FindPasswordPage from '@src/pages/find-password/FindPasswordPage'
 import CommunityPage from '@src/pages/community/CommunityPage'
-import { CommunityPostForm } from '@src/pages/community/components/CommunityPostForm'
+import CommunityPostForm from '@src/pages/community/components/CommunityPostForm'
+import CommunityDetail from '@src/pages/community/CommunityDetail'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -35,6 +36,8 @@ const routes = [
   { path: ROUTES.USER_PROFILE, element: <UserPage /> },
   { path: ROUTES.COMMUNITY, element: <CommunityPage /> },
   { path: ROUTES.COMMUNITY_POST, element: <CommunityPostForm /> },
+  { path: ROUTES.COMMUNITY_EDIT, element: <CommunityPostForm /> },
+  { path: ROUTES.COMMUNITY_DETAIL, element: <CommunityDetail /> },
 ]
 
 function AppRoutes() {

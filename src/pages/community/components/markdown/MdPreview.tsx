@@ -3,9 +3,15 @@ import rehypeSanitize from 'rehype-sanitize'
 import { cn } from '@src/utils/cn'
 import { mdSanitizeSchema } from './sanitizeSchema'
 
-export default function MdPreview({ value, height }: { value: string; embedded?: boolean; height?: number }) {
+interface MdPreviewProps {
+  value: string
+  height?: number
+  className?: string
+}
+
+export default function MdPreview({ value, height, className }: MdPreviewProps) {
   return (
-    <div className={cn('overflow-y-auto bg-white p-3')} style={height ? { height, overflowY: 'auto' } : undefined}>
+    <div className={cn('overflow-y-auto bg-white p-3', className)} style={height ? { height, overflowY: 'auto' } : undefined}>
       <ReactMarkdown
         rehypePlugins={[[rehypeSanitize, mdSanitizeSchema]]}
         components={{
