@@ -18,7 +18,7 @@ export interface CommunityPostFormValues {
   imageUrls?: string[]
 }
 
-export function CommunityPostForm() {
+export default function CommunityPostForm() {
   const {
     control,
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수

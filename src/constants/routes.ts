@@ -8,6 +8,9 @@ export const ROUTES = {
   // Community
   COMMUNITY: '/community',
   COMMUNITY_POST: '/community-post',
+  COMMUNITY_EDIT: '/community/:id/edit',
+  COMMUNITY_DETAIL: '/community/:id',
+  COMMUNITY_DETAIL_ID: (id: string | number) => `/community/${id}`,
 
   // Product
   PRODUCT_POST: '/product-post',

@@ -1,4 +1,4 @@
-import type { CommunityPostRequestData, CommunityResponse } from '../types'
+import type { CommentResponse, CommunityDetailItemResponse, CommunityPostRequestData, CommunityResponse } from '../types'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -81,6 +81,24 @@ export const fetchInfoCommunity = async (
 // 커뮤니티 글 등록
 export const postCommunity = async (requestData: CommunityPostRequestData): Promise<void> => {
   await api.post(`/community/posts`, requestData)
+}
+
+// 커뮤니티 글 상세 조회
+export const fetchCommunityId = async (postId: string) => {
+  const response = await api.get<CommunityDetailItemResponse>(`/community/posts/${postId}`)
+  return response.data.data
+}
+
+// 댓글 목록 조회
+export const fetchComments = async (postId: string) => {
+  const response = await api.get<CommentResponse>(`/community/posts/${postId}/comments`)
+  return response.data.data
+}
+
+// 하위 댓글 목록 조회
+export const fetchReplies = async (commentId: string) => {
+  const response = await api.get<CommentResponse>(`/community/comments/${commentId}/replies`)
+  return response.data.data
 }
 
 // 상품 상세 조회

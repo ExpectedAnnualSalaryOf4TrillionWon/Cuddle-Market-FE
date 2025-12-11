@@ -489,20 +489,39 @@ export interface CommunityPostRequestData {
   imageUrls: string[]
 }
 
-// export interface ProductDetailItem extends Product {
-//   category: string
-//   description: string
-//   subImageUrls: string[]
-//   addressSido: string
-//   addressGugun: string
-//   viewCount: number
-//   sellerInfo: {
-//     sellerId: number
-//     sellerNickname: string
-//     sellerProfileImageUrl: string
-//   }
-//   sellerOtherProducts: Product[]
-// }
+export interface CommunityDetailItemResponse {
+  code: string
+  message: string
+  data: CommunityDetailItem
+}
+
+export interface CommunityDetailItem extends CommunityItem {
+  authorId: string
+  authorProfileImageUrl: string
+  content: string
+  imageUrls: string[]
+}
+
+export interface CommentResponse {
+  code: string
+  message: string
+  data: {
+    comments: Comment[]
+  }
+}
+
+export interface Comment {
+  id: number
+  authorId: string
+  authorNickname: string
+  authorProfileImageUrl: string
+  content: string
+  createdAt: string
+  depth: number
+  parentId: number
+  hasChildren: boolean
+  childrenCount: number
+}
 
 // export interface ProductDetailItemResponse {
 //   code: string
