@@ -1,7 +1,7 @@
 import { Button } from '@src/components/commons/button/Button'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import type { CommunityPostRequestData, ProductPostRequestData } from '@src/types'
+import type { CommunityPostRequestData } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
