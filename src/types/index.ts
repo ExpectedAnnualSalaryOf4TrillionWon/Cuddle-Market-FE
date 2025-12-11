@@ -481,6 +481,14 @@ export interface CommunityItem {
   isModified: boolean
 }
 
+// ========== 커뮤니티 등록 요청 타입 ==========
+export interface CommunityPostRequestData {
+  boardType: string
+  title: string
+  content: string
+  imageUrls: string[]
+}
+
 // export interface ProductDetailItem extends Product {
 //   category: string
 //   description: string

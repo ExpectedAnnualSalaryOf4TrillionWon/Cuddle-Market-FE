@@ -45,6 +45,19 @@ export const signupValidationRules = {
   } satisfies RegisterOptions<SignUpFormValues, 'addressGugun'>,
 } as const
 
+// 공통 제목 필드 validation 규칙
+export const commonTitleValidationRules = {
+  required: '제목을 입력해주세요',
+  minLength: {
+    value: 2,
+    message: '제목은 2~50자여야 합니다.',
+  },
+  maxLength: {
+    value: 50,
+    message: '제목은 2~50자여야 합니다.',
+  },
+}
+
 export const productPostValidationRules = {
   name: {
     required: '상품명을 입력해주세요',

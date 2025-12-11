@@ -1,10 +1,10 @@
-import { FindPasswordForm } from './FindPasswordForm'
-import { TitleSection } from './login/components/TitleSection'
+import { FindPasswordForm } from './components/FindPasswordForm'
+import { TitleSection } from '../login/components/TitleSection'
 // import { TitleSection } from './components/TitleSection'
 // import { SocialLoginButtons } from './components/SocialLoginButtons'
 // import { LoginForm } from './components/LoginForm'
 
-function Login() {
+export default function FindPasswordPage() {
   return (
     <div className="flex h-[calc(100dvh-100px)] flex-col items-center justify-center bg-[#F3F4F6]">
       <div className="flex min-w-[450px] flex-col items-center gap-10">
@@ -14,5 +14,3 @@ function Login() {
     </div>
   )
 }
-
-export default Login

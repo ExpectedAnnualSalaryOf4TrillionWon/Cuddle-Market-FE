@@ -10,11 +10,17 @@ interface SearchBarProps {
   delay?: number // 디바운스 시간 (ms)
   className?: string
   borderColor?: string
+  paramName?: string // URL 파라미터 이름 (기본값: 'keyword')
 }
 
-export function SearchBar({ placeholder = '원하는 반려동물 용품을 검색해보세요', borderColor = 'border-gray-100', className }: SearchBarProps) {
+export function SearchBar({
+  placeholder = '원하는 반려동물 용품을 검색해보세요',
+  borderColor = 'border-gray-100',
+  className,
+  paramName = 'keyword',
+}: SearchBarProps) {
   const [searchParams, setSearchParams] = useSearchParams()
-  const currentKeyword = searchParams.get('keyword') || ''
+  const currentKeyword = searchParams.get(paramName) || ''
   const [keyword, setKeyword] = useState(currentKeyword)
 
   function handleKeywordChange(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -22,11 +28,16 @@ export function SearchBar({ placeholder = '원하는 반려동물 용품을 검�
       const target = e.target as HTMLInputElement
       const keyword = target.value.trim()
       setSearchParams((prev) => {
-        prev.set('keyword', keyword)
+        if (keyword) {
+          prev.set(paramName, keyword)
+        } else {
+          prev.delete(paramName)
+        }
         return prev
       })
     }
   }
+
   // URL이 변경될 때 (뒤로가기, 앞으로가기 등) Input value 동기화
   useEffect(() => {
     setKeyword(currentKeyword)

@@ -36,9 +36,15 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
 
   // 로그아웃 실행 함수
   const onLogout = async () => {
-    await logout()
-    setIsUserMenuOpen(false)
-    clearAll()
+    try {
+      await logout()
+    } catch (error) {
+      console.error('로그아웃 API 실패:', error)
+    } finally {
+      // API 성공/실패 상관없이 로컬 상태 정리
+      setIsUserMenuOpen(false)
+      clearAll()
+    }
   }
 
   // 로그아웃 버튼 클릭 시 확인 모달 열기

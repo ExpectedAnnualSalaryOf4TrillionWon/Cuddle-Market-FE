@@ -18,9 +18,9 @@ import ProductDetail from '@src/pages/product-detail/ProductDetail'
 import ProductPost from '@src/pages/product-post/ProductPost'
 import ProfileUpdate from '@src/pages/profile-update/ProfileUpdate'
 import UserPage from '@src/pages/UserPage'
-import FindPasswordPage from '@src/pages/FindPasswordPage'
-import CommunityPage from '@src/pages/CommunityPage'
-import { CommunityPostForm } from '@src/pages/CommunityPostForm'
+import FindPasswordPage from '@src/pages/find-password/FindPasswordPage'
+import CommunityPage from '@src/pages/community/CommunityPage'
+import { CommunityPostForm } from '@src/pages/community/components/CommunityPostForm'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
