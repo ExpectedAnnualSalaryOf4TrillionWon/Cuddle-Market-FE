@@ -523,6 +523,32 @@ export interface Comment {
   childrenCount: number
 }
 
+export interface CommentPostRequestData {
+  content: string
+  parentId: number
+}
+
+export interface CommentPostResponse {
+  code: string
+  message: string
+  data: {
+    id: number
+    postId: number
+    authorId: number
+    authorNickname: string
+    authorProfileImageUrl: string
+    parentId: number
+    content: string
+    depth: number
+    createdAt: string
+    updatedAt: string
+  }
+}
+export interface CommentDeleteResponse {
+  code: string
+  message: string
+  data: null
+}
 // export interface ProductDetailItemResponse {
 //   code: string
 //   message: string

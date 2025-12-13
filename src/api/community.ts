@@ -1,4 +1,12 @@
-import type { CommentResponse, CommunityDetailItemResponse, CommunityPostRequestData, CommunityResponse } from '../types'
+import type {
+  CommentDeleteResponse,
+  CommentPostRequestData,
+  CommentPostResponse,
+  CommentResponse,
+  CommunityDetailItemResponse,
+  CommunityPostRequestData,
+  CommunityResponse,
+} from '../types'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -98,6 +106,18 @@ export const fetchComments = async (postId: string) => {
 // 하위 댓글 목록 조회
 export const fetchReplies = async (commentId: string) => {
   const response = await api.get<CommentResponse>(`/community/comments/${commentId}/replies`)
+  return response.data.data
+}
+
+// 댓글 등록
+export const postReply = async (requestData: CommentPostRequestData, postId: string) => {
+  const response = await api.post<CommentPostResponse>(`/community/posts/${postId}/comments`, requestData)
+  return response.data.data
+}
+
+// 댓글 삭제
+export const deleteReply = async (commentId: number) => {
+  const response = await api.delete<CommentDeleteResponse>(`community/comments/${commentId}`)
   return response.data.data
 }
 
