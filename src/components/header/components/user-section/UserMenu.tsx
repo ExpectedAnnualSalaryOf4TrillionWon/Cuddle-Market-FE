@@ -41,7 +41,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
     } catch (error) {
       console.error('로그아웃 API 실패:', error)
     } finally {
-      // API 성공/실패 상관없이 로컬 상태 정리
       setIsUserMenuOpen(false)
       clearAll()
     }

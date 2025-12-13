@@ -21,6 +21,9 @@ interface UserState {
   // ===== 계산된 값 (getter) =====
   isLogin: () => boolean
   getUserId: () => number | null
+
+  // ===== 상태 검증 =====
+  validateAuthState: () => void
 }
 
 export const useUserStore = create<UserState>()(
@@ -127,6 +130,24 @@ export const useUserStore = create<UserState>()(
       getUserId: () => {
         return get().user?.id || null
         // number | null 반환
+      },
+
+      // ===== 상태 검증 =====
+      // 앱 시작 시 토큰과 user 상태의 일관성을 검증
+      // user 정보가 있는데 토큰이 없으면 user 정보도 초기화
+      validateAuthState: () => {
+        const { user, accessToken, refreshToken } = get()
+
+        // 토큰이 없는데 user 정보가 있는 경우 → 상태 불일치
+        if (user && (!accessToken || !refreshToken)) {
+          console.warn('[Auth] 상태 불일치 감지: 토큰 없이 user 정보 존재. 상태 초기화.')
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            redirectUrl: null,
+          })
+        }
       },
     }),
 
