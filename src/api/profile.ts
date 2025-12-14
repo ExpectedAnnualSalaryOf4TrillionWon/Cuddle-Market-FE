@@ -9,8 +9,8 @@ import type {
   UserBlockedResponse,
   UserProductResponse,
   UserProfileResponse,
-  UserReportedRequestData,
-  UserReportedResponse,
+  ReportedRequestData,
+  ReportedResponse,
   UserUnBlockedResponse,
   WithDrawRequest,
   WithDrawResponse,
@@ -52,8 +52,8 @@ export const userUnBlocked = async (blockedUserId: number) => {
   await api.delete<UserUnBlockedResponse>(`/reports/blocks/users/${blockedUserId}`)
 }
 
-export const userReported = async (targetUserId: number, requestData: UserReportedRequestData) => {
-  const response = await api.post<UserReportedResponse>(`/reports/users/${targetUserId}`, requestData)
+export const userReported = async (targetUserId: number, requestData: ReportedRequestData) => {
+  const response = await api.post<ReportedResponse>(`/reports/users/${targetUserId}`, requestData)
   return response.data.data
 }
 

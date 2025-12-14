@@ -1,11 +1,10 @@
 import { Button } from '../commons/button/Button'
-import { USER_REPORT_REASON } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
 import { RequiredLabel } from '../commons/RequiredLabel'
 import { useForm } from 'react-hook-form'
 import { ReportApiErrors } from '@src/pages/signup/validationRules'
-import { useNavigate } from 'react-router-dom'
-import { userReported } from '@src/api/profile'
+import ImageUploadField from '@src/pages/product-post/components/imageUploadField/ImageUploadField'
+import type { ReactNode } from 'react'
 
 export interface ReportFormValues {
   reasonCode: string
@@ -13,19 +12,29 @@ export interface ReportFormValues {
   imageFiles?: string[]
 }
 
-interface ReportModalProps {
-  isOpen: boolean
-  userNickname: string
-  onCancel: () => void
-  userId: number
+export interface ReportReason {
+  id: string
+  label: string
 }
 
-export default function ReportModal({ isOpen, userNickname, onCancel, userId }: ReportModalProps) {
+interface ReportModalBaseProps {
+  isOpen: boolean
+  heading: string
+  description: ReactNode
+  reasons: ReportReason[]
+  onCancel: () => void
+  onSubmit: (data: ReportFormValues) => Promise<void>
+}
+
+export default function ReportModalBase({ isOpen, heading, description, reasons, onCancel, onSubmit }: ReportModalBaseProps) {
   const {
     handleSubmit,
     register,
     watch,
     reset,
+    setValue,
+    setError,
+    clearErrors,
     formState: { errors, isValid },
   } = useForm<ReportFormValues>({
     mode: 'onChange',
@@ -35,35 +44,34 @@ export default function ReportModal({ isOpen, userNickname, onCancel, userId }: 
       imageFiles: [],
     },
   })
-  const navigate = useNavigate()
+
   const titleLength = watch('detailReason')?.length ?? 0
+
   const handleCancel = () => {
     reset()
     onCancel()
   }
-  const onSubmit = async (requestData: ReportFormValues) => {
-    try {
-      await userReported(userId, { ...requestData })
-      onCancel()
-      navigate(-1)
-    } catch (error) {
-      console.error('회원신고 실패:', error)
-    }
+
+  const handleFormSubmit = async (data: ReportFormValues) => {
+    await onSubmit(data)
+    reset()
   }
+
   if (!isOpen) return null
+
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
       <div className="flex w-[16vw] flex-col gap-4 rounded-lg bg-white p-5">
-        <ModalTitle heading="사용자 신고하기" description={`정말로 ${userNickname}를 신고하시겠습니까?`} />
+        <ModalTitle heading={heading} description={description} />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-6 pt-2">
             <div className="flex flex-col gap-1">
               <RequiredLabel htmlFor="reportReason" labelClass="font-semibold">
                 신고 사유
               </RequiredLabel>
               <div className="flex flex-col gap-1 rounded-lg border border-gray-300 px-3 py-2.5">
-                {USER_REPORT_REASON.map((reason: { id: string; label: string }) => (
+                {reasons.map((reason) => (
                   <div key={reason.id} className="flex items-center gap-3">
                     <input
                       type="radio"
@@ -95,6 +103,20 @@ export default function ReportModal({ isOpen, userNickname, onCancel, userId }: 
               </div>
             </div>
 
+            <div className="flex w-full flex-col gap-3">
+              <ImageUploadField
+                setValue={setValue}
+                errors={errors}
+                setError={setError}
+                clearErrors={clearErrors}
+                mainImageField="imageFiles"
+                heading="신고 이미지 첨부 (선택항목)"
+                showSection={false}
+                maxFiles={3}
+                className="gap-1"
+                headingClassName="text-gray-900 font-semibold"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-3">
