@@ -1,4 +1,4 @@
-import { POST_REPORT_REASON, USER_REPORT_REASON } from '@src/constants/constants'
+import { POST_REPORT_REASON } from '@src/constants/constants'
 import ReportModalBase, { type ReportFormValues } from './ReportModalBase'
 import { postReported } from '@src/api/community'
 
