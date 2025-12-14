@@ -1,13 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Footer from '@src/components/footer/Footer'
-import { fetchComments, fetchCommunityId } from '@src/api/community'
+import { fetchComments, fetchCommunityId, postReply } from '@src/api/community'
 import MdPreview from './components/markdown/MdPreview'
 import { getBoardType } from '@src/utils/getBoardType'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { formatDate } from '@src/utils/formatDate'
-import { CommentList } from './components/CommentList'
+import { CommentList, type ReplyRequestFormValues } from './components/CommentList'
+import { CommentForm } from './components/CommentForm'
+import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
+import { useForm } from 'react-hook-form'
+import type { CommentPostRequestData } from '@src/types'
 // import MainImage from './components/MainImage'
 // import SubImages from './components/SubImages'
 // import SellerProfileCard from './components/SellerProfileCard'
@@ -18,7 +22,18 @@ import { CommentList } from './components/CommentList'
 // import SellerOtherProducts from './components/SellerOtherProducts'
 
 export default function CommunityDetail() {
+  const {
+    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
+    register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
+    reset,
+  } = useForm<ReplyRequestFormValues>({
+    mode: 'onChange',
+    defaultValues: {
+      content: '',
+    },
+  })
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
   const { data, isLoading, error } = useQuery({
     queryKey: ['community', id],
@@ -31,6 +46,18 @@ export default function CommunityDetail() {
     enabled: !!id,
   })
 
+  const replyMutation = useMutation({
+    mutationFn: (requestData: CommentPostRequestData) => postReply(requestData, id!),
+    onSuccess: () => {
+      // 댓글 목록도 refetch (childrenCount 업데이트를 위해)
+      queryClient.invalidateQueries({ queryKey: ['community', id, 'comments'] })
+      // 폼 초기화 및 닫기
+      reset()
+    },
+    onError: () => {
+      alert('답글 등록에 실패했습니다.')
+    },
+  })
   const getHeaderContent = () => {
     switch (data?.boardType) {
       case 'FREE':
@@ -44,6 +71,11 @@ export default function CommunityDetail() {
     }
   }
   const { title: headerTitle, description: headerDescription } = getHeaderContent()
+
+  const onSubmit = (data: ReplyRequestFormValues) => {
+    replyMutation.mutate(data)
+  }
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -74,14 +106,7 @@ export default function CommunityDetail() {
               <Badge className="bg-primary-400 w-fit rounded-full text-white">{getBoardType(data.boardType ?? '')}</Badge>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
-                  {/* 프로필 이미지 */}
-                  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-[#FACC15]">
-                    {data?.authorProfileImageUrl ? (
-                      <img src={data.authorProfileImageUrl} alt={data.authorNickname} className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="heading-h4">{data?.authorNickname.charAt(0).toUpperCase()}</div>
-                    )}
-                  </div>
+                  <ProfileAvatar imageUrl={data.authorProfileImageUrl} nickname={data.authorNickname} size="lg" />
                   {/* 유저 정보 */}
                   <div className="flex flex-col justify-center gap-0.5">
                     <p>{data.authorNickname}</p>
@@ -101,7 +126,13 @@ export default function CommunityDetail() {
               </div>
 
               {commentData?.comments && <CommentList comments={commentData.comments} postId={id!} />}
-              <textarea name="" id="" placeholder="댓글을 입력하세요" className="bg-primary-50 min-h-"></textarea>
+              <CommentForm
+                id="comment-input"
+                placeholder="댓글을 입력하세요"
+                legendText="댓글 작성폼"
+                register={register}
+                onSubmit={handleSubmit(onSubmit)}
+              />
             </div>
           </div>
         </div>

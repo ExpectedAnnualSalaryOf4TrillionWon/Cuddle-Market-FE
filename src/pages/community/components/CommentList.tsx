@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteReply, fetchReplies, postReply } from '@src/api/community'
 import type { Comment, CommentPostRequestData } from '@src/types'
 import { CommentItem } from './CommentItem'
+import { CommentForm } from './CommentForm'
 import { useForm } from 'react-hook-form'
 
 export interface ReplyRequestFormValues {
@@ -47,7 +48,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
       reset()
       setReplyingToId(null)
       // 대댓글 목록 열기
-      setOpenRepliesCommentId(parentId)
+      setOpenRepliesCommentId(parentId ?? null)
     },
     onError: () => {
       alert('답글 등록에 실패했습니다.')
@@ -118,19 +119,14 @@ export function CommentList({ comments, postId }: CommentListProps) {
           </div>
           {replyingToId === comment.id && (
             <div className="pb-3.5 pl-10">
-              <form className="bg-primary-50 rounded-lg pt-5 pr-6 pb-4 pl-4" onSubmit={handleSubmit(onSubmit)}>
-                <fieldset>
-                  <legend className="sr-only">답글 작성폼</legend>
-                  <textarea id={String(comment.id)} placeholder="답글을 입력하세요" className="w-full resize-none" {...register('content')} />
-
-                  <div className="flex items-center justify-end gap-3.5">
-                    <button className="cursor-pointer text-sm" type="button">
-                      취소
-                    </button>
-                    <button className="cursor-pointer text-sm">등록</button>
-                  </div>
-                </fieldset>
-              </form>
+              <CommentForm
+                id={String(comment.id)}
+                placeholder="답글을 입력하세요"
+                legendText="대댓글 작성폼"
+                register={register}
+                onSubmit={handleSubmit(onSubmit)}
+                onCancel={() => handleOpenReplyForm(comment.id)}
+              />
             </div>
           )}
         </li>
