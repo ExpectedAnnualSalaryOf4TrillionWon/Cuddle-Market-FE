@@ -11,7 +11,7 @@ import { commonTitleValidationRules } from '../../signup/validationRules'
 import Markdown from './markdown/Markdown'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { fetchCommunityId, patchPost, postCommunity } from '@src/api/community'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 export interface CommunityPostFormValues {
   boardType: string
   title: string
@@ -39,7 +39,6 @@ export default function CommunityPostForm() {
   const navigate = useNavigate()
   const { id } = useParams()
   const isEditMode = !!id
-  const [isLoading, setIsLoading] = useState(false)
   const onSubmit = async (data: CommunityPostFormValues) => {
     const requestData: CommunityPostRequestData = {
       boardType: data.boardType,
