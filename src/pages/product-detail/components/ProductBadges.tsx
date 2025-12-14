@@ -21,7 +21,7 @@ export default function ProductBadges({ tradeStatus, petDetailType, category, pr
   const productStatusName = getProductStatus(productStatus)
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2 md:gap-1">
       <Badge className={cn('px-2.5 py-1.5 text-base font-semibold text-white', productTradeColor)}>{productTradeName}</Badge>
       <Badge className={cn('bg-primary-700 px-2.5 py-1.5 text-base font-semibold text-white')}>{petTypeName}</Badge>
       <Badge className={cn('border bg-white px-2.5 py-1.5 text-base font-semibold text-gray-900')}>{categoryName}</Badge>

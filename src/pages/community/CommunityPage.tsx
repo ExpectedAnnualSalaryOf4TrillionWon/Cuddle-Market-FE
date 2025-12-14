@@ -12,11 +12,15 @@ import { UserRound, Clock, MessageSquare, Eye } from 'lucide-react'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { useUserStore } from '@src/store/userStore'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { Button } from '@src/components/commons/button/Button'
+import { cn } from '@src/utils/cn'
 
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab') as CommunityTabId | null
   const initialTab = tabParam === 'tab-question' ? 'tab-question' : tabParam === 'tab-info' ? 'tab-info' : 'tab-free'
+  const isMd = useMediaQuery('(min-width: 768px)')
 
   const [activeCommunityTypeTab, setActiveCommunityTypeTab] = useState<CommunityTabId>(initialTab)
   const sortBy = searchParams.get('sortBy')
@@ -147,7 +151,7 @@ export default function CommunityPage() {
     <>
       <SimpleHeader title={headerTitle} description={headerDescription} />
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
-        <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
+        <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="flex w-full flex-col gap-7">
             <div className="flex w-full flex-col gap-4">
               <div className="flex items-center justify-between">
@@ -159,8 +163,8 @@ export default function CommunityPage() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between gap-5">
-                <div className="w-36">
+              <div className="flex items-center justify-between gap-3 md:gap-5">
+                <div className="h-11 w-36 md:h-auto">
                   <SelectDropdown
                     value={selectSearchType}
                     onChange={handleSearchTypeChange}
@@ -168,27 +172,47 @@ export default function CommunityPage() {
                       value: sort.label,
                       label: sort.label,
                     }))}
-                    buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2"
+                    buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2 "
                   />
                 </div>
                 <SearchBar
-                  placeholder="게시글 제목이나 내용, 작성자로 검색해보세요"
+                  placeholder={isMd ? '게시글 제목이나 내용, 작성자로 검색해보세요' : '게시글 제목이나 내용, 작성자로 검색'}
                   borderColor="border-gray-300"
-                  className="max-w-full"
+                  className="h-11 max-w-full"
                   paramName="communityKeyword"
                 />
-                <div className="w-36">
-                  <SelectDropdown
-                    value={selectedSort}
-                    onChange={handleSortChange}
-                    options={COMMUNITY_SORT_TYPE.map((category) => ({
-                      value: category.label,
-                      label: category.label,
-                    }))}
-                    buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2"
-                  />
-                </div>
+                {isMd && (
+                  <div className="w-36">
+                    <SelectDropdown
+                      value={selectedSort}
+                      onChange={handleSortChange}
+                      options={COMMUNITY_SORT_TYPE.map((category) => ({
+                        value: category.label,
+                        label: category.label,
+                      }))}
+                      buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2"
+                    />
+                  </div>
+                )}
               </div>
+              {!isMd && (
+                <div className="flex gap-2">
+                  {COMMUNITY_SORT_TYPE.map((sortType) => (
+                    <Button
+                      key={sortType.id}
+                      type="button"
+                      size="sm"
+                      onClick={() => handleSortChange(sortType.label)}
+                      className={cn(
+                        'cursor-pointer',
+                        selectedSort === sortType.label ? 'bg-primary-300 font-bold text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      )}
+                    >
+                      {sortType.label}
+                    </Button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <ul className="flex flex-col gap-2.5">

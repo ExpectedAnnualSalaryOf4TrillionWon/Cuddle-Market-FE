@@ -39,7 +39,7 @@ export function ProductThumbnail({
   const displayTradeStatus = getDisplayTradeStatus()
 
   return (
-    <div className="relative overflow-hidden pb-[75%]">
+    <div className="relative flex-1 overflow-hidden pb-[35%] md:flex-none md:pb-[75%]">
       <div className="top-sm px-sm absolute flex w-full justify-between">
         <ProductBadge petTypeName={petTypeName} productStatusName={productStatusName} />
         <Button

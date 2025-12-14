@@ -47,7 +47,7 @@ function ProductPost() {
     <>
       <SimpleHeader title={headerTitle} description={headerDescription} />
       <div className="bg-[#F3F4F6] pt-5">
-        <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
+        <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="gap-2xl flex w-full flex-col">
             <Tabs
               tabs={PRODUCT_TYPE_TABS}

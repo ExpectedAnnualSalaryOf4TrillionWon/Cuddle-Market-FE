@@ -13,7 +13,7 @@ interface ProductInfoProps {
 
 export function ProductInfo({ title, price, createdAt, favoriteCount, productTypeName }: ProductInfoProps) {
   return (
-    <div className="flex h-full flex-col justify-between gap-5 p-3">
+    <div className="flex h-full flex-1 flex-col justify-between gap-5 p-3 md:flex-none">
       <ProductHeading title={title} price={price} productTypeName={productTypeName} />
       <div className="flex w-full justify-between">
         <ProductMetaItem icon={Clock} label={getTimeAgo(createdAt)} className="text-gray-400" />

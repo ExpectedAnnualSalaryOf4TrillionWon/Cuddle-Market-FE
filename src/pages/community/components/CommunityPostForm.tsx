@@ -81,7 +81,7 @@ export default function CommunityPostForm() {
     <>
       <SimpleHeader title="커뮤니티 글쓰기" description="일상 이야기를 마음껏 나눠보세요!" />
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
-        <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
+        <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
             <fieldset className="flex flex-col gap-5">
               <legend className="sr-only">커뮤니티 등록폼</legend>
@@ -93,7 +93,7 @@ export default function CommunityPostForm() {
                   rules={{ required: '카테고리를 선택해주세요' }}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-1">
-                      <RequiredLabel htmlFor="category" labelClass="heading-h5">
+                      <RequiredLabel labelClass="heading-h5">
                         카테고리
                       </RequiredLabel>
                       <SelectDropdown
@@ -132,7 +132,7 @@ export default function CommunityPostForm() {
                   rules={{ required: '내용을 입력하세요' }}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-1">
-                      <RequiredLabel htmlFor="category" labelClass="heading-h5">
+                      <RequiredLabel labelClass="heading-h5">
                         내용
                       </RequiredLabel>
                       <Markdown value={field.value} onChange={field.onChange} placeholder="내용을 입력하세요" height={320} />

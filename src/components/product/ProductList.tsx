@@ -7,7 +7,7 @@ interface ProductListProps {
 
 export default function ProductList({ products }: ProductListProps) {
   return (
-    <ul className="grid grid-cols-4 gap-4">
+    <ul className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {products.map((product, index) => (
         <li key={product.id}>
           <ProductCard data-index={index} data={product} />

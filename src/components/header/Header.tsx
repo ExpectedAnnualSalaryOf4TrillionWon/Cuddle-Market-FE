@@ -6,13 +6,14 @@ import Navigation from './components/Navigation'
 
 function Header() {
   return (
-    <header className={cn('bg-primary-200 sticky top-0 flex h-24 w-full items-center justify-center', `${Z_INDEX.HEADER}`)}>
-      <div className="w-full max-w-7xl px-2.5">
+    <header className={cn('bg-primary-200 sticky top-0 flex h-32 w-full items-center justify-center md:h-24', `${Z_INDEX.HEADER}`)}>
+      <div className="flex w-full flex-col gap-3 px-4 md:block md:px-2.5">
         <div className="gap-lg flex items-center justify-between">
           <Logo />
-          <SearchBar />
+          <SearchBar className="hidden md:block" />
           <Navigation />
         </div>
+        <SearchBar className="md:hidden" />
       </div>
     </header>
   )

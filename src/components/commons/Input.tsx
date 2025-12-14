@@ -53,7 +53,7 @@ export function Input({
         placeholder={placeholder}
         aria-label={placeholder}
         className={cn(
-          'w-full py-3 placeholder:text-gray-400 focus:border-transparent focus:outline-none',
+          'w-full py-2 placeholder:text-gray-400 focus:border-transparent focus:outline-none md:py-3',
           backgroundColor,
           Icon ? 'pl-0' : 'px-3',
           size,

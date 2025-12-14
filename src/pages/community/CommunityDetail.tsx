@@ -118,7 +118,7 @@ export default function CommunityDetail() {
     <>
       <SimpleHeader title={headerTitle} description={headerDescription} to={`/community?tab=${tabId}`} />
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
-        <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
+        <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="flex flex-col justify-center gap-3.5">
             {user?.id === data?.authorId && (
               <div className="flex items-center gap-2.5">
