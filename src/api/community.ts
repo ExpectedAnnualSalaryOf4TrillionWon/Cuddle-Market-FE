@@ -6,6 +6,8 @@ import type {
   CommunityDetailItemResponse,
   CommunityPostRequestData,
   CommunityResponse,
+  ReportedRequestData,
+  ReportedResponse,
 } from '../types'
 import axios from 'axios'
 
@@ -118,6 +120,13 @@ export const postReply = async (requestData: CommentPostRequestData, postId: str
 // 댓글 삭제
 export const deleteReply = async (commentId: number) => {
   const response = await api.delete<CommentDeleteResponse>(`community/comments/${commentId}`)
+  return response.data.data
+}
+
+// 커뮤니티 게시글 신고
+
+export const postReported = async (postId: number, requestData: ReportedRequestData) => {
+  const response = await api.post<ReportedResponse>(`/reports/community-posts/${postId}`, requestData)
   return response.data.data
 }
 

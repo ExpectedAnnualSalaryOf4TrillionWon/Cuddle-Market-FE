@@ -12,6 +12,8 @@ import { CommentForm } from './components/CommentForm'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { useForm } from 'react-hook-form'
 import type { CommentPostRequestData } from '@src/types'
+import { useState } from 'react'
+import PostReportModal from '@src/components/modal/PostReportModal'
 // import MainImage from './components/MainImage'
 // import SubImages from './components/SubImages'
 // import SellerProfileCard from './components/SellerProfileCard'
@@ -32,10 +34,11 @@ export default function CommunityDetail() {
       content: '',
     },
   })
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
-  const { data, isLoading, error } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ['community', id],
     queryFn: () => fetchCommunityId(id!),
     enabled: !!id,
@@ -58,6 +61,7 @@ export default function CommunityDetail() {
       alert('답글 등록에 실패했습니다.')
     },
   })
+
   const getHeaderContent = () => {
     switch (data?.boardType) {
       case 'FREE':
@@ -74,14 +78,6 @@ export default function CommunityDetail() {
 
   const onSubmit = (data: ReplyRequestFormValues) => {
     replyMutation.mutate(data)
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-      </div>
-    )
   }
 
   if (error || !data) {
@@ -117,6 +113,13 @@ export default function CommunityDetail() {
               </div>
               <p className="border-b border-gray-300 pb-3.5 text-lg font-semibold">{data.title}</p>
               <MdPreview value={data.content} className="p-0" />
+              <button
+                className="flex w-fit cursor-pointer justify-end self-end rounded-full border border-gray-400 px-1.5 py-1 text-sm text-gray-500"
+                type="button"
+                onClick={() => setIsReportModalOpen?.(true)}
+              >
+                신고하기
+              </button>
             </div>
 
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-400 bg-white px-6 py-5 shadow-xl">
@@ -138,6 +141,13 @@ export default function CommunityDetail() {
         </div>
       </div>
       <Footer />
+      <PostReportModal
+        isOpen={isReportModalOpen}
+        postId={Number(id)}
+        authorNickname={data.authorNickname}
+        postTitle={data.title}
+        onCancel={() => setIsReportModalOpen(false)}
+      />
     </>
   )
 }

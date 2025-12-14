@@ -1328,3 +1328,14 @@ export const USER_BLOCK_ALERT_LIST = [
   '이미 진행 중인 거래는 영향을 받지 않습니다.',
   `차단은 언제든 '마이페이지 > 차단 목록'에서 해제할 수 있습니다`,
 ]
+
+// ========== 게시글 이유 관련 상수 ==========
+export const POST_REPORT_REASON = [
+  { id: 'ABUSE_OR_HATE', label: '욕설, 비방, 혐오 표현' },
+  { id: 'REPETITIVE_POST', label: '도배 게시물' },
+  { id: 'INAPPROPRIATE_CONTENT', label: '음란물/불건전 콘텐츠' },
+  { id: 'SPAM_OR_AD', label: '스팸/광고성 메시지' },
+  { id: 'SELF_HARM_OR_SUICIDE', label: '자해 또는 자살 의도를 포함' },
+  { id: 'OTHER', label: '기타' },
+]
+export type POST_REPORT_LABEL = (typeof POST_REPORT_REASON)[number]['label']

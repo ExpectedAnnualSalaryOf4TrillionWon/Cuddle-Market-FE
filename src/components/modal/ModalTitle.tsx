@@ -1,8 +1,9 @@
+import type { ReactNode } from 'react'
 import { TriangleAlert } from 'lucide-react'
 
 interface ModalTitleProps {
   heading: string
-  description: string
+  description: ReactNode
 }
 
 export default function ModalTitle({ heading, description }: ModalTitleProps) {
@@ -12,7 +13,7 @@ export default function ModalTitle({ heading, description }: ModalTitleProps) {
         <TriangleAlert className="text-danger-600" />
         <p className="heading-h5">{heading}</p>
       </div>
-      <p>{description}</p>
+      <div>{description}</div>
     </div>
   )
 }

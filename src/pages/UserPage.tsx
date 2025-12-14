@@ -7,7 +7,7 @@ import { ProductListItem } from '@src/components/product/ProductListItem'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
 import { Package } from 'lucide-react'
-import ReportModal from '@src/components/modal/ReportModal'
+import UserReportModal from '@src/components/modal/UserReportModal'
 import BlockModal from '@src/components/modal/BlockModal'
 
 function UserPage() {
@@ -82,7 +82,7 @@ function UserPage() {
           </section>
         </div>
       </div>
-      <ReportModal
+      <UserReportModal
         isOpen={isReportModalOpen}
         onCancel={() => setIsReportModalOpen(false)}
         userNickname={userData.nickname}

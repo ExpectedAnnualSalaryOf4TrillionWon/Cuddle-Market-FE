@@ -427,12 +427,12 @@ export interface UserUnBlockedResponse {
   message: string
   data: null
 }
-export interface UserReportedRequestData {
+export interface ReportedRequestData {
   reasonCode: string
   detailReason?: string
   imageFiles?: string[]
 }
-export interface UserReportedResponse {
+export interface ReportedResponse {
   code: string
   message: string
   data: {
@@ -440,7 +440,7 @@ export interface UserReportedResponse {
     reporterId: 1
     targetType: string
     targetId: 123
-    reasonCodes: string
+    reasonCodes: string[]
     detailReason: string
     imageUrls: string[]
     status: string
