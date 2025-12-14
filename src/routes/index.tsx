@@ -36,8 +36,8 @@ const routes = [
   { path: ROUTES.USER_PROFILE, element: <UserPage /> },
   { path: ROUTES.COMMUNITY, element: <CommunityPage /> },
   { path: ROUTES.COMMUNITY_POST, element: <CommunityPostForm /> },
-  { path: ROUTES.COMMUNITY_EDIT, element: <CommunityPostForm /> },
   { path: ROUTES.COMMUNITY_DETAIL, element: <CommunityDetail /> },
+  { path: ROUTES.COMMUNITY_EDIT, element: <CommunityPostForm /> },
 ]
 
 function AppRoutes() {

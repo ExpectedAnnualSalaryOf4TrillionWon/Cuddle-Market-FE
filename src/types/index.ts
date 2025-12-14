@@ -496,7 +496,7 @@ export interface CommunityDetailItemResponse {
 }
 
 export interface CommunityDetailItem extends CommunityItem {
-  authorId: string
+  authorId: number
   authorProfileImageUrl: string
   content: string
   imageUrls: string[]
@@ -544,7 +544,7 @@ export interface CommentPostResponse {
     updatedAt: string
   }
 }
-export interface CommentDeleteResponse {
+export interface DeleteResponse {
   code: string
   message: string
   data: null

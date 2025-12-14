@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Footer from '@src/components/footer/Footer'
-import { fetchComments, fetchCommunityId, postReply } from '@src/api/community'
+import { deletePost, fetchComments, fetchCommunityId, postReply } from '@src/api/community'
 import MdPreview from './components/markdown/MdPreview'
 import { getBoardType } from '@src/utils/getBoardType'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
@@ -12,8 +12,11 @@ import { CommentForm } from './components/CommentForm'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { useForm } from 'react-hook-form'
 import type { CommentPostRequestData } from '@src/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PostReportModal from '@src/components/modal/PostReportModal'
+import { Button } from '@src/components/commons/button/Button'
+import DeletePostConfirmModal from '@src/components/modal/DeletePostConfirmModal'
+import { useUserStore } from '@src/store/userStore'
 // import MainImage from './components/MainImage'
 // import SubImages from './components/SubImages'
 // import SellerProfileCard from './components/SellerProfileCard'
@@ -34,10 +37,13 @@ export default function CommunityDetail() {
       content: '',
     },
   })
+  const user = useUserStore((state) => state.user)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
+
   const { data, error } = useQuery({
     queryKey: ['community', id],
     queryFn: () => fetchCommunityId(id!),
@@ -52,9 +58,7 @@ export default function CommunityDetail() {
   const replyMutation = useMutation({
     mutationFn: (requestData: CommentPostRequestData) => postReply(requestData, id!),
     onSuccess: () => {
-      // 댓글 목록도 refetch (childrenCount 업데이트를 위해)
       queryClient.invalidateQueries({ queryKey: ['community', id, 'comments'] })
-      // 폼 초기화 및 닫기
       reset()
     },
     onError: () => {
@@ -62,23 +66,41 @@ export default function CommunityDetail() {
     },
   })
 
+  const handlePostDelete = async (id: number) => {
+    try {
+      await deletePost(id)
+      queryClient.invalidateQueries({ queryKey: ['community'] })
+      navigate('/community')
+    } catch (error) {
+      console.error('게시글 삭제 실패:', error)
+    }
+  }
+
+  const handlePostEdit = (postId: number) => {
+    navigate(`/community/${postId}/edit`)
+  }
+
   const getHeaderContent = () => {
     switch (data?.boardType) {
       case 'FREE':
-        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!' }
+        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
       case 'QUESTION':
-        return { title: '질문 있어요', description: '궁금한 점을 질문해보세요!' }
+        return { title: '질문 있어요', description: '궁금한 점을 질문해보세요!', tabId: 'tab-question' }
       case 'INFO':
-        return { title: '정보 공유', description: '유용한 정보를 공유해보세요!' }
+        return { title: '정보 공유', description: '유용한 정보를 공유해보세요!', tabId: 'tab-info' }
       default:
-        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!' }
+        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
     }
   }
-  const { title: headerTitle, description: headerDescription } = getHeaderContent()
+  const { title: headerTitle, description: headerDescription, tabId } = getHeaderContent()
 
   const onSubmit = (data: ReplyRequestFormValues) => {
     replyMutation.mutate(data)
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (error || !data) {
     return (
@@ -94,10 +116,20 @@ export default function CommunityDetail() {
 
   return (
     <>
-      <SimpleHeader title={headerTitle} description={headerDescription} />
+      <SimpleHeader title={headerTitle} description={headerDescription} to={`/community?tab=${tabId}`} />
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-[var(--container-max-width)]">
           <div className="flex flex-col justify-center gap-3.5">
+            {user?.id === data?.authorId && (
+              <div className="flex items-center gap-2.5">
+                <Button className="bg-primary-200 cursor-pointer text-white" size="sm" type="button" onClick={() => handlePostEdit(Number(id))}>
+                  수정
+                </Button>
+                <Button className="cursor-pointer bg-gray-100" size="sm" type="button" onClick={() => setIsPostDeleteModalOpen?.(true)}>
+                  삭제
+                </Button>
+              </div>
+            )}
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-400 bg-white px-6 py-5 shadow-xl">
               <Badge className="bg-primary-400 w-fit rounded-full text-white">{getBoardType(data.boardType ?? '')}</Badge>
               <div className="flex items-center justify-between">
@@ -147,6 +179,12 @@ export default function CommunityDetail() {
         authorNickname={data.authorNickname}
         postTitle={data.title}
         onCancel={() => setIsReportModalOpen(false)}
+      />
+      <DeletePostConfirmModal
+        isOpen={isPostDeleteModalOpen}
+        postId={Number(id)}
+        onConfirm={handlePostDelete}
+        onCancel={() => setIsPostDeleteModalOpen(false)}
       />
     </>
   )
