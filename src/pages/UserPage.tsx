@@ -52,7 +52,7 @@ function UserPage() {
   return (
     <>
       <div className="bg-bg pb-4xl pt-8">
-        <div className="px-lg mx-auto flex max-w-[var(--container-max-width)] gap-8">
+        <div className="px-lg mx-auto flex max-w-7xl gap-8">
           <ProfileData
             setIsWithdrawModalOpen={setIsWithdrawModalOpen}
             setIsReportModalOpen={setIsReportModalOpen}

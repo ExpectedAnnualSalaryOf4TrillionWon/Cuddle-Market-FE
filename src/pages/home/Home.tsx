@@ -213,7 +213,7 @@ function Home() {
 
   if (isLoading && !data) {
     return (
-      <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
+      <div className="px-lg py-md tablet:py-xl mx-auto max-w-7xl">
         <div className="flex items-center justify-center py-20">
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" role="status" aria-label="상품 로딩 중"></div>
         </div>
@@ -223,7 +223,7 @@ function Home() {
 
   if (error) {
     return (
-      <div className="px-lg py-md tablet:py-xl mx-auto max-w-[var(--container-max-width)]">
+      <div className="px-lg py-md tablet:py-xl mx-auto max-w-7xl">
         <div className="rounded-md border border-red-200 bg-red-50 p-4" role="alert">
           <p className="text-red-600">{error.message}</p>
         </div>
@@ -234,7 +234,7 @@ function Home() {
   return (
     <>
       <div className="bg-bg pb-4xl pt-8">
-        <div className="px-lg mx-auto max-w-[var(--container-max-width)]">
+        <div className="px-lg mx-auto max-w-7xl">
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-7">
               <PetTypeFilter

@@ -44,9 +44,9 @@ function ProductDetail() {
 
   return (
     <>
-      <div className="px-lg bg-bg pb-4xl mx-auto max-w-[var(--container-max-width)] pt-8">
+      <div className="px-lg bg-bg pb-4xl mx-auto max-w-7xl pt-8">
         <div className="flex flex-col gap-20">
-          <div className="flex justify-center gap-8">
+          <div className="flex flex-col justify-center gap-8 md:flex-row">
             <div className="flex flex-1 flex-col gap-4">
               <MainImage {...data} />
               <SubImages {...data} />

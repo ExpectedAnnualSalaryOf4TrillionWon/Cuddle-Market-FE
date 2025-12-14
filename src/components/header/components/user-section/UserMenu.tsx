@@ -49,7 +49,8 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
   return (
     <div className="relative flex cursor-pointer items-center gap-2" onClick={handleAvatarToggle}>
       <ProfileAvatar imageUrl={user?.profileImageUrl} nickname={user?.nickname || ''} size="sm" />
-      <p className="text-base text-gray-700">{user?.nickname}</p>
+
+      <p className="hidden text-base text-gray-700 md:block">{user?.nickname}</p>
       {isUserMenuOpen && (
         <div
           className={cn(
