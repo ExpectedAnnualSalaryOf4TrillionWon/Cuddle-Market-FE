@@ -1,0 +1,29 @@
+import { Button } from '../commons/button/Button'
+import ModalTitle from './ModalTitle'
+
+interface DeletePostConfirmProps {
+  isOpen: boolean
+  postId: number | null
+  onConfirm: (id: number) => void
+  onCancel: () => void
+}
+
+export default function DeletePostConfirmModal({ isOpen, postId, onConfirm, onCancel }: DeletePostConfirmProps) {
+  if (!isOpen || !postId) return null
+
+  return (
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
+      <div className="flex w-[16vw] flex-col gap-4 rounded-lg bg-white p-5">
+        <ModalTitle heading="게시글 삭제" description="정말로 이 게시글을 삭제하시겠습니까?" />
+        <div className="flex justify-end gap-3">
+          <Button onClick={onCancel} size="sm" className="cursor-pointer rounded-lg border border-gray-300 bg-white">
+            취소
+          </Button>
+          <Button onClick={() => onConfirm(postId)} size="sm" className="bg-danger-600 cursor-pointer rounded-lg text-white">
+            삭제하기
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}

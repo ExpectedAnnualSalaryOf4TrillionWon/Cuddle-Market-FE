@@ -1,5 +1,5 @@
 import type {
-  CommentDeleteResponse,
+  DeleteResponse,
   CommentPostRequestData,
   CommentPostResponse,
   CommentResponse,
@@ -99,6 +99,18 @@ export const fetchCommunityId = async (postId: string) => {
   return response.data.data
 }
 
+// 커뮤니티 게시글 수정
+export const patchPost = async (postId: number, requestData: CommunityPostRequestData) => {
+  const response = await api.patch<DeleteResponse>(`/community/posts/${postId}`, requestData)
+  return response.data.data
+}
+
+// 커뮤니티 게시글 삭제
+export const deletePost = async (postId: number) => {
+  const response = await api.delete<DeleteResponse>(`/community/posts/${postId}`)
+  return response.data.data
+}
+
 // 댓글 목록 조회
 export const fetchComments = async (postId: string) => {
   const response = await api.get<CommentResponse>(`/community/posts/${postId}/comments`)
@@ -119,12 +131,11 @@ export const postReply = async (requestData: CommentPostRequestData, postId: str
 
 // 댓글 삭제
 export const deleteReply = async (commentId: number) => {
-  const response = await api.delete<CommentDeleteResponse>(`community/comments/${commentId}`)
+  const response = await api.delete<DeleteResponse>(`community/comments/${commentId}`)
   return response.data.data
 }
 
 // 커뮤니티 게시글 신고
-
 export const postReported = async (postId: number, requestData: ReportedRequestData) => {
   const response = await api.post<ReportedResponse>(`/reports/community-posts/${postId}`, requestData)
   return response.data.data

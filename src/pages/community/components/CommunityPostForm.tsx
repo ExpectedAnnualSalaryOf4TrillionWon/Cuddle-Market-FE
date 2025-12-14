@@ -1,6 +1,6 @@
 import { Button } from '@src/components/commons/button/Button'
 import { Controller, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import type { CommunityPostRequestData } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
@@ -10,7 +10,8 @@ import { TitleField } from '@src/components/commons/TitleField'
 import { commonTitleValidationRules } from '../../signup/validationRules'
 import Markdown from './markdown/Markdown'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
-import { postCommunity } from '@src/api/community'
+import { fetchCommunityId, patchPost, postCommunity } from '@src/api/community'
+import { useEffect } from 'react'
 export interface CommunityPostFormValues {
   boardType: string
   title: string
@@ -24,6 +25,7 @@ export default function CommunityPostForm() {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
     watch, // 특정 필드 값을 실시간으로 구독
+    reset, // 폼 값을 초기화하거나 새로운 값으로 채우는 함수
     formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
   } = useForm<CommunityPostFormValues>({
     mode: 'onChange',
@@ -35,7 +37,8 @@ export default function CommunityPostForm() {
     },
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
-
+  const { id } = useParams()
+  const isEditMode = !!id
   const onSubmit = async (data: CommunityPostFormValues) => {
     const requestData: CommunityPostRequestData = {
       boardType: data.boardType,
@@ -45,12 +48,34 @@ export default function CommunityPostForm() {
     }
 
     try {
-      await postCommunity(requestData)
+      if (isEditMode) {
+        await patchPost(Number(id), requestData)
+      } else {
+        await postCommunity(requestData)
+      }
       navigate(`/community`)
     } catch {
-      alert('상품 등록에 실패했습니다.')
+      alert('게시글 등록에 실패했습니다.')
     }
   }
+  useEffect(() => {
+    const loadPost = async () => {
+      if (isEditMode && id) {
+        try {
+          const data = await fetchCommunityId(id)
+          reset({
+            boardType: data.boardType,
+            title: data.title,
+            content: data.content,
+            imageUrls: data.imageUrls ?? [],
+          })
+        } catch (error) {
+          console.error('게시글 로드 실패:', error)
+        }
+      }
+    }
+    loadPost()
+  }, [id, isEditMode, reset])
 
   return (
     <>
@@ -123,7 +148,7 @@ export default function CommunityPostForm() {
                   className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-200')}
                   type="submit"
                 >
-                  등록
+                  {isEditMode ? '수정' : '등록'}
                 </Button>
                 <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
                   취소
