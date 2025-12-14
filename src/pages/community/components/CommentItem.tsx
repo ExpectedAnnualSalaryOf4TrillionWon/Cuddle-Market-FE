@@ -3,6 +3,7 @@ import { cn } from '@src/utils/cn'
 import type { Comment } from '@src/types'
 import { EllipsisVertical } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
+import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { useState } from 'react'
 import { useUserStore } from '@src/store/userStore'
 
@@ -43,14 +44,7 @@ export function CommentItem({
 
   return (
     <div className={cn('flex items-start gap-3.5', showBorder && 'border-t border-gray-300 pt-3.5', !isReply && !isRepliesOpen && 'pb-3.5')}>
-      {/* 프로필 이미지 */}
-      <div className={`flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#FACC15]`}>
-        {comment.authorProfileImageUrl ? (
-          <img src={comment.authorProfileImageUrl} alt={comment.authorNickname} className="h-full w-full object-cover" />
-        ) : (
-          <p>{comment.authorNickname.charAt(0).toUpperCase()}</p>
-        )}
-      </div>
+      <ProfileAvatar imageUrl={comment.authorProfileImageUrl} nickname={comment.authorNickname} size="sm" />
 
       {/* 유저 정보 및 내용 */}
       <div className="flex flex-col justify-center gap-1">

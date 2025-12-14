@@ -525,7 +525,7 @@ export interface Comment {
 
 export interface CommentPostRequestData {
   content: string
-  parentId: number
+  parentId?: number
 }
 
 export interface CommentPostResponse {
