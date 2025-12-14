@@ -161,6 +161,7 @@ function Home() {
 
     // 새로운 데이터를 가져오는 동안 이전 데이터 유지
     placeholderData: (previousData) => previousData,
+    refetchOnMount: 'always',
   })
 
   // 모든 페이지의 상품을 하나의 배열로 합치기

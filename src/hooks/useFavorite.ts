@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addFavorite } from '@src/api/products'
 import { useUserStore } from '@src/store/userStore'
 import { useLoginModalStore } from '@src/store/modalStore'
@@ -12,11 +12,24 @@ interface UseFavoriteOptions {
 export function useFavorite({ productId, initialIsFavorite }: UseFavoriteOptions) {
   const { isLogin } = useUserStore()
   const { openLoginModal } = useLoginModalStore()
+  const queryClient = useQueryClient()
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
+
+  // initialIsFavorite가 변경되면 로컬 state 동기화 (서버 데이터 반영)
+  useEffect(() => {
+    setIsFavorite(initialIsFavorite)
+  }, [initialIsFavorite])
 
   const { mutate: toggleFavorite, isPending } = useMutation({
     mutationFn: () => addFavorite(productId),
-    onSuccess: () => {},
+    onMutate: () => {
+      // Optimistic Update: API 호출 전 즉시 UI 토글
+      setIsFavorite((prev) => !prev)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product', productId] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+    },
     onError: () => {
       setIsFavorite(initialIsFavorite)
     },

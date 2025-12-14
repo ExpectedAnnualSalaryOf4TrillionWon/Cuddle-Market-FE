@@ -11,10 +11,7 @@ import type {
   RequestProductPostRequestData,
 } from '../types'
 import { api } from './api'
-import axios from 'axios'
 import type { TransactionStatus } from '@src/constants/constants'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 // 상품 목록 조회
 export const fetchAllProducts = async (
@@ -80,7 +77,7 @@ export const fetchAllProducts = async (
     params.append('sortOrder', sortOrder)
   }
 
-  const response = await axios.get<ProductResponse>(`${API_BASE_URL}/products/search?${params.toString()}`)
+  const response = await api.get<ProductResponse>(`/products/search?${params.toString()}`)
 
   return {
     data: response.data,
