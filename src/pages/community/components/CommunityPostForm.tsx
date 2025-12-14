@@ -61,7 +61,6 @@ export default function CommunityPostForm() {
   useEffect(() => {
     const loadPost = async () => {
       if (isEditMode && id) {
-        setIsLoading(true)
         try {
           const data = await fetchCommunityId(id)
           reset({
@@ -72,8 +71,6 @@ export default function CommunityPostForm() {
           })
         } catch (error) {
           console.error('게시글 로드 실패:', error)
-        } finally {
-          setIsLoading(false)
         }
       }
     }
