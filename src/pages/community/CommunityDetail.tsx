@@ -1,10 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import Footer from '@src/components/footer/Footer'
 import { deletePost, fetchComments, fetchCommunityId, postReply } from '@src/api/community'
 import MdPreview from './components/markdown/MdPreview'
 import { getBoardType } from '@src/utils/getBoardType'
-import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { formatDate } from '@src/utils/formatDate'
 import { CommentList, type ReplyRequestFormValues } from './components/CommentList'
@@ -17,6 +15,9 @@ import PostReportModal from '@src/components/modal/PostReportModal'
 import { Button } from '@src/components/commons/button/Button'
 import DeletePostConfirmModal from '@src/components/modal/DeletePostConfirmModal'
 import { useUserStore } from '@src/store/userStore'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { ArrowLeft, EllipsisVertical } from 'lucide-react'
+import { IconButton } from '@src/components/commons/button/IconButton'
 // import MainImage from './components/MainImage'
 // import SubImages from './components/SubImages'
 // import SellerProfileCard from './components/SellerProfileCard'
@@ -25,7 +26,8 @@ import { useUserStore } from '@src/store/userStore'
 // import ProductDescription from './components/ProductDescription'
 // import ProductActions from './components/ProductActions'
 // import SellerOtherProducts from './components/SellerOtherProducts'
-
+import { cn } from '@src/utils/cn'
+import { Z_INDEX } from '@src/constants/ui'
 export default function CommunityDetail() {
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
@@ -38,6 +40,8 @@ export default function CommunityDetail() {
     },
   })
   const user = useUserStore((state) => state.user)
+  const isMd = useMediaQuery('(min-width: 768px)')
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false)
   const navigate = useNavigate()
@@ -75,11 +79,13 @@ export default function CommunityDetail() {
       console.error('게시글 삭제 실패:', error)
     }
   }
+  const handleMoreToggle = () => {
+    setIsMoreMenuOpen(!isMoreMenuOpen)
+  }
 
   const handlePostEdit = (postId: number) => {
     navigate(`/community/${postId}/edit`)
   }
-
   const getHeaderContent = () => {
     switch (data?.boardType) {
       case 'FREE':
@@ -92,7 +98,7 @@ export default function CommunityDetail() {
         return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
     }
   }
-  const { title: headerTitle, description: headerDescription, tabId } = getHeaderContent()
+  const { title: headerTitle } = getHeaderContent()
 
   const onSubmit = (data: ReplyRequestFormValues) => {
     replyMutation.mutate(data)
@@ -116,7 +122,22 @@ export default function CommunityDetail() {
 
   return (
     <>
-      <SimpleHeader title={headerTitle} description={headerDescription} to={`/community?tab=${tabId}`} />
+      {/* <SimpleHeader
+        title={headerTitle}
+        description={isMd ? headerDescription : undefined}
+        to={`/community?tab=${tabId}`}
+        showWriteButton={false}
+        showBackButton
+        layoutClassname="py-5 flex-row justify-between border-b border-gray-200"
+      /> */}
+      <div className={cn('bg-primary-200 sticky top-0 mx-auto flex w-full max-w-7xl justify-between px-3.5 py-4', Z_INDEX.HEADER)}>
+        {!isMd && (
+          <button type="button" onClick={() => navigate(-1)} className="flex cursor-pointer items-center gap-1 text-gray-600">
+            <ArrowLeft size={23} className="text-white" />
+          </button>
+        )}
+        <h2 className="heading-h4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-extrabold! text-white">{headerTitle}</h2>
+      </div>
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="flex flex-col justify-center gap-3.5">
@@ -131,8 +152,22 @@ export default function CommunityDetail() {
               </div>
             )}
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-400 bg-white px-6 py-5 shadow-xl">
-              <Badge className="bg-primary-400 w-fit rounded-full text-white">{getBoardType(data.boardType ?? '')}</Badge>
-              <div className="flex items-center justify-between">
+              <div className="relative flex items-center justify-between">
+                <Badge className="bg-primary-400 w-fit rounded-full text-white">{getBoardType(data.boardType ?? '')}</Badge>
+                <IconButton className="" size="sm" onClick={handleMoreToggle}>
+                  <EllipsisVertical size={16} className="text-gray-500" />
+                </IconButton>
+                {isMoreMenuOpen && (
+                  <button
+                    className="absolute top-7 right-0 cursor-pointer rounded border border-gray-200 bg-white px-3 py-1.5 text-sm whitespace-nowrap shadow-md hover:bg-gray-50"
+                    type="button"
+                    onClick={() => setIsReportModalOpen?.(true)}
+                  >
+                    신고하기
+                  </button>
+                )}
+              </div>
+              <div className="flex items-baseline justify-between md:items-center">
                 <div className="flex items-center gap-3.5">
                   <ProfileAvatar imageUrl={data.authorProfileImageUrl} nickname={data.authorNickname} size="lg" />
                   {/* 유저 정보 */}
@@ -145,13 +180,6 @@ export default function CommunityDetail() {
               </div>
               <p className="border-b border-gray-300 pb-3.5 text-lg font-semibold">{data.title}</p>
               <MdPreview value={data.content} className="p-0" />
-              <button
-                className="flex w-fit cursor-pointer justify-end self-end rounded-full border border-gray-400 px-1.5 py-1 text-sm text-gray-500"
-                type="button"
-                onClick={() => setIsReportModalOpen?.(true)}
-              >
-                신고하기
-              </button>
             </div>
 
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-400 bg-white px-6 py-5 shadow-xl">
@@ -172,7 +200,6 @@ export default function CommunityDetail() {
           </div>
         </div>
       </div>
-      <Footer />
       <PostReportModal
         isOpen={isReportModalOpen}
         postId={Number(id)}

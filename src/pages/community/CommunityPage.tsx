@@ -8,11 +8,12 @@ import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { ROUTES } from '@src/constants/routes'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { fetchFreeCommunity, fetchInfoCommunity, fetchQuestionCommunity } from '@src/api/community'
-import { UserRound, Clock, MessageSquare, Eye } from 'lucide-react'
+import { UserRound, Clock, MessageSquare, Eye, Dot, Plus } from 'lucide-react'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { useUserStore } from '@src/store/userStore'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { useScrollDirection } from '@src/hooks/useScrollDirection'
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
 
@@ -21,6 +22,7 @@ export default function CommunityPage() {
   const tabParam = searchParams.get('tab') as CommunityTabId | null
   const initialTab = tabParam === 'tab-question' ? 'tab-question' : tabParam === 'tab-info' ? 'tab-info' : 'tab-free'
   const isMd = useMediaQuery('(min-width: 768px)')
+  const { isCollapsed: isFilterCollapsed } = useScrollDirection()
 
   const [activeCommunityTypeTab, setActiveCommunityTypeTab] = useState<CommunityTabId>(initialTab)
   const sortBy = searchParams.get('sortBy')
@@ -149,39 +151,97 @@ export default function CommunityPage() {
   const { isLogin } = useUserStore()
   return (
     <>
-      <SimpleHeader title={headerTitle} description={headerDescription} />
-      <div className="min-h-screen bg-[#F3F4F6] pt-5">
-        <div className="px-lg pb-4xl mx-auto max-w-7xl">
-          <div className="flex w-full flex-col gap-7">
-            <div className="flex w-full flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
-                {isLogin() && (
-                  <Link to={ROUTES.COMMUNITY_POST} type="button" className="bg-primary-200 rounded-lg px-3 py-2 text-white">
-                    글쓰기
-                  </Link>
-                )}
-              </div>
+      <SimpleHeader
+        title={headerTitle}
+        description={isMd ? headerDescription : undefined}
+        layoutClassname="py-5 flex-row justify-between border-b border-gray-200 sticky top-16 z-25"
+      />
+      <div className="relative min-h-screen bg-[#F3F4F6] pt-0 md:pt-5">
+        <div className="pb-4xl mx-auto max-w-7xl px-0 md:px-4">
+          <div className="flex w-full flex-col">
+            {/* 모바일: 필터 영역 */}
+            {!isMd && (
+              <div className="sticky top-32 z-25 bg-white">
+                {/* 토글 버튼 */}
+                {/* <button
+                  type="button"
+                  onClick={toggleFilter}
+                  className="flex w-full items-center justify-center gap-2 border-b border-gray-200 py-2 text-gray-600"
+                >
+                  <span className="text-sm">{isFilterCollapsed ? '필터 펼치기' : '필터 접기'}</span>
+                  {isFilterCollapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+                </button> */}
 
-              <div className="flex items-center justify-between gap-3 md:gap-5">
-                <div className="h-11 w-36 md:h-auto">
-                  <SelectDropdown
-                    value={selectSearchType}
-                    onChange={handleSearchTypeChange}
-                    options={COMMUNITY_SEARCH_TYPE.map((sort) => ({
-                      value: sort.label,
-                      label: sort.label,
-                    }))}
-                    buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2 "
-                  />
+                {/* 접히는 필터 영역 */}
+                <div className={cn('overflow-hidden transition-all duration-300 ease-out', isFilterCollapsed ? 'max-h-0' : 'max-h-[300px]')}>
+                  <div className="flex items-center justify-between border-b border-gray-200 p-3.5">
+                    <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
+                  </div>
+
+                  <div className="flex flex-row-reverse items-center justify-between gap-3 border-b border-gray-200 px-3.5 pt-4 pb-3.5">
+                    <div className="h-11 w-24">
+                      <SelectDropdown
+                        value={selectSearchType}
+                        onChange={handleSearchTypeChange}
+                        options={COMMUNITY_SEARCH_TYPE.map((sort) => ({
+                          value: sort.label,
+                          label: sort.label,
+                        }))}
+                        buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2 "
+                      />
+                    </div>
+                    <SearchBar placeholder="게시글 검색" borderColor="border-gray-300" className="h-11 max-w-full" paramName="communityKeyword" />
+                  </div>
+                  <div className="flex gap-2 border-b border-gray-200 px-3.5 py-3.5">
+                    {COMMUNITY_SORT_TYPE.map((sortType) => (
+                      <Button
+                        key={sortType.id}
+                        type="button"
+                        size="sm"
+                        onClick={() => handleSortChange(sortType.label)}
+                        className={cn(
+                          'cursor-pointer rounded-full whitespace-nowrap',
+                          selectedSort === sortType.label ? 'bg-primary-500 font-bold text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        )}
+                      >
+                        {sortType.label}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-                <SearchBar
-                  placeholder={isMd ? '게시글 제목이나 내용, 작성자로 검색해보세요' : '게시글 제목이나 내용, 작성자로 검색'}
-                  borderColor="border-gray-300"
-                  className="h-11 max-w-full"
-                  paramName="communityKeyword"
-                />
-                {isMd && (
+              </div>
+            )}
+
+            {/* 데스크탑 */}
+            {isMd && (
+              <div className="mb-7 flex w-full flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
+                  {isLogin() && (
+                    <Link to={ROUTES.COMMUNITY_POST} type="button" className="bg-primary-200 rounded-lg px-3 py-2 text-white">
+                      글쓰기
+                    </Link>
+                  )}
+                </div>
+
+                <div className="flex flex-row items-center justify-between gap-5">
+                  <div className="h-auto w-36">
+                    <SelectDropdown
+                      value={selectSearchType}
+                      onChange={handleSearchTypeChange}
+                      options={COMMUNITY_SEARCH_TYPE.map((sort) => ({
+                        value: sort.label,
+                        label: sort.label,
+                      }))}
+                      buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2 "
+                    />
+                  </div>
+                  <SearchBar
+                    placeholder="게시글 제목이나 내용, 작성자로 검색해보세요"
+                    borderColor="border-gray-300"
+                    className="h-11 max-w-full"
+                    paramName="communityKeyword"
+                  />
                   <div className="w-36">
                     <SelectDropdown
                       value={selectedSort}
@@ -193,62 +253,88 @@ export default function CommunityPage() {
                       buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2"
                     />
                   </div>
-                )}
-              </div>
-              {!isMd && (
-                <div className="flex gap-2">
-                  {COMMUNITY_SORT_TYPE.map((sortType) => (
-                    <Button
-                      key={sortType.id}
-                      type="button"
-                      size="sm"
-                      onClick={() => handleSortChange(sortType.label)}
-                      className={cn(
-                        'cursor-pointer',
-                        selectedSort === sortType.label ? 'bg-primary-300 font-bold text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      )}
-                    >
-                      {sortType.label}
-                    </Button>
-                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <ul className="flex flex-col gap-2.5">
-              {communityPosts.map((post) => (
-                <li
-                  key={post.id}
-                  className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
-                >
-                  <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)}>
-                    <p className="font-semibold">{post.title}</p>
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex items-center gap-1 text-gray-500">
-                        <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
-                        <p>{post.authorNickname}</p>
+            <ul className="mt-7 flex flex-col gap-2.5 px-3.5 md:mt-0 md:p-0">
+              {communityPosts.map((post) =>
+                isMd ? (
+                  <li
+                    key={post.id}
+                    className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
+                  >
+                    <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)}>
+                      <p className="font-semibold">{post.title}</p>
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
+                          <p>{post.authorNickname}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
+                          <p>{getTimeAgo(post.createdAt)}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
+                          <p>{post.commentCount}</p>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
+                          <span>조회</span>
+                          <span>{post.viewCount}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-500">
-                        <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
-                        <p>{getTimeAgo(post.createdAt)}</p>
+                    </Link>
+                  </li>
+                ) : (
+                  <li
+                    key={post.id}
+                    className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
+                  >
+                    <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)} className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-2">
+                        <p className="text-lg font-semibold">{post.title}</p>
+
+                        <p className="line-clamp-1">{post.contentPreview}</p>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-500">
-                        <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
-                        <p>{post.commentCount}</p>
+                      <div className="flex items-center justify-between gap-2.5">
+                        <div className="flex items-center text-gray-500">
+                          <p>{post.authorNickname}</p>
+                          <Dot size={12} />
+                          <p>{getTimeAgo(post.createdAt)}</p>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-1 text-gray-500">
+                            <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
+                            <p>{post.commentCount}</p>
+                          </div>
+                          <div className="flex items-center gap-1 text-gray-500">
+                            <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
+                            <span>{post.viewCount}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-500">
-                        <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
-                        <span>조회</span>
-                        <span>{post.viewCount}</span>
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
-            {hasNextPage && <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} classname="border-0" />}
+            {hasNextPage &&
+              (isMd ? (
+                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} classname="border-0" />
+              ) : (
+                <div className="px-3.5">
+                  <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} classname="border-0" />
+                </div>
+              ))}
           </div>
         </div>
+        {!isMd && isLogin() && (
+          <Link to={ROUTES.COMMUNITY_POST} type="button" className="bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white">
+            <Plus />
+          </Link>
+        )}
       </div>
     </>
   )

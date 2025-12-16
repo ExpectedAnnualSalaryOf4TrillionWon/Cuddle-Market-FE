@@ -60,8 +60,8 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
-      <div className="flex w-[16vw] flex-col gap-4 rounded-lg bg-white p-5">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70 p-4">
+      <div className="flex max-h-[90vh] w-full flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-[16vw]">
         <ModalTitle heading={heading} description={description} />
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">

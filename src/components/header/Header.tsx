@@ -4,16 +4,26 @@ import Logo from '../Logo'
 import { SearchBar } from './components/SearchBar'
 import Navigation from './components/Navigation'
 
-function Header() {
+interface HeaderProps {
+  hideSearchBar?: boolean
+}
+
+function Header({ hideSearchBar = false }: HeaderProps) {
   return (
-    <header className={cn('bg-primary-200 sticky top-0 flex h-32 w-full items-center justify-center md:h-24', `${Z_INDEX.HEADER}`)}>
+    <header
+      className={cn(
+        'bg-primary-200 sticky top-0 flex w-full items-center justify-center',
+        hideSearchBar ? 'h-16 md:h-24' : 'h-32 md:h-24',
+        `${Z_INDEX.HEADER}`
+      )}
+    >
       <div className="flex w-full flex-col gap-3 px-4 md:block md:px-2.5">
         <div className="gap-lg flex items-center justify-between">
           <Logo />
-          <SearchBar className="hidden md:block" />
+          {!hideSearchBar && <SearchBar className="hidden md:block" />}
           <Navigation />
         </div>
-        <SearchBar className="md:hidden" />
+        {!hideSearchBar && <SearchBar className="md:hidden" />}
       </div>
     </header>
   )

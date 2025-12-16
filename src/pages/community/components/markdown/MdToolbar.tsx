@@ -16,7 +16,7 @@ interface MdToolbarProps {
 
 export default function MdToolbar({ tab, setTab, onBold, onItalic, onCode, onLink, onH1, onBullet, onNumber, onImage }: MdToolbarProps) {
   return (
-    <div className="flex items-center border-b border-gray-400 bg-gray-100 px-2 py-2">
+    <div className="flex flex-wrap items-center gap-2.5 border-b border-gray-400 bg-gray-100 px-2 py-2 md:gap-0">
       {/* 좌측 탭 */}
       <div className="flex items-center gap-1 rounded-lg bg-white p-1">
         <button
@@ -36,7 +36,7 @@ export default function MdToolbar({ tab, setTab, onBold, onItalic, onCode, onLin
       </div>
 
       {/* 우측 툴바 */}
-      <div className="ml-auto flex items-center gap-1">
+      <div className="ml-0 flex items-center gap-1 md:ml-auto">
         <IconButton onClick={onBold}>
           <Bold size={16} />
         </IconButton>

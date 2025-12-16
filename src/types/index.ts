@@ -471,6 +471,7 @@ export interface CommunityResponse {
 export interface CommunityItem {
   id: number
   title: string
+  contentPreview?: string
   authorNickname: string
   boardType?: string
   searchType: string
