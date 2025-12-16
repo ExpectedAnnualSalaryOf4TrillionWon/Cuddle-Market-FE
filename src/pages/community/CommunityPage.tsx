@@ -16,7 +16,6 @@ import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useScrollDirection } from '@src/hooks/useScrollDirection'
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
-import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
