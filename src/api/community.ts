@@ -42,9 +42,9 @@ export const fetchFreeCommunity = async (
 export const fetchQuestionCommunity = async (
   page: number = 0,
   size: number = 10,
+  searchType?: string | null,
   keyword?: string | null,
-  sortBy?: string | null,
-  searchType?: string | null
+  sortBy?: string | null
 ) => {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -67,9 +67,9 @@ export const fetchQuestionCommunity = async (
 export const fetchInfoCommunity = async (
   page: number = 0,
   size: number = 10,
+  searchType?: string | null,
   keyword?: string | null,
-  sortBy?: string | null,
-  searchType?: string | null
+  sortBy?: string | null
 ) => {
   const params = new URLSearchParams({
     page: page.toString(),

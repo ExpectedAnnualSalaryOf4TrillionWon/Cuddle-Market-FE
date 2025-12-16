@@ -1268,8 +1268,8 @@ export type SORT_LABELS = (typeof SORT_TYPE)[number]['label']
 export const COMMUNITY_SORT_TYPE = [
   { id: 'latest', label: '최신순' },
   { id: 'oldest', label: '오래된 순' },
-  { id: 'views', label: '조회수 많은 순' },
-  { id: 'comments', label: '댓글 많은 순' },
+  { id: 'views', label: '조회 순' },
+  { id: 'comments', label: '댓글 순' },
 ]
 export type COMMUNITY_SORT_LABELS = (typeof COMMUNITY_SORT_TYPE)[number]['label']
 
