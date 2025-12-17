@@ -147,7 +147,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                 ) : (
                   <button
                     type="button"
-                    className="flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg border-t border-gray-300 bg-transparent px-3 py-1.5 pt-6 text-sm text-gray-500 hover:bg-gray-100"
+                    className="flex w-full cursor-pointer items-center justify-start gap-2 border-t border-gray-300 bg-transparent px-3 pt-6 pb-6 text-sm text-gray-500 hover:bg-gray-100 md:rounded-lg md:py-1.5"
                     onClick={() => setIsReportModalOpen?.(true)}
                   >
                     <Flag size={16} />

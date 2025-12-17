@@ -52,17 +52,18 @@ function UserPage() {
   return (
     <>
       <div className="bg-bg pb-4xl pt-0 md:pt-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col gap-0 md:flex-row md:gap-8">
           <ProfileData
             setIsWithdrawModalOpen={setIsWithdrawModalOpen}
             setIsReportModalOpen={setIsReportModalOpen}
             setIsBlockModalOpen={setIsBlockModalOpen}
             data={userData!}
           />
-          <section className="border-border flex w-full flex-col gap-6 rounded-xl border p-5">
+          <section className="flex w-full flex-col gap-6 rounded-xl border-gray-200 p-5 md:border">
             <div className="flex justify-between">
-              <h4 className="flex items-center gap-2">
-                {userData?.nickname}님의 판매상품 {totalProducts}
+              <h4 className="flex flex-col items-start">
+                <span className="font-bold">{userData?.nickname}님의 판매상품</span>
+                <span>총 {totalProducts}개의 상품이 있습니다</span>
               </h4>
             </div>
             <div className="gap-lg flex max-h-[60vh] flex-col overflow-y-auto">
