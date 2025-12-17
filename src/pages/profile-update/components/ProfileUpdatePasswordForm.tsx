@@ -75,7 +75,7 @@ export default function ProfileUpdatePasswordForm() {
   }, [password, passwordConfirm, setError, clearErrors])
 
   return (
-    <form className="border-border flex w-full flex-col gap-6 rounded-xl border p-7" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-7" onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="flex flex-col gap-8">
         <legend className="sr-only">비밀번호 변경 폼</legend>
         <div className="flex flex-col gap-2">

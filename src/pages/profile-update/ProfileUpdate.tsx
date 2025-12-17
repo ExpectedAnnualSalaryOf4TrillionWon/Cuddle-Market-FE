@@ -5,11 +5,12 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchMyPageData } from '@src/api/products'
 import { useUserStore } from '@src/store/userStore'
 import ProfileUpdatePasswordForm from './components/ProfileUpdatePasswordForm'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
 
 function ProfileUpdate() {
   const [, setIsWithdrawModalOpen] = useState(false)
   const { user, updateUserProfile } = useUserStore()
-
+  const isMd = useMediaQuery('(min-width: 768px)')
   const { data: myData, isLoading: isLoadingMyData } = useQuery({
     queryKey: ['mypage', user?.id],
     queryFn: () => fetchMyPageData(),
@@ -41,10 +42,16 @@ function ProfileUpdate() {
   }
 
   return (
-    <div className="bg-bg pb-4xl pt-8">
-      <div className="px-lg mx-auto flex max-w-7xl gap-8">
-        <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />
-        <div className="flex w-full flex-col gap-8">
+    <div className="pb-4xl bg-[#F3F4F6] pt-0 md:bg-white md:pt-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-0 md:flex-row md:gap-8 md:p-0">
+        {isMd && <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />}
+        {!isMd && (
+          <div className="flex flex-col gap-2 border-b border-gray-200 bg-white p-5">
+            <h2 className="heading-h3">기본 정보</h2>
+            <p className="text-gray-500">프로필 이미지, 닉네임, 거주지를 수정할 수 있습니다</p>
+          </div>
+        )}
+        <div className="flex w-full flex-col gap-8 p-5 md:p-0">
           <ProfileUpdateBaseForm myData={myData!} />
           <ProfileUpdatePasswordForm />
         </div>

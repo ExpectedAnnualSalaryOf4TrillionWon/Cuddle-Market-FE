@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Calendar, Settings, MessageCircle, Flag, Ban, LockOpen, ShieldAlert } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
@@ -38,6 +38,9 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
   const isMyProfile = user?.id === data?.id
   const queryClient = useQueryClient()
   const isMd = useMediaQuery('(min-width: 768px)')
+  const { pathname } = useLocation()
+  const isProfileEditPage = /^\/profile-update$/.test(pathname)
+
   const { mutate: unblockUser } = useMutation({
     mutationFn: () => userUnBlocked(Number(data?.id)),
     onSuccess: () => {
@@ -88,21 +91,25 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                     <ProductMetaItem icon={Calendar} iconSize={17} label={`가입일: ${formattedJoinDate}`} className="gap-2" />
                   </div>
                 )}
-                <Link
-                  to={ROUTES.PROFILE_UPDATE}
-                  className="bg-primary-200 flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
-                >
-                  <Settings size={19} />
-                  <span>내 정보 수정</span>
-                </Link>
+                {!isProfileEditPage && (
+                  <Link
+                    to={ROUTES.PROFILE_UPDATE}
+                    className="bg-primary-200 flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
+                  >
+                    <Settings size={19} />
+                    <span>내 정보 수정</span>
+                  </Link>
+                )}
               </div>
-              <button
-                type="button"
-                className="w-full cursor-pointer rounded-lg border-gray-300 pb-5 text-right text-sm text-gray-500 hover:underline md:border-t md:pt-6 md:pb-0 md:text-left"
-                onClick={() => setIsWithdrawModalOpen?.(true)}
-              >
-                회원탈퇴
-              </button>
+              {!isProfileEditPage && (
+                <button
+                  type="button"
+                  className="w-full cursor-pointer rounded-lg border-gray-300 pb-5 text-right text-sm text-gray-500 hover:underline md:border-t md:pt-6 md:pb-0 md:text-left"
+                  onClick={() => setIsWithdrawModalOpen?.(true)}
+                >
+                  회원탈퇴
+                </button>
+              )}
             </>
           )}
 

@@ -15,6 +15,7 @@ import { useUserStore } from '@src/store/userStore'
 import { useDropzone } from 'react-dropzone'
 import { uploadImage } from '@src/api/products'
 import { useQueryClient } from '@tanstack/react-query'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
@@ -57,7 +58,9 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
 
   const titleLength = watch('introduction')?.length ?? 0
   const queryClient = useQueryClient()
+  const isMd = useMediaQuery('(min-width: 768px)')
   const [, setIsNicknameVerified] = useState(false)
+
   const [previewUrl, setPreviewUrl] = useState<string>(myData?.profileImageUrl || '')
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
@@ -151,18 +154,20 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
   }, [myData, reset])
 
   return (
-    <form className="border-border flex w-full flex-col gap-6 rounded-xl border p-7" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex w-full flex-col gap-6 rounded-xl border border-gray-200 bg-white p-5 md:p-7" onSubmit={handleSubmit(onSubmit)}>
       <fieldset className="flex flex-col gap-8">
         <legend className="sr-only">프로필 정보 수정 폼</legend>
-        <div className="flex flex-col gap-2">
-          <h2 className="heading-h3">기본 정보</h2>
-          <p className="text-gray-500">프로필 이미지, 닉네임, 거주지를 수정할 수 있습니다</p>
-        </div>
+        {isMd && (
+          <div className="flex flex-col gap-2">
+            <h2 className="heading-h3">기본 정보</h2>
+            <p className="text-gray-500">프로필 이미지, 닉네임, 거주지를 수정할 수 있습니다</p>
+          </div>
+        )}
 
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-10">
             {/* 프로필 이미지 */}
-            <div className="flex flex-col items-center gap-2.5">
+            <div className="flex flex-col items-center gap-4">
               <div
                 {...getRootProps()}
                 className="flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#FACC15]"
@@ -183,8 +188,8 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
               <div className="flex flex-col gap-3.5">
                 <h3 className="heading-h5">본인 인증 정보</h3>
 
-                <div className="flex items-center justify-between gap-6">
-                  <div className="flex flex-1 flex-col gap-1">
+                <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+                  <div className="flex w-full flex-1 flex-col gap-1">
                     <div className="flex flex-col gap-2">
                       <span className="font-medium text-gray-600">이름</span>
                       <div className="bg-primary-50/50 rounded-lg p-3 font-medium text-gray-400">{myData?.nickname}</div>
@@ -192,7 +197,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
                     <p className="text-sm font-bold text-gray-400">본인 인증 정보로 변경할 수 없습니다.</p>
                   </div>
 
-                  <div className="flex flex-1 flex-col gap-1">
+                  <div className="flex w-full flex-1 flex-col gap-1">
                     <div className="flex flex-col gap-2">
                       <span className="font-medium text-gray-600">생년월일</span>
                       <div className="bg-primary-50/50 rounded-lg p-3 font-medium text-gray-400">{formatBirthDate(myData?.birthDate)}</div>
