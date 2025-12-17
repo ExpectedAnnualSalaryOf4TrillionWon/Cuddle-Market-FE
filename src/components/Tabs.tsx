@@ -1,6 +1,6 @@
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
-
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
 interface Tab {
   id: string
   label: string
@@ -17,20 +17,22 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onTabChange, ariaLabel, excludeTabId }: TabsProps) {
   const filteredTabs = excludeTabId ? tabs.filter((tab) => tab.id !== excludeTabId) : tabs
-
+  const isMd = useMediaQuery('(min-width: 768px)')
   return (
-    <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex gap-2.5 border-b-2 pb-1')}>
+    <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex gap-1 px-3.5 md:gap-2.5 md:border-b-2 md:p-0 md:pb-1')}>
       {filteredTabs.map((tab) => (
         <Button
           key={tab.id}
           id={tab.id}
-          size="md"
+          size={isMd ? 'md' : 'sm'}
           role="tab"
           type="button"
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            'flex-1 cursor-pointer rounded-2xl text-base',
-            activeTab === tab.id ? 'bg-primary-300 font-bold text-white' : 'hover:bg-primary-100 text-gray-900'
+            'flex-1 cursor-pointer rounded-full bg-white text-base whitespace-nowrap md:rounded-2xl md:bg-transparent',
+            activeTab === tab.id
+              ? 'md:bg-primary-300 bg-primary-500 font-bold text-white'
+              : 'md:hover:bg-primary-100 bg-gray-100 text-gray-900 md:bg-transparent'
           )}
           aria-selected={activeTab === tab.id}
           aria-controls={`panel-${tab.code}`}

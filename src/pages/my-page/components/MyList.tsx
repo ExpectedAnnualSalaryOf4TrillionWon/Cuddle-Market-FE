@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '@src/components/commons/button/Button'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
-import { Eye } from 'lucide-react'
+import { Eye, EllipsisVertical, SquarePen, Trash2 } from 'lucide-react'
 import { getTradeStatus } from '@src/utils/getTradeStatus'
 import { getTradeStatusColor } from '@src/utils/getTradeStatusColor'
 import { cn } from '@src/utils/cn'
@@ -15,7 +15,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { patchProductTradeStatus, addFavorite } from '@src/api/products'
 import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
-
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { IconButton } from '@src/components/commons/button/IconButton'
+import { Z_INDEX } from '@src/constants/ui'
 type MyListProps = Product & {
   activeTab?: MyPageTabId
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
@@ -24,7 +26,9 @@ type TradeStatusKo = '판매중' | '예약중' | '거래완료'
 export default function MyList({ id, title, price, mainImageUrl, tradeStatus, viewCount, activeTab, handleConfirmModal }: MyListProps) {
   const [selectedProductType, setSelectedProductType] = useState<TradeStatusKo>('판매중')
   const [localTradeStatus, setLocalTradeStatus] = useState(tradeStatus)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const isMd = useMediaQuery('(min-width: 768px)')
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (newStatus: TransactionStatus) => patchProductTradeStatus(id, newStatus),
@@ -70,33 +74,98 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
     e.stopPropagation()
     cancelFavorite()
   }
-
+  const handleMoreToggle = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsMoreMenuOpen(!isMoreMenuOpen)
+  }
   return (
-    <li id={id.toString()} className="w-full">
-      <Link to={ROUTES.DETAIL_ID(id)} className="flex w-full items-center justify-center gap-6 rounded-lg border border-gray-300 p-3.5">
-        <div className="aspect-square w-32 shrink-0 overflow-hidden rounded-lg">
+    <li id={id.toString()} className="w-full pt-5 pb-5 md:p-0">
+      <Link
+        to={ROUTES.DETAIL_ID(id)}
+        className="flex w-full items-start justify-center gap-3 rounded-lg border-gray-300 md:items-center md:justify-between md:gap-6 md:border md:p-3.5"
+      >
+        <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static">
           <img
             src={mainImageUrl || PlaceholderImage}
             alt={title}
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
           />
+          {!isMd && trade_status && <Badge className={cn('absolute top-2 left-2 bg-[#48BB78] text-white', productTradeColor)}>{trade_status}</Badge>}
         </div>
-        <div className="flex flex-1">
+        <div className="flex flex-1 items-start">
           <div className="flex h-fit flex-1 flex-col items-start gap-2">
-            {trade_status && <Badge className={cn('bg-[#48BB78] text-white', productTradeColor)}>{trade_status}</Badge>}
+            {isMd && trade_status && <Badge className={cn('bg-[#48BB78] text-white', productTradeColor)}>{trade_status}</Badge>}
             <div className="flex w-full items-start justify-between">
-              <div className="flex flex-col gap-1">
-                <h3 className="heading-h5 w-96 truncate">{title}</h3>
-                <span className="font-medium text-gray-500">{formatPrice(price)} 원</span>
+              <div className="flex w-full flex-col gap-1">
+                {isMd && <h3 className="heading-h5 line-clamp-2 w-96 truncate">{title}</h3>}
+                {!isMd && (
+                  <div className="relative flex w-full items-start justify-between gap-2">
+                    <h3 className="line-clamp-2 w-full text-[17px] font-bold">{title}</h3>
+                    <IconButton className="" size="sm" onClick={handleMoreToggle}>
+                      <EllipsisVertical size={16} className="text-gray-500" />
+                    </IconButton>
+                    {isMoreMenuOpen && (
+                      <div
+                        className={cn(
+                          'absolute top-7 right-0 flex w-fit flex-col items-end rounded-lg border border-gray-300 bg-white',
+                          Z_INDEX.DROPDOWN
+                        )}
+                      >
+                        {isMyProductTab && !isCompleted && (
+                          <Button
+                            size="sm"
+                            className="hover:bg-primary-300 w-fit cursor-pointer gap-3 rounded-none border-b border-gray-300 hover:font-bold hover:text-white"
+                            onClick={handleProductUpdate}
+                          >
+                            <SquarePen size={16} />
+                            <span>수정</span>
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          className="text-danger-500 hover:bg-primary-300 w-fit cursor-pointer gap-3 rounded-none hover:font-bold hover:text-white"
+                          onClick={
+                            isWishlistTab ? handleCancelFavorite : (e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)
+                          }
+                        >
+                          <Trash2 size={16} />
+                          <span>삭제</span>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <span className="font-bold text-gray-500 md:font-medium">{formatPrice(price)} 원</span>
+                {!isMd && !isCompleted && isSalesTab && (
+                  <div className="w-full" onClick={(e) => e.preventDefault()}>
+                    <SelectDropdown
+                      value={selectedProductType}
+                      onChange={handleProductType}
+                      options={STATUS_EN_TO_KO.map((sort) => ({
+                        value: sort.name,
+                        label: sort.name,
+                      }))}
+                      buttonClassName="border-0 bg-primary-50 text-gray-900 px-3 py-2"
+                    />
+                  </div>
+                )}
+                {!isMd && !isCompleted && isPurchasesTab && (
+                  <Button
+                    size="sm"
+                    className="h-fit w-32 flex-1 cursor-pointer border border-gray-300 hover:bg-gray-300"
+                    onClick={productTradeStatusCompleted}
+                  >
+                    구매완료
+                  </Button>
+                )}
               </div>
             </div>
-            <div>
-              <ProductMetaItem icon={Eye} label={`조회 ${viewCount}`} className="text-sm text-gray-400" />
-            </div>
+            <ProductMetaItem icon={Eye} label={`조회 ${viewCount}`} className="text-sm text-gray-400" />
           </div>
           <div className="flex flex-col items-end gap-2">
-            {!isCompleted && isSalesTab && (
-              <div className="w-32">
+            {isMd && !isCompleted && isSalesTab && (
+              <div className="w-32" onClick={(e) => e.preventDefault()}>
                 <SelectDropdown
                   value={selectedProductType}
                   onChange={handleProductType}
@@ -108,7 +177,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                 />
               </div>
             )}
-            {!isCompleted && isPurchasesTab && (
+            {isMd && !isCompleted && isPurchasesTab && (
               <Button
                 size="sm"
                 className="h-fit w-32 flex-1 cursor-pointer border border-gray-300 hover:bg-gray-300"
@@ -117,24 +186,26 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                 구매완료
               </Button>
             )}
-            <div className="flex w-full min-w-32 gap-1">
-              {isMyProductTab && !isCompleted && (
+            {isMd && (
+              <div className="flex w-full min-w-32 gap-1">
+                {isMyProductTab && !isCompleted && (
+                  <Button
+                    size="sm"
+                    className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
+                    onClick={handleProductUpdate}
+                  >
+                    수정
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
-                  onClick={handleProductUpdate}
+                  onClick={isWishlistTab ? handleCancelFavorite : (e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)}
                 >
-                  수정
+                  삭제
                 </Button>
-              )}
-              <Button
-                size="sm"
-                className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
-                onClick={isWishlistTab ? handleCancelFavorite : (e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)}
-              >
-                삭제
-              </Button>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </Link>
