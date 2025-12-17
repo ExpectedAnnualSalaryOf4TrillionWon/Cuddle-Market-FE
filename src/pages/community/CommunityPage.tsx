@@ -162,16 +162,6 @@ export default function CommunityPage() {
             {/* 모바일: 필터 영역 */}
             {!isMd && (
               <div className="sticky top-32 z-25 bg-white">
-                {/* 토글 버튼 */}
-                {/* <button
-                  type="button"
-                  onClick={toggleFilter}
-                  className="flex w-full items-center justify-center gap-2 border-b border-gray-200 py-2 text-gray-600"
-                >
-                  <span className="text-sm">{isFilterCollapsed ? '필터 펼치기' : '필터 접기'}</span>
-                  {isFilterCollapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
-                </button> */}
-
                 {/* 접히는 필터 영역 */}
                 <div className={cn('overflow-hidden transition-all duration-300 ease-out', isFilterCollapsed ? 'max-h-0' : 'max-h-[300px]')}>
                   <div className="flex items-center justify-between border-b border-gray-200 p-3.5">
