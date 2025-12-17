@@ -17,7 +17,6 @@ interface TabsProps {
 
 export function CommunityTabs({ tabs, activeTab, onTabChange, ariaLabel, excludeTabId }: TabsProps) {
   const filteredTabs = excludeTabId ? tabs.filter((tab) => tab.id !== excludeTabId) : tabs
-
   return (
     <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex w-fit gap-2.5 md:border-b-2 md:pb-1')}>
       {filteredTabs.map((tab) => (
