@@ -9,7 +9,6 @@ interface SimpleHeaderProps {
 }
 
 export function SimpleHeader({ title, description, to, layoutClassname }: SimpleHeaderProps) {
-
   return (
     <div className={cn('mx-auto flex max-w-7xl flex-col gap-2 bg-white px-3.5 py-2.5', layoutClassname)}>
       {to ? (

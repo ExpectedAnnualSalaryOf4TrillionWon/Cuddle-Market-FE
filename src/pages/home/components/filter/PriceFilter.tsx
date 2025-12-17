@@ -40,7 +40,7 @@ export function PriceFilter({ headingClassName, selectedPriceRange, onMinPriceCh
       <span id="price-filter-heading" className={cn('heading-h5', headingClassName)}>
         가격대
       </span>
-      <div className="gap-sm flex flex-wrap" role="group" aria-labelledby="price-filter-heading">
+      <div className="gap-sm grid grid-cols-2 flex-wrap md:flex" role="group" aria-labelledby="price-filter-heading">
         {PRICE_TYPE.map((item) => (
           <Button
             key={`${item.value.min}-${item.value.max}`}

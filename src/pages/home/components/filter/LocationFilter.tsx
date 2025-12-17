@@ -75,7 +75,7 @@ export function LocationFilter({ headingClassName, onLocationChange }: LocationF
       <span id="location-filter-heading" className={cn('heading-h5', headingClassName)}>
         지역
       </span>
-      <div className="flex gap-2.5" role="group" aria-labelledby="location-filter-heading">
+      <div className="flex flex-col gap-2.5 md:flex-row" role="group" aria-labelledby="location-filter-heading">
         {/* 시/도 선택 */}
         <div className="flex-1">
           <SelectDropdown

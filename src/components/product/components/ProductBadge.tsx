@@ -7,7 +7,7 @@ interface ProductBadgeProps {
 
 export function ProductBadge({ petTypeName, productStatusName }: ProductBadgeProps) {
   return (
-    <div className="gap-xs z-1 flex">
+    <div className="gap-xs z-1 flex flex-wrap">
       <Badge className="bg-primary-700 text-white">{petTypeName}</Badge>
       <Badge className="bg-primary-200 text-gray-900">{productStatusName}</Badge>
     </div>
