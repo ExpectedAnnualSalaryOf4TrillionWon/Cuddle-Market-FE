@@ -64,7 +64,7 @@ export function CascadingSelectField<T extends FieldValues>({
         {label}
       </RequiredLabel>
 
-      <div className="flex gap-2.5">
+      <div className="flex flex-col gap-2.5 md:flex-row">
         <Controller
           name={primaryName}
           control={control}

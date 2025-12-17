@@ -64,7 +64,7 @@ export function ProductStateFilter({
           상품 상태
         </RequiredLabel>
       )}
-      <div className={cn('flex flex-wrap gap-2.5')} role="radiogroup" aria-labelledby="condition-filter-heading">
+      <div className={cn('grid grid-cols-2 flex-wrap gap-2.5 md:flex')} role="radiogroup" aria-labelledby="condition-filter-heading">
         {CONDITION_ITEMS.map((item) => (
           <div key={item.value} className={inputClassname}>
             <input
