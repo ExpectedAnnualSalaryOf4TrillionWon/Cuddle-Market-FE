@@ -24,7 +24,7 @@ export function useScrollDirection({ threshold = 10, ignoreTime = 300 }: UseScro
       const prevScrollY = lastScrollY.current
       const diff = currentScrollY - prevScrollY
 
-      console.log('scrollY:', currentScrollY, 'diff:', diff, 'isCollapsed:', isCollapsedRef.current)
+      // console.log('scrollY:', currentScrollY, 'diff:', diff, 'isCollapsed:', isCollapsedRef.current)
 
       // threshold 이상 스크롤했을 때만 상태 변경
       if (Math.abs(diff) >= threshold) {

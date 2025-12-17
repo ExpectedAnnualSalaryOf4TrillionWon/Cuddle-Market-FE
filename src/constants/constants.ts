@@ -175,7 +175,6 @@ export type CategoryName = (typeof PRODUCT_CATEGORIES)[number]['name']
 export const STATUS_EN_TO_KO: Array<{ value: string | null; name: string; bgColor: string }> = [
   { value: 'SELLING', name: '판매중', bgColor: 'bg-onsale' },
   { value: 'RESERVED', name: '예약중', bgColor: 'bg-reserved' },
-  { value: null, name: '요청중', bgColor: 'bg-requesting' },
   { value: 'COMPLETED', name: '판매완료', bgColor: 'bg-complete' },
 ]
 export type TransactionStatus = 'SELLING' | 'RESERVED' | 'COMPLETED'

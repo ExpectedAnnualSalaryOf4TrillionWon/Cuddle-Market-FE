@@ -51,8 +51,8 @@ function UserPage() {
 
   return (
     <>
-      <div className="bg-bg pb-4xl pt-8">
-        <div className="px-lg mx-auto flex max-w-7xl gap-8">
+      <div className="bg-bg pb-4xl pt-0 md:pt-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row">
           <ProfileData
             setIsWithdrawModalOpen={setIsWithdrawModalOpen}
             setIsReportModalOpen={setIsReportModalOpen}
@@ -82,12 +82,7 @@ function UserPage() {
           </section>
         </div>
       </div>
-      <UserReportModal
-        isOpen={isReportModalOpen}
-        onCancel={() => setIsReportModalOpen(false)}
-        userNickname={userData.nickname}
-        userId={Number(id)}
-      />
+      <UserReportModal isOpen={isReportModalOpen} onCancel={() => setIsReportModalOpen(false)} userNickname={userData.nickname} userId={Number(id)} />
       <BlockModal isOpen={isBlockModalOpen} onCancel={() => setIsBlockModalOpen(false)} userNickname={userData.nickname} userId={Number(id)} />
     </>
   )

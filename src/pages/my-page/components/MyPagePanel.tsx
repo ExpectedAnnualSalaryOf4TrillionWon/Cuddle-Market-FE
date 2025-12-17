@@ -100,7 +100,7 @@ export default function MyPagePanel({
       role="tabpanel"
       id={`panel-${activeTabCode}`}
       aria-labelledby={activeMyPageTab}
-      className="border-border flex flex-col gap-6 rounded-xl border p-5"
+      className="flex flex-col gap-6 rounded-xl border-gray-200 px-5 py-7 md:border md:p-5"
     >
       {config ? (
         <MyPageTitle
@@ -109,16 +109,17 @@ export default function MyPagePanel({
           description={config.description}
           buttonLabel={config.buttonLabel}
           navigateTo={config.navigateTo}
+          buttonClassname="text-base"
         />
       ) : (
         <MyPageTitle heading="차단 유저" description={`차단한 유저 ${myBlockedTotal ?? 0}명`} />
       )}
 
-      <div className="gap-lg flex max-h-[60vh] flex-col overflow-y-auto">
+      <div className="gap-lg scrollbar-hide flex max-h-[60vh] flex-col overflow-y-auto">
         {activeMyPageTab !== 'tab-blocked' ? (
           productData?.content?.length ? (
             <>
-              <ul className="flex flex-col items-center justify-start gap-2.5">
+              <ul className="flex flex-col items-center justify-start divide-y divide-gray-200 md:gap-2.5 md:divide-y-0">
                 {productData.content.map((product) => (
                   <MyList key={product.id} {...product} activeTab={activeMyPageTab} handleConfirmModal={handleConfirmModal} />
                 ))}
