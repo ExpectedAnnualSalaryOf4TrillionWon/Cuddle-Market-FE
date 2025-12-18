@@ -13,7 +13,7 @@ function Header({ hideSearchBar = false }: HeaderProps) {
     <header
       className={cn(
         'bg-primary-200 sticky top-0 flex w-full items-center justify-center',
-        hideSearchBar ? 'h-16 md:h-24' : 'h-32 md:h-24',
+        hideSearchBar ? 'h-16 md:h-24' : 'h-28 md:h-24',
         `${Z_INDEX.HEADER}`
       )}
     >
@@ -23,7 +23,7 @@ function Header({ hideSearchBar = false }: HeaderProps) {
           {!hideSearchBar && <SearchBar className="hidden md:block" />}
           <Navigation />
         </div>
-        {!hideSearchBar && <SearchBar className="md:hidden" />}
+        {!hideSearchBar && <SearchBar className="md:hidden" inputClass="py-1" />}
       </div>
     </header>
   )

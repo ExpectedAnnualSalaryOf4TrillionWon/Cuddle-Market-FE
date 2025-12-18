@@ -15,7 +15,7 @@ export default function Logo({ logoClassname, textClassname }: LogoProps) {
         <img src={CuddleMarketLogo} alt="CuddleMarket 로고" className="h-full w-full object-cover" />
       </div>
 
-      <p className={cn('logo flex flex-col text-xl leading-none text-white md:text-2xl', textClassname)}>
+      <p className={cn('logo hidden flex-col text-xl leading-none text-white md:flex md:text-2xl', textClassname)}>
         <span>CUDDLE</span>
         <span>MARKET</span>
       </p>

@@ -36,6 +36,7 @@ export function CommentItem({
   const handleMoreToggle = () => {
     setIsMoreMenuOpen(!isMoreMenuOpen)
   }
+  console.log(comment)
 
   const handleDelete = () => {
     onDelete?.(comment.id)

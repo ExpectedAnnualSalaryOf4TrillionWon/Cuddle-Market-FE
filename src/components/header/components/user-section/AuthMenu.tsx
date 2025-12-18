@@ -6,34 +6,13 @@ import { ROUTES } from '@src/constants/routes'
 export default function AuthMenu() {
   return (
     <div className="flex items-center gap-4">
-      <Link
-        to={ROUTES.COMMUNITY}
-        // variant="text"
-        // fontWeight="normal"
-        // link={`${ACCOUNT}/auth/login?return_to=${returnTo}`}
-        // size="lg"
-        className="text-lg font-bold text-white"
-      >
+      <Link to={ROUTES.COMMUNITY} className="font-bold text-white md:text-lg">
         커뮤니티
       </Link>
-      <Link
-        to={ROUTES.LOGIN}
-        // variant="text"
-        // fontWeight="normal"
-        // link={`${ACCOUNT}/auth/login?return_to=${returnTo}`}
-        // size="lg"
-        className="text-lg font-bold text-white"
-      >
+      <Link to={ROUTES.LOGIN} className="font-bold text-white md:text-lg">
         로그인
       </Link>
-      <Link
-        to={ROUTES.SIGNUP}
-        // variant="filled"
-        // size="base"
-        // fontWeight="medium"
-        // link="/signup"
-        className="rounded-lg bg-white px-4 py-2.5"
-      >
+      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 md:px-4 md:py-2.5">
         회원가입
       </Link>
     </div>
