@@ -22,6 +22,7 @@ import FindPasswordPage from '@src/pages/find-password/FindPasswordPage'
 import CommunityPage from '@src/pages/community/CommunityPage'
 import CommunityPostForm from '@src/pages/community/components/CommunityPostForm'
 import CommunityDetail from '@src/pages/community/CommunityDetail'
+import GoogleCallback from '@src/pages/GoogleCallback'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -49,6 +50,7 @@ function AppRoutes() {
         ))}
       </Route>
       <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
+      <Route path="/oauth-redirect" element={<GoogleCallback />} />
     </Routes>
   )
 }
