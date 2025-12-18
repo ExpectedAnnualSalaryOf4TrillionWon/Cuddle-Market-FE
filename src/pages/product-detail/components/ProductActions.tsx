@@ -3,6 +3,8 @@ import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
 import { useNavigate } from 'react-router-dom'
 import { useFavorite } from '@src/hooks/useFavorite'
+import { createChatRoom } from '@src/api/chatting'
+import { ROUTES } from '@src/constants/routes'
 
 interface ProductActionsProps {
   isFavorite: boolean
@@ -28,8 +30,10 @@ export default function ProductActions({ id, isFavorite: initialIsFavorite, sell
     navigate(`/products/${productId}/edit`)
   }
 
-  const handleChat = () => {
-    console.log('채팅')
+  const handleChat = async () => {
+    const chatRoom = await createChatRoom({ productId: id })
+    // state로 채팅방 정보 전달
+    navigate(ROUTES.CHAT_ROOM_ID(chatRoom.chatRoomId), { state: { chatRoom } })
   }
 
   return (
