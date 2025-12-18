@@ -11,6 +11,7 @@ interface SearchBarProps {
   className?: string
   borderColor?: string
   paramName?: string // URL 파라미터 이름 (기본값: 'keyword')
+  inputClass?: string
 }
 
 export function SearchBar({
@@ -18,6 +19,7 @@ export function SearchBar({
   borderColor = 'border-gray-100',
   className,
   paramName = 'keyword',
+  inputClass,
 }: SearchBarProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentKeyword = searchParams.get(paramName) || ''
@@ -44,7 +46,7 @@ export function SearchBar({
   }, [currentKeyword])
 
   return (
-    <div className={cn('h-9 max-w-[700px] flex-1 md:h-10', className)}>
+    <div className={cn('h-5 max-w-[700px] flex-1 md:h-10', className)}>
       <Input
         type="text"
         value={keyword}
@@ -55,6 +57,7 @@ export function SearchBar({
         border
         borderColor={borderColor}
         backgroundColor="bg-white"
+        inputClass={inputClass}
       />
     </div>
   )

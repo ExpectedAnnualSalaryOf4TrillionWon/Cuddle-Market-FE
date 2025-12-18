@@ -28,6 +28,7 @@ import { IconButton } from '@src/components/commons/button/IconButton'
 // import SellerOtherProducts from './components/SellerOtherProducts'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
+import { SimpleHeader } from '@src/components/header/SimpleHeader'
 export default function CommunityDetail() {
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
@@ -98,8 +99,7 @@ export default function CommunityDetail() {
         return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
     }
   }
-  const { title: headerTitle } = getHeaderContent()
-
+  const { title: headerTitle, description: headerDescription } = getHeaderContent()
   const onSubmit = (data: ReplyRequestFormValues) => {
     replyMutation.mutate(data)
   }
@@ -122,22 +122,20 @@ export default function CommunityDetail() {
 
   return (
     <>
-      {/* <SimpleHeader
-        title={headerTitle}
-        description={isMd ? headerDescription : undefined}
-        to={`/community?tab=${tabId}`}
-        showWriteButton={false}
-        showBackButton
-        layoutClassname="py-5 flex-row justify-between border-b border-gray-200"
-      /> */}
-      <div className={cn('bg-primary-200 sticky top-0 mx-auto flex w-full max-w-7xl justify-between px-3.5 py-4', Z_INDEX.HEADER)}>
-        {!isMd && (
+      {!isMd ? (
+        <div className={cn('bg-primary-200 sticky top-0 mx-auto flex w-full max-w-7xl justify-between px-3.5 py-4', Z_INDEX.HEADER)}>
           <button type="button" onClick={() => navigate(-1)} className="flex cursor-pointer items-center gap-1 text-gray-600">
             <ArrowLeft size={23} className="text-white" />
           </button>
-        )}
-        <h2 className="heading-h4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-extrabold! text-white">{headerTitle}</h2>
-      </div>
+          <h2 className="heading-h4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-extrabold! text-white">{headerTitle}</h2>
+        </div>
+      ) : (
+        <SimpleHeader
+          title={headerTitle}
+          description={isMd ? headerDescription : undefined}
+          layoutClassname="py-5 flex-col justify-between border-b border-gray-200"
+        />
+      )}
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="flex flex-col justify-center gap-3.5">

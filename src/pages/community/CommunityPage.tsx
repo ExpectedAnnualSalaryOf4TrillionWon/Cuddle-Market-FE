@@ -154,7 +154,7 @@ export default function CommunityPage() {
       <SimpleHeader
         title={headerTitle}
         description={isMd ? headerDescription : undefined}
-        layoutClassname="py-5 flex-row justify-between border-b border-gray-200 sticky top-16 z-20"
+        layoutClassname="py-5 justify-between border-b border-gray-200 md:static sticky top-16 z-20"
       />
       <div className="relative min-h-screen bg-[#F3F4F6] pt-0 md:pt-5">
         <div className="pb-4xl mx-auto max-w-7xl px-0 md:px-4">
@@ -163,7 +163,12 @@ export default function CommunityPage() {
             {!isMd && (
               <div className="sticky top-32 z-20 bg-white">
                 {/* 접히는 필터 영역 */}
-                <div className={cn('transition-all duration-300 ease-out', isFilterCollapsed ? 'max-h-0 overflow-hidden' : 'max-h-[300px] overflow-visible')}>
+                <div
+                  className={cn(
+                    'transition-all duration-300 ease-out',
+                    isFilterCollapsed ? 'max-h-0 overflow-hidden' : 'max-h-[300px] overflow-visible'
+                  )}
+                >
                   <div className="flex items-center justify-between border-b border-gray-200 p-3.5">
                     <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
                   </div>
