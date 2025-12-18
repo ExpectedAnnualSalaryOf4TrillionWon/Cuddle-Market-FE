@@ -10,6 +10,7 @@ import ProductSummary from './components/ProductSummary'
 import ProductDescription from './components/ProductDescription'
 import ProductActions from './components/ProductActions'
 import SellerOtherProducts from './components/SellerOtherProducts'
+import { useEffect } from 'react'
 
 function ProductDetail() {
   const navigate = useNavigate()
@@ -20,6 +21,9 @@ function ProductDetail() {
     queryFn: () => fetchProductById(id!),
     enabled: !!id,
   })
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (isLoading) {
     return (

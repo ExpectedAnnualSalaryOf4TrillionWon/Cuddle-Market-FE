@@ -16,6 +16,7 @@ function ProductPost() {
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>(initialTab)
   const [productData, setProductData] = useState<ProductDetailItem | null>(null)
   const { id } = useParams()
+
   const isEditMode = !!id
 
   const handleTabChange = (tabId: string) => {
@@ -24,12 +25,14 @@ function ProductPost() {
   }
 
   const isSalesTab = activeProductTypeTab === 'tab-sales'
-  const headerTitle = isSalesTab
-    ? isEditMode ? '판매 상품 수정' : '판매 상품 등록'
-    : isEditMode ? '판매 요청 수정' : '판매 요청 등록'
+  const headerTitle = isSalesTab ? (isEditMode ? '판매 상품 수정' : '판매 상품 등록') : isEditMode ? '판매 요청 수정' : '판매 요청 등록'
   const headerDescription = isSalesTab
-    ? isEditMode ? '등록된 상품 정보를 수정할 수 있습니다.' : '상품을 등록하여 다른 사용자들에게 판매할 수 있습니다.'
-    : isEditMode ? '등록된 판매 요청 정보를 수정할 수 있습니다.' : '원하는 상품이 없을 때 판매를 요청할 수 있습니다.'
+    ? isEditMode
+      ? '등록된 상품 정보를 수정할 수 있습니다.'
+      : '상품을 등록하여 다른 사용자들에게 판매할 수 있습니다.'
+    : isEditMode
+      ? '등록된 판매 요청 정보를 수정할 수 있습니다.'
+      : '원하는 상품이 없을 때 판매를 요청할 수 있습니다.'
 
   useEffect(() => {
     const loadProduct = async () => {
