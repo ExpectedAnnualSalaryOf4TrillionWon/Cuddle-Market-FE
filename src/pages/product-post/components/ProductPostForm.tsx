@@ -89,8 +89,15 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
     }
 
     try {
-      await postProduct(requestData)
-      navigate(`/products/${id}`)
+      if (isEditMode && id) {
+        // 편집 모드: 기존 상품 ID로 이동
+        await postProduct(requestData)
+        navigate(`/products/${id}`)
+      } else {
+        // 새 등록: 서버에서 생성된 ID로 이동
+        const createdProduct = await postProduct(requestData)
+        navigate(`/products/${createdProduct.id}`)
+      }
     } catch {
       alert('상품 등록에 실패했습니다.')
     }
