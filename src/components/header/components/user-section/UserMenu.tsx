@@ -9,6 +9,8 @@ import { useLoginModalStore } from '@src/store/modalStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { Link } from 'react-router-dom'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { useRef } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -21,6 +23,9 @@ interface UserMenuProps {
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
   const { user, clearAll } = useUserStore()
   const { openLogoutModal } = useLoginModalStore()
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOutsideClick(isUserMenuOpen, [modalRef], () => setIsUserMenuOpen(false))
+
   const isMd = useMediaQuery('(min-width: 768px)')
   const handleAvatarToggle = () => {
     if (isNotificationOpen) {
@@ -56,8 +61,9 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
         <div
           className={cn(
             'absolute top-12 right-0 flex w-32 flex-col divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white shadow-lg md:w-48',
-            `${Z_INDEX.DROPDOWN}`
+            `${Z_INDEX.BUTTON}`
           )}
+          ref={modalRef}
         >
           {isMd ? (
             <>

@@ -161,7 +161,10 @@ export default function CommunityDetail() {
                   <button
                     className="absolute top-7 right-0 cursor-pointer rounded border border-gray-200 bg-white px-3 py-1.5 text-sm whitespace-nowrap shadow-md hover:bg-gray-50"
                     type="button"
-                    onClick={() => setIsReportModalOpen?.(true)}
+                    onClick={() => {
+                      setIsMoreMenuOpen(false)
+                      setIsReportModalOpen(true)
+                    }}
                   >
                     신고하기
                   </button>

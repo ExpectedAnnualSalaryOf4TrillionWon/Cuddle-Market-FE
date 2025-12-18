@@ -6,6 +6,8 @@ import { RequiredLabel } from '../commons/RequiredLabel'
 import { WithDrawApiErrors } from '@src/pages/signup/validationRules'
 import AlertBox from './AlertBox'
 import ModalTitle from './ModalTitle'
+import { useRef } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 export interface WithDrawFormValues {
   reason: string
@@ -36,7 +38,9 @@ export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawM
     },
   })
   const titleLength = watch('detailReason')?.length ?? 0
-
+  const modalRef = useRef<HTMLDivElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isOpen, [modalRef], onCancel)
   const handleCancel = () => {
     reset()
     onCancel()
@@ -52,7 +56,7 @@ export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawM
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
-      <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw]">
+      <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96" ref={modalRef}>
         <ModalTitle heading="회원탈퇴" description="정말로 탈퇴하시겠습니까?" />
         <AlertBox alertList={WITH_DRAW_ALERT_LIST} />
 
