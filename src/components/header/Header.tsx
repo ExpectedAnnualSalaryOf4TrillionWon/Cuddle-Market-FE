@@ -17,7 +17,7 @@ function Header({ hideSearchBar = false }: HeaderProps) {
         `${Z_INDEX.HEADER}`
       )}
     >
-      <div className="flex w-full flex-col gap-3 px-4 md:block md:px-2.5">
+      <div className="flex w-full flex-col gap-3 px-4 md:block md:max-w-7xl md:px-3.5">
         <div className="gap-lg flex items-center justify-between">
           <Logo />
           {!hideSearchBar && <SearchBar className="hidden md:block" />}
