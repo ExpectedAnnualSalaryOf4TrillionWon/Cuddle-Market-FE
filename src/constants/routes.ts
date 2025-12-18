@@ -20,7 +20,10 @@ export const ROUTES = {
   PROFILE_UPDATE: `/profile-update`,
   USER_PROFILE: '/user-profile/:id',
   USER_ID: (id: string | number) => `/user-profile/${id}`,
-  // RECRUITMENT_CREATE: '/recruitment/create',
+
+  // Chat
+  CHAT: '/chat/:id',
+  CHAT_ROOM_ID: (id: string | number) => `/chat/${id}`,
   // RECRUITMENT_MANAGE: '/recruitment/manage',
   // RECRUITMENT_EDIT: (uuid: string | number) => `/recruitment/${uuid}/edit`,
   // RECRUITMENT_UUID: (uuid: string) => `/recruitment/${uuid}`,

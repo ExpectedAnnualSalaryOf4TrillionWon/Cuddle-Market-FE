@@ -545,11 +545,47 @@ export interface CommentPostResponse {
     updatedAt: string
   }
 }
-export interface DeleteResponse {
+
+export interface CreateChatRequestData {
+  productId: number
+}
+
+export interface CreateChatRoomResponse {
   code: string
   message: string
-  data: null
+  data: {
+    chatRoomId: number
+    productId: number
+    productTitle: string
+    productPrice: number
+    productImageUrl: string
+    createdAt: string
+    sellerNickname: string
+    sellerProfileImageUrl: null
+  }
 }
+
+export interface ChatRoomMessagesResponse {
+  code: string
+  message: string
+  data: {
+    messages: Message[]
+  }
+}
+
+export interface Message {
+  messageId: number
+  senderId: number
+  senderNickname: string
+  messageType: string
+  content: string
+  imageUrl: null
+  isBlocked: boolean
+  blockReason: null
+  createdAt: string
+  isMine: boolean
+}
+
 // export interface ProductDetailItemResponse {
 //   code: string
 //   message: string

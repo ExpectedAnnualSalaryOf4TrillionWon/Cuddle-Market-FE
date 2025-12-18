@@ -23,6 +23,7 @@ import CommunityPage from '@src/pages/community/CommunityPage'
 import CommunityPostForm from '@src/pages/community/components/CommunityPostForm'
 import CommunityDetail from '@src/pages/community/CommunityDetail'
 import GoogleCallback from '@src/pages/GoogleCallback'
+import ChattingPage from '@src/pages/ChattingPage'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
@@ -39,6 +40,7 @@ const routes = [
   { path: ROUTES.COMMUNITY_POST, element: <CommunityPostForm /> },
   { path: ROUTES.COMMUNITY_DETAIL, element: <CommunityDetail /> },
   { path: ROUTES.COMMUNITY_EDIT, element: <CommunityPostForm /> },
+  { path: ROUTES.CHAT, element: <ChattingPage /> },
 ]
 
 function AppRoutes() {
