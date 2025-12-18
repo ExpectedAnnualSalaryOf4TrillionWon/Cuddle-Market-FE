@@ -21,11 +21,6 @@ import { IconButton } from '@src/components/commons/button/IconButton'
 // import { useSearchParams } from 'react-router-dom'
 // // import { chatList } from '@src/mock/chatListData'
 
-interface ChatProps {
-  toggleChat: () => void
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
-}
 export default function ChattingPage() {
   const { user } = useUserStore()
   const { id: chatRoomId } = useParams()

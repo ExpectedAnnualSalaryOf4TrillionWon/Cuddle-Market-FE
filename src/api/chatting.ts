@@ -2,15 +2,10 @@ import type {
   CreateChatRequestData,
   CreateChatRoomResponse,
   ImageUploadResponse,
-  // FilterApiResponse,
   MyBlockedUsersResponse,
   MyPageDataResponse,
   MyPageProductResponse,
-  ProductDetailItemResponse,
-  ProductPostRequestData,
   ProductPostResponse,
-  ProductResponse,
-  RequestProductPostRequestData,
 } from '../types'
 import { api } from './api'
 import type { TransactionStatus } from '@src/constants/constants'

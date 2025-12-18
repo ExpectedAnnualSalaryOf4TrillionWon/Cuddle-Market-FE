@@ -546,6 +546,12 @@ export interface CommentPostResponse {
   }
 }
 
+export interface DeleteResponse {
+  code: string
+  message: string
+  data: null
+}
+
 export interface CreateChatRequestData {
   productId: number
 }
