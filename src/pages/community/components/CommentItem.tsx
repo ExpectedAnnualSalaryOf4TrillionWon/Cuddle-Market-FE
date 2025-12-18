@@ -4,8 +4,9 @@ import type { Comment } from '@src/types'
 import { EllipsisVertical } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useUserStore } from '@src/store/userStore'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 interface CommentItemProps {
   comment: Comment
@@ -36,8 +37,10 @@ export function CommentItem({
   const handleMoreToggle = () => {
     setIsMoreMenuOpen(!isMoreMenuOpen)
   }
-  console.log(comment)
 
+  const modalRef = useRef<HTMLButtonElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isMoreMenuOpen, [modalRef], () => setIsMoreMenuOpen(false))
   const handleDelete = () => {
     onDelete?.(comment.id)
     setIsMoreMenuOpen(false)
@@ -50,7 +53,12 @@ export function CommentItem({
       {/* 유저 정보 및 내용 */}
       <div className="flex flex-col justify-center gap-1">
         <div className="flex items-center gap-3.5">
-          <p>{comment.authorNickname}</p>
+          <div className="flex items-center gap-1.5">
+            <p>{comment.authorNickname}</p>
+            {Number(comment.authorId) === user?.id && (
+              <p className="bg-primary-200 rounded-full px-2.5 py-1 text-xs font-semibold text-white">작성자</p>
+            )}
+          </div>
           <p className="text-sm text-gray-400">{formatDate(comment.createdAt)}</p>
         </div>
         <p>{comment.content}</p>
@@ -78,6 +86,7 @@ export function CommentItem({
               className="absolute top-7 right-0 cursor-pointer rounded border border-gray-200 bg-white px-3 py-1.5 text-sm whitespace-nowrap shadow-md hover:bg-gray-50"
               type="button"
               onClick={() => handleDelete()}
+              ref={modalRef}
             >
               삭제
             </button>
