@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { MapPin, Calendar, Settings, MessageCircle, Flag, Ban, LockOpen, ShieldAlert } from 'lucide-react'
+import { MapPin, Calendar, Settings, Flag, Ban, LockOpen, ShieldAlert } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
 import { formatJoinDate } from '@src/utils/formatJoinDate'
@@ -116,28 +116,21 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
           {/* 다른 유저 프로필 */}
           {!isMyProfile && (
             <>
-              <div className="flex flex-col gap-3.5">
-                {data?.isBlocked ? (
-                  <>
-                    <div className="bg-danger-100/30 border-danger-100 text-danger-800 flex items-center justify-center gap-2 rounded-lg border p-2.5 font-medium">
-                      <ShieldAlert />
-                      <span>이 사용자를 차단했습니다</span>
-                    </div>
-                    <Button
-                      icon={LockOpen}
-                      onClick={() => unblockUser()}
-                      className="bg-primary-200 flex cursor-pointer items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
-                    >
-                      차단 해제하기
-                    </Button>
-                  </>
-                ) : (
-                  <Link to="#" className="bg-primary-200 flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all">
-                    <MessageCircle size={19} />
-                    <span>채팅하기</span>
-                  </Link>
-                )}
-              </div>
+              {data?.isBlocked && (
+                <div className="flex flex-col gap-3.5">
+                  <div className="bg-danger-100/30 border-danger-100 text-danger-800 flex items-center justify-center gap-2 rounded-lg border p-2.5 font-medium">
+                    <ShieldAlert />
+                    <span>이 사용자를 차단했습니다</span>
+                  </div>
+                  <Button
+                    icon={LockOpen}
+                    onClick={() => unblockUser()}
+                    className="bg-primary-200 flex cursor-pointer items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
+                  >
+                    차단 해제하기
+                  </Button>
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 {data?.isReported ? (
                   <div className="flex w-full items-center justify-start gap-2 px-3 py-1.5 text-sm text-gray-500">
@@ -147,7 +140,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                 ) : (
                   <button
                     type="button"
-                    className="flex w-full cursor-pointer items-center justify-start gap-2 border-t border-gray-300 bg-transparent px-3 pt-6 pb-6 text-sm text-gray-500 hover:bg-gray-100 md:rounded-lg md:py-1.5"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-transparent px-4 pt-4 pb-3 text-sm text-gray-500 hover:bg-gray-100 md:py-1.5"
                     onClick={() => setIsReportModalOpen?.(true)}
                   >
                     <Flag size={16} />
@@ -158,7 +151,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                 {!data?.isBlocked && (
                   <button
                     type="button"
-                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100"
+                    className="1.5 tex1.5-sm p3 bg-tra3arent roun4ed-l4 flex w-full cursor-pointer items-center justify-center gap-2 text-gray-500 hover:bg-gray-100 md:py-1.5"
                     onClick={() => setIsBlockModalOpen?.(true)}
                   >
                     <Ban size={16} />

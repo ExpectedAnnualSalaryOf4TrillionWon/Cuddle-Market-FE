@@ -4,6 +4,8 @@ import { Button } from '../commons/button/Button'
 import AlertBox from './AlertBox'
 import { PRODUCT_DELETE_ALERT_LIST } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
+import { useRef } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 interface DeleteConfirmModalProps {
   isOpen: boolean
@@ -13,11 +15,14 @@ interface DeleteConfirmModalProps {
 }
 
 function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel }: DeleteConfirmModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isOpen, [modalRef], onCancel)
   if (!isOpen || !product) return null
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
-      <div className="flex w-[16vw] flex-col gap-4 rounded-lg bg-white p-5">
+      <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96" ref={modalRef}>
         <ModalTitle heading="상품 삭제" description="정말로 이 상품을 삭제하시겠습니까?" />
         <AlertBox alertList={PRODUCT_DELETE_ALERT_LIST} />
         <ul>
@@ -30,7 +35,7 @@ function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel }: DeleteConf
               />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="w-72 truncate font-medium">{product.title}</p>
+              <p className="line-clamp-2 w-full font-medium md:line-clamp-none md:w-72 md:truncate">{product.title}</p>
               <p className="font-medium">
                 <span>{formatPrice(Number(product.price))}</span>원
               </p>

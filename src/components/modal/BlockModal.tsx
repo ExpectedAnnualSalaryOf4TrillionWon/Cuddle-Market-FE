@@ -4,6 +4,8 @@ import { USER_BLOCK_ALERT_LIST } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
 import { userBlocked } from '@src/api/profile'
 import { useQueryClient } from '@tanstack/react-query'
+import { useRef } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 interface BlockModalProps {
   isOpen: boolean
@@ -17,6 +19,9 @@ export default function BlockModal({ isOpen, onCancel, userNickname, userId }: B
   const handleCancel = () => {
     onCancel()
   }
+  const modalRef = useRef<HTMLDivElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isOpen, [modalRef], onCancel)
   const onUserBlock = async () => {
     try {
       await userBlocked(userId)
@@ -29,7 +34,7 @@ export default function BlockModal({ isOpen, onCancel, userNickname, userId }: B
   if (!isOpen) return null
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
-      <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw]">
+      <div ref={modalRef} className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-max">
         <ModalTitle heading="사용자 차단하기" description={`정말로 ${userNickname}를 신고하시겠습니까?`} />
         <AlertBox alertList={USER_BLOCK_ALERT_LIST} />
 

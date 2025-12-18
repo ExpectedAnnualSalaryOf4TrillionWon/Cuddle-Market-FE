@@ -154,16 +154,16 @@ export default function CommunityPage() {
       <SimpleHeader
         title={headerTitle}
         description={isMd ? headerDescription : undefined}
-        layoutClassname="py-5 flex-row justify-between border-b border-gray-200 sticky top-16 z-25"
+        layoutClassname="py-5 flex-row justify-between border-b border-gray-200 sticky top-16 z-20"
       />
       <div className="relative min-h-screen bg-[#F3F4F6] pt-0 md:pt-5">
         <div className="pb-4xl mx-auto max-w-7xl px-0 md:px-4">
           <div className="flex w-full flex-col">
             {/* 모바일: 필터 영역 */}
             {!isMd && (
-              <div className="sticky top-32 z-25 bg-white">
+              <div className="sticky top-32 z-20 bg-white">
                 {/* 접히는 필터 영역 */}
-                <div className={cn('overflow-hidden transition-all duration-300 ease-out', isFilterCollapsed ? 'max-h-0' : 'max-h-[300px]')}>
+                <div className={cn('transition-all duration-300 ease-out', isFilterCollapsed ? 'max-h-0 overflow-hidden' : 'max-h-[300px] overflow-visible')}>
                   <div className="flex items-center justify-between border-b border-gray-200 p-3.5">
                     <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
                   </div>
@@ -177,7 +177,7 @@ export default function CommunityPage() {
                           value: sort.label,
                           label: sort.label,
                         }))}
-                        buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2 "
+                        buttonClassName="border border-gray-300 bg-primary-50 text-gray-900 text-base px-3 py-2"
                       />
                     </div>
                     <SearchBar placeholder="게시글 검색" borderColor="border-gray-300" className="h-11 max-w-full" paramName="communityKeyword" />

@@ -4,7 +4,8 @@ import { RequiredLabel } from '../commons/RequiredLabel'
 import { useForm } from 'react-hook-form'
 import { ReportApiErrors } from '@src/pages/signup/validationRules'
 import ImageUploadField from '@src/pages/product-post/components/imageUploadField/ImageUploadField'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 export interface ReportFormValues {
   reasonCode: string
@@ -44,6 +45,9 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
       imageFiles: [],
     },
   })
+  const modalRef = useRef<HTMLDivElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isOpen, [modalRef], onCancel)
 
   const titleLength = watch('detailReason')?.length ?? 0
 
@@ -61,7 +65,7 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70 p-4">
-      <div className="flex max-h-[90vh] w-full flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-[16vw]">
+      <div ref={modalRef} className="flex max-h-[90vh] w-11/12 flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96">
         <ModalTitle heading={heading} description={description} />
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">

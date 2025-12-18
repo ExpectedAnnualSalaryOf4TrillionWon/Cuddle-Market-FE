@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom'
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
 import { useLoginModalStore } from '@src/store/modalStore'
+import { useRef } from 'react'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 export default function ConfirmModal() {
   const { isOpen, modalType, onConfirm, closeModal } = useLoginModalStore()
-
+  const modalRef = useRef<HTMLDivElement>(null)
+  // 바깥 클릭 시 onCancel 호출
+  useOutsideClick(isOpen, [modalRef], closeModal)
   if (!isOpen) return null
 
   // 모달 타입에 따른 텍스트 설정
@@ -24,7 +28,7 @@ export default function ConfirmModal() {
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
-      <div className="flex min-w-80 flex-col items-center gap-6 rounded-lg bg-white p-5">
+      <div ref={modalRef} className="flex w-11/12 flex-col items-center gap-6 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-80">
         <div className="flex w-full flex-col items-center gap-2">
           <h3 className="heading-h4">{heading}</h3>
           <p>{description}</p>

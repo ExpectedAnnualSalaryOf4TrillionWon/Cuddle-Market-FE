@@ -3,7 +3,7 @@ import { Badge } from '@src/components/commons/badge/Badge'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { STATUS_EN_TO_KO, type TransactionStatus, type MyPageTabId } from '@src/constants/constants'
 import type { Product } from '@src/types'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '@src/components/commons/button/Button'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
@@ -18,6 +18,7 @@ import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { Z_INDEX } from '@src/constants/ui'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 type MyListProps = Product & {
   activeTab?: MyPageTabId
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
@@ -28,6 +29,9 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
   const [localTradeStatus, setLocalTradeStatus] = useState(tradeStatus)
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOutsideClick(isMoreMenuOpen, [modalRef], () => setIsMoreMenuOpen(false))
+
   const isMd = useMediaQuery('(min-width: 768px)')
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
@@ -111,6 +115,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                           'absolute top-7 right-0 flex w-fit flex-col items-end rounded-lg border border-gray-300 bg-white',
                           Z_INDEX.DROPDOWN
                         )}
+                        ref={modalRef}
                       >
                         {isMyProductTab && !isCompleted && (
                           <Button

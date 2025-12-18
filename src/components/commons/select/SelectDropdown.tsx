@@ -99,7 +99,7 @@ function SelectOptions({ options, selectedValue, onSelect, placeholder, optionCl
       ref={listboxRef}
       role="listbox"
       aria-label={placeholder}
-      className="absolute top-full left-0 z-2 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md"
+      className="absolute top-full left-0 z-20 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md"
     >
       {options.map((option) => {
         const isSelected = selectedValue === option.value
