@@ -1,4 +1,6 @@
 import type {
+  ChatRoomMessagesResponse,
+  ChatRoomsResponse,
   CreateChatRequestData,
   CreateChatRoomResponse,
   ImageUploadResponse,
@@ -16,10 +18,21 @@ export const createChatRoom = async (requestData: CreateChatRequestData) => {
   return response.data.data
 }
 
+// 채팅 목록 조회
+export const fetchRooms = async () => {
+  const response = await api.get<ChatRoomsResponse>(`/chat/rooms`)
+  return response.data.data.chatRooms
+}
+
 // 채팅 내역 조회
 export const fetchRoomMessages = async (chatRoomId: number, page: number = 0, size: number = 50) => {
-  const response = await api.get(`/chat/rooms/${chatRoomId}/messages?page=${page}&size=${size}`)
+  const response = await api.get<ChatRoomMessagesResponse>(`/chat/rooms/${chatRoomId}/messages?page=${page}&size=${size}`)
   return response.data.data.messages
+}
+
+// 채팅방 나가기
+export const outChatRoom = async (chatRoomId: number) => {
+  await api.delete(`/chat/rooms/${chatRoomId}`)
 }
 
 // 이미지 업로드

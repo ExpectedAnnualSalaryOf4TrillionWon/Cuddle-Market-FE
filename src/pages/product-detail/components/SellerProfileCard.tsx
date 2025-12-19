@@ -26,7 +26,7 @@ export default function SellerProfileCard({ sellerInfo }: SellerProfileCardProps
     sellerInfo?.sellerId !== user?.id && (
       <div className="flex justify-between rounded-lg border border-gray-300 p-5">
         <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#FACC15]">
+          <div className="bg-primary-50 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full">
             {sellerInfo.sellerProfileImageUrl ? (
               <img src={sellerInfo.sellerProfileImageUrl ?? ''} alt={sellerInfo?.sellerNickname} className="h-full w-full object-cover" />
             ) : (

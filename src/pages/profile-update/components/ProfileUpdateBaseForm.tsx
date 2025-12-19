@@ -170,7 +170,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
             <div className="flex flex-col items-center gap-4">
               <div
                 {...getRootProps()}
-                className="flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#FACC15]"
+                className="bg-primary-50 flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full"
               >
                 <input {...getInputProps()} />
                 {previewUrl ? (

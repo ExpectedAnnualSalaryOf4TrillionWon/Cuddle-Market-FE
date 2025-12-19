@@ -58,7 +58,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
       <div className="text-text-primary sticky top-24 flex flex-col rounded-xl">
         <div className="flex flex-col gap-3 md:gap-6">
           <div className="flex flex-row items-center gap-3.5 md:flex-col">
-            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#FACC15]">
+            <div className="bg-primary-50 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
               {data?.profileImageUrl ? (
                 <img src={data.profileImageUrl} alt={data.nickname} className="h-full w-full object-cover" />
               ) : (
