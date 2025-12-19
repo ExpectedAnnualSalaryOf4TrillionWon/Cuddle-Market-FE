@@ -1,16 +1,16 @@
 import { fetchRoomMessages, fetchRooms } from '@src/api/chatting'
 import { useUserStore } from '@src/store/userStore'
 import { useQuery } from '@tanstack/react-query'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import type { ChatRoom, CreateChatRoomResponse, fetchChatRoom } from '@src/types'
+import { useNavigate, useParams } from 'react-router-dom'
+import type { fetchChatRoom } from '@src/types'
 import { Send, Paperclip } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
-import { ChatRooms } from '@src/pages/ChatRooms'
-import { ChatRoomInfo } from '@src/pages/ChatRoomInfo'
+import { ChatRooms } from './components/ChatRooms'
+import { ChatRoomInfo } from './components/ChatRoomInfo'
 import { useEffect, useState } from 'react'
 import { chatSocketStore } from '@src/store/chatSocketStore'
-import { ChatLog } from '@src/pages/ChatLog'
-import ChatInput from '../ChatInput'
+import { ChatLog } from './components/ChatLog'
+import ChatInput from './components/ChatInput'
 
 export default function ChattingPage() {
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)

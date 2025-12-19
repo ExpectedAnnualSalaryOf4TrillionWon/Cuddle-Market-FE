@@ -2,9 +2,6 @@ import { create } from 'zustand'
 import { Client, type IMessage, type StompSubscription } from '@stomp/stompjs'
 import type { Message } from '@src/types'
 import SockJS from 'sockjs-client'
-interface ChatMessage extends Message {
-  chatRoomId: number
-}
 
 interface ChatSocketState {
   //---

@@ -1,6 +1,6 @@
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
-import type { ChatRoom, fetchChatRoom } from '@src/types'
+import type { fetchChatRoom } from '@src/types'
 import { Link } from 'react-router-dom'
 import { SellerAvatar } from '@src/components/commons/avatar/SellerAvatar'
 import { ChatProductCard } from '@src/components/commons/card/ChatProductCard'
