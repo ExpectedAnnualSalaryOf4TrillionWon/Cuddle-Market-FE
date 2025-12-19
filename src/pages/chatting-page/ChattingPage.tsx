@@ -69,14 +69,6 @@ export default function ChattingPage() {
     }
   }, [rooms, chatRoomId, selectedRoom])
 
-  useEffect(() => {
-    if (roomMessages && chatRoomId) {
-      // 이미 초기화되지 않은 경우에만
-      if (!realtimeMessages[Number(chatRoomId)]?.length) {
-        // chatSocketStore에 초기 메시지 설정 함수가 필요
-      }
-    }
-  }, [roomMessages, chatRoomId])
   // export default function Chatting({ isOpen, setIsOpen }: ChatProps) {
   //   const [searchParams] = useSearchParams()
   //   const [currentView, setCurrentView] = useState<'list' | 'chat'>('list')
