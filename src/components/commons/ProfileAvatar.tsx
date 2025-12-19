@@ -15,18 +15,8 @@ const sizeClasses = {
 
 export function ProfileAvatar({ imageUrl, nickname, size = 'md', className }: ProfileAvatarProps) {
   return (
-    <div
-      className={cn(
-        'flex items-center justify-center overflow-hidden rounded-full bg-[#FACC15]',
-        sizeClasses[size],
-        className
-      )}
-    >
-      {imageUrl ? (
-        <img src={imageUrl} alt={nickname} className="h-full w-full object-cover" />
-      ) : (
-        <span>{nickname.charAt(0).toUpperCase()}</span>
-      )}
+    <div className={cn('bg-primary-50 flex items-center justify-center overflow-hidden rounded-full', sizeClasses[size], className)}>
+      {imageUrl ? <img src={imageUrl} alt={nickname} className="h-full w-full object-cover" /> : <span>{nickname.charAt(0).toUpperCase()}</span>}
     </div>
   )
 }

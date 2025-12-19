@@ -555,20 +555,21 @@ export interface DeleteResponse {
 export interface CreateChatRequestData {
   productId: number
 }
+export interface ChatRoom {
+  chatRoomId: number
+  productId: number
+  productTitle: string
+  productPrice: number
+  productImageUrl: string
+  createdAt: string
+  sellerNickname: string
+  sellerProfileImageUrl: null
+}
 
 export interface CreateChatRoomResponse {
   code: string
   message: string
-  data: {
-    chatRoomId: number
-    productId: number
-    productTitle: string
-    productPrice: number
-    productImageUrl: string
-    createdAt: string
-    sellerNickname: string
-    sellerProfileImageUrl: null
-  }
+  data: ChatRoom
 }
 
 export interface ChatRoomMessagesResponse {
@@ -590,6 +591,27 @@ export interface Message {
   blockReason: null
   createdAt: string
   isMine: boolean
+}
+
+export interface ChatRoomsResponse {
+  code: string
+  message: string
+  data: { chatRooms: fetchChatRoom[] }
+}
+
+export interface fetchChatRoom {
+  chatRoomId: number
+  productId: number
+  productTitle: string
+  productPrice: number
+  productImageUrl: string
+  opponentId: number
+  opponentNickname: string
+  opponentProfileImageUrl: string
+  lastMessage: string
+  lastMessageTime: string
+  hasUnread: boolean
+  unreadCount: number
 }
 
 // export interface ProductDetailItemResponse {

@@ -23,7 +23,7 @@ import CommunityPage from '@src/pages/community/CommunityPage'
 import CommunityPostForm from '@src/pages/community/components/CommunityPostForm'
 import CommunityDetail from '@src/pages/community/CommunityDetail'
 import GoogleCallback from '@src/pages/GoogleCallback'
-import ChattingPage from '@src/pages/ChattingPage'
+import ChattingPage from '@src/pages/chattingpage/ChattingPage'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
