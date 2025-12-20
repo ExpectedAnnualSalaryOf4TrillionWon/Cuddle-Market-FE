@@ -12,9 +12,11 @@ import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
 import { uploadImage } from '@src/api/products'
+import { cn } from '@src/utils/cn'
 const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 
 export default function ChattingPage() {
+  const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
@@ -47,7 +49,13 @@ export default function ChattingPage() {
     subscribeToRoom(room.chatRoomId)
     clearUnreadCount(room.chatRoomId)
     setSelectedRoom(room)
-    navigate(`/chat/${room.chatRoomId}`, { replace: true })
+    setIsChatOpen(true)
+    // 모바일에서 뒤로가기 시 목록으로 돌아갈 수 있도록 history state 추가
+    if (window.innerWidth < 768) {
+      window.history.pushState({ chatOpen: true }, '', `/chat/${room.chatRoomId}`)
+    } else {
+      navigate(`/chat/${room.chatRoomId}`)
+    }
   }
 
   const handleSend = (message: string) => {
@@ -87,9 +95,12 @@ export default function ChattingPage() {
     } else {
       // 채팅방이 없으면 초기화
       setSelectedRoom(null)
+      setIsChatOpen(false)
     }
   }
-
+  const handleBack = () => {
+    setIsChatOpen(false)
+  }
   useEffect(() => {
     if (accessToken) {
       connect(WS_URL, accessToken)
@@ -117,16 +128,36 @@ export default function ChattingPage() {
       navigate('/auth/login')
     }
   }, [])
+  useEffect(() => {
+    if (!chatRoomId) {
+      setIsChatOpen(false)
+    }
+  }, [chatRoomId])
+
+  // 모바일에서 뒤로가기 시 채팅방 목록으로 전환
+  useEffect(() => {
+    const handlePopState = () => {
+      // 모바일에서만 동작 (md 브레이크포인트 = 768px)
+      if (window.innerWidth < 768) {
+        setIsChatOpen(false)
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   return (
-    <div className="pb-4xl bg-white pt-0 md:pt-8">
-      <div className="mx-auto flex max-w-7xl flex-col md:flex-row">
-        {<ChatRooms rooms={rooms ?? []} handleSelectRoom={handleSelectRoom} selectedRoomId={selectedRoom?.chatRoomId ?? null} />}
-        <section className="flex flex-1 flex-col border border-gray-300">
+    <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">
+      <div className="mx-auto flex h-full max-w-7xl flex-col md:h-auto md:flex-row">
+        <div className={cn('md:block', isChatOpen ? 'hidden' : 'block')}>
+          <ChatRooms rooms={rooms ?? []} handleSelectRoom={handleSelectRoom} selectedRoomId={selectedRoom?.chatRoomId ?? null} />
+        </div>
+        <section className={cn('flex flex-1 flex-col border border-gray-300', 'md:block', isChatOpen ? 'block' : 'hidden')}>
           {selectedRoom ? (
             <>
-              <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} />
-              <div className="bg-primary-50 max-h-[70vh] min-h-[70vh] p-3.5">
+              <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} onBack={handleBack} />
+              <div className="bg-primary-50 h-screen flex-1 p-3.5 md:h-[70vh]">
                 <ChatLog
                   roomMessages={allMessages}
                   onLoadPrevious={() => fetchNextPage()}
@@ -134,7 +165,7 @@ export default function ChattingPage() {
                   isLoadingPrevious={isFetchingNextPage}
                 />
               </div>
-              <div className="flex items-center gap-2.5 p-3.5">
+              <div className="fixed right-0 bottom-0 left-0 z-25 flex items-center gap-2.5 bg-white p-3.5 md:static">
                 <input type="file" id="chat-file-input" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageSend} />
                 <label htmlFor="chat-file-input" className="cursor-pointer rounded p-1">
                   <Paperclip size={20} />

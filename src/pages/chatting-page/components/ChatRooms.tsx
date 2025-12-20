@@ -26,7 +26,7 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
     return room
   }
   return (
-    <section className="flex flex-col rounded-none border-t border-b border-l border-gray-300 md:max-w-96 md:min-w-96">
+    <section className="flex flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
       <h2 className="border-b border-gray-300 p-5">채팅목록</h2>
       <div className="px-3 py-3">
         <ul className="flex flex-col gap-2">
@@ -38,16 +38,18 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
                   key={roomData.chatRoomId}
                   className={cn(
                     'flex cursor-pointer items-start gap-2 rounded-lg p-3',
-                    roomData.chatRoomId === selectedRoomId ? 'border border-gray-300 bg-[#E5E7EB]/50' : 'border border-transparent'
+                    roomData.chatRoomId === selectedRoomId ? 'border-gray-300 md:border md:bg-[#E5E7EB]/50' : 'border border-transparent'
                   )}
                   onClick={() => handleSelectRoom(room)}
                 >
                   <SellerAvatar profileImageUrl={roomData?.opponentProfileImageUrl} nickname={roomData?.opponentNickname} />
-                  <div className="flex w-full flex-col gap-2">
+                  <div className="flex w-full flex-1 flex-col gap-2 md:flex-none">
                     <div className="flex w-full items-start justify-between">
                       <div className="flex flex-col gap-1">
-                        <p className="leading-none">{roomData?.opponentNickname}</p>
-                        <p className="text-sm">{roomData.lastMessage}</p>
+                        <p className="leading-none font-semibold">{roomData?.opponentNickname}</p>
+                        <p className={cn('text-sm', roomData.lastMessage ? '' : 'text-blue-600')}>
+                          {roomData.lastMessage ? roomData.lastMessage : '채팅방에 입장해주세요'}
+                        </p>
                       </div>
                       <div className="flex items-center gap-1">
                         {roomData.lastMessageTime && (

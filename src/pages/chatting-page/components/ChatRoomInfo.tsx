@@ -7,12 +7,15 @@ import { ChatProductCard } from '@src/components/commons/card/ChatProductCard'
 import { outChatRoom } from '@src/api/chatting'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { useQueryClient } from '@tanstack/react-query'
+import { ArrowLeft } from 'lucide-react'
+
 interface ChatRoomInfoProps {
   data: fetchChatRoom
   onLeaveRoom: (leftRoomId: number) => void
+  onBack?: () => void
 }
 
-export function ChatRoomInfo({ data, onLeaveRoom }: ChatRoomInfoProps) {
+export function ChatRoomInfo({ data, onLeaveRoom, onBack }: ChatRoomInfoProps) {
   const queryClient = useQueryClient()
   const { unsubscribeFromRoom } = chatSocketStore()
   const handleOutChatRoom = async () => {
@@ -27,9 +30,14 @@ export function ChatRoomInfo({ data, onLeaveRoom }: ChatRoomInfoProps) {
     }
   }
   return (
-    <div className="flex flex-col gap-2.5 p-3.5">
+    <div className="sticky top-28 flex flex-col gap-2.5 bg-white p-3.5 md:static">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
+          {onBack && (
+            <button onClick={onBack} className="p-1 md:hidden">
+              <ArrowLeft size={24} />
+            </button>
+          )}
           <SellerAvatar profileImageUrl={data?.opponentProfileImageUrl} nickname={data?.opponentNickname} />
           <p>{data?.opponentNickname}</p>
         </div>
