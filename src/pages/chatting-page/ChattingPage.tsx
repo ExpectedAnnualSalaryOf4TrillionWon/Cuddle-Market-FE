@@ -7,10 +7,12 @@ import { Send, Paperclip } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { ChatRooms } from '@src/pages/chatting-page/components/ChatRooms'
 import { ChatRoomInfo } from '@src/pages/chatting-page/components/ChatRoomInfo'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
+import { uploadImage } from '@src/api/products'
+const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 
 export default function ChattingPage() {
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
@@ -18,7 +20,7 @@ export default function ChattingPage() {
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
   const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount } = chatSocketStore()
-
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const {
     data: roomMessages,
     fetchNextPage,
@@ -53,6 +55,24 @@ export default function ChattingPage() {
       sendMessage(selectedRoom.chatRoomId, message, 'TEXT')
     }
   }
+  const handleImageSend = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0 || !selectedRoom) return
+
+    try {
+      // 1. 이미지 업로드 API 호출
+      const uploadResult = await uploadImage(Array.from(files))
+      const imageUrl = uploadResult.mainImageUrl
+
+      // 2. 업로드된 URL로 이미지 메시지 전송
+      // content는 null, imageUrl에 업로드된 URL 전달
+      sendMessage(selectedRoom.chatRoomId, '', 'IMAGE', imageUrl)
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error)
+    }
+    e.target.value = ''
+  }
+
   const handleLeaveRoom = (leftRoomId: number) => {
     // 나간 방을 제외한 나머지 채팅방들
     const remainingRooms = rooms?.filter((room) => room.chatRoomId !== leftRoomId) ?? []
@@ -69,8 +89,6 @@ export default function ChattingPage() {
       setSelectedRoom(null)
     }
   }
-
-  const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 
   useEffect(() => {
     if (accessToken) {
@@ -117,9 +135,10 @@ export default function ChattingPage() {
                 />
               </div>
               <div className="flex items-center gap-2.5 p-3.5">
-                <IconButton size="sm" className="p-0">
+                <input type="file" id="chat-file-input" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageSend} />
+                <label htmlFor="chat-file-input" className="cursor-pointer rounded p-1">
                   <Paperclip size={20} />
-                </IconButton>
+                </label>
                 <ChatInput onSend={handleSend} />
                 <IconButton size="lg" className="bg-primary-100 aspect-square h-full">
                   <Send className="text-white" />

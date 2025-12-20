@@ -66,10 +66,21 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       // STOMP 연결 완료 시 호출
       onConnect: () => {
         console.log('✅ STOMP 연결됨')
+
         // 채팅방 목록 실시간 업데이트 이벤트
         socket.subscribe('/user/queue/chat-room-list', (message) => {
           const updatedChatRoom = JSON.parse(message.body)
           get().updateChatRoomInList(updatedChatRoom) // 목록 업데이트
+        })
+        socket.subscribe('/user/queue/chat', (message) => {
+          const data = JSON.parse(message.body)
+          // 차단된 메시지를 해당 채팅방 메시지에 추가
+          set((state) => ({
+            messages: {
+              ...state.messages,
+              [data.chatRoomId]: [...(state.messages[data.chatRoomId] || []), data],
+            },
+          }))
         })
         set({ socket, isConnected: true })
       },
@@ -210,6 +221,7 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
     const subscription = get().subscriptions[chatRoomId]
     if (subscription) {
       subscription.unsubscribe()
+
       set((state) => {
         const { [chatRoomId]: _, ...rest } = state.subscriptions
         return { subscriptions: rest }
