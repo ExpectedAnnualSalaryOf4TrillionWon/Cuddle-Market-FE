@@ -27,7 +27,7 @@ export const fetchRooms = async () => {
 // 채팅 내역 조회
 export const fetchRoomMessages = async (chatRoomId: number, page: number = 0, size: number = 50) => {
   const response = await api.get<ChatRoomMessagesResponse>(`/chat/rooms/${chatRoomId}/messages?page=${page}&size=${size}`)
-  return response.data.data.messages
+  return response.data
 }
 
 // 채팅방 나가기

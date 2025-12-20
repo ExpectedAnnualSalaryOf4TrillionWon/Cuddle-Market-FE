@@ -1,6 +1,6 @@
 import { fetchRoomMessages, fetchRooms } from '@src/api/chatting'
 import { useUserStore } from '@src/store/userStore'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { fetchChatRoom } from '@src/types'
 import { Send, Paperclip } from 'lucide-react'
@@ -19,13 +19,21 @@ export default function ChattingPage() {
   const { id: chatRoomId } = useParams()
   const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount } = chatSocketStore()
 
-  const { data: roomMessages } = useQuery({
+  const {
+    data: roomMessages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['messages', chatRoomId],
-    queryFn: () => fetchRoomMessages(Number(chatRoomId)),
+    queryFn: ({ pageParam }) => fetchRoomMessages(Number(chatRoomId), pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.currentPage + 1 : undefined),
+    initialPageParam: 0,
     enabled: !!user && !!chatRoomId,
   })
 
-  const allMessages = [...(roomMessages ?? []), ...(realtimeMessages[Number(chatRoomId)] ?? [])]
+  const httpMessages = roomMessages?.pages.flatMap((page) => page.data.messages) ?? []
+  const allMessages = [...httpMessages, ...(realtimeMessages[Number(chatRoomId)] ?? [])]
 
   const { data: rooms } = useQuery({
     queryKey: ['chatRooms'],
@@ -164,7 +172,12 @@ export default function ChattingPage() {
           {selectedRoom && <ChatRoomInfo data={selectedRoom} />}
 
           <div className="bg-primary-50 max-h-[70vh] min-h-[70vh] p-3.5">
-            <ChatLog roomMessages={allMessages} />
+            <ChatLog
+              roomMessages={allMessages}
+              onLoadPrevious={() => fetchNextPage()}
+              hasMorePrevious={hasNextPage}
+              isLoadingPrevious={isFetchingNextPage}
+            />
           </div>
           <div className="flex items-center gap-2.5 p-3.5">
             <IconButton size="sm" className="p-0">

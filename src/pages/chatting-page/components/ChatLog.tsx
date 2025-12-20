@@ -5,6 +5,9 @@ import { useEffect, useRef } from 'react'
 
 interface ChatLogProps {
   roomMessages: Message[]
+  onLoadPrevious?: () => void
+  hasMorePrevious?: boolean
+  isLoadingPrevious?: boolean
 }
 
 // isMine 계산: HTTP API 응답은 isMine 포함, STOMP는 senderId로 비교
@@ -51,10 +54,18 @@ const groupMessagesByDate = (messages: Message[]) => {
   return groups
 }
 
-export function ChatLog({ roomMessages }: ChatLogProps) {
+export function ChatLog({ roomMessages, onLoadPrevious, hasMorePrevious, isLoadingPrevious }: ChatLogProps) {
   const { user } = useUserStore()
   const groupedMessages = groupMessagesByDate(roomMessages)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      // 스크롤이 맨 위에 도달하면 이전 메시지 로드
+      if (scrollRef.current.scrollTop === 0 && hasMorePrevious && !isLoadingPrevious) {
+        onLoadPrevious?.()
+      }
+    }
+  }
 
   // 메시지가 추가될 때 자동 스크롤
   useEffect(() => {
@@ -64,7 +75,7 @@ export function ChatLog({ roomMessages }: ChatLogProps) {
   }, [roomMessages])
 
   return (
-    <div ref={scrollRef} className="flex h-full flex-col gap-4 overflow-y-auto">
+    <div ref={scrollRef} onScroll={handleScroll} className="flex h-full flex-col gap-4 overflow-y-auto">
       {Object.entries(groupedMessages).map(([dateKey, messages]) => (
         <div key={dateKey} className="flex flex-col gap-2">
           <div className="flex justify-center">
@@ -81,7 +92,7 @@ export function ChatLog({ roomMessages }: ChatLogProps) {
                   {!isMine && <p className="text-sm text-gray-600">{message.senderNickname}</p>}
                   <span
                     className={cn(
-                      'whitespace-pre-wrap rounded-t-lg px-3 py-2',
+                      'rounded-t-lg px-3 py-2 whitespace-pre-wrap',
                       isMine ? 'rounded-bl-lg bg-gray-900 text-white' : 'rounded-br-lg border border-gray-300 bg-white'
                     )}
                   >
