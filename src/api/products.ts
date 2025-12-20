@@ -110,6 +110,12 @@ export const requestPostProduct = async (requestData: RequestProductPostRequestD
   await api.post(`/products/requests`, requestData)
 }
 
+// 판매요청 상품 수정
+export const patchProduct = async (requestData: ProductPostRequestData, id: number): Promise<ProductPostResponse> => {
+  const response = await api.patch<{ data: ProductPostResponse }>(`/products/${id}`, requestData)
+  return response.data.data
+}
+
 // 이미지 업로드
 export const uploadImage = async (files: File[]): Promise<ImageUploadResponse['data']> => {
   const formData = new FormData()
