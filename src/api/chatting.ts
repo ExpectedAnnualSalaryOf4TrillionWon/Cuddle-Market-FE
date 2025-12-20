@@ -35,6 +35,8 @@ export const outChatRoom = async (chatRoomId: number) => {
   await api.delete(`/chat/rooms/${chatRoomId}`)
 }
 
+// 채팅방 목록 실시간 업데이트 이벤트
+export const updateChatRoomInList = () => {}
 // 이미지 업로드
 export const uploadImage = async (files: File[]): Promise<ImageUploadResponse['data']> => {
   const formData = new FormData()

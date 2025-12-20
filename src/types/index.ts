@@ -578,6 +578,11 @@ export interface ChatRoomMessagesResponse {
   data: {
     messages: Message[]
   }
+  currentPage: number
+  totalPages: number
+  totalElements: number
+  hasNext: boolean
+  hasPrevious: boolean
 }
 
 export interface Message {
@@ -614,6 +619,20 @@ export interface fetchChatRoom {
   unreadCount: number
 }
 
+export interface ChatRoomUpdateResponse {
+  chatRoomId: number
+  productId: number
+  productTitle: string
+  productPrice: number
+  productImageUrl: string
+  opponentId: number
+  opponentNickname: string
+  opponentProfileImageUrl: string
+  lastMessage: string
+  lastMessageTime: string
+  hasUnread: boolean
+  unreadCount: number
+}
 // export interface ProductDetailItemResponse {
 //   code: string
 //   message: string

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { Client, type IMessage, type StompSubscription } from '@stomp/stompjs'
-import type { Message } from '@src/types'
+import type { ChatRoomUpdateResponse, Message } from '@src/types'
 import SockJS from 'sockjs-client'
 
 interface ChatSocketState {
@@ -38,6 +38,10 @@ interface ChatSocketState {
   subscriptions: Record<number, StompSubscription> // 구독한 채팅방들의 구독 객체를 저장합니다. 나중에 unsubscribeFromRoom에서 특정 채팅방 구독을 해제할 때 사용합니다.
   unsubscribeFromRoom: (chatRoomId: number) => void // 채팅방을 나갈 때 해당 채팅방의 구독을 해제해야 합니다. subscriptions[chatRoomId].unsubscribe()를 호출합니다.
   isConnected: boolean // STOMP 연결 상태를 UI에서 확인할 수 있도록 합니다. onConnect 시 true, onDisconnect 시 false로 설정됩니다.
+  // 채팅방별 업데이트 정보
+  chatRoomUpdates: Record<number, ChatRoomUpdateResponse>
+  updateChatRoomInList: (updatedChatRoom: ChatRoomUpdateResponse) => void
+  clearUnreadCount: (chatRoomId: number) => void
 }
 
 export const chatSocketStore = create<ChatSocketState>((set, get) => ({
@@ -46,6 +50,8 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
   currentRoomId: null,
   subscriptions: {}, // 채팅방별 구독 객체 저장
   isConnected: false, // 연결 상태
+  chatRoomUpdates: {},
+
   connect: (url: string, accessToken: string) => {
     // TOMP Client는 active 속성으로 연결 상태 확인
     if (get().socket?.active) return
@@ -60,6 +66,11 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       // STOMP 연결 완료 시 호출
       onConnect: () => {
         console.log('✅ STOMP 연결됨')
+        // 채팅방 목록 실시간 업데이트 이벤트
+        socket.subscribe('/user/queue/chat-room-list', (message) => {
+          const updatedChatRoom = JSON.parse(message.body)
+          get().updateChatRoomInList(updatedChatRoom) // 목록 업데이트
+        })
         set({ socket, isConnected: true })
       },
       onDisconnect: () => {
@@ -75,7 +86,24 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
     socket.activate()
     set({ socket })
   },
-
+  updateChatRoomInList: (updatedChatRoom: ChatRoomUpdateResponse) => {
+    set((state) => ({
+      chatRoomUpdates: {
+        ...state.chatRoomUpdates,
+        [updatedChatRoom.chatRoomId]: updatedChatRoom,
+      },
+    }))
+  },
+  clearUnreadCount: (chatRoomId: number) => {
+    const current = get().chatRoomUpdates[chatRoomId]
+    if (!current) return
+    set((state) => ({
+      chatRoomUpdates: {
+        ...state.chatRoomUpdates,
+        [chatRoomId]: { ...current, unreadCount: 0 },
+      },
+    }))
+  },
   disconnect: () => {
     // socket 가져오기
     const socket = get().socket
@@ -101,6 +129,41 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       `/topic/chat/${chatRoomId}`,
       // 메시지 수신 콜백
       // 내가 보낸 메시지도 서버로부터 다시 받아서 UI에 반영합니다.
+      (message: IMessage) => {
+        console.log('📩 메시지 수신:', message.body)
+        // 메시지 파싱
+        const data = JSON.parse(message.body)
+        console.log('📩 파싱된 데이터:', data) // isMine 필드 확인
+        console.log('📩 isMine:', data.isMine) // 추가
+        // 메시지 상태 업데이트
+        set((state) => ({
+          messages: {
+            ...state.messages,
+            [chatRoomId]: [...(state.messages[chatRoomId] || []), data],
+          },
+        }))
+      }
+    )
+    //  상태 업데이트 (currentRoomId + subscriptions)
+    set((state) => ({
+      currentRoomId: chatRoomId,
+      subscriptions: { ...state.subscriptions, [chatRoomId]: subscription },
+    }))
+  },
+
+  subscribeToUnreadCount: (chatRoomId: number) => {
+    // socket 가져오기
+    const socket = get().socket
+    // 연결 상태 확인
+    if (!socket?.active) return
+
+    // 이미 구독 중이면 중복 구독 방지
+    if (get().subscriptions[chatRoomId]) return
+
+    // 구독 실행
+    const subscription = socket.subscribe(
+      // 구독 destination
+      `/user/queue/chat-room-list`,
       (message: IMessage) => {
         console.log('📩 메시지 수신:', message.body)
         // 메시지 파싱
