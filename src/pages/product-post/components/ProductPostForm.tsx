@@ -7,7 +7,7 @@ import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
 import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
-import { postProduct } from '@src/api/products'
+import { patchProduct, postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
 import { useEffect, useMemo } from 'react'
 
@@ -91,7 +91,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
     try {
       if (isEditMode && id) {
         // 편집 모드: 기존 상품 ID로 이동
-        await postProduct(requestData)
+        await patchProduct(requestData, Number(id))
         navigate(`/products/${id}`)
       } else {
         // 새 등록: 서버에서 생성된 ID로 이동
