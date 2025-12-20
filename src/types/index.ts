@@ -602,6 +602,11 @@ export interface ChatRoomsResponse {
   code: string
   message: string
   data: { chatRooms: fetchChatRoom[] }
+  currentPage: number
+  totalPages: number
+  totalElements: number
+  hasNext: boolean
+  hasPrevious: boolean
 }
 
 export interface fetchChatRoom {
