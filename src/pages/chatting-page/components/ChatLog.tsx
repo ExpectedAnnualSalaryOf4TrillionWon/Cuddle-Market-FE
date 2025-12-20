@@ -2,6 +2,7 @@ import type { Message } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { useUserStore } from '@src/store/userStore'
 import { useEffect, useRef } from 'react'
+import PlaceholderImage from '@assets/images/placeholder.png'
 
 interface ChatLogProps {
   roomMessages: Message[]
@@ -84,20 +85,40 @@ export function ChatLog({ roomMessages, onLoadPrevious, hasMorePrevious, isLoadi
           <ul>
             {messages.map((message) => {
               const isMine = getIsMine(message, user?.id)
-              return (
+              return message.messageType === 'SYSTEM' ? (
+                <li className="bg-primary-100 m-6 mx-auto w-fit rounded-full px-3 py-1 text-center">{message.content}</li>
+              ) : message.isBlocked ? (
+                <li className="ml-auto flex w-fit max-w-64 min-w-60 flex-col rounded-full px-3 py-1">
+                  <span className="rounded-t-lg rounded-bl-lg bg-gray-900 px-3 py-2 text-white">{message.content}</span>
+                  <span className="text-sm">개인정보 포함으로 상대방에게 전송되지 않았습니다.</span>
+                </li>
+              ) : (
                 <li
                   key={message.messageId}
                   className={cn('flex max-w-64 min-w-60 flex-col gap-1 rounded-lg px-3 py-2', isMine ? 'ml-auto' : 'mr-auto')}
                 >
                   {!isMine && <p className="text-sm text-gray-600">{message.senderNickname}</p>}
-                  <span
-                    className={cn(
-                      'rounded-t-lg px-3 py-2 whitespace-pre-wrap',
-                      isMine ? 'rounded-bl-lg bg-gray-900 text-white' : 'rounded-br-lg border border-gray-300 bg-white'
-                    )}
-                  >
-                    {message.content}
-                  </span>
+                  {message.messageType === 'IMAGE' ? (
+                    <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static">
+                      <img
+                        src={message.imageUrl || PlaceholderImage}
+                        alt={message.senderNickname}
+                        onError={(e) => {
+                          e.currentTarget.src = PlaceholderImage
+                        }}
+                        className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
+                      />
+                    </div>
+                  ) : (
+                    <span
+                      className={cn(
+                        'rounded-t-lg px-3 py-2 whitespace-pre-wrap',
+                        isMine ? 'rounded-bl-lg bg-gray-900 text-white' : 'rounded-br-lg border border-gray-300 bg-white'
+                      )}
+                    >
+                      {message.content}
+                    </span>
+                  )}
                   <span className={cn('text-xs text-gray-500', isMine ? 'text-right' : 'text-left')}>{chatFormatTime(message.createdAt)}</span>
                 </li>
               )
