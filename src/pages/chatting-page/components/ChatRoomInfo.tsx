@@ -6,17 +6,21 @@ import { SellerAvatar } from '@src/components/commons/avatar/SellerAvatar'
 import { ChatProductCard } from '@src/components/commons/card/ChatProductCard'
 import { outChatRoom } from '@src/api/chatting'
 import { chatSocketStore } from '@src/store/chatSocketStore'
+import { useQueryClient } from '@tanstack/react-query'
 interface ChatRoomInfoProps {
   data: fetchChatRoom
+  onLeaveRoom: (leftRoomId: number) => void
 }
 
-export function ChatRoomInfo({ data }: ChatRoomInfoProps) {
+export function ChatRoomInfo({ data, onLeaveRoom }: ChatRoomInfoProps) {
+  const queryClient = useQueryClient()
   const { unsubscribeFromRoom } = chatSocketStore()
   const handleOutChatRoom = async () => {
     try {
       await outChatRoom(data.chatRoomId)
       unsubscribeFromRoom(data.chatRoomId)
-      // 성공 시 채팅 목록 페이지로 이동 또는 UI 업데이트
+      queryClient.invalidateQueries({ queryKey: ['chatRooms'] })
+      onLeaveRoom(data.chatRoomId)
     } catch (error) {
       console.error('채팅방 나가기 실패:', error)
       // 사용자에게 에러 알림 (toast 등)
