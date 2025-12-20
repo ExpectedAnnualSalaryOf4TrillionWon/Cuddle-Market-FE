@@ -66,7 +66,11 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       // STOMP 연결 완료 시 호출
       onConnect: () => {
         console.log('✅ STOMP 연결됨')
-
+        // [필수] 에러 구독 - 디버깅에 필수!
+        socket.subscribe('/user/queue/errors', (message) => {
+          const error = JSON.parse(message.body)
+          alert(`에러: ${error.message}`)
+        })
         // 채팅방 목록 실시간 업데이트 이벤트
         socket.subscribe('/user/queue/chat-room-list', (message) => {
           const updatedChatRoom = JSON.parse(message.body)
