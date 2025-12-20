@@ -81,7 +81,7 @@ export function ChatLog({ roomMessages }: ChatLogProps) {
                   {!isMine && <p className="text-sm text-gray-600">{message.senderNickname}</p>}
                   <span
                     className={cn(
-                      'rounded-t-lg px-3 py-2',
+                      'whitespace-pre-wrap rounded-t-lg px-3 py-2',
                       isMine ? 'rounded-bl-lg bg-gray-900 text-white' : 'rounded-br-lg border border-gray-300 bg-white'
                     )}
                   >

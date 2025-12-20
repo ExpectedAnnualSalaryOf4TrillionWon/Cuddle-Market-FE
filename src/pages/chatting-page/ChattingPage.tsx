@@ -17,7 +17,7 @@ export default function ChattingPage() {
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
-  const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages } = chatSocketStore()
+  const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount } = chatSocketStore()
 
   const { data: roomMessages } = useQuery({
     queryKey: ['messages', chatRoomId],
@@ -35,6 +35,7 @@ export default function ChattingPage() {
 
   const handleSelectRoom = (room: fetchChatRoom) => {
     subscribeToRoom(room.chatRoomId)
+    clearUnreadCount(room.chatRoomId)
     setSelectedRoom(room)
     navigate(`/chat/${room.chatRoomId}`, { replace: true })
   }
@@ -68,6 +69,12 @@ export default function ChattingPage() {
       }
     }
   }, [rooms, chatRoomId, selectedRoom])
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth/login')
+    }
+  }, [])
 
   // export default function Chatting({ isOpen, setIsOpen }: ChatProps) {
   //   const [searchParams] = useSearchParams()
