@@ -6,6 +6,7 @@ import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
 import { logout } from '@src/api/auth'
 import { useLoginModalStore } from '@src/store/modalStore'
+import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { Link } from 'react-router-dom'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
@@ -23,6 +24,7 @@ interface UserMenuProps {
 export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
   const { user, clearAll } = useUserStore()
   const { openLogoutModal } = useLoginModalStore()
+  const { disconnect } = chatSocketStore()
   const modalRef = useRef<HTMLDivElement>(null)
   useOutsideClick(isUserMenuOpen, [modalRef], () => setIsUserMenuOpen(false))
 
@@ -42,6 +44,7 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
       console.error('로그아웃 API 실패:', error)
     } finally {
       setIsUserMenuOpen(false)
+      disconnect() // WebSocket 연결 해제
       clearAll()
     }
   }
