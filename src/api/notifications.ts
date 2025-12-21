@@ -12,7 +12,6 @@ import type {
   ReportedRequestData,
   ReportedResponse,
   UserUnBlockedResponse,
-  WithDrawRequest,
   WithDrawResponse,
 } from '../types'
 import { api } from './api'
