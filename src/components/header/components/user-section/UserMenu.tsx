@@ -9,7 +9,6 @@ import { useLoginModalStore } from '@src/store/modalStore'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { Link } from 'react-router-dom'
-import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
@@ -28,7 +27,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
   const modalRef = useRef<HTMLDivElement>(null)
   useOutsideClick(isUserMenuOpen, [modalRef], () => setIsUserMenuOpen(false))
 
-  const isMd = useMediaQuery('(min-width: 768px)')
   const handleAvatarToggle = () => {
     if (isNotificationOpen) {
       setIsNotificationOpen(false)
