@@ -13,8 +13,8 @@ import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
 import { uploadImage } from '@src/api/products'
 import { cn } from '@src/utils/cn'
-const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
-
+// const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
+const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
 export default function ChattingPage() {
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
@@ -103,7 +103,7 @@ export default function ChattingPage() {
   }
   useEffect(() => {
     if (accessToken) {
-      connect(WS_URL, accessToken)
+      connect(VITE_WS_URL, accessToken)
     }
   }, [connect, disconnect, accessToken])
 
