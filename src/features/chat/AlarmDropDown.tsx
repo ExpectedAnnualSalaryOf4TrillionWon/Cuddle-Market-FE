@@ -1,7 +1,10 @@
 import { useUserStore } from '@store/userStore';
-import type { DropdownProps } from 'src/types/DropDownType';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+
+interface DropdownProps {
+  isOpen: boolean;
+}
 
 interface AlarmDivProps {
   message: string;
