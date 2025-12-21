@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useUserStore } from '@src/store/userStore'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
-import { MessageSquare, Bell } from 'lucide-react'
+import { MessageCircleMore, Bell } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 
 export default function Navigation() {
@@ -16,8 +16,8 @@ export default function Navigation() {
     <div className="flex items-center gap-2 md:gap-4">
       {isLogin() ? (
         <>
-          <Link to={ROUTES.COMMUNITY} className="hidden md:block">
-            <MessageSquare />
+          <Link to={ROUTES.CHAT} className="">
+            <MessageCircleMore />
           </Link>
           <IconButton aria-label="알림" size="lg" className="hover:bg-transparent">
             <Bell size={24} className="stroke-gray-600" />

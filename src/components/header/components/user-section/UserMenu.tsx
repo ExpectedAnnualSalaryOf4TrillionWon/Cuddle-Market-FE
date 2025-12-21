@@ -68,39 +68,21 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
           )}
           ref={modalRef}
         >
-          {isMd ? (
-            <>
-              <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <UserRoundIcon className="h-5 w-5" />
-                마이페이지
-              </Link>
-              <button
-                onClick={handleLogoutClick}
-                className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
-              >
-                <LogOutIcon className="h-5 w-5 rotate-180" />
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to={ROUTES.COMMUNITY} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <MessageSquare className="h-5 w-5" />
-                커뮤니티
-              </Link>
-              <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <UserRoundIcon className="h-5 w-5" />
-                마이페이지
-              </Link>
-              <button
-                onClick={handleLogoutClick}
-                className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
-              >
-                <LogOutIcon className="h-5 w-5 rotate-180" />
-                로그아웃
-              </button>
-            </>
-          )}
+          <Link to={ROUTES.COMMUNITY} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
+            <MessageSquare className="h-5 w-5" />
+            커뮤니티
+          </Link>
+          <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
+            <UserRoundIcon className="h-5 w-5" />
+            마이페이지
+          </Link>
+          <button
+            onClick={handleLogoutClick}
+            className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
+          >
+            <LogOutIcon className="h-5 w-5 rotate-180" />
+            로그아웃
+          </button>
         </div>
       )}
     </div>
