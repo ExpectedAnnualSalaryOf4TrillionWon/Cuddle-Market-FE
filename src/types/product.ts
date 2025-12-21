@@ -28,11 +28,11 @@ export interface ProductResponse {
     size: number
     total: number
     content: Product[]
-    totalPages: 8
-    hasNext: true
-    hasPrevious: false
-    totalElements: 150
-    numberOfElements: 20
+    totalPages: number
+    hasNext: boolean
+    hasPrevious: boolean
+    totalElements: number
+    numberOfElements: number
   }
 }
 

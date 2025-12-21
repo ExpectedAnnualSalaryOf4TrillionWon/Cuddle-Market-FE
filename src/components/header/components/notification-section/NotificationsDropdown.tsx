@@ -1,107 +1,110 @@
-// import { useEffect, useMemo, useState, type RefObject } from 'react'
-// import { Z_INDEX } from '@constants/ui'
-// import { cn } from '@utils/cn'
-// import NotificationTabs from './NotificationTabs'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { Z_INDEX } from '@constants/ui'
+import { cn } from '@utils/cn'
+import NotificationTabs from './NotificationTabs'
 // import NotificationItem from './NotificationItem'
-// // import NotificationsSkeleton from './NotificationsSkeleton'
-// // import { useNotifications, useMarkAllAsRead, useUnreadCountQuery } from '@hooks/useNotifications'
-// import { useIntersectionObserver } from '@hooks/useIntersectionObserver'
+// import NotificationsSkeleton from './NotificationsSkeleton'
+// import { useNotifications, useMarkAllAsRead, useUnreadCountQuery } from '@hooks/useNotifications'
+import { useIntersectionObserver } from '@hooks/useIntersectionObserver'
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { fetchNotifications, getUnreadCount, patchNotifications, readNotification } from '@src/api/notifications'
+import { useUserStore } from '@src/store/userStore'
+import type { NotificationItem as NotificationItemType } from '@src/types/notifications'
+import NotificationItem from './NotificationItem'
+import { useNavigate } from 'react-router-dom'
+import { getNavigationPath } from '@src/utils/getNavigationPath'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
+// import type { NotificationItem } from '@src/types/notifications'
 
-// interface NotificationsDropdownProps {
-//   setIsNotificationOpen: (isNotificationOpen: boolean) => void
-//   notificationsDropdownRef: RefObject<HTMLDivElement | null>
-// }
+interface NotificationsDropdownProps {
+  isNotificationOpen: boolean
+  setIsNotificationOpen: (isNotificationOpen: boolean) => void
+  // notificationsDropdownRef: RefObject<HTMLDivElement | null>
+}
 
-// export default function NotificationsDropdown({ setIsNotificationOpen, notificationsDropdownRef }: NotificationsDropdownProps) {
-//   const [notificationFilter, setNotificationFilter] = useState<'all' | 'unread' | 'read'>('all')
+export default function NotificationsDropdown({ isNotificationOpen, setIsNotificationOpen }: NotificationsDropdownProps) {
+  const user = useUserStore((state) => state.user)
+  const navigate = useNavigate()
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOutsideClick(isNotificationOpen, [modalRef], () => setIsNotificationOpen(false))
+  const {
+    data: notificationsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['notifications'],
+    queryFn: ({ pageParam }) => fetchNotifications(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    initialPageParam: 0,
+    enabled: !!user,
+  })
 
-//   const { notifications, totalCount, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications()
+  const observerTargetRef = useIntersectionObserver({
+    enabled: hasNextPage ?? false,
+    hasNextPage: hasNextPage ?? false,
+    isFetchingNextPage,
+    onIntersect: () => fetchNextPage(),
+    threshold: 0.5,
+  })
 
-//   // const { unreadCount } = useUnreadCountQuery()
-//   // const markAllAsReadMutation = useMarkAllAsRead()
+  const handleMarkAllAsRead = async () => {
+    await patchNotifications()
+    refetch()
+  }
 
-//   // const handleMarkAllAsRead = () => {
-//   //   if (unreadCount === 0 || markAllAsReadMutation.isPending) {
-//   //     return
-//   //   }
+  const handleReadNotification = async (notification: NotificationItemType) => {
+    setIsNotificationOpen(false)
+    navigate(getNavigationPath(notification))
+    await readNotification(notification.notificationId)
+    refetch()
+  }
 
-//   //   markAllAsReadMutation.mutate()
-//   //   if (notificationFilter === 'unread') {
-//   //     setNotificationFilter('all')
-//   //   }
-//   // }
+  return (
+    <div
+      ref={modalRef}
+      className={cn('absolute top-12 right-0 max-h-[819.2px] overflow-hidden rounded-lg border border-gray-200 bg-white', `${Z_INDEX.DROPDOWN}`)}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between border-b border-gray-200 px-4 pt-4 pb-[17px]">
+        <div className="flex items-center gap-1">
+          <h3 className="flex items-center justify-start text-lg font-semibold text-gray-900">알림</h3>
+        </div>
+        <button
+          type="button"
+          // disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
+          onClick={handleMarkAllAsRead}
+          className="text-primary-600 flex cursor-pointer items-center justify-center text-center text-sm"
+        >
+          모두 읽음
+        </button>
+      </div>
 
-//   const observerTargetRef = useIntersectionObserver({
-//     enabled: true,
-//     hasNextPage,
-//     isFetchingNextPage,
-//     onIntersect: () => fetchNextPage(),
-//     threshold: 0.5,
-//   })
-
-//   // const filteredNotifications = useMemo(() => {
-//   //   switch (notificationFilter) {
-//   //     case 'unread':
-//   //       return notifications.filter((notification) => !notification.is_read)
-//   //     case 'read':
-//   //       return notifications.filter((notification) => notification.is_read)
-//   //     default:
-//   //       return notifications
-//   //   }
-//   // }, [notifications, notificationFilter])
-
-//   // unreadCount가 0이 되면 자동으로 전체보기로
-//   // useEffect(() => {
-//   //   if (unreadCount === 0 && notificationFilter === 'unread') {
-//   //     setNotificationFilter('all')
-//   //   }
-//   // }, [unreadCount, notificationFilter])
-
-//   return (
-//     <div
-//       ref={notificationsDropdownRef}
-//       className={cn('absolute top-12 right-0 max-h-[819.2px] overflow-hidden rounded-lg border border-gray-200 bg-white', `${Z_INDEX.DROPDOWN}`)}
-//       onClick={(e) => e.stopPropagation()}
-//     >
-//       <div className="flex items-center justify-between px-4 pt-4 pb-[17px]">
-//         <h3 className="flex items-center justify-start text-lg font-semibold text-gray-900">알림</h3>
-//         <button
-//           type="button"
-//           // disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
-//           // onClick={handleMarkAllAsRead}
-//           className="text-primary-600 flex cursor-pointer items-center justify-center text-center text-sm"
-//         >
-//           {/* {markAllAsReadMutation.isPending ? '처리 중…' : '모두 읽음'} */}
-//         </button>
-//       </div>
-
-//       <NotificationTabs
-//         setNotificationFilter={setNotificationFilter}
-//         notificationFilter={notificationFilter}
-//         notifications={notifications}
-//         totalCount={totalCount}
-//         // unreadCount={unreadCount}
-//       />
-
-//       <div className="scrollbar-hide flex max-h-80 flex-col overflow-y-auto" role="tabpanel">
-//         {isLoading ? (
-//           <></>
-//         ) : // <NotificationsSkeleton />
-//         error ? (
-//           <div className="flex h-32 min-w-[364px] items-center justify-center text-sm text-red-500">알림을 불러오는데 실패했습니다.</div>
-//         ) : filteredNotifications.length !== 0 ? (
-//           <>
-//             {filteredNotifications.map((notification) => (
-//               <NotificationItem key={notification.notification_id} {...notification} setIsNotificationOpen={setIsNotificationOpen} />
-//             ))}
-//             <div ref={observerTargetRef} className="h-4" />
-//             {isFetchingNextPage && <div className="flex items-center justify-center py-4 text-sm text-gray-500">로딩 중...</div>}
-//           </>
-//         ) : (
-//           <div className="flex h-32 min-w-[364px] items-center justify-center text-sm text-gray-500">표시할 알림이 없습니다.</div>
-//         )}
-//       </div>
-//       <div className="flex h-[45px] bg-gray-50" />
-//     </div>
-//   )
-// }
+      <div className="scrollbar-hide flex max-h-80 flex-col overflow-y-auto" role="tabpanel">
+        {isLoading ? (
+          <></>
+        ) : // <NotificationsSkeleton />
+        notificationsData?.pages.length !== 0 ? (
+          <>
+            {notificationsData?.pages.flatMap((page) =>
+              page.content.map((notification: NotificationItemType) => (
+                <NotificationItem
+                  key={notification.notificationId}
+                  {...notification}
+                  setIsNotificationOpen={setIsNotificationOpen}
+                  handleReadNotification={handleReadNotification}
+                />
+              ))
+            )}
+            <div ref={observerTargetRef} className="h-4" />
+          </>
+        ) : (
+          <div className="flex h-32 min-w-[364px] items-center justify-center text-sm text-gray-500">표시할 알림이 없습니다.</div>
+        )}
+      </div>
+      <div className="flex h-[45px] border-t border-gray-200" />
+    </div>
+  )
+}

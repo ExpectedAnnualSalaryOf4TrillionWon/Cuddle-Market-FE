@@ -1,3 +1,4 @@
+import type { NotificationsDataResponse, NotificationsPatchResponse, NotificationsUnReadCountResponse } from '@src/types/notifications'
 import type {
   ChangePasswordRequestData,
   ChangePasswordResponse,
@@ -18,22 +19,25 @@ import { api } from './api'
 import axios from 'axios'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
+// 알림 목록 조회
 export const fetchNotifications = async (page: number = 0, size: number = 10) => {
-  await api.get<WithDrawResponse>(`/notifications?page=${page}&size=${size}`)
+  const response = await api.get<NotificationsDataResponse>(`/notifications?page=${page}&size=${size}`)
+  return response.data.data
 }
 
-export const profileUpdate = async (requestData: ProfileUpdateRequestData) => {
-  const response = await api.patch<ProfileUpdateResponse>(`/profile/me`, requestData)
-  return response.data
+// 모든 알림 읽음 처리
+export const patchNotifications = async () => {
+  await api.patch<NotificationsPatchResponse>(`/profile/notifications/read-all`)
 }
 
-export const changePassword = async (requestData: ChangePasswordRequestData) => {
-  const response = await api.patch<ChangePasswordResponse>(`/auth/password/change`, requestData)
-  return response.data
+// 알림 읽음 처리
+export const readNotification = async (notificationId: number) => {
+  await api.patch<NotificationsPatchResponse>(`/notifications/${notificationId}/read`)
 }
 
-export const fetchUserData = async (id: number) => {
-  const response = await api.get<UserProfileResponse>(`/profile/${id}`)
+// 안 읽은 알림 조회
+export const getUnreadCount = async () => {
+  const response = await api.get<NotificationsUnReadCountResponse>(`/notifications/unread-count`)
   return response.data.data
 }
 
