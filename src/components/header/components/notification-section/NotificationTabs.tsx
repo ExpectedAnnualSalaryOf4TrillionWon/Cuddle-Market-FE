@@ -1,5 +1,3 @@
-// import { tabClass } from './notificationIconClass'
-import type { NotificationItem } from '@src/types/notifications'
 import { cn } from '@utils/cn'
 
 // interface NotificationTabsProps {

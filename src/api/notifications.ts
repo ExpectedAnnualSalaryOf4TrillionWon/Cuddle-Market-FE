@@ -1,19 +1,13 @@
 import type { NotificationsDataResponse, NotificationsPatchResponse, NotificationsUnReadCountResponse } from '@src/types/notifications'
 import type {
-  ChangePasswordRequestData,
-  ChangePasswordResponse,
   EmailCheckResponse,
-  ProfileUpdateRequestData,
-  ProfileUpdateResponse,
   ResettingPasswordRequestData,
   ResettingPasswordResponse,
   UserBlockedResponse,
   UserProductResponse,
-  UserProfileResponse,
   ReportedRequestData,
   ReportedResponse,
   UserUnBlockedResponse,
-  WithDrawResponse,
 } from '../types'
 import { api } from './api'
 import axios from 'axios'

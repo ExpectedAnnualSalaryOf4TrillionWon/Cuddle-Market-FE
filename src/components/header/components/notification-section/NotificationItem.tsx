@@ -1,5 +1,4 @@
 import { cn } from '@utils/cn'
-import { useNavigate } from 'react-router-dom'
 import { Bell as BellIcon } from 'lucide-react'
 import type { NotificationItem as NotificationItemType } from '@src/types/notifications'
 import { iconMap, NOTIFICATION_MESSAGES, type NotificationType } from '@src/constants/constants'
@@ -12,8 +11,6 @@ interface NotificationItemProps extends NotificationItemType {
 }
 
 export default function NotificationItem({ handleReadNotification, setIsNotificationOpen, ...notification }: NotificationItemProps) {
-  const { notificationId } = notification
-  const navigate = useNavigate()
   const Icon = iconMap[notification.notificationType as NotificationType] || BellIcon
 
   return (
