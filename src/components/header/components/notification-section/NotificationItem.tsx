@@ -1,9 +1,6 @@
 // import { cn } from '@utils/cn'
 // import Icon from '@components/commons/Icon'
-// import {
-//   notificationIconClass,
-//   notificationIconStrokeClass,
-// } from './notificationIconClass'
+// import { notificationIconClass, notificationIconStrokeClass } from './notificationIconClass'
 // import { useNavigate } from 'react-router-dom'
 // import {
 //   Bell as BellIcon,
@@ -36,11 +33,7 @@
 
 //   return (
 //     <div className={notificationIconClass({ type })}>
-//       <Icon
-//         icon={IconComponent}
-//         className={notificationIconStrokeClass({ type })}
-//         size="sm"
-//       />
+//       <Icon icon={IconComponent} className={notificationIconStrokeClass({ type })} size="sm" />
 //     </div>
 //   )
 // }
@@ -48,11 +41,7 @@
 //   const serverDate = new Date(dateString)
 //   const now = new Date()
 
-//   const startOfToday = new Date(
-//     now.getFullYear(),
-//     now.getMonth(),
-//     now.getDate()
-//   )
+//   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 //   const startOfYesterday = new Date(startOfToday)
 //   startOfYesterday.setDate(startOfYesterday.getDate() - 1)
 
@@ -82,10 +71,7 @@
 
 // const ACCOUNT = 'https://account.ozcoding.site'
 // const STUDY_GROUP = 'https://study.ozcoding.site'
-// export default function NotificationItem({
-//   setIsNotificationOpen,
-//   ...notification
-// }: NotificationItemProps) {
+// export default function NotificationItem({ setIsNotificationOpen, ...notification }: NotificationItemProps) {
 //   const { notification_id } = notification
 //   const navigate = useNavigate()
 //   const readNotificationMutation = useReadNotification()
@@ -93,13 +79,8 @@
 //     const navigateToLink = () => {
 //       if (!notification.back_url_link) return
 
-//       if (
-//         notification.type === 'STUDY_JOIN' &&
-//         notification.back_url_link.includes('/study-group/')
-//       ) {
-//         const uuid = notification.back_url_link
-//           .split('/study-group/')[1]
-//           ?.split('/')[0]
+//       if (notification.type === 'STUDY_JOIN' && notification.back_url_link.includes('/study-group/')) {
+//         const uuid = notification.back_url_link.split('/study-group/')[1]?.split('/')[0]
 //         if (uuid) {
 //           navigate(`/?study_group_uuid=${uuid}`)
 //           return
@@ -142,12 +123,8 @@
 //       {getNotificationIcon(notification.type)}
 //       <div className="flex min-w-72 justify-between gap-1">
 //         <div className="flex flex-col gap-1">
-//           <p className="line-clamp-2 text-left text-sm text-gray-900">
-//             {notification.content}
-//           </p>
-//           <p className="flex items-center text-xs text-gray-500">
-//             {formatDate(notification.created_at)}
-//           </p>
+//           <p className="line-clamp-2 text-left text-sm text-gray-900">{notification.content}</p>
+//           <p className="flex items-center text-xs text-gray-500">{formatDate(notification.created_at)}</p>
 //         </div>
 //         {!notification.is_read && (
 //           <div className="flex pt-2">

@@ -1,4 +1,4 @@
-// import { tabClass } from './notificationIconClass'
+// // import { tabClass } from './notificationIconClass'
 // import type { NotificationItem } from '@src/types/notification'
 // import { cn } from '@utils/cn'
 
@@ -7,7 +7,7 @@
 //   notificationFilter: 'all' | 'unread' | 'read'
 //   notifications: NotificationItem[]
 //   totalCount: number
-//   unreadCount: number
+//   unreadCount?: number
 // }
 // export default function NotificationTabs({
 //   setNotificationFilter,
@@ -16,17 +16,12 @@
 //   unreadCount,
 //   totalCount,
 // }: NotificationTabsProps) {
-//   const readCount = notifications.filter(
-//     (notification) => notification.is_read
-//   ).length
+//   const readCount = notifications.filter((notification) => notification.is_read).length
 //   const isUnreadTabDisabled = unreadCount === 0
 //   const isReadTabDisabled = unreadCount === 0
 //   const handleTabClick = (filter: 'all' | 'unread' | 'read') => {
 //     // 읽지않음 탭이 비활성화된 경우 클릭 무시
-//     if (
-//       (filter === 'unread' && isUnreadTabDisabled) ||
-//       (filter === 'read' && isReadTabDisabled)
-//     ) {
+//     if ((filter === 'unread' && isUnreadTabDisabled) || (filter === 'read' && isReadTabDisabled)) {
 //       return
 //     }
 //     setNotificationFilter(filter)
@@ -38,10 +33,10 @@
 //         role="tab"
 //         onClick={() => handleTabClick('all')}
 //         className={cn(
-//           'flex-1',
-//           tabClass({
-//             active: notificationFilter === 'all',
-//           })
+//           'flex-1'
+//           // tabClass({
+//           //   active: notificationFilter === 'all',
+//           // })
 //         )}
 //       >
 //         전체보기 ({totalCount})
@@ -51,9 +46,9 @@
 //         onClick={() => handleTabClick('unread')}
 //         className={cn(
 //           'flex-1',
-//           tabClass({
-//             active: notificationFilter === 'unread' && !isUnreadTabDisabled,
-//           }),
+//           // tabClass({
+//           //   active: notificationFilter === 'unread' && !isUnreadTabDisabled,
+//           // }),
 //           isUnreadTabDisabled && 'cursor-not-allowed text-gray-400 opacity-50'
 //         )}
 //       >
@@ -64,9 +59,9 @@
 //         onClick={() => handleTabClick('read')}
 //         className={cn(
 //           'flex-1',
-//           tabClass({
-//             active: notificationFilter === 'read' && !isReadTabDisabled,
-//           }),
+//           // tabClass({
+//           //   active: notificationFilter === 'read' && !isReadTabDisabled,
+//           // }),
 //           isReadTabDisabled && 'cursor-not-allowed text-gray-400 opacity-50'
 //         )}
 //       >
