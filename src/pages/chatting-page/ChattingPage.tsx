@@ -50,12 +50,7 @@ export default function ChattingPage() {
     clearUnreadCount(room.chatRoomId)
     setSelectedRoom(room)
     setIsChatOpen(true)
-    // 모바일에서 뒤로가기 시 목록으로 돌아갈 수 있도록 history state 추가
-    if (window.innerWidth < 768) {
-      window.history.pushState({ chatOpen: true }, '', `/chat/${room.chatRoomId}`)
-    } else {
-      navigate(`/chat/${room.chatRoomId}`)
-    }
+    navigate(`/chat/${room.chatRoomId}`)
   }
 
   const handleSend = (message: string) => {
@@ -128,24 +123,13 @@ export default function ChattingPage() {
       navigate('/auth/login')
     }
   }, [])
+  // chatRoomId가 없으면 (뒤로가기 등으로 /chat으로 이동 시) 선택 초기화
   useEffect(() => {
     if (!chatRoomId) {
       setIsChatOpen(false)
+      setSelectedRoom(null)
     }
   }, [chatRoomId])
-
-  // 모바일에서 뒤로가기 시 채팅방 목록으로 전환
-  useEffect(() => {
-    const handlePopState = () => {
-      // 모바일에서만 동작 (md 브레이크포인트 = 768px)
-      if (window.innerWidth < 768) {
-        setIsChatOpen(false)
-      }
-    }
-
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
 
   return (
     <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">

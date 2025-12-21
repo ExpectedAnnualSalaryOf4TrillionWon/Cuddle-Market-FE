@@ -9,7 +9,6 @@ import { useLoginModalStore } from '@src/store/modalStore'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { Link } from 'react-router-dom'
-import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
@@ -28,7 +27,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
   const modalRef = useRef<HTMLDivElement>(null)
   useOutsideClick(isUserMenuOpen, [modalRef], () => setIsUserMenuOpen(false))
 
-  const isMd = useMediaQuery('(min-width: 768px)')
   const handleAvatarToggle = () => {
     if (isNotificationOpen) {
       setIsNotificationOpen(false)
@@ -68,39 +66,21 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
           )}
           ref={modalRef}
         >
-          {isMd ? (
-            <>
-              <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <UserRoundIcon className="h-5 w-5" />
-                마이페이지
-              </Link>
-              <button
-                onClick={handleLogoutClick}
-                className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
-              >
-                <LogOutIcon className="h-5 w-5 rotate-180" />
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to={ROUTES.COMMUNITY} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <MessageSquare className="h-5 w-5" />
-                커뮤니티
-              </Link>
-              <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-                <UserRoundIcon className="h-5 w-5" />
-                마이페이지
-              </Link>
-              <button
-                onClick={handleLogoutClick}
-                className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
-              >
-                <LogOutIcon className="h-5 w-5 rotate-180" />
-                로그아웃
-              </button>
-            </>
-          )}
+          <Link to={ROUTES.COMMUNITY} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
+            <MessageSquare className="h-5 w-5" />
+            커뮤니티
+          </Link>
+          <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
+            <UserRoundIcon className="h-5 w-5" />
+            마이페이지
+          </Link>
+          <button
+            onClick={handleLogoutClick}
+            className="hover:bg-primary-50 text-danger-500 flex w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-sm"
+          >
+            <LogOutIcon className="h-5 w-5 rotate-180" />
+            로그아웃
+          </button>
         </div>
       )}
     </div>

@@ -22,7 +22,8 @@ export const ROUTES = {
   USER_ID: (id: string | number) => `/user-profile/${id}`,
 
   // Chat
-  CHAT: '/chat/:id',
+  CHAT: '/chat',
+  CHAT_ROOM: '/chat/:id',
   CHAT_ROOM_ID: (id: string | number) => `/chat/${id}`,
   // RECRUITMENT_MANAGE: '/recruitment/manage',
   // RECRUITMENT_EDIT: (uuid: string | number) => `/recruitment/${uuid}/edit`,

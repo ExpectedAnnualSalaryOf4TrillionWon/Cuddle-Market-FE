@@ -41,6 +41,7 @@ const routes = [
   { path: ROUTES.COMMUNITY_DETAIL, element: <CommunityDetail /> },
   { path: ROUTES.COMMUNITY_EDIT, element: <CommunityPostForm /> },
   { path: ROUTES.CHAT, element: <ChattingPage /> },
+  { path: ROUTES.CHAT_ROOM, element: <ChattingPage /> },
 ]
 
 function AppRoutes() {
