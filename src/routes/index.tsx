@@ -2,7 +2,6 @@
 // import AlarmPage from '@pages/AlarmPage';
 import Home from '@src/pages/home/Home'
 
-import KakaoCallback from '@pages/KakaoCallback'
 
 import Login from '@src/pages/login/Login'
 import MyPage from '@src/pages/my-page/MyPage'
@@ -22,7 +21,7 @@ import FindPasswordPage from '@src/pages/find-password/FindPasswordPage'
 import CommunityPage from '@src/pages/community/CommunityPage'
 import CommunityPostForm from '@src/pages/community/components/CommunityPostForm'
 import CommunityDetail from '@src/pages/community/CommunityDetail'
-import GoogleCallback from '@src/pages/GoogleCallback'
+import SocialCallback from '@src/pages/SocialCallback'
 import ChattingPage from '@src/pages/chatting-page/ChattingPage'
 
 const routes = [
@@ -52,8 +51,7 @@ function AppRoutes() {
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
       </Route>
-      <Route path="/oauth/kakao/callback" element={<KakaoCallback />} />
-      <Route path="/oauth-redirect" element={<GoogleCallback />} />
+      <Route path="/oauth-redirect" element={<SocialCallback />} />
     </Routes>
   )
 }

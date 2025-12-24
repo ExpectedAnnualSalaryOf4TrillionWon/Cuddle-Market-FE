@@ -3,11 +3,11 @@ import { useUserStore } from '@src/store/userStore'
 import { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function GoogleCallback() {
+export default function SocialCallback() {
   const navigate = useNavigate()
   const { handleLogin, setAccessToken, setRefreshToken } = useUserStore()
 
-  const handleGoogleAuth = useCallback(
+  const handleSocialAuth = useCallback(
     async (accessToken: string, refreshToken: string) => {
       // 1. 토큰 먼저 저장
       setAccessToken(accessToken)
@@ -30,11 +30,11 @@ export default function GoogleCallback() {
     const accessToken = params.get('accessToken')
     const refreshToken = params.get('refreshToken')
     if (accessToken && refreshToken) {
-      handleGoogleAuth(accessToken, refreshToken)
+      handleSocialAuth(accessToken, refreshToken)
     } else {
       navigate('/login')
     }
-  }, [handleGoogleAuth, navigate])
+  }, [handleSocialAuth, navigate])
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
       <h2>로그인 처리 중...</h2>
