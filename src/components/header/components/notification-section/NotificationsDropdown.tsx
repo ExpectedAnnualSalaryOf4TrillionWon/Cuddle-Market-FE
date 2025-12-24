@@ -10,6 +10,7 @@ import NotificationItem from './NotificationItem'
 import { useNavigate } from 'react-router-dom'
 import { getNavigationPath } from '@src/utils/getNavigationPath'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+import NotificationsSkeleton from './NotificationsSkeleton'
 // import type { NotificationItem } from '@src/types/notifications'
 
 interface NotificationsDropdownProps {
@@ -80,9 +81,8 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
 
       <div className="scrollbar-hide flex max-h-80 flex-col overflow-y-auto" role="tabpanel">
         {isLoading ? (
-          <></>
-        ) : // <NotificationsSkeleton />
-        notificationsData?.pages.length !== 0 ? (
+          <NotificationsSkeleton />
+        ) : notificationsData?.pages.length !== 0 ? (
           <>
             {notificationsData?.pages.flatMap((page) =>
               page.content.map((notification: NotificationItemType) => (

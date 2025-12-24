@@ -3,7 +3,7 @@ import { Bell as BellIcon } from 'lucide-react'
 import type { NotificationItem as NotificationItemType } from '@src/types/notifications'
 import { iconMap, NOTIFICATION_MESSAGES, type NotificationType } from '@src/constants/constants'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
-import { notificationIconClass, notificationIconStrokeClass } from '../user-section/notificationIconClass'
+import { notificationIconClass, notificationIconStrokeClass } from './notificationIconClass'
 
 interface NotificationItemProps extends NotificationItemType {
   setIsNotificationOpen: (isOpen: boolean) => void
