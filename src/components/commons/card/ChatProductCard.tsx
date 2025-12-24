@@ -6,7 +6,6 @@ interface ChatProductCardProps {
   productTitle?: string
   productPrice?: number
   size?: 'sm' | 'md'
-  titleWidth?: string
 }
 
 const sizeClasses = {
@@ -14,7 +13,7 @@ const sizeClasses = {
   md: 'w-16',
 }
 
-export function ChatProductCard({ productImageUrl, productTitle, productPrice, size = 'sm', titleWidth }: ChatProductCardProps) {
+export function ChatProductCard({ productImageUrl, productTitle, productPrice, size = 'sm' }: ChatProductCardProps) {
   return (
     <>
       <div className={`relative aspect-square shrink-0 overflow-hidden rounded-lg ${sizeClasses[size]}`}>
@@ -24,8 +23,8 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
           className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
         />
       </div>
-      <div className="flex-1">
-        <p className={`line-clamp-1 truncate ${titleWidth ?? ''}`}>{productTitle}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate">{productTitle}</p>
         <p className="font-bold">{formatPrice(Number(productPrice))}원</p>
       </div>
     </>

@@ -1,6 +1,6 @@
 import { fetchRoomMessages, fetchRooms } from '@src/api/chatting'
 import { useUserStore } from '@src/store/userStore'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { fetchChatRoom } from '@src/types'
 import { Send, Paperclip } from 'lucide-react'
@@ -16,6 +16,7 @@ import { cn } from '@src/utils/cn'
 // const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
 export default function ChattingPage() {
+  const queryClient = useQueryClient()
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
   const navigate = useNavigate()
@@ -47,6 +48,13 @@ export default function ChattingPage() {
 
   const handleSelectRoom = (room: fetchChatRoom) => {
     subscribeToRoom(room.chatRoomId)
+    // 채팅방의 unreadCount만큼 헤더 알림 개수 감소
+    const roomUnreadCount = chatSocketStore.getState().chatRoomUpdates[room.chatRoomId]?.unreadCount ?? room.unreadCount ?? 0
+    if (roomUnreadCount > 0) {
+      queryClient.setQueryData<{ unreadCount: number }>(['notifications', 'unreadCount'], (prev) => ({
+        unreadCount: Math.max((prev?.unreadCount ?? 0) - roomUnreadCount, 0),
+      }))
+    }
     clearUnreadCount(room.chatRoomId)
     setSelectedRoom(room)
     setIsChatOpen(true)

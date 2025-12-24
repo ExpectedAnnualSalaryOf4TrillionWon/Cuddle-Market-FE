@@ -110,12 +110,13 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
     }))
   },
   clearUnreadCount: (chatRoomId: number) => {
-    const current = get().chatRoomUpdates[chatRoomId]
-    if (!current) return
     set((state) => ({
       chatRoomUpdates: {
         ...state.chatRoomUpdates,
-        [chatRoomId]: { ...current, unreadCount: 0 },
+        [chatRoomId]: {
+          ...(state.chatRoomUpdates[chatRoomId] || {}),
+          unreadCount: 0,
+        },
       },
     }))
   },

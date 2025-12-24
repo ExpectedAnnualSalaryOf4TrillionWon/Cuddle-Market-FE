@@ -42,8 +42,10 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
                   )}
                   onClick={() => handleSelectRoom(room)}
                 >
-                  <SellerAvatar profileImageUrl={roomData?.opponentProfileImageUrl} nickname={roomData?.opponentNickname} />
-                  <div className="flex w-full flex-1 flex-col gap-2 md:flex-none">
+                  <div className="shrink-0">
+                    <SellerAvatar profileImageUrl={roomData?.opponentProfileImageUrl} nickname={roomData?.opponentNickname} />
+                  </div>
+                  <div className="flex min-w-0 flex-1 flex-col gap-2">
                     <div className="flex w-full items-start justify-between">
                       <div className="flex flex-col gap-1">
                         <p className="leading-none font-semibold">{roomData?.opponentNickname}</p>
@@ -56,17 +58,18 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
                           <span className="text-sm leading-none font-medium text-gray-500">{getTimeAgo(roomData.lastMessageTime)}</span>
                         )}
                         {roomData.unreadCount >= 1 && (
-                          <p className="bg-danger-500 flex size-5 items-center justify-center rounded-full text-white">{roomData.unreadCount}</p>
+                          <p className="bg-danger-500 tex-sm flex size-5 items-center justify-center rounded-full text-white">
+                            {roomData.unreadCount}
+                          </p>
                         )}
                       </div>
                     </div>
-                    <div className="border-primary-100 bg-primary-50 flex items-center justify-between gap-2 rounded-lg border px-2.5 py-3">
+                    <div className="border-primary-100 bg-primary-50 flex items-center gap-2 rounded-lg border px-2.5 py-3 overflow-hidden">
                       <ChatProductCard
                         productImageUrl={roomData?.productImageUrl}
                         productTitle={roomData?.productTitle}
                         productPrice={roomData?.productPrice}
                         size="sm"
-                        titleWidth="w-52"
                       />
                     </div>
                   </div>
