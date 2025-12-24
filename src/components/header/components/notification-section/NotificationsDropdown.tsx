@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom'
 import { getNavigationPath } from '@src/utils/getNavigationPath'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import NotificationsSkeleton from './NotificationsSkeleton'
-import { useNotificationSSE } from '@src/hooks/useNotifications'
 // import type { NotificationItem } from '@src/types/notifications'
 
 interface NotificationsDropdownProps {

@@ -1,5 +1,4 @@
-import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
-import { api } from '@api/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useUserStore } from '@src/store/userStore'

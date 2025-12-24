@@ -1,17 +1,5 @@
 import type { NotificationsDataResponse, NotificationsPatchResponse, NotificationsUnReadCountResponse } from '@src/types/notifications'
-import type {
-  EmailCheckResponse,
-  ResettingPasswordRequestData,
-  ResettingPasswordResponse,
-  UserBlockedResponse,
-  UserProductResponse,
-  ReportedRequestData,
-  ReportedResponse,
-  UserUnBlockedResponse,
-} from '../types'
 import { api } from './api'
-import axios from 'axios'
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 // 알림 목록 조회
 export const fetchNotifications = async (page: number = 0, size: number = 10) => {
