@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { getNavigationPath } from '@src/utils/getNavigationPath'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import NotificationsSkeleton from './NotificationsSkeleton'
+import { chatSocketStore } from '@src/store/chatSocketStore'
 // import type { NotificationItem } from '@src/types/notifications'
 
 interface NotificationsDropdownProps {
@@ -63,10 +64,13 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
         unreadCount: Math.max((prev?.unreadCount ?? 0) - 1, 0),
       }))
     }
+    // 채팅 알림인 경우 ChatRooms의 unreadCount도 감소
+    if (notification.relatedEntityType === 'CHAT_ROOM') {
+      chatSocketStore.getState().clearUnreadCount(notification.relatedEntityId)
+    }
     const path = getNavigationPath(notification)
     console.log('이동할 경로:', path)
     setIsNotificationOpen(false)
-    // navigate(getNavigationPath(notification))
     navigate(path)
     await readNotification(notification.notificationId)
     refetch()
