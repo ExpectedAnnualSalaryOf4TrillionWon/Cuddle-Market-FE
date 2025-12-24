@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Z_INDEX } from '@constants/ui'
 import { cn } from '@utils/cn'
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchNotifications, patchNotifications, readNotification } from '@src/api/notifications'
 import { useUserStore } from '@src/store/userStore'
 import type { NotificationItem as NotificationItemType } from '@src/types/notifications'
@@ -20,6 +20,8 @@ interface NotificationsDropdownProps {
 }
 
 export default function NotificationsDropdown({ isNotificationOpen, setIsNotificationOpen }: NotificationsDropdownProps) {
+  const queryClient = useQueryClient()
+
   const user = useUserStore((state) => state.user)
   const navigate = useNavigate()
   const modalRef = useRef<HTMLDivElement>(null)
@@ -49,12 +51,23 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
 
   const handleMarkAllAsRead = async () => {
     await patchNotifications()
+    queryClient.setQueryData<{ unreadCount: number }>(['notifications', 'unreadCount'], {
+      unreadCount: 0,
+    })
     refetch()
   }
 
   const handleReadNotification = async (notification: NotificationItemType) => {
+    if (!notification.isRead) {
+      queryClient.setQueryData<{ unreadCount: number }>(['notifications', 'unreadCount'], (prev) => ({
+        unreadCount: Math.max((prev?.unreadCount ?? 0) - 1, 0),
+      }))
+    }
+    const path = getNavigationPath(notification)
+    console.log('이동할 경로:', path)
     setIsNotificationOpen(false)
-    navigate(getNavigationPath(notification))
+    // navigate(getNavigationPath(notification))
+    navigate(path)
     await readNotification(notification.notificationId)
     refetch()
   }
