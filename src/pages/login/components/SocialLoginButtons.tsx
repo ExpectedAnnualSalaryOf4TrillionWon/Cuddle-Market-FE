@@ -6,15 +6,13 @@ export function SocialLoginButtons() {
   const handleGoogleLogin = () => {
     window.location.href = 'https://cmarket-api.duckdns.org/oauth2/authorization/google'
   }
+  const handleKakaoLogin = () => {
+    window.location.href = 'https://cmarket-api.duckdns.org/oauth2/authorization/kakao'
+  }
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <Button
-        iconSrc={kakao}
-        size="md"
-        className="w-full cursor-pointer bg-[#fee500]"
-        // onClick={handleKakaoLogin}
-      >
+      <Button iconSrc={kakao} size="md" className="w-full cursor-pointer bg-[#fee500]" onClick={handleKakaoLogin}>
         카카오 간편 로그인
       </Button>
       <Button iconSrc={google} size="md" className="w-full cursor-pointer bg-[#F2F2F2]" onClick={handleGoogleLogin}>
