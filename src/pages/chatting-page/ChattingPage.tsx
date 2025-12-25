@@ -23,7 +23,7 @@ export default function ChattingPage() {
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
-  const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount } = chatSocketStore()
+  const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount, clearRoomMessages } = chatSocketStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const {
     data: roomMessages,
@@ -115,9 +115,11 @@ export default function ChattingPage() {
   // 연결 완료 후 구독 (중복 구독은 subscribeToRoom 내부에서 방지)
   useEffect(() => {
     if (isConnected && chatRoomId) {
+      // 채팅방 진입 시 실시간 메시지 초기화 (httpMessages와 중복 방지)
+      clearRoomMessages(Number(chatRoomId))
       subscribeToRoom(Number(chatRoomId))
     }
-  }, [isConnected, chatRoomId, subscribeToRoom])
+  }, [isConnected, chatRoomId, subscribeToRoom, clearRoomMessages])
 
   useEffect(() => {
     if (rooms && chatRoomId && !selectedRoom) {

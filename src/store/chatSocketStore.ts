@@ -37,6 +37,7 @@ interface ChatSocketState {
   //---
   subscriptions: Record<number, StompSubscription> // 구독한 채팅방들의 구독 객체를 저장합니다. 나중에 unsubscribeFromRoom에서 특정 채팅방 구독을 해제할 때 사용합니다.
   unsubscribeFromRoom: (chatRoomId: number) => void // 채팅방을 나갈 때 해당 채팅방의 구독을 해제해야 합니다. subscriptions[chatRoomId].unsubscribe()를 호출합니다.
+  clearRoomMessages: (chatRoomId: number) => void // 채팅방의 실시간 메시지를 초기화합니다. (중복 방지)
   isConnected: boolean // STOMP 연결 상태를 UI에서 확인할 수 있도록 합니다. onConnect 시 true, onDisconnect 시 false로 설정됩니다.
   // 채팅방별 업데이트 정보
   chatRoomUpdates: Record<number, ChatRoomUpdateResponse>
@@ -232,5 +233,11 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
         return { subscriptions: rest }
       })
     }
+  },
+  clearRoomMessages: (chatRoomId: number) => {
+    set((state) => {
+      const { [chatRoomId]: _, ...rest } = state.messages
+      return { messages: rest }
+    })
   },
 }))
