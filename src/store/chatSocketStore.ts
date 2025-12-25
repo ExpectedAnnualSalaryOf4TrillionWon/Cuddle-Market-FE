@@ -58,7 +58,7 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
 
     // STOMP Client 생성
     const socket = new Client({
-      webSocketFactory: () => new SockJS(url), // ← 추가
+      webSocketFactory: () => new SockJS(url, null, { transports: ['websocket'] }),
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
