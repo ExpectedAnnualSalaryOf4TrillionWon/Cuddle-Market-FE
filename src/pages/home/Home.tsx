@@ -9,10 +9,6 @@ import {
   PRODUCT_TYPE_TABS,
   PET_TYPE_TABS,
   type ProductTypeTabId,
-  type PriceRange,
-  type LocationFilter,
-  type PetTypeTabId,
-  type CategoryFilter as CategoryFilterType,
   SORT_TYPE,
   type SORT_LABELS,
 } from '@src/constants/constants'
@@ -23,6 +19,7 @@ import { Plus } from 'lucide-react'
 import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { useFilterStore } from '@src/store/filterStore'
 
 function Home() {
   const { isLogin } = useUserStore()
@@ -33,55 +30,61 @@ function Home() {
   const keyword = searchParams.get('keyword') || ''
   const sortBy = searchParams.get('sortBy')
   const sortOrder = searchParams.get('sortOrder')
-  const [activePetTypeTab, setActivePetTypeTab] = useState<PetTypeTabId>('tab-all')
-  const [selectedDetailPet, setSelectedDetailPet] = useState<CategoryFilterType | null>(searchParams.get('petDetailType'))
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType | null>(searchParams.get('categories'))
+
+  const {
+    activePetTypeTab,
+    setActivePetTypeTab,
+    selectedDetailPet,
+    setSelectedDetailPet,
+    selectedCategory,
+    setSelectedCategory,
+    selectedProductStatus,
+    setSelectedProductStatus,
+    selectedProductPrice,
+    setSelectedProductPrice,
+    selectedLocation,
+    setSelectedLocation,
+    selectedSort,
+    setSelectedSort,
+    activeProductTypeTab,
+    setActiveProductTypeTab,
+    resetFilters,
+  } = useFilterStore()
+
   const [isDetailFilterOpen, setIsDetailFilterOpen] = useState(false)
-  const [selectedProductStatus, setSelectedProductStatus] = useState<string | null>(searchParams.get('productStatuses'))
-  const [selectedProductPrice, setSelectedProductPrice] = useState<PriceRange | null>(() => {
+
+  // URL searchParams에서 초기값 설정 (마운트 시 1회)
+  useEffect(() => {
+    const petDetailType = searchParams.get('petDetailType')
+    const categories = searchParams.get('categories')
+    const productStatuses = searchParams.get('productStatuses')
     const minPrice = searchParams.get('minPrice')
     const maxPrice = searchParams.get('maxPrice')
-    if (!minPrice) return null
-    return {
-      min: Number(minPrice),
-      max: maxPrice ? Number(maxPrice) : null,
-    }
-  })
-  const [selectedLocation, setSelectedLocation] = useState<LocationFilter | null>(null)
-  const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>('tab-all')
-  const [selectedSort, setSelectedSort] = useState<string>(() => {
-    const sortItem = SORT_TYPE.find((sort) => {
-      if (sortBy === 'price') {
-        return sortOrder === 'asc' ? sort.id === 'orderedLowPriced' : sort.id === 'orderedHighPriced'
-      }
-      return sort.id === sortBy
-    })
 
-    return sortItem?.label || '최신순'
-  })
+    if (petDetailType) setSelectedDetailPet(petDetailType)
+    if (categories) setSelectedCategory(categories)
+    if (productStatuses) setSelectedProductStatus(productStatuses)
+    if (minPrice) {
+      setSelectedProductPrice({
+        min: Number(minPrice),
+        max: maxPrice ? Number(maxPrice) : null,
+      })
+    }
+
+    if (sortBy) {
+      const sortItem = SORT_TYPE.find((sort) => {
+        if (sortBy === 'price') {
+          return sortOrder === 'asc' ? sort.id === 'orderedLowPriced' : sort.id === 'orderedHighPriced'
+        }
+        return sort.id === sortBy
+      })
+      if (sortItem) setSelectedSort(sortItem.label)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleDetailFilterToggle = useCallback((isOpen: boolean) => {
     setIsDetailFilterOpen(isOpen)
-  }, [])
-
-  const handleProductStatusChange = useCallback((status: string | null) => {
-    setSelectedProductStatus(status)
-  }, [])
-
-  const handleMinPriceChange = useCallback((priceRange: PriceRange | null) => {
-    setSelectedProductPrice(priceRange)
-  }, [])
-
-  const handleLocationChange = useCallback((location: LocationFilter | null) => {
-    setSelectedLocation(location)
-  }, [])
-
-  const handleCategoryChange = useCallback((category: string | null) => {
-    setSelectedCategory(category)
-  }, [])
-
-  const handlePetDetailTypeChange = useCallback((pet: string | null) => {
-    setSelectedDetailPet(pet)
   }, [])
 
   /**
@@ -187,15 +190,9 @@ function Home() {
     (e: React.MouseEvent) => {
       e.stopPropagation()
       setSearchParams({})
-      setActivePetTypeTab('tab-all')
-      setSelectedDetailPet(null)
-      setSelectedCategory(null)
-      setSelectedProductStatus(null)
-      setSelectedProductPrice(null)
-      setSelectedLocation(null)
-      setSelectedSort('최신순')
+      resetFilters()
     },
-    [setSearchParams]
+    [setSearchParams, resetFilters]
   )
 
   const toGoProductPostPage = (e: React.MouseEvent) => {
@@ -243,17 +240,17 @@ function Home() {
                 activeTab={activePetTypeTab}
                 onTabChange={setActivePetTypeTab}
                 selectedDetailPet={selectedDetailPet}
-                onPetDetailTypeChange={handlePetDetailTypeChange}
+                onPetDetailTypeChange={setSelectedDetailPet}
               />
-              <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={handleCategoryChange} />
+              <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
               <DetailFilter
                 isOpen={isDetailFilterOpen}
                 onToggle={handleDetailFilterToggle}
                 selectedProductStatus={selectedProductStatus}
-                onProductStatusChange={handleProductStatusChange}
+                onProductStatusChange={setSelectedProductStatus}
                 selectedPriceRange={selectedProductPrice}
-                onMinPriceChange={handleMinPriceChange}
-                onLocationChange={handleLocationChange}
+                onMinPriceChange={setSelectedProductPrice}
+                onLocationChange={setSelectedLocation}
                 filterReset={filterReset}
               />
             </div>
