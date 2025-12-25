@@ -19,6 +19,7 @@ export default function ChattingPage() {
   const queryClient = useQueryClient()
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
+  const [inputMessage, setInputMessage] = useState('')
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
@@ -61,9 +62,10 @@ export default function ChattingPage() {
     navigate(`/chat/${room.chatRoomId}`)
   }
 
-  const handleSend = (message: string) => {
-    if (selectedRoom) {
-      sendMessage(selectedRoom.chatRoomId, message, 'TEXT')
+  const handleSend = () => {
+    if (selectedRoom && inputMessage.length > 0) {
+      sendMessage(selectedRoom.chatRoomId, inputMessage, 'TEXT')
+      setInputMessage('')
     }
   }
   const handleImageSend = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,8 +164,8 @@ export default function ChattingPage() {
                 <label htmlFor="chat-file-input" className="cursor-pointer rounded p-1">
                   <Paperclip size={20} />
                 </label>
-                <ChatInput onSend={handleSend} />
-                <IconButton size="lg" className="bg-primary-100 aspect-square h-full">
+                <ChatInput value={inputMessage} onChange={setInputMessage} onSubmit={handleSend} />
+                <IconButton size="lg" className="bg-primary-100 aspect-square h-full" onClick={handleSend}>
                   <Send className="text-white" />
                 </IconButton>
               </div>
