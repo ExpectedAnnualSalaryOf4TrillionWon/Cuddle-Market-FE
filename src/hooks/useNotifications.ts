@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useUserStore } from '@src/store/userStore'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -7,20 +7,26 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 export function useNotificationSSE() {
   const queryClient = useQueryClient()
   const user = useUserStore((state) => state.user)
+  const accessToken = useUserStore((state) => state.accessToken)
+  const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
   useEffect(() => {
-    if (!user) {
-      console.log('[SSE] 연결 안 함:', { hasUser: !!user })
+    if (!user || !accessToken) {
       return
     }
-    const token = useUserStore.getState().accessToken
+
+    // 이전 연결 정리
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close()
+    }
+
     const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/notifications/stream`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         Accept: 'text/event-stream',
       },
     })
-    console.log('[SSE] 연결 시작')
+    eventSourceRef.current = eventSource
 
     // notification 이벤트: 새 알림이 왔을 때
     eventSource.addEventListener('notification', (e) => {
@@ -38,11 +44,9 @@ export function useNotificationSSE() {
       }
     })
 
-    eventSource.onerror = (error) => {
-      if (eventSource.readyState === EventSource.CLOSED) {
-        return
-      }
-      console.error('[SSE] 연결 오류:', error)
+    eventSource.onerror = () => {
+      // CLOSED: 연결 종료됨, CONNECTING: 재연결 시도 중 (타임아웃 후 자동 재연결)
+      // 30초 타임아웃으로 인한 정상적인 재연결이므로 에러 로그 생략
     }
 
     eventSource.addEventListener('connect', () => {
@@ -53,5 +57,5 @@ export function useNotificationSSE() {
       console.log('[SSE] 연결 종료')
       eventSource.close()
     }
-  }, [user, queryClient])
+  }, [user, accessToken, queryClient])
 }
