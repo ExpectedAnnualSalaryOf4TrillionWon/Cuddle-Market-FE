@@ -1,8 +1,10 @@
 export const Z_INDEX = {
-  HEADER: 'z-25',
   DROPDOWN: 'z-20',
-  BUTTON: 'z-25',
-  MODAL: 'z-30',
-  POPUP: 'z-40',
-  TOAST: 'z-50',
+  HEADER: 'z-30',
+  BUTTON: 'z-30',
+  FLOATING_BUTTON: 'z-30',
+  OVERLAY: 'z-40',
+  SIDEBAR: 'z-50',
+  TOAST: 'z-[60]',
+  MODAL: 'z-[100]',
 } as const

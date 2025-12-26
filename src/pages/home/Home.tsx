@@ -20,6 +20,7 @@ import { Button } from '@src/components/commons/button/Button'
 import { useUserStore } from '@src/store/userStore'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useFilterStore } from '@src/store/filterStore'
+import { Z_INDEX } from '@src/constants/ui'
 
 function Home() {
   const { isLogin } = useUserStore()
@@ -283,7 +284,7 @@ function Home() {
       </div>
       {/* <ChatButton /> */}
       {isLoggedIn && (
-        <div className="fixed right-10 bottom-5 z-50">
+        <div className={`fixed right-10 bottom-5 ${Z_INDEX.FLOATING_BUTTON}`}>
           <Button size={isMd ? 'lg' : 'md'} className="bg-primary-300 cursor-pointer text-white" icon={Plus} onClick={toGoProductPostPage}>
             상품등록
           </Button>

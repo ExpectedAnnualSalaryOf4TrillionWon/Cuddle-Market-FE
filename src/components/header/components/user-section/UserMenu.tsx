@@ -1,7 +1,7 @@
 // import Icon from '@components/commons/Icon'
 import { Z_INDEX } from '@constants/ui'
 import { cn } from '@utils/cn'
-import { UserRound as UserRoundIcon, LogOut as LogOutIcon, MessageSquare } from 'lucide-react'
+import { UserRound as UserRoundIcon, LogOut as LogOutIcon } from 'lucide-react'
 import { ROUTES } from '@src/constants/routes'
 import { useUserStore } from '@src/store/userStore'
 import { logout } from '@src/api/auth'
@@ -11,22 +11,27 @@ import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { IconButton } from '@src/components/commons/button/IconButton'
+import { Menu } from 'lucide-react'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
   setIsNotificationOpen: (isNotificationOpen: boolean) => void
   isUserMenuOpen: boolean
   setIsUserMenuOpen: (isUserMenuOpen: boolean) => void
+  isSideOpen: boolean
+  setIsSideOpen: (isSideOpen: boolean) => void
   userNickname?: string
 }
 
-export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen }: UserMenuProps) {
+export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen, isSideOpen, setIsSideOpen }: UserMenuProps) {
   const { user, clearAll } = useUserStore()
   const { openLogoutModal } = useLoginModalStore()
   const { disconnect } = chatSocketStore()
   const modalRef = useRef<HTMLDivElement>(null)
   useOutsideClick(isUserMenuOpen, [modalRef], () => setIsUserMenuOpen(false))
-
+  const isMd = useMediaQuery('(min-width: 768px)')
   const handleAvatarToggle = () => {
     if (isNotificationOpen) {
       setIsNotificationOpen(false)
@@ -53,11 +58,9 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
     openLogoutModal(onLogout)
   }
 
-  return (
+  return isMd ? (
     <div className="relative flex cursor-pointer items-center gap-2" onClick={handleAvatarToggle}>
       <ProfileAvatar imageUrl={user?.profileImageUrl} nickname={user?.nickname || ''} size="sm" />
-
-      <p className="hidden text-base text-gray-700 md:block">{user?.nickname}</p>
       {isUserMenuOpen && (
         <div
           className={cn(
@@ -66,10 +69,6 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
           )}
           ref={modalRef}
         >
-          <Link to={ROUTES.COMMUNITY} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
-            <MessageSquare className="h-5 w-5" />
-            커뮤니티
-          </Link>
           <Link to={ROUTES.MYPAGE} className="hover:bg-primary-50 flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700">
             <UserRoundIcon className="h-5 w-5" />
             마이페이지
@@ -84,5 +83,9 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
         </div>
       )}
     </div>
+  ) : (
+    <IconButton aria-label="메뉴" onClick={() => setIsSideOpen(!isSideOpen)}>
+      <Menu className="text-white" />
+    </IconButton>
   )
 }

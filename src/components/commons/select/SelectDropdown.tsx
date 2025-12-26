@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@src/utils/cn'
 import { ChevronDown as DownArrow } from 'lucide-react'
+import { Z_INDEX } from '@src/constants/ui'
 
 // 메인 토글 버튼 컴포넌트
 interface SelectProps {
@@ -99,7 +100,7 @@ function SelectOptions({ options, selectedValue, onSelect, placeholder, optionCl
       ref={listboxRef}
       role="listbox"
       aria-label={placeholder}
-      className="absolute top-full left-0 z-20 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md"
+      className={cn('absolute top-full left-0 mt-0.5 flex max-h-56 w-full flex-col gap-1 overflow-scroll rounded-md border border-gray-400 bg-white p-1 shadow-md', Z_INDEX.DROPDOWN)}
     >
       {options.map((option) => {
         const isSelected = selectedValue === option.value

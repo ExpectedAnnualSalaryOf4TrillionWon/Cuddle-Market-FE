@@ -13,6 +13,7 @@ import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
 import { uploadImage } from '@src/api/products'
 import { cn } from '@src/utils/cn'
+import { Z_INDEX } from '@src/constants/ui'
 // const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
 export default function ChattingPage() {
@@ -161,7 +162,7 @@ export default function ChattingPage() {
                   isLoadingPrevious={isFetchingNextPage}
                 />
               </div>
-              <div className="fixed right-0 bottom-0 left-0 z-25 flex items-center gap-2.5 bg-white p-3.5 md:static">
+              <div className={cn('fixed right-0 bottom-0 left-0 flex items-center gap-2.5 bg-white p-3.5 md:static', Z_INDEX.HEADER)}>
                 <input type="file" id="chat-file-input" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageSend} />
                 <label htmlFor="chat-file-input" className="cursor-pointer rounded p-1">
                   <Paperclip size={20} />

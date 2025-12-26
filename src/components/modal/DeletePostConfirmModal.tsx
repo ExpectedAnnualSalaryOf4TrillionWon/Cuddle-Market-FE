@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { Button } from '../commons/button/Button'
 import ModalTitle from './ModalTitle'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+import { Z_INDEX } from '@src/constants/ui'
 
 interface DeletePostConfirmProps {
   isOpen: boolean
@@ -17,7 +18,7 @@ export default function DeletePostConfirmModal({ isOpen, postId, onConfirm, onCa
   if (!isOpen || !postId) return null
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
+    <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 ${Z_INDEX.MODAL}`}>
       <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96" ref={modalRef}>
         <ModalTitle heading="게시글 삭제" description="정말로 이 게시글을 삭제하시겠습니까?" />
         <div className="flex justify-end gap-3">

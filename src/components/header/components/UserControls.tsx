@@ -35,13 +35,13 @@ export default function UserControls({ isSideOpen, setIsSideOpen, hideMenuButton
   return (
     <div className="flex items-center gap-2 md:gap-4">
       {isLogin() ? (
-        <div className="flex items-center gap-3">
-          <Link to={ROUTES.CHAT} className="">
-            <MessageCircleMore />
+        <div className="flex items-center gap-1">
+          <Link to={ROUTES.CHAT} className="ml-1">
+            <MessageCircleMore className="text-white" strokeWidth={1.5} />
           </Link>
           <div className="relative mr-2.5" onClick={handleBellToggle}>
             <IconButton aria-label="알림" size="lg" className="hover:bg-transparent">
-              <Bell size={24} className="stroke-gray-600" />
+              <Bell size={24} className="stroke-white" />
             </IconButton>
             {(unreadCountData?.unreadCount ?? 0) > 0 && (
               <span className="bg-danger-500 absolute top-0 -right-2 flex size-5 items-center justify-center rounded-full p-2 text-sm text-white">
@@ -50,12 +50,13 @@ export default function UserControls({ isSideOpen, setIsSideOpen, hideMenuButton
             )}
             {isNotificationOpen && <NotificationsDropdown isNotificationOpen={isNotificationOpen} setIsNotificationOpen={setIsNotificationOpen} />}
           </div>
-
           <UserMenu
             isNotificationOpen={false}
             setIsNotificationOpen={setIsNotificationOpen}
             isUserMenuOpen={isUserMenuOpen}
             setIsUserMenuOpen={setIsUserMenuOpen}
+            isSideOpen={isSideOpen}
+            setIsSideOpen={setIsSideOpen}
           />
         </div>
       ) : (
