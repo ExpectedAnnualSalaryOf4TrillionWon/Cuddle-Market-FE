@@ -3,7 +3,7 @@ import { cn } from '@utils/cn'
 import Logo from '../Logo'
 import { SearchBar } from './components/SearchBar'
 import Navigation from './components/Navigation'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 
