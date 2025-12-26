@@ -29,11 +29,11 @@ export default function Navigation() {
   return (
     <div className="flex items-center gap-2 md:gap-4">
       {isLogin() ? (
-        <>
+        <div className="flex items-center gap-3">
           <Link to={ROUTES.CHAT} className="">
             <MessageCircleMore />
           </Link>
-          <div className="relative" onClick={handleBellToggle}>
+          <div className="relative mr-2.5" onClick={handleBellToggle}>
             <IconButton aria-label="알림" size="lg" className="hover:bg-transparent">
               <Bell size={24} className="stroke-gray-600" />
             </IconButton>
@@ -51,7 +51,7 @@ export default function Navigation() {
             isUserMenuOpen={isUserMenuOpen}
             setIsUserMenuOpen={setIsUserMenuOpen}
           />
-        </>
+        </div>
       ) : (
         <AuthMenu />
       )}
