@@ -1,5 +1,5 @@
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { COMMUNITY_SEARCH_TYPE, COMMUNITY_SORT_TYPE, COMMUNITY_TABS, type CommunityTabId } from '@src/constants/constants'
 import { CommunityTabs } from './components/CommunityTabs'
@@ -25,6 +25,14 @@ export default function CommunityPage() {
   const { isCollapsed: isFilterCollapsed } = useScrollDirection()
 
   const [activeCommunityTypeTab, setActiveCommunityTypeTab] = useState<CommunityTabId>(initialTab)
+
+  // URL의 tab 파라미터가 변경되면 탭 상태 동기화
+  useEffect(() => {
+    if (tabParam) {
+      setActiveCommunityTypeTab(tabParam)
+    }
+  }, [tabParam])
+
   const sortBy = searchParams.get('sortBy')
   const [selectedSort, setSelectedSort] = useState<string>(() => {
     const sortItem = COMMUNITY_SEARCH_TYPE.find((sort) => {
