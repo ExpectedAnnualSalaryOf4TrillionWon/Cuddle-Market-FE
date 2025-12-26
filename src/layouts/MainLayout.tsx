@@ -13,6 +13,9 @@ const HIDE_HEADER_MOBILE_PATTERNS = [/^\/community\/\d+$/]
 // SearchBar 숨김 경로 (정적 경로)
 const HIDE_SEARCHBAR_PATHS: string[] = [ROUTES.COMMUNITY, ROUTES.PROFILE_UPDATE, ROUTES.PRODUCT_POST, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.FIND_PASSWORD, ROUTES.MYPAGE]
 
+// 메뉴 버튼 숨김 경로
+const HIDE_MENU_BUTTON_PATHS: string[] = [ROUTES.LOGIN, ROUTES.SIGNUP]
+
 // SearchBar 숨김 패턴 (동적 경로)
 const HIDE_SEARCHBAR_PATTERNS = [/^\/products\/\d+\/edit$/, /^\/user-profile\/\d+$/]
 
@@ -24,9 +27,10 @@ export default function MainLayout() {
   const hideHeaderMobile = !isMd && HIDE_HEADER_MOBILE_PATTERNS.some((pattern) => pattern.test(pathname))
   const showHeader = !hideHeaderAlways && !hideHeaderMobile
   const hideSearchBar = !isMd && (HIDE_SEARCHBAR_PATHS.includes(pathname) || HIDE_SEARCHBAR_PATTERNS.some((pattern) => pattern.test(pathname)))
+  const hideMenuButton = HIDE_MENU_BUTTON_PATHS.includes(pathname)
   return (
     <div className="flex min-h-screen flex-col">
-      {showHeader && <Header hideSearchBar={hideSearchBar} />}
+      {showHeader && <Header hideSearchBar={hideSearchBar} hideMenuButton={hideMenuButton} />}
       {/* <ChatFloatButton /> */}
       <main className="w-full flex-1">
         <Outlet />

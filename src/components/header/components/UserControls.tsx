@@ -11,7 +11,13 @@ import { useQuery } from '@tanstack/react-query'
 import { getUnreadCount } from '@src/api/notifications'
 import { useNotificationSSE } from '@src/hooks/useNotifications'
 
-export default function Navigation() {
+interface UserControlsProps {
+  isSideOpen: boolean
+  setIsSideOpen: (isSideOpen: boolean) => void
+  hideMenuButton?: boolean
+}
+
+export default function UserControls({ isSideOpen, setIsSideOpen, hideMenuButton = false }: UserControlsProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const user = useUserStore((state) => state.user)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -53,7 +59,7 @@ export default function Navigation() {
           />
         </div>
       ) : (
-        <AuthMenu />
+        <AuthMenu setIsSideOpen={setIsSideOpen} isSideOpen={isSideOpen} hideMenuButton={hideMenuButton} />
       )}
     </div>
   )

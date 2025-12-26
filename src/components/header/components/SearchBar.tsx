@@ -46,7 +46,7 @@ export function SearchBar({
   }, [currentKeyword])
 
   return (
-    <div className={cn('h-5 min-w-[650px] flex-1 md:h-10', className)}>
+    <div className={cn('h-5 flex-1 md:h-10 md:min-w-[480px]', className)}>
       <Input
         type="text"
         value={keyword}
