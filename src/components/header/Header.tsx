@@ -10,6 +10,7 @@ import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useEffect, useRef, useState } from 'react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { Search } from 'lucide-react'
+
 interface HeaderProps {
   hideSearchBar?: boolean
   hideMenuButton?: boolean
@@ -29,6 +30,7 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
   }, [])
 
   return (
+    <>
     <header
       className={cn(
         'bg-primary-200 sticky top-0 flex w-full items-center justify-center py-3',
@@ -76,8 +78,9 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
           </div>
         )}
       </div>
-      <MobileNavigation isOpen={isSideOpen} onClose={() => setIsSideOpen(false)} />
     </header>
+    <MobileNavigation isOpen={isSideOpen} onClose={() => setIsSideOpen(false)} />
+  </>
   )
 }
 

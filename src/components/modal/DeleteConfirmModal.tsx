@@ -6,6 +6,7 @@ import { PRODUCT_DELETE_ALERT_LIST } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+import { Z_INDEX } from '@src/constants/ui'
 
 interface DeleteConfirmModalProps {
   isOpen: boolean
@@ -21,7 +22,7 @@ function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel }: DeleteConf
   if (!isOpen || !product) return null
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
+    <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 ${Z_INDEX.MODAL}`}>
       <div className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96" ref={modalRef}>
         <ModalTitle heading="상품 삭제" description="정말로 이 상품을 삭제하시겠습니까?" />
         <AlertBox alertList={PRODUCT_DELETE_ALERT_LIST} />

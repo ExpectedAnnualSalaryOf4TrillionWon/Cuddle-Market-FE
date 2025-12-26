@@ -16,6 +16,7 @@ import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useScrollDirection } from '@src/hooks/useScrollDirection'
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
+import { Z_INDEX } from '@src/constants/ui'
 
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -162,14 +163,14 @@ export default function CommunityPage() {
       <SimpleHeader
         title={headerTitle}
         description={isMd ? headerDescription : undefined}
-        layoutClassname="py-5 justify-between border-b border-gray-200 md:static sticky top-16 z-20"
+        layoutClassname={`py-5 justify-between border-b border-gray-200 md:static sticky top-16 ${Z_INDEX.DROPDOWN}`}
       />
       <div className="relative min-h-screen bg-[#F3F4F6] pt-0 md:pt-5">
         <div className="pb-4xl mx-auto max-w-7xl px-0 md:px-4">
           <div className="flex w-full flex-col">
             {/* 모바일: 필터 영역 */}
             {!isMd && (
-              <div className="sticky top-32 z-20 bg-white">
+              <div className={`sticky top-32 bg-white ${Z_INDEX.DROPDOWN}`}>
                 {/* 접히는 필터 영역 */}
                 <div
                   className={cn(
@@ -334,7 +335,7 @@ export default function CommunityPage() {
           </div>
         </div>
         {!isMd && isLogin() && (
-          <Link to={ROUTES.COMMUNITY_POST} type="button" className="bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white">
+          <Link to={ROUTES.COMMUNITY_POST} type="button" className={`bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white ${Z_INDEX.FLOATING_BUTTON}`}>
             <Plus />
           </Link>
         )}

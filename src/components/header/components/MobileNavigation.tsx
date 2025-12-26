@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom'
 import { X, ChevronDown } from 'lucide-react'
 import { cn } from '@src/utils/cn'
 import { ROUTES } from '@src/constants/routes'
+import { Z_INDEX } from '@src/constants/ui'
 import Logo from '@src/components/Logo'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { IconButton } from '@src/components/commons/button/IconButton'
+import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
+import { chatSocketStore } from '@src/store/chatSocketStore'
+import { logout } from '@src/api/auth'
 
 interface MobileNavigationProps {
   isOpen: boolean
@@ -23,6 +28,26 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
 
   const sideNavRef = useRef<HTMLDivElement>(null)
   useOutsideClick(isOpen, [sideNavRef], onClose)
+
+  const { isLogin, clearAll } = useUserStore()
+  const { openLogoutModal } = useLoginModalStore()
+  const { disconnect } = chatSocketStore()
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+    } catch (error) {
+      console.error('로그아웃 API 실패:', error)
+    } finally {
+      onClose()
+      disconnect()
+      clearAll()
+    }
+  }
+
+  const handleLogoutClick = () => {
+    openLogoutModal(handleLogout)
+  }
 
   useEffect(() => {
     if (communityRef.current) {
@@ -48,11 +73,14 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
   return (
     <>
       <div
-        className={cn('fixed inset-0 z-24 bg-black/50 transition-opacity', isOpen ? 'opacity-100' : 'pointer-events-none opacity-0')}
+        className={cn('fixed inset-0 bg-black/50 transition-opacity', Z_INDEX.OVERLAY, isOpen ? 'opacity-100' : 'pointer-events-none opacity-0')}
         onClick={onClose}
       />
       <nav
-        className="fixed top-0 left-0 z-25 h-full w-9/12 -translate-x-full overflow-y-auto bg-white px-4 py-5 transition-transform data-[open=true]:translate-x-0"
+        className={cn(
+          'fixed top-0 left-0 h-full w-9/12 -translate-x-full overflow-y-auto bg-white px-4 py-5 transition-transform data-[open=true]:translate-x-0',
+          Z_INDEX.SIDEBAR
+        )}
         data-open={isOpen}
         ref={sideNavRef}
       >
@@ -64,19 +92,29 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
             </IconButton>
           </div>
           <div className="flex items-center gap-2">
+            {isLogin() ? (
+              <button
+                type="button"
+                onClick={handleLogoutClick}
+                className="border-primary-200 text-primary-200 flex-1 cursor-pointer rounded-sm border py-2 text-center text-sm font-bold"
+              >
+                로그아웃
+              </button>
+            ) : (
+              <Link
+                to={ROUTES.LOGIN}
+                onClick={onClose}
+                className="border-primary-200 text-primary-200 flex-1 rounded-sm border py-2 text-center text-sm font-bold"
+              >
+                로그인
+              </Link>
+            )}
             <Link
-              to={ROUTES.LOGIN}
-              onClick={onClose}
-              className="border-primary-200 text-primary-200 flex-1 rounded-sm border py-2 text-center text-sm font-bold"
-            >
-              로그인
-            </Link>
-            <Link
-              to={ROUTES.SIGNUP}
+              to={isLogin() ? ROUTES.MYPAGE : ROUTES.SIGNUP}
               onClick={onClose}
               className="border-primary-200 bg-primary-200 flex-1 rounded-sm border py-2 text-center text-sm font-bold text-white"
             >
-              회원가입
+              {isLogin() ? '마이페이지' : '회원가입'}
             </Link>
           </div>
         </div>

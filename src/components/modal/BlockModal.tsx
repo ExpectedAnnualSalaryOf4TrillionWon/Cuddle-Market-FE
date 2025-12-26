@@ -6,6 +6,7 @@ import { userBlocked } from '@src/api/profile'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+import { Z_INDEX } from '@src/constants/ui'
 
 interface BlockModalProps {
   isOpen: boolean
@@ -33,7 +34,7 @@ export default function BlockModal({ isOpen, onCancel, userNickname, userId }: B
   }
   if (!isOpen) return null
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-gray-900/70">
+    <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 ${Z_INDEX.MODAL}`}>
       <div ref={modalRef} className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-max">
         <ModalTitle heading="사용자 차단하기" description={`정말로 ${userNickname}를 신고하시겠습니까?`} />
         <AlertBox alertList={USER_BLOCK_ALERT_LIST} />
