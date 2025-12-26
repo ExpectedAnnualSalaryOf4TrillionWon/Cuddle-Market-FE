@@ -4,14 +4,20 @@ import { useState } from 'react'
 import { useUserStore } from '@src/store/userStore'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
-import { MessageCircleMore, Bell } from 'lucide-react'
+import { MessageCircleMore, Bell, Menu } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import NotificationsDropdown from './notification-section/NotificationsDropdown'
 import { useQuery } from '@tanstack/react-query'
 import { getUnreadCount } from '@src/api/notifications'
 import { useNotificationSSE } from '@src/hooks/useNotifications'
 
-export default function Navigation() {
+interface UserControlsProps {
+  isSideOpen: boolean
+  setIsSideOpen: (isSideOpen: boolean) => void
+  hideMenuButton?: boolean
+}
+
+export default function UserControls({ isSideOpen, setIsSideOpen, hideMenuButton = false }: UserControlsProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const user = useUserStore((state) => state.user)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -53,7 +59,7 @@ export default function Navigation() {
           />
         </div>
       ) : (
-        <AuthMenu />
+        <AuthMenu setIsSideOpen={setIsSideOpen} isSideOpen={isSideOpen} hideMenuButton={hideMenuButton} />
       )}
     </div>
   )

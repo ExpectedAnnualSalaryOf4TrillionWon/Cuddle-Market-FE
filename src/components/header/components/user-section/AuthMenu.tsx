@@ -1,20 +1,29 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
-// import PageLink from '@components/commons/page-link/PageLink'
-// const ACCOUNT = 'https://account.ozcoding.site'
-// const returnTo = encodeURIComponent(window.location.href)
-export default function AuthMenu() {
-  return (
-    <div className="flex items-center gap-4">
-      <Link to={ROUTES.COMMUNITY} className="font-bold text-white md:text-lg">
-        커뮤니티
-      </Link>
-      <Link to={ROUTES.LOGIN} className="font-bold text-white md:text-lg">
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { Menu } from 'lucide-react'
+import { IconButton } from '@src/components/commons/button/IconButton'
+
+interface AuthMenuProps {
+  isSideOpen: boolean
+  setIsSideOpen: (isSideOpen: boolean) => void
+  hideMenuButton?: boolean
+}
+
+export default function AuthMenu({ isSideOpen, setIsSideOpen, hideMenuButton = false }: AuthMenuProps) {
+  const isMd = useMediaQuery('(min-width: 768px)')
+  return isMd ? (
+    <div className="flex items-center gap-5">
+      <Link to={ROUTES.LOGIN} className="font-bold text-white">
         로그인
       </Link>
-      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 md:px-4 md:py-2.5">
+      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 md:px-4 md:py-2">
         회원가입
       </Link>
     </div>
+  ) : hideMenuButton ? null : (
+    <IconButton aria-label="메뉴" onClick={() => setIsSideOpen(!isSideOpen)}>
+      <Menu className="text-white" />
+    </IconButton>
   )
 }

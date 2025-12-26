@@ -31,9 +31,6 @@ function Footer() {
             <h4 className="font-semibold text-gray-500">고객센터</h4>
             <ul className="flex flex-col gap-3 text-gray-500">
               <li>
-                <Link to={ROUTES.COMMUNITY}>공지사항</Link>
-              </li>
-              <li>
                 <a href="mailto:support@cuddlemarket.com?subject=허들마켓 1:1 문의">1:1 문의</a>
               </li>
             </ul>
