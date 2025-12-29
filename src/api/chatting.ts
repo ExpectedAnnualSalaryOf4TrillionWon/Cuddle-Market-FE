@@ -19,8 +19,8 @@ export const createChatRoom = async (requestData: CreateChatRequestData) => {
 }
 
 // 채팅 목록 조회
-export const fetchRooms = async () => {
-  const response = await api.get<ChatRoomsResponse>(`/chat/rooms`)
+export const fetchRooms = async (page: number = 0, size: number = 10) => {
+  const response = await api.get<ChatRoomsResponse>(`/chat/rooms?page=${page}&size=${size}`)
   return response.data.data
 }
 

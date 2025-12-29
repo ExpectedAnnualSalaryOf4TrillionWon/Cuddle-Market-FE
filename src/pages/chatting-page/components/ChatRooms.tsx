@@ -5,14 +5,25 @@ import { ChatProductCard } from '@src/components/commons/card/ChatProductCard'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { cn } from '@src/utils/cn'
 import { chatSocketStore } from '@src/store/chatSocketStore'
+import { useIntersectionObserver } from '@src/hooks/useIntersectionObserver'
 interface ChatRoomsProps {
   rooms: fetchChatRoom[]
   handleSelectRoom: (room: fetchChatRoom) => void
   selectedRoomId: number | null
+  hasNextPage: boolean
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
 }
 
-export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRoomsProps) {
+export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId, hasNextPage, isFetchingNextPage, fetchNextPage }: ChatRoomsProps) {
   const { chatRoomUpdates } = chatSocketStore()
+  const targetRef = useIntersectionObserver({
+    enabled: rooms.length > 0,
+    hasNextPage,
+    isFetchingNextPage,
+    onIntersect: fetchNextPage,
+    threshold: 0.5,
+  })
   const getRoomData = (room: fetchChatRoom) => {
     const update = chatRoomUpdates[room.chatRoomId]
     if (update) {
@@ -25,6 +36,7 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
     }
     return room
   }
+
   return (
     <section className="flex h-full flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
       <h2 className="border-b border-gray-300 p-5">채팅목록</h2>
@@ -77,6 +89,15 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
               )
             })}
         </ul>
+        {/* 무한 스크롤 감지 영역 - ul 태그 밖, div 안 */}
+        <div ref={targetRef} className="h-10" aria-hidden="true" />
+
+        {/* 로딩 스피너 */}
+        {isFetchingNextPage && (
+          <div className="flex items-center justify-center py-8">
+            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" aria-label="채팅방 로딩 중" role="status" />
+          </div>
+        )}
       </div>
     </section>
   )

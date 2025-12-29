@@ -7,13 +7,14 @@ import { Send, Paperclip } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { ChatRooms } from '@src/pages/chatting-page/components/ChatRooms'
 import { ChatRoomInfo } from '@src/pages/chatting-page/components/ChatRoomInfo'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
 import { uploadImage } from '@src/api/products'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
+import { useIntersectionObserver } from '@src/hooks/useIntersectionObserver'
 // const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
 export default function ChattingPage() {
@@ -51,11 +52,6 @@ export default function ChattingPage() {
   const httpMessages = roomMessages?.pages.flatMap((page) => page.data.messages) ?? []
   const allMessages = [...httpMessages, ...(realtimeMessages[Number(chatRoomId)] ?? [])]
 
-  // const { data: rooms } = useQuery({
-  //   queryKey: ['chatRooms'],
-  //   queryFn: () => fetchRooms(),
-  //   enabled: !!user,
-  // })
   const {
     data: rooms,
     fetchNextPage: fetchNextRooms,
@@ -63,12 +59,14 @@ export default function ChattingPage() {
     isFetchingNextPage: isFetchingNextRooms,
   } = useInfiniteQuery({
     queryKey: ['chatRooms'],
-    queryFn: ({ pageParam }) => fetchRooms(),
+    queryFn: ({ pageParam }) => fetchRooms(pageParam),
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.currentPage + 1 : undefined),
     initialPageParam: 0,
     enabled: !!user,
   })
-  const allRooms = rooms?.pages.flatMap((page) => page.chatRooms) ?? []
+
+  const allRooms = useMemo(() => rooms?.pages.flatMap((page) => page.chatRooms) ?? [], [rooms])
+
   const handleSelectRoom = (room: fetchChatRoom) => {
     subscribeToRoom(room.chatRoomId)
     // 채팅방의 unreadCount만큼 헤더 알림 개수 감소
@@ -170,7 +168,14 @@ export default function ChattingPage() {
     <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">
       <div className="mx-auto flex h-full max-w-7xl flex-col md:h-auto md:flex-row">
         <div className={cn('md:block', isChatOpen ? 'hidden' : 'block')}>
-          <ChatRooms rooms={allRooms ?? []} handleSelectRoom={handleSelectRoom} selectedRoomId={selectedRoom?.chatRoomId ?? null} />
+          <ChatRooms
+            rooms={allRooms ?? []}
+            handleSelectRoom={handleSelectRoom}
+            selectedRoomId={selectedRoom?.chatRoomId ?? null}
+            hasNextPage={hasNextRooms ?? false}
+            isFetchingNextPage={isFetchingNextRooms}
+            fetchNextPage={fetchNextRooms}
+          />
         </div>
         <section className={cn('flex flex-1 flex-col border border-gray-300', 'md:flex', isChatOpen ? 'flex' : 'hidden')}>
           {selectedRoom ? (
