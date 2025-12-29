@@ -12,7 +12,7 @@ import { withDraw } from '@src/api/profile'
 import ProfileData from '@src/components/profile/ProfileData'
 
 function MyPage() {
-  const { user, clearAll, updateUserProfile } = useUserStore()
+  const { user, clearAll, updateUserProfile, setRedirectUrl } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -178,6 +178,7 @@ function MyPage() {
     )
   }
   if (!user?.id) {
+    setRedirectUrl(window.location.pathname)
     navigate('/auth/login')
   }
 
