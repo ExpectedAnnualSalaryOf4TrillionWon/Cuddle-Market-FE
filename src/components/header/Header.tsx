@@ -4,13 +4,12 @@ import Logo from '../Logo'
 import { SearchBar } from './components/SearchBar'
 import UserControls from './components/UserControls'
 import MobileNavigation from './components/MobileNavigation'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useEffect, useRef, useState } from 'react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { Search } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
 
 interface HeaderProps {
   hideSearchBar?: boolean
