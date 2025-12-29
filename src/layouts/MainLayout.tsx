@@ -11,7 +11,15 @@ const HIDE_HEADER_PATTERNS = [/^\/community\/\d+\/edit$/, new RegExp(`^${ROUTES.
 const HIDE_HEADER_MOBILE_PATTERNS = [/^\/community\/\d+$/]
 
 // SearchBar 숨김 경로 (정적 경로)
-const HIDE_SEARCHBAR_PATHS: string[] = [ROUTES.COMMUNITY, ROUTES.PROFILE_UPDATE, ROUTES.PRODUCT_POST, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.FIND_PASSWORD, ROUTES.MYPAGE]
+const HIDE_SEARCHBAR_PATHS: string[] = [
+  ROUTES.COMMUNITY,
+  ROUTES.PROFILE_UPDATE,
+  ROUTES.PRODUCT_POST,
+  ROUTES.LOGIN,
+  ROUTES.SIGNUP,
+  ROUTES.FIND_PASSWORD,
+  ROUTES.MYPAGE,
+]
 
 // 메뉴 버튼 숨김 경로
 const HIDE_MENU_BUTTON_PATHS: string[] = [ROUTES.LOGIN, ROUTES.SIGNUP]
@@ -32,7 +40,7 @@ export default function MainLayout() {
     <div className="flex min-h-screen flex-col">
       {showHeader && <Header hideSearchBar={hideSearchBar} hideMenuButton={hideMenuButton} />}
       {/* <ChatFloatButton /> */}
-      <main className="w-full flex-1">
+      <main className="w-full flex-1 pt-16 md:pt-0">
         <Outlet />
       </main>
     </div>

@@ -174,7 +174,7 @@ export default function ChattingPage() {
   }, [])
 
   return (
-    <div className="md:pb-4xl bg-white pt-16 md:h-auto md:pt-8">
+    <div className="md:pb-4xl bg-white md:h-auto md:pt-8">
       <div className="mx-auto flex h-full max-w-7xl flex-col md:h-[80vh] md:flex-row">
         <div className={cn('md:flex', isChatOpen ? 'hidden' : 'block')}>
           <ChatRooms
