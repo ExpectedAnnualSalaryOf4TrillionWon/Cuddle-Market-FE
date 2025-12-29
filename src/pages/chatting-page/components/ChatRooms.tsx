@@ -28,7 +28,7 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
   return (
     <section className="flex h-full flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
       <h2 className="border-b border-gray-300 p-5">채팅목록</h2>
-      <div className="h-full px-3 py-3">
+      <div className="scrollbar-hide overflow-y-scroll px-3 py-3 md:h-[70vh]">
         <ul className="flex flex-col gap-2">
           {rooms &&
             rooms.map((room) => {
@@ -64,7 +64,7 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId }: ChatRooms
                         )}
                       </div>
                     </div>
-                    <div className="border-primary-100 bg-primary-50 flex items-center gap-2 rounded-lg border px-2.5 py-3 overflow-hidden">
+                    <div className="border-primary-100 bg-primary-50 flex items-center gap-2 overflow-hidden rounded-lg border px-2.5 py-3">
                       <ChatProductCard
                         productImageUrl={roomData?.productImageUrl}
                         productTitle={roomData?.productTitle}

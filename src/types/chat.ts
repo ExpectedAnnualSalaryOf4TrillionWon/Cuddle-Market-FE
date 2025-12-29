@@ -64,7 +64,7 @@ export interface fetchChatRoom {
 export interface ChatRoomsResponse {
   code: string
   message: string
-  data: { chatRooms: fetchChatRoom[] }
+  data: { chatRooms: fetchChatRoom[]; currentPage: number; totalPages: number; totalElements: number; hasNext: boolean; hasPrevious: boolean }
   currentPage: number
   totalPages: number
   totalElements: number

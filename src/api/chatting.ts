@@ -21,7 +21,7 @@ export const createChatRoom = async (requestData: CreateChatRequestData) => {
 // 채팅 목록 조회
 export const fetchRooms = async () => {
   const response = await api.get<ChatRoomsResponse>(`/chat/rooms`)
-  return response.data.data.chatRooms
+  return response.data.data
 }
 
 // 채팅 내역 조회
