@@ -10,7 +10,7 @@ interface UseFavoriteOptions {
 }
 
 export function useFavorite({ productId, initialIsFavorite }: UseFavoriteOptions) {
-  const { isLogin } = useUserStore()
+  const { isLogin, setRedirectUrl } = useUserStore()
   const { openLoginModal } = useLoginModalStore()
   const queryClient = useQueryClient()
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
@@ -44,6 +44,7 @@ export function useFavorite({ productId, initialIsFavorite }: UseFavoriteOptions
 
     // 미로그인 시 로그인 모달 열기
     if (!isLogin()) {
+      setRedirectUrl(window.location.pathname)
       openLoginModal()
       return
     }

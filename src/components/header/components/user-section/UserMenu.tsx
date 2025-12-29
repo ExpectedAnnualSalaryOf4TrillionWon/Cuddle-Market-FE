@@ -8,12 +8,13 @@ import { logout } from '@src/api/auth'
 import { useLoginModalStore } from '@src/store/modalStore'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { Menu } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface UserMenuProps {
   isNotificationOpen: boolean
@@ -25,7 +26,16 @@ interface UserMenuProps {
   userNickname?: string
 }
 
-export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, isUserMenuOpen, setIsUserMenuOpen, isSideOpen, setIsSideOpen }: UserMenuProps) {
+export default function UserMenu({
+  isNotificationOpen,
+  setIsNotificationOpen,
+  isUserMenuOpen,
+  setIsUserMenuOpen,
+  isSideOpen,
+  setIsSideOpen,
+}: UserMenuProps) {
+  const queryClient = useQueryClient()
+  const navigator = useNavigate()
   const { user, clearAll } = useUserStore()
   const { openLogoutModal } = useLoginModalStore()
   const { disconnect } = chatSocketStore()
@@ -49,6 +59,8 @@ export default function UserMenu({ isNotificationOpen, setIsNotificationOpen, is
       setIsUserMenuOpen(false)
       disconnect() // WebSocket 연결 해제
       clearAll()
+      queryClient.clear()
+      navigator(ROUTES.HOME)
     }
   }
 
