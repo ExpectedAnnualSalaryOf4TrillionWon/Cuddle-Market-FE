@@ -12,11 +12,12 @@ interface SellerProfileCardProps {
 }
 
 export default function SellerProfileCard({ sellerInfo }: SellerProfileCardProps) {
-  const { user, isLogin } = useUserStore()
+  const { user, isLogin, setRedirectUrl } = useUserStore()
   const { openLoginModal } = useLoginModalStore()
   const navigate = useNavigate()
   const goToUserPage = (sellerId: number) => {
     if (!isLogin()) {
+      setRedirectUrl(window.location.pathname)
       openLoginModal()
       return
     }
