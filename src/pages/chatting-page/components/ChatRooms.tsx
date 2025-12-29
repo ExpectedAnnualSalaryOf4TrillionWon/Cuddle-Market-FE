@@ -6,6 +6,7 @@ import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { cn } from '@src/utils/cn'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { useIntersectionObserver } from '@src/hooks/useIntersectionObserver'
+import { Z_INDEX } from '@src/constants/ui'
 interface ChatRoomsProps {
   rooms: fetchChatRoom[]
   handleSelectRoom: (room: fetchChatRoom) => void
@@ -39,7 +40,7 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId, hasNextPage
 
   return (
     <section className="relative flex flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
-      <h2 className="sticky top-16 border-b border-gray-300 p-5 md:static">채팅목록</h2>
+      <h2 className={cn('sticky top-16 border-b border-gray-300 bg-white p-5 md:static', Z_INDEX.HEADER)}>채팅목록</h2>
       <div className="scrollbar-hide flex-1 overflow-y-scroll px-3 py-3">
         <ul className="flex flex-col gap-2">
           {rooms &&
