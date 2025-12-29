@@ -17,6 +17,7 @@ import { Z_INDEX } from '@src/constants/ui'
 // const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
 const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
 export default function ChattingPage() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
@@ -33,8 +34,9 @@ export default function ChattingPage() {
     messages: realtimeMessages,
     clearUnreadCount,
     clearRoomMessages,
+    chatRoomUpdates,
   } = chatSocketStore()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const {
     data: roomMessages,
     fetchNextPage,
@@ -64,7 +66,15 @@ export default function ChattingPage() {
     enabled: !!user,
   })
 
-  const allRooms = useMemo(() => rooms?.pages.flatMap((page) => page.chatRooms) ?? [], [rooms])
+  const allRooms = useMemo(() => {
+    const roomList = rooms?.pages.flatMap((page) => page.chatRooms) ?? []
+    return roomList.sort((a, b) => {
+      // chatRoomUpdates에 있으면 실시간 데이터 사용
+      const timeA = chatRoomUpdates[a.chatRoomId]?.lastMessageTime ?? a.lastMessageTime
+      const timeB = chatRoomUpdates[b.chatRoomId]?.lastMessageTime ?? b.lastMessageTime
+      return new Date(timeB).getTime() - new Date(timeA).getTime()
+    })
+  }, [rooms, chatRoomUpdates])
 
   const handleSelectRoom = (room: fetchChatRoom) => {
     subscribeToRoom(room.chatRoomId)
@@ -165,8 +175,8 @@ export default function ChattingPage() {
 
   return (
     <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">
-      <div className="mx-auto flex h-full max-w-7xl flex-col md:h-auto md:flex-row">
-        <div className={cn('md:block', isChatOpen ? 'hidden' : 'block')}>
+      <div className="mx-auto flex h-full max-w-7xl flex-col md:h-[80vh] md:flex-row">
+        <div className={cn('md:flex', isChatOpen ? 'hidden' : 'block')}>
           <ChatRooms
             rooms={allRooms ?? []}
             handleSelectRoom={handleSelectRoom}
@@ -180,7 +190,7 @@ export default function ChattingPage() {
           {selectedRoom ? (
             <>
               <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} onBack={handleBack} />
-              <div className="bg-primary-50 h-screen flex-1 p-3.5">
+              <div className="bg-primary-50 h-1/2 flex-1 p-3.5">
                 <ChatLog
                   roomMessages={allMessages}
                   onLoadPrevious={() => fetchNextPage()}
@@ -188,7 +198,12 @@ export default function ChattingPage() {
                   isLoadingPrevious={isFetchingNextPage}
                 />
               </div>
-              <div className={cn('fixed right-0 bottom-0 left-0 flex items-center gap-2.5 bg-white p-3.5 md:static', Z_INDEX.HEADER)}>
+              <div
+                className={cn(
+                  'fixed right-0 bottom-0 left-0 flex items-center gap-2.5 border-t border-gray-300 bg-white p-3.5 md:static',
+                  Z_INDEX.HEADER
+                )}
+              >
                 <input type="file" id="chat-file-input" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageSend} />
                 <label htmlFor="chat-file-input" className="cursor-pointer rounded p-1">
                   <Paperclip size={20} />
