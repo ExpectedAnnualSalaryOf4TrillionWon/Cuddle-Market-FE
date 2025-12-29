@@ -30,7 +30,7 @@ export function ChatRoomInfo({ data, onLeaveRoom, onBack }: ChatRoomInfoProps) {
     }
   }
   return (
-    <div className="sticky top-28 flex flex-col gap-2.5 bg-white p-3.5 md:static">
+    <div className="flex flex-col gap-2.5 bg-white p-3.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {onBack && (

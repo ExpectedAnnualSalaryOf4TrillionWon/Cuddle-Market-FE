@@ -38,8 +38,8 @@ export function ChatRooms({ rooms, handleSelectRoom, selectedRoomId, hasNextPage
   }
 
   return (
-    <section className="flex flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
-      <h2 className="border-b border-gray-300 p-5">채팅목록</h2>
+    <section className="relative flex flex-col rounded-none border-t border-l border-gray-300 md:max-w-96 md:min-w-96 md:border-b">
+      <h2 className="sticky top-16 border-b border-gray-300 p-5 md:static">채팅목록</h2>
       <div className="scrollbar-hide flex-1 overflow-y-scroll px-3 py-3">
         <ul className="flex flex-col gap-2">
           {rooms &&

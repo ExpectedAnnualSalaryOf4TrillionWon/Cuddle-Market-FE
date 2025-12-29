@@ -33,7 +33,7 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
     <>
       <header
         className={cn(
-          'bg-primary-200 sticky top-0 flex w-full items-center justify-center py-3',
+          'bg-primary-200 fixed top-0 flex w-full items-center justify-center py-3',
           hideSearchBar ? 'h-16 md:h-24' : 'h-auto pb-0 md:h-24',
           `${Z_INDEX.HEADER}`
         )}

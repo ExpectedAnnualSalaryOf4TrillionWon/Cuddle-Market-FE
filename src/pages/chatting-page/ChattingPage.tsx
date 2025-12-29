@@ -174,7 +174,7 @@ export default function ChattingPage() {
   }, [])
 
   return (
-    <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">
+    <div className="md:pb-4xl bg-white pt-16 md:h-auto md:pt-8">
       <div className="mx-auto flex h-full max-w-7xl flex-col md:h-[80vh] md:flex-row">
         <div className={cn('md:flex', isChatOpen ? 'hidden' : 'block')}>
           <ChatRooms
@@ -186,11 +186,13 @@ export default function ChattingPage() {
             fetchNextPage={fetchNextRooms}
           />
         </div>
-        <section className={cn('flex flex-1 flex-col border border-gray-300', 'md:flex', isChatOpen ? 'flex' : 'hidden')}>
+        <section className={cn('relative flex flex-1 flex-col border border-gray-300 md:flex', isChatOpen ? 'flex' : 'hidden')}>
           {selectedRoom ? (
             <>
-              <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} onBack={handleBack} />
-              <div className="bg-primary-50 h-1/2 flex-1 p-3.5">
+              <div className="sticky top-16 shrink-0 md:static">
+                <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} onBack={handleBack} />
+              </div>
+              <div className="bg-primary-50 min-h-0 flex-1 p-3.5 pb-20 md:pb-3.5">
                 <ChatLog
                   roomMessages={allMessages}
                   onLoadPrevious={() => fetchNextPage()}
@@ -200,7 +202,7 @@ export default function ChattingPage() {
               </div>
               <div
                 className={cn(
-                  'fixed right-0 bottom-0 left-0 flex items-center gap-2.5 border-t border-gray-300 bg-white p-3.5 md:static',
+                  'fixed right-0 bottom-0 left-0 flex items-center gap-2.5 border-t border-gray-300 bg-white p-3.5 md:relative',
                   Z_INDEX.HEADER
                 )}
               >

@@ -76,7 +76,7 @@ export function ChatLog({ roomMessages, onLoadPrevious, hasMorePrevious, isLoadi
   }, [roomMessages])
 
   return (
-    <div ref={scrollRef} onScroll={handleScroll} className="scrollbar-hide flex h-full flex-col gap-4 overflow-y-auto">
+    <div ref={scrollRef} onScroll={handleScroll} className="flex h-full flex-col gap-4 overflow-y-auto">
       {Object.entries(groupedMessages).map(([dateKey, messages]) => (
         <div key={dateKey} className="flex flex-col gap-2">
           <div className="flex justify-center">
