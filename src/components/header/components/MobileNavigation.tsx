@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { X, ChevronDown } from 'lucide-react'
 import { cn } from '@src/utils/cn'
 import { ROUTES } from '@src/constants/routes'
@@ -11,6 +11,7 @@ import { useUserStore } from '@src/store/userStore'
 import { useLoginModalStore } from '@src/store/modalStore'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { logout } from '@src/api/auth'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface MobileNavigationProps {
   isOpen: boolean
@@ -18,6 +19,8 @@ interface MobileNavigationProps {
 }
 
 export default function MobileNavigation({ isOpen, onClose }: MobileNavigationProps) {
+  const queryClient = useQueryClient()
+  const navigator = useNavigate()
   const [isCommunityOpen, setIsCommunityOpen] = useState(false)
   const [communityHeight, setCommunityHeight] = useState(0)
   const communityRef = useRef<HTMLDivElement>(null)
@@ -42,6 +45,8 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
       onClose()
       disconnect()
       clearAll()
+      queryClient.clear()
+      navigator(ROUTES.HOME)
     }
   }
 
