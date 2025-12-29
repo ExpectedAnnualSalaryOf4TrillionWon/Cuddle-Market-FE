@@ -1,13 +1,13 @@
 import { fetchRoomMessages, fetchRooms } from '@src/api/chatting'
 import { useUserStore } from '@src/store/userStore'
-import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { fetchChatRoom } from '@src/types'
 import { Send, Paperclip } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { ChatRooms } from '@src/pages/chatting-page/components/ChatRooms'
 import { ChatRoomInfo } from '@src/pages/chatting-page/components/ChatRoomInfo'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ChatLog } from '@src/pages/chatting-page/components/ChatLog'
 import ChatInput from './components/ChatInput'
@@ -24,7 +24,16 @@ export default function ChattingPage() {
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
-  const { connect, disconnect, subscribeToRoom, isConnected, sendMessage, messages: realtimeMessages, clearUnreadCount, clearRoomMessages } = chatSocketStore()
+  const {
+    connect,
+    disconnect,
+    subscribeToRoom,
+    isConnected,
+    sendMessage,
+    messages: realtimeMessages,
+    clearUnreadCount,
+    clearRoomMessages,
+  } = chatSocketStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const {
     data: roomMessages,
@@ -42,11 +51,20 @@ export default function ChattingPage() {
   const httpMessages = roomMessages?.pages.flatMap((page) => page.data.messages) ?? []
   const allMessages = [...httpMessages, ...(realtimeMessages[Number(chatRoomId)] ?? [])]
 
-  const { data: rooms } = useQuery({
+  const {
+    data: rooms,
+    fetchNextPage: fetchNextRooms,
+    hasNextPage: hasNextRooms,
+    isFetchingNextPage: isFetchingNextRooms,
+  } = useInfiniteQuery({
     queryKey: ['chatRooms'],
-    queryFn: () => fetchRooms(),
+    queryFn: ({ pageParam }) => fetchRooms(pageParam),
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.currentPage + 1 : undefined),
+    initialPageParam: 0,
     enabled: !!user,
   })
+
+  const allRooms = useMemo(() => rooms?.pages.flatMap((page) => page.chatRooms) ?? [], [rooms])
 
   const handleSelectRoom = (room: fetchChatRoom) => {
     subscribeToRoom(room.chatRoomId)
@@ -89,7 +107,7 @@ export default function ChattingPage() {
 
   const handleLeaveRoom = (leftRoomId: number) => {
     // 나간 방을 제외한 나머지 채팅방들
-    const remainingRooms = rooms?.filter((room) => room.chatRoomId !== leftRoomId) ?? []
+    const remainingRooms = allRooms?.filter((room) => room.chatRoomId !== leftRoomId) ?? []
 
     if (remainingRooms.length > 0) {
       // 가장 최근 메시지가 있는 채팅방 선택 (lastMessageTime 기준 정렬)
@@ -123,19 +141,14 @@ export default function ChattingPage() {
   }, [isConnected, chatRoomId, subscribeToRoom, clearRoomMessages])
 
   useEffect(() => {
-    if (rooms && chatRoomId && !selectedRoom) {
-      const room = rooms.find((r) => r.chatRoomId === Number(chatRoomId))
+    if (allRooms && chatRoomId && !selectedRoom) {
+      const room = allRooms.find((room) => room.chatRoomId === Number(chatRoomId))
       if (room) {
         setSelectedRoom(room)
       }
     }
-  }, [rooms, chatRoomId, selectedRoom])
+  }, [allRooms, chatRoomId, selectedRoom])
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/auth/login')
-    }
-  }, [])
   // chatRoomId가 없으면 (뒤로가기 등으로 /chat으로 이동 시) 선택 초기화
   useEffect(() => {
     if (!chatRoomId) {
@@ -144,17 +157,30 @@ export default function ChattingPage() {
     }
   }, [chatRoomId])
 
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth/login')
+    }
+  }, [])
+
   return (
     <div className="md:pb-4xl h-[calc(100dvh-112px)] bg-white pt-0 md:h-auto md:pt-8">
       <div className="mx-auto flex h-full max-w-7xl flex-col md:h-auto md:flex-row">
         <div className={cn('md:block', isChatOpen ? 'hidden' : 'block')}>
-          <ChatRooms rooms={rooms ?? []} handleSelectRoom={handleSelectRoom} selectedRoomId={selectedRoom?.chatRoomId ?? null} />
+          <ChatRooms
+            rooms={allRooms ?? []}
+            handleSelectRoom={handleSelectRoom}
+            selectedRoomId={selectedRoom?.chatRoomId ?? null}
+            hasNextPage={hasNextRooms ?? false}
+            isFetchingNextPage={isFetchingNextRooms}
+            fetchNextPage={fetchNextRooms}
+          />
         </div>
-        <section className={cn('flex flex-1 flex-col border border-gray-300', 'md:block', isChatOpen ? 'block' : 'hidden')}>
+        <section className={cn('flex flex-1 flex-col border border-gray-300', 'md:flex', isChatOpen ? 'flex' : 'hidden')}>
           {selectedRoom ? (
             <>
               <ChatRoomInfo data={selectedRoom} onLeaveRoom={handleLeaveRoom} onBack={handleBack} />
-              <div className="bg-primary-50 h-screen flex-1 p-3.5 md:h-[70vh]">
+              <div className="bg-primary-50 h-screen flex-1 p-3.5">
                 <ChatLog
                   roomMessages={allMessages}
                   onLoadPrevious={() => fetchNextPage()}
