@@ -40,7 +40,7 @@ export default function MainLayout() {
     <div className="flex min-h-screen flex-col">
       {showHeader && <Header hideSearchBar={hideSearchBar} hideMenuButton={hideMenuButton} />}
       {/* <ChatFloatButton /> */}
-      <main className="w-full flex-1 pt-16 md:pt-0">
+      <main className="w-full flex-1 pt-16 md:pt-24">
         <Outlet />
       </main>
     </div>
