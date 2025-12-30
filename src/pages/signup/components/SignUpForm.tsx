@@ -107,7 +107,9 @@ export function SignUpForm() {
       })
       handleLogin(loginResponse.data.user, loginResponse.data.accessToken, loginResponse.data.refreshToken)
 
-      navigate('/')
+      const redirectUrl = useUserStore.getState().redirectUrl
+      navigate(redirectUrl || '/')
+      useUserStore.getState().setRedirectUrl(null)
     } catch (error) {
       console.error('회원가입 실패:', error)
     }
