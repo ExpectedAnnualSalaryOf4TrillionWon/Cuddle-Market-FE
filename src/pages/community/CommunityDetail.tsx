@@ -44,12 +44,16 @@ export default function CommunityDetail() {
   const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
 
-  const { data, error } = useQuery({
+  const {
+    data,
+    isLoading: isLoadingCommunityData,
+    error,
+  } = useQuery({
     queryKey: ['community', id],
     queryFn: () => fetchCommunityId(id!),
     enabled: !!id,
   })
-  const { data: commentData } = useQuery({
+  const { data: commentData, isLoading: isLoadingCommentData } = useQuery({
     queryKey: ['community', id, 'comments'],
     queryFn: () => fetchComments(id!),
     enabled: !!id,
@@ -108,11 +112,20 @@ export default function CommunityDetail() {
     window.scrollTo(0, 0)
   }, [])
 
-  if (error || !data) {
+  if (isLoadingCommunityData || isLoadingCommentData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (error || !data || !commentData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>게시글 정보를 불러올 수 없습니다</p>
+          <button onClick={() => navigate('/community')} className="text-blue-600 hover:text-blue-800">
             목록으로 돌아가기
           </button>
         </div>

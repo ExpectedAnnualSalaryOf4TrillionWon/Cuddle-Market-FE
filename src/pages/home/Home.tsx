@@ -5,13 +5,7 @@ import { DetailFilter } from '@src/pages/home/components/filter/DetailFilter'
 import { ProductsSection } from '@src/pages/home/components/product-section/ProductsSection'
 import { fetchAllProducts } from '../../api/products'
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
-import {
-  PRODUCT_TYPE_TABS,
-  PET_TYPE_TABS,
-  type ProductTypeTabId,
-  SORT_TYPE,
-  type SORT_LABELS,
-} from '@src/constants/constants'
+import { PRODUCT_TYPE_TABS, PET_TYPE_TABS, type ProductTypeTabId, SORT_TYPE, type SORT_LABELS } from '@src/constants/constants'
 import { PetTypeFilter } from './components/filter/PetTypeFilter'
 import { CategoryFilter } from './components/filter/CategoryFilter'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -220,12 +214,14 @@ function Home() {
       </div>
     )
   }
-
-  if (error) {
+  if (error || !data) {
     return (
-      <div className="px-lg py-md tablet:py-xl mx-auto max-w-7xl">
-        <div className="rounded-md border border-red-200 bg-red-50 p-4" role="alert">
-          <p className="text-red-600">{error.message}</p>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>상품을 불러올 수 없습니다</p>
+          <button onClick={() => window.location.reload()} className="text-blue-600 hover:text-blue-800">
+            새로고침
+          </button>
         </div>
       </div>
     )

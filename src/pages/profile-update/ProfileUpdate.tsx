@@ -6,12 +6,18 @@ import { fetchMyPageData } from '@src/api/products'
 import { useUserStore } from '@src/store/userStore'
 import ProfileUpdatePasswordForm from './components/ProfileUpdatePasswordForm'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { useNavigate } from 'react-router-dom'
 
 function ProfileUpdate() {
+  const navigate = useNavigate()
   const [, setIsWithdrawModalOpen] = useState(false)
   const { user, updateUserProfile } = useUserStore()
   const isMd = useMediaQuery('(min-width: 768px)')
-  const { data: myData, isLoading: isLoadingMyData } = useQuery({
+  const {
+    data: myData,
+    isLoading: isLoadingMyData,
+    error,
+  } = useQuery({
     queryKey: ['mypage', user?.id],
     queryFn: () => fetchMyPageData(),
     enabled: !!user,
@@ -37,6 +43,19 @@ function ProfileUpdate() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (error || !myData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>프로필 정보를 불러올 수 없습니다</p>
+          <button onClick={() => navigate('/my-page')} className="text-blue-600 hover:text-blue-800">
+            마이페이지로 돌아가기
+          </button>
+        </div>
       </div>
     )
   }

@@ -36,8 +36,8 @@ function ProductDetail() {
   if (error || !data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          {/* <p className="mb-4 text-red-600">{error || '상품을 찾을 수 없습니다.'}</p> */}
+        <div className="flex flex-col items-center gap-4">
+          <p>상품 정보를 불러올 수 없습니다</p>
           <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
             목록으로 돌아가기
           </button>

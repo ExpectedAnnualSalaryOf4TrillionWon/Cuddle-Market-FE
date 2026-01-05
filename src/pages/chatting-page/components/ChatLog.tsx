@@ -5,10 +5,13 @@ import { useEffect, useRef } from 'react'
 import PlaceholderImage from '@assets/images/placeholder.png'
 
 interface ChatLogProps {
+  isLoadingMessages: boolean
+  errorMessages: Error | null
   roomMessages: Message[]
   onLoadPrevious?: () => void
   hasMorePrevious?: boolean
   isLoadingPrevious?: boolean
+  onRetry?: () => void
 }
 
 // isMine 계산: HTTP API 응답은 isMine 포함, STOMP는 senderId로 비교
@@ -55,7 +58,15 @@ const groupMessagesByDate = (messages: Message[]) => {
   return groups
 }
 
-export function ChatLog({ roomMessages, onLoadPrevious, hasMorePrevious, isLoadingPrevious }: ChatLogProps) {
+export function ChatLog({
+  isLoadingMessages,
+  errorMessages,
+  roomMessages,
+  onLoadPrevious,
+  hasMorePrevious,
+  isLoadingPrevious,
+  onRetry,
+}: ChatLogProps) {
   const { user } = useUserStore()
   const groupedMessages = groupMessagesByDate(roomMessages)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -74,6 +85,29 @@ export function ChatLog({ roomMessages, onLoadPrevious, hasMorePrevious, isLoadi
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [roomMessages])
+
+  if (isLoadingMessages && !roomMessages) {
+    return (
+      <div className="px-lg py-md tablet:py-xl mx-auto max-w-7xl">
+        <div className="flex items-center justify-center py-20">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" role="status" aria-label="상품 로딩 중"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (errorMessages) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>메세지를 불러올 수 없습니다</p>
+          <button onClick={onRetry} className="text-blue-600 hover:text-blue-800">
+            다시 시도
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div ref={scrollRef} onScroll={handleScroll} className="flex h-full flex-col gap-4 overflow-y-auto">

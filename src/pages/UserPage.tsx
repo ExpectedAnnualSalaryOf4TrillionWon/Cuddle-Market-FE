@@ -1,7 +1,7 @@
 import ProfileData from '@src/components/profile/ProfileData'
 import { useState } from 'react'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { fetchUserData, fetchUserProductData } from '@src/api/profile'
 import { ProductListItem } from '@src/components/product/ProductListItem'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
@@ -11,11 +11,16 @@ import UserReportModal from '@src/components/modal/UserReportModal'
 import BlockModal from '@src/components/modal/BlockModal'
 
 function UserPage() {
+  const navigate = useNavigate()
   const [, setIsWithdrawModalOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false)
   const { id } = useParams()
-  const { data: userData, isLoading: isLoadingUserData } = useQuery({
+  const {
+    data: userData,
+    isLoading: isLoadingUserData,
+    error: errorUserData,
+  } = useQuery({
     queryKey: ['userPage'],
     queryFn: () => fetchUserData(Number(id)),
     enabled: !!id,
@@ -28,6 +33,7 @@ function UserPage() {
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingUserProductData,
+    error: errorUserProductData,
   } = useInfiniteQuery({
     queryKey: ['userProducts', id],
     queryFn: ({ pageParam }) => fetchUserProductData(id!, pageParam),
@@ -39,7 +45,7 @@ function UserPage() {
   const totalProducts = userProductData?.pages[0]?.total ?? 0
   const allProducts = userProductData?.pages.flatMap((page) => page.content) ?? []
 
-  if (isLoadingUserData || isLoadingUserProductData) {
+  if ((isLoadingUserData && !userData) || (isLoadingUserProductData && !userProductData)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
@@ -47,7 +53,18 @@ function UserPage() {
     )
   }
 
-  if (!userData || !userProductData) return
+  if (errorUserData || errorUserProductData || !userData || !userProductData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col gap-4">
+          <p>사용자 정보를 불러올 수 없습니다</p>
+          <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
+            홈으로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
