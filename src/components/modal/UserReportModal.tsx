@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom'
 import { userReported } from '@src/api/profile'
 import { USER_REPORT_REASON } from '@src/constants/constants'
 import ReportModalBase, { type ReportFormValues } from './ReportModalBase'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface UserReportModalProps {
   isOpen: boolean
@@ -11,13 +11,13 @@ interface UserReportModalProps {
 }
 
 export default function UserReportModal({ isOpen, userNickname, userId, onCancel }: UserReportModalProps) {
-  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const handleSubmit = async (data: ReportFormValues) => {
     try {
       await userReported(userId, { ...data })
+      queryClient.invalidateQueries({ queryKey: ['userPage'] })
       onCancel()
-      navigate(-1)
     } catch (error) {
       console.error('회원신고 실패:', error)
     }
