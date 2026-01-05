@@ -66,7 +66,7 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
 
   return (
     <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 p-4 ${Z_INDEX.MODAL}`}>
-      <div ref={modalRef} className="flex max-h-[90vh] w-11/12 flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96">
+      <div ref={modalRef} className="flex max-h-[90vh] w-11/12 flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-1/5 md:min-w-96">
         <ModalTitle heading={heading} description={description} />
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
@@ -97,7 +97,7 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
               <div className="flex flex-col gap-0.5">
                 <textarea
                   placeholder="신고 상세 사유를 입력해주세요."
-                  className="bg-primary-50 focus:border-primary-500 w-full resize-none rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none"
+                  className="bg-primary-50 focus:border-primary-500 min-h-32 w-full resize-none rounded-lg px-3 py-3 text-sm placeholder:text-gray-400 focus:outline-none md:min-h-20"
                   id="withdrawReasonDetail"
                   {...register('detailReason', {
                     maxLength: ReportApiErrors.detailReason.maxLength,

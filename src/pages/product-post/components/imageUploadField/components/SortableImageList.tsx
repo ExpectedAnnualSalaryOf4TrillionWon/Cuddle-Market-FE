@@ -3,6 +3,7 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import { Button } from '@src/components/commons/button/Button'
 import { Plus } from 'lucide-react'
 import SortableImageItem from './SortableImageItem'
+import { useMediaQuery } from '@src/hooks/useMediaQuery'
 
 interface SortableImageListProps {
   previewUrls: string[]
@@ -11,14 +12,17 @@ interface SortableImageListProps {
 }
 
 export default function SortableImageList({ previewUrls, onDragEnd, onRemoveImage }: SortableImageListProps) {
+  const isMd = useMediaQuery('(min-width: 768px)')
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext items={previewUrls} strategy={horizontalListSortingStrategy}>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 md:gap-3">
           {previewUrls.map((imgUrl, i) => (
             <SortableImageItem key={imgUrl} url={imgUrl} index={i} onRemove={() => onRemoveImage(i)} />
           ))}
-          {previewUrls.length < 5 && <Button size="lg" className="bg-primary-300 flex cursor-pointer flex-col rounded-full text-white" icon={Plus} />}
+          {previewUrls.length < 5 && (
+            <Button size={isMd ? 'lg' : 'sm'} className="bg-primary-300 flex cursor-pointer flex-col rounded-full text-white" icon={Plus} />
+          )}
         </div>
       </SortableContext>
     </DndContext>
