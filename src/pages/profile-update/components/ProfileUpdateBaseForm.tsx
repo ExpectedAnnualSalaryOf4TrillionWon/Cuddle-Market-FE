@@ -9,10 +9,9 @@ import { cn } from '@src/utils/cn'
 import type { MyPageData } from '@src/components/profile/ProfileData'
 import { formatBirthDate } from '@src/utils/formatBirthDate'
 import { checkNickname } from '@src/api/auth'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { profileUpdate } from '@src/api/profile'
 import { useUserStore } from '@src/store/userStore'
-import { useDropzone } from 'react-dropzone'
 import { uploadImage } from '@src/api/products'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
@@ -27,7 +26,6 @@ export interface ProfileUpdateBaseFormValues {
 const IMAGE_UPLOAD_ERRORS = {
   'file-too-large': '파일 크기는 5MB를 초과할 수 없습니다.',
   'file-invalid-type': '지원하지 않는 파일 형식입니다. (jpg, jpeg, png, webp만 가능)',
-  'too-many-files': `최대 1개의 파일만 업로드할 수 있습니다.`,
   'upload-failed': '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
 } as const
 
@@ -97,37 +95,41 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
     }
   }
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
-    maxFiles: 1,
-    maxSize: 5 * 1024 * 1024,
-    onDrop: async (acceptedFiles, rejectedFiles) => {
-      clearErrors('profileImageUrl')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-      if (rejectedFiles.length > 0) {
-        const errorCode = rejectedFiles[0].errors[0].code as keyof typeof IMAGE_UPLOAD_ERRORS
-        const message = IMAGE_UPLOAD_ERRORS[errorCode] || '파일 업로드에 실패했습니다.'
-        setError('profileImageUrl', { type: 'manual', message })
-        return
-      }
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-      if (acceptedFiles.length === 0) {
-        setError('profileImageUrl', { type: 'manual', message: '업로드할 파일을 선택해주세요.' })
-        return
-      }
+    clearErrors('profileImageUrl')
 
-      try {
-        const uploadedUrl = await uploadImage(acceptedFiles)
-        setValue('profileImageUrl', uploadedUrl.mainImageUrl)
-        setPreviewUrl(uploadedUrl.mainImageUrl)
-      } catch {
-        setError('profileImageUrl', {
-          type: 'manual',
-          message: IMAGE_UPLOAD_ERRORS['upload-failed'],
-        })
-      }
-    },
-  })
+    // 파일 형식 검사
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      setError('profileImageUrl', { type: 'manual', message: IMAGE_UPLOAD_ERRORS['file-invalid-type'] })
+      return
+    }
+
+    // 파일 크기 검사 (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('profileImageUrl', { type: 'manual', message: IMAGE_UPLOAD_ERRORS['file-too-large'] })
+      return
+    }
+
+    try {
+      const uploadedUrl = await uploadImage([file])
+      setValue('profileImageUrl', uploadedUrl.mainImageUrl)
+      setPreviewUrl(uploadedUrl.mainImageUrl)
+    } catch {
+      setError('profileImageUrl', {
+        type: 'manual',
+        message: IMAGE_UPLOAD_ERRORS['upload-failed'],
+      })
+    }
+
+    // 같은 파일 재선택 가능하도록 초기화
+    e.target.value = ''
+  }
   const onSubmit = async (data: ProfileUpdateBaseFormValues) => {
     try {
       const response = await profileUpdate(data)
@@ -169,17 +171,24 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
             {/* 프로필 이미지 */}
             <div className="flex flex-col items-center gap-4">
               <div
-                {...getRootProps()}
+                onClick={() => fileInputRef.current?.click()}
                 className="bg-primary-50 flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full"
               >
-                <input {...getInputProps()} />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
                 {previewUrl ? (
                   <img src={previewUrl ?? ''} alt={myData?.nickname} className="h-full w-full object-cover" />
                 ) : (
                   <div className="heading-h1 font-normal!">{myData?.nickname.charAt(0).toUpperCase()}</div>
                 )}
               </div>
-              <p className="text-sm">프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요</p>
+              {errors.profileImageUrl && <p className="text-danger-500 text-xs font-semibold">{errors.profileImageUrl.message}</p>}
+              <p className="text-sm">프로필 사진을 변경하려면 이미지를 클릭하세요</p>
             </div>
 
             {/* 정보 영역 */}
