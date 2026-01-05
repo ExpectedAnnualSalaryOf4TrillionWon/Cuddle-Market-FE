@@ -87,7 +87,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
       await requestPostProduct(requestData)
       navigate(`/products/${id}`)
     } catch {
-      alert('상품 등록에 실패했습니다.')
+      alert(isEditMode ? '상품 수정에 실패했습니다.' : '상품 등록에 실패했습니다.')
     }
   }
 
@@ -147,7 +147,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
           </div>
           <div className="flex items-center gap-4">
             <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-200')} type="submit">
-              등록
+              {isEditMode ? '수정' : '등록'}
             </Button>
             <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
               취소
