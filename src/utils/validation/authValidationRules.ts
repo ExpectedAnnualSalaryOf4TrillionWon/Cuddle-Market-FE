@@ -48,11 +48,11 @@ export const profileValidationRules = {
   introduction: {
     minLength: {
       value: 2,
-      message: '자기소개는 2~ 100자 이상이어야 합니다.',
+      message: '자기소개는 2~ 100자 이하이어야 합니다.',
     },
     maxLength: {
       value: 1000,
-      message: '자기소개는 2~ 1000자 이상이어야 합니다.',
+      message: '자기소개는 2~ 1000자 이하이어야 합니다.',
     },
   } satisfies RegisterOptions<ProfileUpdateBaseFormValues, 'introduction'>,
 
