@@ -27,13 +27,6 @@ export default function CommunityPage() {
 
   const [activeCommunityTypeTab, setActiveCommunityTypeTab] = useState<CommunityTabId>(initialTab)
 
-  // URL의 tab 파라미터가 변경되면 탭 상태 동기화
-  useEffect(() => {
-    if (tabParam) {
-      setActiveCommunityTypeTab(tabParam)
-    }
-  }, [tabParam])
-
   const sortBy = searchParams.get('sortBy')
   const [selectedSort, setSelectedSort] = useState<string>(() => {
     const sortItem = COMMUNITY_SEARCH_TYPE.find((sort) => {
@@ -93,6 +86,8 @@ export default function CommunityPage() {
     fetchNextPage: fetchNextFree,
     hasNextPage: hasNextFree,
     isFetchingNextPage: isFetchingNextFree,
+    isLoading: isLoadingFree,
+    error: errorFree,
   } = useInfiniteQuery({
     queryKey: ['community', 'free', searchType, currentKeyword, sortBy],
     queryFn: ({ pageParam }) => fetchFreeCommunity(pageParam, 10, searchType, currentKeyword, sortBy),
@@ -107,6 +102,8 @@ export default function CommunityPage() {
     fetchNextPage: fetchNextQuestion,
     hasNextPage: hasNextQuestion,
     isFetchingNextPage: isFetchingNextQuestion,
+    isLoading: isLoadingQuestion,
+    error: errorQuestion,
   } = useInfiniteQuery({
     queryKey: ['community', 'question', searchType, currentKeyword, sortBy],
     queryFn: ({ pageParam }) => fetchQuestionCommunity(pageParam, 10, searchType, currentKeyword, sortBy),
@@ -121,6 +118,8 @@ export default function CommunityPage() {
     fetchNextPage: fetchNextInfo,
     hasNextPage: hasNextInfo,
     isFetchingNextPage: isFetchingNextInfo,
+    isLoading: isLoadingInfo,
+    error: errorInfo,
   } = useInfiniteQuery({
     queryKey: ['community', 'info', searchType, currentKeyword, sortBy],
     queryFn: ({ pageParam }) => fetchInfoCommunity(pageParam, 10, searchType, currentKeyword, sortBy),
@@ -128,6 +127,14 @@ export default function CommunityPage() {
     initialPageParam: 0,
     enabled: activeCommunityTypeTab === 'tab-info',
   })
+
+  // 현재 탭에 맞는 로딩/에러 상태 선택
+  const currentData = activeCommunityTypeTab === 'tab-free' ? freeData : activeCommunityTypeTab === 'tab-question' ? questionData : infoData
+
+  const isLoading =
+    activeCommunityTypeTab === 'tab-free' ? isLoadingFree : activeCommunityTypeTab === 'tab-question' ? isLoadingQuestion : isLoadingInfo
+
+  const error = activeCommunityTypeTab === 'tab-free' ? errorFree : activeCommunityTypeTab === 'tab-question' ? errorQuestion : errorInfo
 
   // 현재 탭에 맞는 데이터 선택
   const communityPosts = (() => {
@@ -158,6 +165,35 @@ export default function CommunityPage() {
 
   const { title: headerTitle, description: headerDescription } = getHeaderContent()
   const { isLogin } = useUserStore()
+
+  // URL의 tab 파라미터가 변경되면 탭 상태 동기화
+  useEffect(() => {
+    if (tabParam) {
+      setActiveCommunityTypeTab(tabParam)
+    }
+  }, [tabParam])
+
+  if (isLoading && !currentData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (error || !currentData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>게시글을 불러올 수 없습니다</p>
+          <button onClick={() => window.location.reload()} className="text-blue-600 hover:text-blue-800">
+            새로고침
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <SimpleHeader
@@ -335,7 +371,11 @@ export default function CommunityPage() {
           </div>
         </div>
         {!isMd && isLogin() && (
-          <Link to={ROUTES.COMMUNITY_POST} type="button" className={`bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white ${Z_INDEX.FLOATING_BUTTON}`}>
+          <Link
+            to={ROUTES.COMMUNITY_POST}
+            type="button"
+            className={`bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white ${Z_INDEX.FLOATING_BUTTON}`}
+          >
             <Plus />
           </Link>
         )}

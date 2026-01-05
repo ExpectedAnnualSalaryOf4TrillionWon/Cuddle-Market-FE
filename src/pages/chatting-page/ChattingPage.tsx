@@ -42,6 +42,9 @@ export default function ChattingPage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading: isLoadingMessages,
+    error: errorMessages,
+    refetch: refetchMessages,
   } = useInfiniteQuery({
     queryKey: ['messages', chatRoomId],
     queryFn: ({ pageParam }) => fetchRoomMessages(Number(chatRoomId), pageParam),
@@ -58,6 +61,8 @@ export default function ChattingPage() {
     fetchNextPage: fetchNextRooms,
     hasNextPage: hasNextRooms,
     isFetchingNextPage: isFetchingNextRooms,
+    isLoading: isLoadingRooms,
+    error: errorRooms,
   } = useInfiniteQuery({
     queryKey: ['chatRooms'],
     queryFn: ({ pageParam }) => fetchRooms(pageParam),
@@ -173,6 +178,27 @@ export default function ChattingPage() {
     }
   }, [])
 
+  if (isLoadingRooms && !rooms) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (errorRooms || !rooms) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>채팅 목록을 불러올 수 없습니다</p>
+          <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
+            홈으로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="md:pb-4xl bg-white md:h-auto md:pt-8">
       <div className="mx-auto flex h-full max-w-7xl flex-col md:h-[80vh] md:flex-row">
@@ -194,10 +220,13 @@ export default function ChattingPage() {
               </div>
               <div className="bg-primary-50 min-h-0 flex-1 p-3.5 pb-20 md:pb-3.5">
                 <ChatLog
+                  isLoadingMessages={isLoadingMessages}
+                  errorMessages={errorMessages}
                   roomMessages={allMessages}
                   onLoadPrevious={() => fetchNextPage()}
                   hasMorePrevious={hasNextPage}
                   isLoadingPrevious={isFetchingNextPage}
+                  onRetry={() => refetchMessages()}
                 />
               </div>
               <div

@@ -59,7 +59,6 @@ function MyPage() {
     fetchNextPage: fetchNextRequests,
     hasNextPage: hasNextRequests,
     isFetchingNextPage: isFetchingNextRequests,
-    isLoading: isLoadingMyRequestData,
     error: errorMyRequestData,
   } = useInfiniteQuery({
     queryKey: ['myRequest', user?.id],
@@ -74,7 +73,6 @@ function MyPage() {
     fetchNextPage: fetchNextFavorites,
     hasNextPage: hasNextFavorites,
     isFetchingNextPage: isFetchingNextFavorites,
-    isLoading: isLoadingMyFavoriteData,
     error: errorMyFavoritetData,
   } = useInfiniteQuery({
     queryKey: ['myFavorite', user?.id],
@@ -89,7 +87,6 @@ function MyPage() {
     fetchNextPage: fetchNextBlocked,
     hasNextPage: hasNextBlocked,
     isFetchingNextPage: isFetchingNextBlocked,
-    isLoading: isLoadingMyFBlockedData,
     error: errorMyFBlockedData,
   } = useInfiniteQuery({
     queryKey: ['myBlocked', user?.id],
@@ -158,7 +155,8 @@ function MyPage() {
     }
   }, [myData, updateUserProfile])
 
-  if (isLoadingMyData || isLoadingMyProductData || isLoadingMyRequestData || isLoadingMyFavoriteData || isLoadingMyFBlockedData) {
+  // 초기 로딩 시에만 스피너 표시 (무한 스크롤 시 스피너 중복 방지)
+  if ((isLoadingMyData && !myData) || (isLoadingMyProductData && !myProductsData)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
@@ -169,14 +167,16 @@ function MyPage() {
   if (errorMyData || errorMyProductData || errorMyRequestData || errorMyFavoritetData || errorMyFBlockedData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
+        <div className="flex flex-col gap-4">
+          <p>내 정보를 불러올 수 없습니다</p>
           <button onClick={() => navigate('/')} className="text-blue-600 hover:text-blue-800">
-            목록으로 돌아가기
+            홈으로 돌아가기
           </button>
         </div>
       </div>
     )
   }
+
   if (!user?.id) {
     setRedirectUrl(window.location.pathname)
     navigate('/auth/login')
