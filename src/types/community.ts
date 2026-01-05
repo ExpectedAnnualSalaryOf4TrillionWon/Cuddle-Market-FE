@@ -39,6 +39,14 @@ export interface CommunityPostRequestData {
   imageUrls: string[]
 }
 
+export interface CommunityPostResponse {
+  code: string
+  message: string
+  data: {
+    id: number
+  }
+}
+
 export interface CommunityDetailItem extends CommunityItem {
   authorId: number
   authorProfileImageUrl: string

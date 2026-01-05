@@ -7,12 +7,15 @@ import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { COMMUNITY_TABS } from '@src/constants/constants'
 import { TitleField } from '@src/components/commons/TitleField'
-import { commonTitleValidationRules } from '../../signup/validationRules'
+import { commonTitleValidationRules, communityContentValidationRules } from '../../signup/validationRules'
 import Markdown from './markdown/Markdown'
 import { ArrowLeft } from 'lucide-react'
 import { fetchCommunityId, patchPost, postCommunity } from '@src/api/community'
 import { useEffect } from 'react'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+
+const DRAFT_STORAGE_KEY = 'community-post-draft'
+
 export interface CommunityPostFormValues {
   boardType: string
   title: string
@@ -20,27 +23,56 @@ export interface CommunityPostFormValues {
   imageUrls?: string[]
 }
 
+// sessionStorage에서 임시 저장된 데이터 불러오기
+const getSavedDraft = (): CommunityPostFormValues => {
+  const saved = sessionStorage.getItem(DRAFT_STORAGE_KEY)
+  if (saved) {
+    try {
+      return JSON.parse(saved)
+    } catch {
+      return { boardType: 'FREE', title: '', content: '', imageUrls: [] }
+    }
+  }
+  return { boardType: 'FREE', title: '', content: '', imageUrls: [] }
+}
+
+// 임시 저장 데이터 삭제
+const clearDraft = () => {
+  sessionStorage.removeItem(DRAFT_STORAGE_KEY)
+}
+
 export default function CommunityPostForm() {
-  const {
-    control,
-    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
-    register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
-    watch, // 특정 필드 값을 실시간으로 구독
-    reset, // 폼 값을 초기화하거나 새로운 값으로 채우는 함수
-    formState: { errors, isValid }, // errors: Controller/register의 에러 메세지 자동 출력 : 각 필드의 에러 상태
-  } = useForm<CommunityPostFormValues>({
-    mode: 'onChange',
-    defaultValues: {
-      boardType: 'FREE',
-      title: '',
-      content: '',
-      imageUrls: [],
-    },
-  }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
   const isMd = useMediaQuery('(min-width: 768px)')
   const { id } = useParams()
   const isEditMode = !!id
+
+  const {
+    control,
+    handleSubmit,
+    register,
+    watch,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<CommunityPostFormValues>({
+    mode: 'onChange',
+    defaultValues: isEditMode ? { boardType: 'FREE', title: '', content: '', imageUrls: [] } : getSavedDraft(),
+  })
+
+  const formValues = watch()
+
+  // 새 글 작성 시 폼 데이터 변경마다 sessionStorage에 자동 저장
+  useEffect(() => {
+    if (!isEditMode) {
+      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formValues))
+    }
+  }, [formValues, isEditMode])
+
+  const handleCancel = () => {
+    clearDraft()
+    navigate('/community')
+  }
+
   const onSubmit = async (data: CommunityPostFormValues) => {
     const requestData: CommunityPostRequestData = {
       boardType: data.boardType,
@@ -52,12 +84,14 @@ export default function CommunityPostForm() {
     try {
       if (isEditMode) {
         await patchPost(Number(id), requestData)
+        navigate(`/community/${id}`)
       } else {
-        await postCommunity(requestData)
+        const response = await postCommunity(requestData)
+        clearDraft()
+        navigate(`/community/${response.id}`)
       }
-      navigate(`/community`)
     } catch {
-      alert('게시글 등록에 실패했습니다.')
+      alert(isEditMode ? '게시글 수정에 실패했습니다.' : '게시글 등록에 실패했습니다.')
     }
   }
   useEffect(() => {
@@ -137,13 +171,15 @@ export default function CommunityPostForm() {
                 <Controller
                   name="content"
                   control={control}
-                  rules={{ required: '내용을 입력하세요' }}
+                  rules={communityContentValidationRules}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-1">
                       <RequiredLabel labelClass="heading-h5">내용</RequiredLabel>
                       <Markdown value={field.value} onChange={field.onChange} placeholder="내용을 입력하세요" height={320} />
-                      <p className="text-sm text-gray-500">{field.value?.length ?? 0}/1000자</p>
-                      {fieldState.error && <p className="text-xs font-semibold text-red-500">{fieldState.error.message}</p>}
+                      <div className="flex flex-col gap-1">
+                        {fieldState.error && <p className="pt-1.5 text-xs font-semibold text-red-500">{fieldState.error.message}</p>}
+                        <p className="text-sm text-gray-500">{field.value?.length ?? 0}/1000자</p>
+                      </div>
                     </div>
                   )}
                 />
@@ -156,7 +192,7 @@ export default function CommunityPostForm() {
                 >
                   {isEditMode ? '수정' : '등록'}
                 </Button>
-                <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
+                <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button" onClick={handleCancel}>
                   취소
                 </Button>
               </div>

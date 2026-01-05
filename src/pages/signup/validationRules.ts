@@ -10,11 +10,11 @@ export const signupValidationRules = {
     required: '이름을 입력해주세요',
     minLength: {
       value: 2,
-      message: '이름은 2~ 10자 이상이어야 합니다.',
+      message: '이름은 2~ 10자 이하이어야 합니다.',
     },
     maxLength: {
       value: 10,
-      message: '이름은 2~ 10자 이상이어야 합니다.',
+      message: '이름은 2~ 10자 이하이어야 합니다.',
     },
   } satisfies RegisterOptions<SignUpFormValues, 'name'>,
 
@@ -22,11 +22,11 @@ export const signupValidationRules = {
     required: '닉네임을 입력해주세요',
     minLength: {
       value: 2,
-      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+      message: '닉네임은 2~ 10자 이하이어야 합니다.',
     },
     maxLength: {
       value: 10,
-      message: '닉네임은 2~ 10자 이상이어야 합니다.',
+      message: '닉네임은 2~ 10자 이하이어야 합니다.',
     },
   } satisfies RegisterOptions<SignUpFormValues, 'nickname'>,
 
@@ -58,16 +58,29 @@ export const commonTitleValidationRules = {
   },
 }
 
+// 커뮤니티 내용 필드 validation 규칙
+export const communityContentValidationRules = {
+  required: '내용을 입력하세요',
+  minLength: {
+    value: 2,
+    message: '내용은 2~1000자여야 합니다.',
+  },
+  maxLength: {
+    value: 1000,
+    message: '내용은 2~1000자여야 합니다.',
+  },
+}
+
 export const productPostValidationRules = {
   name: {
     required: '상품명을 입력해주세요',
     minLength: {
       value: 2,
-      message: '상품명은 2~ 50자 이상이어야 합니다.',
+      message: '상품명은 2~ 50자 이하이어야 합니다.',
     },
     maxLength: {
       value: 50,
-      message: '상품명은 2~ 50자 이상이어야 합니다.',
+      message: '상품명은 2~ 50자 이하이어야 합니다.',
     },
   } satisfies RegisterOptions<ProductPostFormValues, 'title'>,
 
@@ -75,11 +88,11 @@ export const productPostValidationRules = {
     required: '상품설명을 입력해주세요',
     minLength: {
       value: 2,
-      message: '상품설명은 2~ 1000자 이상이어야 합니다.',
+      message: '상품설명은 2 ~ 1000자 이하이어야 합니다.',
     },
     maxLength: {
       value: 1000,
-      message: '상품설명은 2~ 1000자 이하이어야 합니다.',
+      message: '상품설명은 2 ~ 1000자 이하이어야 합니다.',
     },
   } satisfies RegisterOptions<ProductPostFormValues, 'description'>,
 
@@ -109,11 +122,11 @@ export const WithDrawApiErrors = {
     required: '상세 사유를 입력해주세요',
     minLength: {
       value: 2,
-      message: '상세사유는 2~ 500자 이상이어야 합니다.',
+      message: '상세사유는 2 ~ 500자 이하이어야 합니다.',
     },
     maxLength: {
       value: 500,
-      message: '상세사유는 2~ 500자 이상이어야 합니다.',
+      message: '상세사유는 2 ~ 500자 이하이어야 합니다.',
     },
   },
 } as const
@@ -122,7 +135,7 @@ export const ReportApiErrors = {
   detailReason: {
     maxLength: {
       value: 300,
-      message: '상세사유는 2~ 300자 이상이어야 합니다.',
+      message: '상세사유는 2 ~ 300자 이하이어야 합니다.',
     },
   },
 } as const

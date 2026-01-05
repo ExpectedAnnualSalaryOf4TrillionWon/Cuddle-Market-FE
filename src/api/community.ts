@@ -5,6 +5,7 @@ import type {
   CommentResponse,
   CommunityDetailItemResponse,
   CommunityPostRequestData,
+  CommunityPostResponse,
   CommunityResponse,
   ReportedRequestData,
   ReportedResponse,
@@ -89,8 +90,9 @@ export const fetchInfoCommunity = async (
 }
 
 // 커뮤니티 글 등록
-export const postCommunity = async (requestData: CommunityPostRequestData): Promise<void> => {
-  await api.post(`/community/posts`, requestData)
+export const postCommunity = async (requestData: CommunityPostRequestData) => {
+  const response = await api.post<CommunityPostResponse>(`/community/posts`, requestData)
+  return response.data.data
 }
 
 // 커뮤니티 글 상세 조회

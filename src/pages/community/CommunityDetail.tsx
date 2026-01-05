@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deletePost, fetchComments, fetchCommunityId, postReply } from '@src/api/community'
 import MdPreview from './components/markdown/MdPreview'
@@ -12,9 +12,9 @@ import { useForm } from 'react-hook-form'
 import type { CommentPostRequestData } from '@src/types'
 import { useEffect, useState } from 'react'
 import PostReportModal from '@src/components/modal/PostReportModal'
-import { Button } from '@src/components/commons/button/Button'
 import DeletePostConfirmModal from '@src/components/modal/DeletePostConfirmModal'
 import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { ArrowLeft, EllipsisVertical } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
@@ -33,6 +33,9 @@ export default function CommunityDetail() {
     },
   })
   const user = useUserStore((state) => state.user)
+  const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
+  const openLoginModal = useLoginModalStore((state) => state.openLoginModal)
+  const location = useLocation()
   const isMd = useMediaQuery('(min-width: 768px)')
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
@@ -93,6 +96,11 @@ export default function CommunityDetail() {
   }
   const { title: headerTitle, description: headerDescription } = getHeaderContent()
   const onSubmit = (data: ReplyRequestFormValues) => {
+    if (!user) {
+      setRedirectUrl(location.pathname + location.search)
+      openLoginModal()
+      return
+    }
     replyMutation.mutate(data)
   }
 
@@ -131,16 +139,6 @@ export default function CommunityDetail() {
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <div className="flex flex-col justify-center gap-3.5">
-            {user?.id === data?.authorId && (
-              <div className="flex items-center gap-2.5">
-                <Button className="bg-primary-200 cursor-pointer text-white" size="sm" type="button" onClick={() => handlePostEdit(Number(id))}>
-                  수정
-                </Button>
-                <Button className="cursor-pointer bg-gray-100" size="sm" type="button" onClick={() => setIsPostDeleteModalOpen?.(true)}>
-                  삭제
-                </Button>
-              </div>
-            )}
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-400 bg-white px-6 py-5 shadow-xl">
               <div className="relative flex items-center justify-between">
                 <Badge className="bg-primary-400 w-fit rounded-full text-white">{getBoardType(data.boardType ?? '')}</Badge>
@@ -148,16 +146,47 @@ export default function CommunityDetail() {
                   <EllipsisVertical size={16} className="text-gray-500" />
                 </IconButton>
                 {isMoreMenuOpen && (
-                  <button
-                    className="absolute top-7 right-0 cursor-pointer rounded border border-gray-200 bg-white px-3 py-1.5 text-sm whitespace-nowrap shadow-md hover:bg-gray-50"
-                    type="button"
-                    onClick={() => {
-                      setIsMoreMenuOpen(false)
-                      setIsReportModalOpen(true)
-                    }}
-                  >
-                    신고하기
-                  </button>
+                  <div className="absolute top-7 right-0 flex flex-col rounded border border-gray-200 bg-white shadow-md md:min-w-14">
+                    {user?.id === data?.authorId ? (
+                      <>
+                        <button
+                          className="cursor-pointer px-3 py-1.5 text-sm whitespace-nowrap hover:bg-gray-50"
+                          type="button"
+                          onClick={() => {
+                            setIsMoreMenuOpen(false)
+                            handlePostEdit(Number(id))
+                          }}
+                        >
+                          수정
+                        </button>
+                        <button
+                          className="cursor-pointer px-3 py-1.5 text-sm whitespace-nowrap hover:bg-gray-50"
+                          type="button"
+                          onClick={() => {
+                            setIsMoreMenuOpen(false)
+                            setIsPostDeleteModalOpen(true)
+                          }}
+                        >
+                          삭제
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className="cursor-pointer px-3 py-1.5 text-sm whitespace-nowrap hover:bg-gray-50"
+                        type="button"
+                        onClick={() => {
+                          setIsMoreMenuOpen(false)
+                          if (!user) {
+                            openLoginModal()
+                          } else {
+                            setIsReportModalOpen(true)
+                          }
+                        }}
+                      >
+                        신고하기
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
               <div className="flex items-baseline justify-between md:items-center">
@@ -188,6 +217,7 @@ export default function CommunityDetail() {
                 legendText="댓글 작성폼"
                 register={register}
                 onSubmit={handleSubmit(onSubmit)}
+                onCancel={() => reset()}
               />
             </div>
           </div>

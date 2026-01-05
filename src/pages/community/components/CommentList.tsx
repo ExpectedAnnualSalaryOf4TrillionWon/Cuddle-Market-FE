@@ -1,10 +1,13 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteReply, fetchReplies, postReply } from '@src/api/community'
 import type { Comment, CommentPostRequestData } from '@src/types'
 import { CommentItem } from './CommentItem'
 import { CommentForm } from './CommentForm'
 import { useForm } from 'react-hook-form'
+import { useUserStore } from '@src/store/userStore'
+import { useLoginModalStore } from '@src/store/modalStore'
 
 export interface ReplyRequestFormValues {
   content: string
@@ -17,6 +20,10 @@ interface CommentListProps {
 
 export function CommentList({ comments, postId }: CommentListProps) {
   const queryClient = useQueryClient()
+  const user = useUserStore((state) => state.user)
+  const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
+  const openLoginModal = useLoginModalStore((state) => state.openLoginModal)
+  const location = useLocation()
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     register, // onChange 등의 이벤트 객체 생성 : input에 "이 필드는 폼의 어떤 이름이다"라고 연결해주는 함수
@@ -67,6 +74,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
       alert('댓글 삭제에 실패했습니다.')
     },
   })
+
   const handleOpenReplyForm = (commentId: number) => {
     if (replyingToId === commentId) {
       setReplyingToId(null)
@@ -75,12 +83,18 @@ export function CommentList({ comments, postId }: CommentListProps) {
       setReplyingToId(commentId)
     }
   }
+
   const handleToggleReplies = (commentId: number) => {
     setOpenRepliesCommentId(openRepliesCommentId === commentId ? null : commentId)
   }
 
   const onSubmit = (data: ReplyRequestFormValues) => {
     if (!replyingToId) return
+    if (!user) {
+      setRedirectUrl(location.pathname + location.search)
+      openLoginModal()
+      return
+    }
     const requestData: CommentPostRequestData = {
       content: data.content,
       parentId: replyingToId,
