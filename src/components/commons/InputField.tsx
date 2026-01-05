@@ -17,12 +17,13 @@ interface InputFieldProps {
   inputClass?: string
   registration: UseFormRegisterReturn
   id?: string
+  suffix?: string
 }
 
-export function InputField({ error, checkResult, registration, classname, inputClass, id, ...inputProps }: InputFieldProps) {
+export function InputField({ error, checkResult, registration, classname, inputClass, id, suffix, ...inputProps }: InputFieldProps) {
   return (
     <div className={cn('flex flex-col gap-1', classname)}>
-      <Input {...inputProps} {...registration} inputClass={inputClass} id={id} />
+      <Input {...inputProps} {...registration} inputClass={inputClass} id={id} suffix={suffix} />
       {error && <p className="text-danger-500 text-xs font-semibold">{error.message}</p>}
       {checkResult?.message && (
         <p className={cn('text-xs font-semibold', checkResult.status === 'error' ? 'text-danger-500' : 'text-success-500')}>{checkResult.message}</p>

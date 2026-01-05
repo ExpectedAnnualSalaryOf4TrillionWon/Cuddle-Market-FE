@@ -24,7 +24,7 @@ export default function PriceAndStatusSection({
   return (
     <section className="flex flex-col gap-5 rounded-xl border border-gray-100 bg-white px-6 py-5">
       <FormSectionHeader heading={heading} />
-      <PriceField register={register} errors={errors} label={priceLabel} />
+      <PriceField register={register} errors={errors} label={priceLabel} suffix="원" />
       {showProductStateFilter && (
         <Controller
           name="productStatus"
