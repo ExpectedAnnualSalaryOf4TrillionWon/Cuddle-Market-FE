@@ -12,6 +12,7 @@ interface InputProps {
   size?: string
   id?: string
   inputClass?: string
+  suffix?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   [key: string]: any // register에서 전달하는 다른 props들을 받기 위해
 }
@@ -28,6 +29,7 @@ export function Input({
   onChange,
   id,
   inputClass,
+  suffix,
   ...rest // 나머지 모든 props (register가 전달하는 ref, name 등)
 }: InputProps) {
   return (
@@ -61,6 +63,7 @@ export function Input({
         )}
         {...rest}
       />
+      {suffix && <span className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">{suffix}</span>}
     </div>
   )
 }

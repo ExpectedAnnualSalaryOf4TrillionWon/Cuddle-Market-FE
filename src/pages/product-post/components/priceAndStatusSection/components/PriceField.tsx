@@ -9,9 +9,10 @@ interface PriceFieldProps {
   register: UseFormRegister<ProductPostFormValues>
   errors: FieldErrors<ProductPostFormValues>
   label?: string
+  suffix?: string
 }
 
-export function PriceField({ register, errors, label = '판매 가격' }: PriceFieldProps) {
+export function PriceField({ register, errors, suffix, label = '판매 가격' }: PriceFieldProps) {
   return (
     <div className="flex flex-col gap-1">
       <RequiredLabel htmlFor="price" labelClass="heading-h5">
@@ -28,8 +29,9 @@ export function PriceField({ register, errors, label = '판매 가격' }: PriceF
           inputClass="pr-10"
           error={errors.price}
           registration={register('price', productPostValidationRules.price)}
+          suffix={suffix}
         />
-        <span className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">원</span>
+        {/* <span className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">원</span> */}
       </div>
     </div>
   )
