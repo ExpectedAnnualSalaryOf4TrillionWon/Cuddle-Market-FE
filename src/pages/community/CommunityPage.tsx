@@ -8,7 +8,7 @@ import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { ROUTES } from '@src/constants/routes'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { fetchFreeCommunity, fetchInfoCommunity, fetchQuestionCommunity } from '@src/api/community'
-import { UserRound, Clock, MessageSquare, Eye, Dot, Plus } from 'lucide-react'
+import { UserRound, Clock, MessageSquare, Eye, Dot, Plus, MessageSquareText } from 'lucide-react'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
 import { useUserStore } from '@src/store/userStore'
@@ -17,6 +17,7 @@ import { useScrollDirection } from '@src/hooks/useScrollDirection'
 import { Button } from '@src/components/commons/button/Button'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
+import { EmptyState } from '@src/components/EmptyState'
 
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -296,70 +297,73 @@ export default function CommunityPage() {
                 </div>
               </div>
             )}
-
-            <ul className="mt-7 flex flex-col gap-2.5 px-3.5 md:mt-0 md:p-0">
-              {communityPosts.map((post) =>
-                isMd ? (
-                  <li
-                    key={post.id}
-                    className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
-                  >
-                    <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)}>
-                      <p className="font-semibold">{post.title}</p>
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex items-center gap-1 text-gray-500">
-                          <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
-                          <p>{post.authorNickname}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-gray-500">
-                          <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
-                          <p>{getTimeAgo(post.createdAt)}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-gray-500">
-                          <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
-                          <p>{post.commentCount}</p>
-                        </div>
-                        <div className="flex items-center gap-1 text-gray-500">
-                          <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
-                          <span>조회</span>
-                          <span>{post.viewCount}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                ) : (
-                  <li
-                    key={post.id}
-                    className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
-                  >
-                    <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)} className="flex flex-col gap-4">
-                      <div className="flex flex-col gap-2">
-                        <p className="text-lg font-semibold">{post.title}</p>
-
-                        <p className="line-clamp-1">{post.contentPreview}</p>
-                      </div>
-                      <div className="flex items-center justify-between gap-2.5">
-                        <div className="flex items-center text-gray-500">
-                          <p>{post.authorNickname}</p>
-                          <Dot size={12} />
-                          <p>{getTimeAgo(post.createdAt)}</p>
-                        </div>
+            {communityPosts.length === 0 ? (
+              <EmptyState icon={MessageSquareText} title="아직 게시글이 없어요" description="첫 번째 이야기를 나눠보세요!" />
+            ) : (
+              <ul className="mt-7 flex flex-col gap-2.5 px-3.5 md:mt-0 md:p-0">
+                {communityPosts.map((post) =>
+                  isMd ? (
+                    <li
+                      key={post.id}
+                      className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
+                    >
+                      <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)}>
+                        <p className="font-semibold">{post.title}</p>
                         <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-1 text-gray-500">
+                            <UserRound size={16} className="text-gray-500" strokeWidth={2.3} />
+                            <p>{post.authorNickname}</p>
+                          </div>
+                          <div className="flex items-center gap-1 text-gray-500">
+                            <Clock size={16} className="text-gray-500" strokeWidth={2.3} />
+                            <p>{getTimeAgo(post.createdAt)}</p>
+                          </div>
                           <div className="flex items-center gap-1 text-gray-500">
                             <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
                             <p>{post.commentCount}</p>
                           </div>
                           <div className="flex items-center gap-1 text-gray-500">
                             <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
+                            <span>조회</span>
                             <span>{post.viewCount}</span>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </li>
-                )
-              )}
-            </ul>
+                      </Link>
+                    </li>
+                  ) : (
+                    <li
+                      key={post.id}
+                      className="flex flex-col justify-center gap-2.5 rounded-lg border border-gray-400 bg-white px-3.5 pt-3.5 pb-5 shadow-xl"
+                    >
+                      <Link to={ROUTES.COMMUNITY_DETAIL_ID(post.id)} className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                          <p className="text-lg font-semibold">{post.title}</p>
+
+                          <p className="line-clamp-1">{post.contentPreview}</p>
+                        </div>
+                        <div className="flex items-center justify-between gap-2.5">
+                          <div className="flex items-center text-gray-500">
+                            <p>{post.authorNickname}</p>
+                            <Dot size={12} />
+                            <p>{getTimeAgo(post.createdAt)}</p>
+                          </div>
+                          <div className="flex items-center gap-2.5">
+                            <div className="flex items-center gap-1 text-gray-500">
+                              <MessageSquare size={16} className="text-gray-500" strokeWidth={2.3} />
+                              <p>{post.commentCount}</p>
+                            </div>
+                            <div className="flex items-center gap-1 text-gray-500">
+                              <Eye size={16} className="text-gray-500" strokeWidth={2.3} />
+                              <span>{post.viewCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
             {hasNextPage &&
               (isMd ? (
                 <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} classname="border-0" />
