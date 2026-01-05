@@ -15,6 +15,7 @@ import { useUserStore } from '@src/store/userStore'
 import { uploadImage } from '@src/api/products'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { Camera } from 'lucide-react'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
@@ -170,25 +171,22 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
           <div className="flex flex-col gap-10">
             {/* 프로필 이미지 */}
             <div className="flex flex-col items-center gap-4">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="bg-primary-50 flex h-28 w-28 cursor-pointer items-center justify-center overflow-hidden rounded-full"
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.webp"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
+              <div className="bg-primary-50 relative flex h-28 w-28 cursor-pointer items-center justify-center rounded-full">
+                <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" onChange={handleImageChange} className="hidden" />
                 {previewUrl ? (
                   <img src={previewUrl ?? ''} alt={myData?.nickname} className="h-full w-full object-cover" />
                 ) : (
                   <div className="heading-h1 font-normal!">{myData?.nickname.charAt(0).toUpperCase()}</div>
                 )}
+                <div
+                  className="bg-primary-100 absolute right-0 bottom-2 flex size-8 items-center justify-center rounded-full"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Camera className="" size={20} />
+                </div>
               </div>
               {errors.profileImageUrl && <p className="text-danger-500 text-xs font-semibold">{errors.profileImageUrl.message}</p>}
-              <p className="text-sm">프로필 사진을 변경하려면 이미지를 클릭하세요</p>
+              <p className="text-sm">프로필 사진을 변경하려면 카메라 아이콘을 클릭하세요</p>
             </div>
 
             {/* 정보 영역 */}
