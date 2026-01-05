@@ -143,7 +143,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
             <TradeInfoSection control={control} setValue={setValue} register={register} />
           </div>
           <div className="flex items-center gap-4">
-            <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-200')} type="submit">
+            <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-300')} type="submit">
               {isEditMode ? '수정' : '등록'}
             </Button>
             <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
