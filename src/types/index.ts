@@ -51,6 +51,7 @@ export type {
   CommunityItem,
   CommunityResponse,
   CommunityPostRequestData,
+  CommunityPostResponse,
   CommunityDetailItem,
   CommunityDetailItemResponse,
   Comment,
