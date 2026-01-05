@@ -23,10 +23,9 @@ type MyListProps = Product & {
   activeTab?: MyPageTabId
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
 }
-type TradeStatusKo = '판매중' | '예약중' | '거래완료'
 export default function MyList({ id, title, price, mainImageUrl, tradeStatus, viewCount, activeTab, handleConfirmModal }: MyListProps) {
-  const [selectedProductType, setSelectedProductType] = useState<TradeStatusKo>('판매중')
-  const [localTradeStatus, setLocalTradeStatus] = useState(tradeStatus)
+  const [currentTradeStatus, setCurrentTradeStatus] = useState(tradeStatus)
+  const currentTradeStatusKo = STATUS_EN_TO_KO.find((s) => s.value === currentTradeStatus)?.name ?? '판매중'
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const navigate = useNavigate()
   const modalRef = useRef<HTMLDivElement>(null)
@@ -47,13 +46,12 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
 
   const handleProductType = (value: string) => {
     const koToEn = STATUS_EN_TO_KO.find((status) => status.name === value)?.value
-    setSelectedProductType(value as TradeStatusKo)
-    setLocalTradeStatus(koToEn as TransactionStatus)
+    setCurrentTradeStatus(koToEn as TransactionStatus)
     mutate(koToEn as TransactionStatus)
   }
 
   const productTradeStatusCompleted = () => {
-    setLocalTradeStatus('COMPLETED')
+    setCurrentTradeStatus('COMPLETED')
     mutate('COMPLETED')
   }
 
@@ -62,12 +60,11 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
     e.stopPropagation()
     navigate(`/products/${id}/edit`)
   }
-  const baseTradeStatus = getTradeStatus(localTradeStatus)
-  // 판매요청 탭에서는 "판매완료" → "구매완료"로 표시
+  const baseTradeStatus = getTradeStatus(currentTradeStatus)
   const trade_status = activeTab === 'tab-purchases' && baseTradeStatus === '판매완료' ? '구매완료' : baseTradeStatus
-  const productTradeColor = getTradeStatusColor(localTradeStatus)
+  const productTradeColor = getTradeStatusColor(currentTradeStatus)
 
-  const isCompleted = localTradeStatus === 'COMPLETED'
+  const isCompleted = currentTradeStatus === 'COMPLETED'
   const isSalesTab = activeTab === 'tab-sales'
   const isPurchasesTab = activeTab === 'tab-purchases'
   const isWishlistTab = activeTab === 'tab-wishlist'
@@ -145,7 +142,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                 {!isMd && !isCompleted && isSalesTab && (
                   <div className="w-full" onClick={(e) => e.preventDefault()}>
                     <SelectDropdown
-                      value={selectedProductType}
+                      value={currentTradeStatusKo}
                       onChange={handleProductType}
                       options={STATUS_EN_TO_KO.map((sort) => ({
                         value: sort.name,
@@ -172,7 +169,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
             {isMd && !isCompleted && isSalesTab && (
               <div className="w-32" onClick={(e) => e.preventDefault()}>
                 <SelectDropdown
-                  value={selectedProductType}
+                  value={currentTradeStatusKo}
                   onChange={handleProductType}
                   options={STATUS_EN_TO_KO.map((sort) => ({
                     value: sort.name,
