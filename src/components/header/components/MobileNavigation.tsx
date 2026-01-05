@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { X, ChevronDown } from 'lucide-react'
 import { cn } from '@src/utils/cn'
 import { ROUTES } from '@src/constants/routes'
@@ -21,6 +21,7 @@ interface MobileNavigationProps {
 export default function MobileNavigation({ isOpen, onClose }: MobileNavigationProps) {
   const queryClient = useQueryClient()
   const navigator = useNavigate()
+  const location = useLocation()
   const [isCommunityOpen, setIsCommunityOpen] = useState(false)
   const [communityHeight, setCommunityHeight] = useState(0)
   const communityRef = useRef<HTMLDivElement>(null)
@@ -36,6 +37,12 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
   const { openLogoutModal } = useLoginModalStore()
   const { disconnect } = chatSocketStore()
 
+  // 로그인 필수 페이지 목록
+  const authRequiredPaths = [ROUTES.MYPAGE, ROUTES.PROFILE_UPDATE, ROUTES.CHAT]
+
+  // 현재 페이지가 로그인 필수 페이지인지 확인
+  const isAuthRequiredPage = authRequiredPaths.some((path) => location.pathname.startsWith(path))
+
   const handleLogout = async () => {
     try {
       await logout()
@@ -46,7 +53,9 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
       disconnect()
       clearAll()
       queryClient.clear()
-      navigator(ROUTES.HOME)
+      if (isAuthRequiredPage) {
+        navigator(ROUTES.HOME)
+      }
     }
   }
 

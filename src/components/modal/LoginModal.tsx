@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
 import { useLoginModalStore } from '@src/store/modalStore'
+import { useUserStore } from '@src/store/userStore'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { Z_INDEX } from '@src/constants/ui'
 
 export default function ConfirmModal() {
   const { isOpen, modalType, onConfirm, closeModal } = useLoginModalStore()
+  const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
+  const location = useLocation()
   const modalRef = useRef<HTMLDivElement>(null)
   // 바깥 클릭 시 onCancel 호출
   useOutsideClick(isOpen, [modalRef], closeModal)
@@ -42,7 +45,10 @@ export default function ConfirmModal() {
             <Link
               to={ROUTES.LOGIN}
               className="bg-primary-300 flex flex-1 items-center justify-center rounded-lg px-4 py-2.5 text-white"
-              onClick={closeModal}
+              onClick={() => {
+                setRedirectUrl(location.pathname + location.search)
+                closeModal()
+              }}
             >
               {confirmText}
             </Link>
