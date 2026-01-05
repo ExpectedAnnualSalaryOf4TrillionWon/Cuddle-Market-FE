@@ -11,9 +11,10 @@ import SortableImageList from './SortableImageList'
 const IMAGE_UPLOAD_ERRORS = {
   'file-too-large': '파일 크기는 5MB를 초과할 수 없습니다.',
   'file-invalid-type': '지원하지 않는 파일 형식입니다. (jpg, jpeg, png, webp만 가능)',
-  'too-many-files': `최대 ${MAX_FILES}개의 파일만 업로드할 수 있습니다.`,
   'upload-failed': '이미지 업로드에 실패했습니다. 다시 시도해주세요.',
 } as const
+
+const getTooManyFilesError = (max: number) => `최대 ${max}개의 파일만 업로드할 수 있습니다.`
 
 interface DropzoneAreaProps<T extends FieldValues> {
   setValue: UseFormSetValue<T>
@@ -45,7 +46,7 @@ export default function DropzoneArea<T extends FieldValues>({
 
       const totalCount = previewUrls.length + acceptedFiles.length
       if (totalCount > maxFiles) {
-        setError(mainImageField, { type: 'manual', message: IMAGE_UPLOAD_ERRORS['too-many-files'] })
+        setError(mainImageField, { type: 'manual', message: getTooManyFilesError(maxFiles) })
         return
       }
 
@@ -123,7 +124,7 @@ export default function DropzoneArea<T extends FieldValues>({
   }, [initialImages])
 
   return (
-    <div {...getRootProps()} className="cursor-pointer rounded-lg border border-dashed border-gray-400 px-6 py-10">
+    <div {...getRootProps()} className="cursor-pointer rounded-lg border border-dashed border-gray-400 px-4 py-4 md:px-6 md:py-10">
       <input {...getInputProps()} />
       {previewUrls.length === 0 ? (
         <DropzoneGuide maxFiles={maxFiles} />

@@ -19,7 +19,7 @@ export default function SortableImageItem({ url, index, onRemove }: SortableImag
   }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} className="relative h-40 w-40 overflow-hidden rounded-lg">
+    <div ref={setNodeRef} style={style} {...attributes} className="relative size-20 overflow-hidden rounded-lg md:size-28">
       <Button
         icon={X}
         size="xs"
