@@ -8,7 +8,7 @@ import { logout } from '@src/api/auth'
 import { useLoginModalStore } from '@src/store/modalStore'
 import { chatSocketStore } from '@src/store/chatSocketStore'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
@@ -36,6 +36,7 @@ export default function UserMenu({
 }: UserMenuProps) {
   const queryClient = useQueryClient()
   const navigator = useNavigate()
+  const location = useLocation()
   const { user, clearAll } = useUserStore()
   const { openLogoutModal } = useLoginModalStore()
   const { disconnect } = chatSocketStore()
@@ -49,6 +50,12 @@ export default function UserMenu({
     setIsUserMenuOpen(!isUserMenuOpen)
   }
 
+  // 로그인 필수 페이지 목록
+  const authRequiredPaths = [ROUTES.MYPAGE, ROUTES.PROFILE_UPDATE, ROUTES.CHAT]
+
+  // 현재 페이지가 로그인 필수 페이지인지 확인
+  const isAuthRequiredPage = authRequiredPaths.some((path) => location.pathname.startsWith(path))
+
   // 로그아웃 실행 함수
   const onLogout = async () => {
     try {
@@ -60,7 +67,9 @@ export default function UserMenu({
       disconnect() // WebSocket 연결 해제
       clearAll()
       queryClient.clear()
-      navigator(ROUTES.HOME)
+      if (isAuthRequiredPage) {
+        navigator(ROUTES.HOME)
+      }
     }
   }
 
