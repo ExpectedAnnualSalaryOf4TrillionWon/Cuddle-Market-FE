@@ -21,6 +21,7 @@ import { IconButton } from '@src/components/commons/button/IconButton'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
+
 export default function CommunityDetail() {
   const {
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수

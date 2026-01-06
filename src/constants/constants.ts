@@ -1,4 +1,18 @@
-import { MessageSquarePlus, MessageSquareMore, HeartCrack, Tag, ShieldAlert, Trash2, Reply, MessageCircle, type LucideIcon } from 'lucide-react'
+import {
+  MessageSquarePlus,
+  MessageSquareMore,
+  HeartCrack,
+  Tag,
+  ShieldAlert,
+  Trash2,
+  Reply,
+  MessageCircle,
+  AlertTriangle,
+  CheckCircle2,
+  CircleSlash,
+  type LucideIcon,
+} from 'lucide-react'
+import type { ToastType } from '@src/types/toast'
 
 // ========== 반려동물 관련 상수 ==========
 export const PETS = [
@@ -251,3 +265,70 @@ export const iconMap = {
   POST_COMMENT: MessageCircle,
 } as const satisfies Record<string, LucideIcon>
 export type NotificationType = keyof typeof iconMap
+
+/** 토스트 기본 설정 */
+export const TOAST_DEFAULTS = {
+  durationMs: 3000,
+  maxVisible: 5,
+} as const
+
+/** 타입별 지속 시간 */
+export const TOAST_DURATION_BY_TYPE: Record<ToastType, number> = {
+  success: 3000,
+  error: 5000,
+  warning: 4000,
+}
+
+/** 타입별 아이콘 */
+export const TOAST_ICONS: Record<ToastType, LucideIcon> = {
+  success: CheckCircle2,
+  warning: AlertTriangle,
+  error: CircleSlash,
+}
+
+/** 타입별 색상 스타일 */
+export const TOAST_COLORS: Record<ToastType, { box: string; icon: string; text: string; bar: string }> = {
+  success: {
+    box: 'bg-success-100 border-success-500',
+    icon: 'text-success-500',
+    text: 'text-success-500',
+    bar: 'bg-success-100',
+  },
+  error: {
+    box: 'bg-danger-100 border-danger-500',
+    icon: 'fill-danger-500 stroke-white',
+    text: 'text-danger-500',
+    bar: 'bg-danger-100',
+  },
+  warning: {
+    box: 'bg-primary-100 border-primary-500',
+    icon: 'text-primary-500',
+    text: 'text-primary-500',
+    bar: 'bg-primary-100',
+  },
+}
+
+/** 타입별 닫기 버튼 스타일 */
+export const TOAST_CLOSE_BTN: Record<ToastType, string> = {
+  success: 'text-success-500 hover:bg-success-600 hover:text-success-100',
+  error: 'text-danger-500 hover:bg-danger-600 hover:text-danger-100',
+  warning: 'text-primary-500 hover:bg-primary-600 hover:text-primary-100',
+}
+
+/** 토스트 애니메이션 설정 */
+export const TOAST_ANIMATION = {
+  initial: { opacity: 0, x: 100, y: 100, scale: 0.9 },
+  animate: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.25, ease: 'easeOut' },
+  },
+  exit: {
+    opacity: 0,
+    x: 100,
+    scale: 0.9,
+    transition: { duration: 0.25, ease: 'easeOut' },
+  },
+} as const
