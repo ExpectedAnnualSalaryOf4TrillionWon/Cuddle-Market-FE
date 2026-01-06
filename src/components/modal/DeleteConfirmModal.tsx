@@ -2,7 +2,7 @@ import PlaceholderImage from '@assets/images/placeholder.png'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '../commons/button/Button'
 import AlertBox from './AlertBox'
-import { PRODUCT_DELETE_ALERT_LIST, TOAST_CLOSE_BTN, TOAST_COLORS, TOAST_ICONS } from '@src/constants/constants'
+import { PRODUCT_DELETE_ALERT_LIST, TOAST_COLORS, TOAST_ICONS } from '@src/constants/constants'
 import ModalTitle from './ModalTitle'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
@@ -11,7 +11,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ToastProgress from '../commons/ToastProgress'
 import { cn } from '@src/utils/cn'
 import { X } from 'lucide-react'
-import { useToastStore } from '@src/store/toastStore'
 
 interface DeleteConfirmModalProps {
   isOpen: boolean
@@ -23,7 +22,6 @@ interface DeleteConfirmModalProps {
 }
 
 function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel, error, onClearError }: DeleteConfirmModalProps) {
-  const remove = useToastStore((state) => state.remove)
   const modalRef = useRef<HTMLDivElement>(null)
   // 바깥 클릭 시 onCancel 호출
   useOutsideClick(isOpen, [modalRef], onCancel)
