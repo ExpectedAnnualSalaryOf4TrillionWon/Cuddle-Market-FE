@@ -146,6 +146,7 @@ export default function CommunityDetail() {
         <SimpleHeader
           title={headerTitle}
           description={isMd ? headerDescription : undefined}
+          to={`/community?tab=${getHeaderContent().tabId}`}
           layoutClassname="py-5 flex-col justify-between border-b border-gray-200"
         />
       )}

@@ -3,6 +3,7 @@ import Header from '@components/header/Header'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { ROUTES } from '@src/constants/routes'
+import { cn } from '@src/utils/cn'
 
 // Header 숨김 패턴 (정규표현식 필요)
 const HIDE_HEADER_PATTERNS = [/^\/community\/\d+\/edit$/, new RegExp(`^${ROUTES.COMMUNITY_POST}$`)]
@@ -40,7 +41,7 @@ export default function MainLayout() {
     <div className="flex min-h-screen flex-col">
       {showHeader && <Header hideSearchBar={hideSearchBar} hideMenuButton={hideMenuButton} />}
       {/* <ChatFloatButton /> */}
-      <main className="w-full flex-1 pt-16 md:pt-24">
+      <main className={cn('w-full flex-1', showHeader ? 'pt-16 md:pt-24' : 'pt-0')}>
         <Outlet />
       </main>
     </div>
