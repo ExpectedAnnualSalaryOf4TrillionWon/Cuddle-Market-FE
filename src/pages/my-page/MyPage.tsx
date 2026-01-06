@@ -12,6 +12,8 @@ import { withDraw } from '@src/api/profile'
 import ProfileData from '@src/components/profile/ProfileData'
 
 function MyPage() {
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+
   const { user, clearAll, updateUserProfile, setRedirectUrl } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
@@ -103,6 +105,9 @@ function MyPage() {
       queryClient.invalidateQueries({ queryKey: ['myProducts'] })
       setIsModalOpen(false)
       setSelectedProduct(null)
+    },
+    onError: () => {
+      setDeleteError('삭제에 실패했습니다. 다시 시도해주세요.')
     },
   })
 
@@ -237,7 +242,14 @@ function MyPage() {
           </section>
         </div>
       </div>
-      <DeleteConfirmModal isOpen={isModalOpen} product={selectedProduct} onConfirm={handleDelete} onCancel={() => setIsModalOpen(false)} />
+      <DeleteConfirmModal
+        isOpen={isModalOpen}
+        product={selectedProduct}
+        onConfirm={handleDelete}
+        onCancel={() => setIsModalOpen(false)}
+        error={deleteError}
+        onClearError={() => setDeleteError(null)}
+      />
       <WithdrawModal isOpen={isWithdrawModalOpen} onConfirm={handleWithdraw} onCancel={() => setIsWithdrawModalOpen(false)} />
     </>
   )

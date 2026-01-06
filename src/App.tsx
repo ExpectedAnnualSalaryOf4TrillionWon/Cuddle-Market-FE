@@ -3,7 +3,8 @@
 
 import { useEffect } from 'react'
 import AppRoutes from './routes/index'
-import ConfirmModal from './components/modal/LoginModal'
+import LoginModal from './components/modal/LoginModal'
+import ToastContainer from './components/commons/ToastContainer'
 import { useUserStore } from './store/userStore'
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
   return (
     <>
       <AppRoutes />
-      <ConfirmModal />
+      <LoginModal />
+      <ToastContainer />
     </>
   )
 }

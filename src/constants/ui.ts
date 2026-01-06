@@ -5,6 +5,6 @@ export const Z_INDEX = {
   FLOATING_BUTTON: 'z-30',
   OVERLAY: 'z-40',
   SIDEBAR: 'z-50',
-  TOAST: 'z-[60]',
   MODAL: 'z-[100]',
+  TOAST: 'z-[110]',
 } as const

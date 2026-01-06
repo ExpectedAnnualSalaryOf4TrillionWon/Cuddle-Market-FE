@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { Z_INDEX } from '@src/constants/ui'
 
-export default function ConfirmModal() {
+export default function LoginModal() {
   const { isOpen, modalType, onConfirm, closeModal } = useLoginModalStore()
   const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
   const location = useLocation()
