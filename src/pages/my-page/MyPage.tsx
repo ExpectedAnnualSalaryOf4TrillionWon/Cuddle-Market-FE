@@ -12,7 +12,7 @@ import { withDraw } from '@src/api/profile'
 import ProfileData from '@src/components/profile/ProfileData'
 
 function MyPage() {
-  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<React.ReactNode | null>(null)
 
   const { user, clearAll, updateUserProfile, setRedirectUrl } = useUserStore()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -107,7 +107,12 @@ function MyPage() {
       setSelectedProduct(null)
     },
     onError: () => {
-      setDeleteError('삭제에 실패했습니다. 다시 시도해주세요.')
+      setDeleteError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">상품 삭제에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     },
   })
 
