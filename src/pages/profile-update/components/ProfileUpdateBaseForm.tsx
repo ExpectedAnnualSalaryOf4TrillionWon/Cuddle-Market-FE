@@ -15,10 +15,9 @@ import { useUserStore } from '@src/store/userStore'
 import { uploadImage } from '@src/api/products'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
-import { Camera, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { TOAST_COLORS, TOAST_ICONS } from '@src/constants/constants'
-import ToastProgress from '@src/components/commons/ToastProgress'
+import { Camera } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
@@ -57,22 +56,25 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
       addressGugun: '',
     },
   })
+  const { user, updateUserProfile } = useUserStore()
 
-  const titleLength = watch('introduction')?.length ?? 0
   const queryClient = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const isMd = useMediaQuery('(min-width: 768px)')
   const [, setIsNicknameVerified] = useState(false)
-  const [updateError, setUpdateError] = useState<string | null>(null)
+
+  const [updateError, setUpdateError] = useState<React.ReactNode | null>(null)
+  const [updateSuccess, setUpdateSuccess] = useState<React.ReactNode | null>(null)
+  const [updateWarning, setUpdateWarning] = useState<React.ReactNode | null>(null)
+
   const [previewUrl, setPreviewUrl] = useState<string>(myData?.profileImageUrl || '')
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
     message: string
   }>({ status: 'idle', message: '' })
 
+  const titleLength = watch('introduction')?.length ?? 0
   const nickname = watch('nickname')
-  const { user, updateUserProfile } = useUserStore()
-  const LeadingIcon = TOAST_ICONS['error']
 
   const handleNicknameCheck = async () => {
     try {
@@ -136,6 +138,23 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
   }
 
   const onSubmit = async (data: ProfileUpdateBaseFormValues) => {
+    const isUnchanged =
+      data.nickname === myData?.nickname &&
+      data.profileImageUrl === myData?.profileImageUrl &&
+      data.introduction === myData?.introduction &&
+      data.addressSido === myData?.addressSido &&
+      data.addressGugun === myData?.addressGugun
+
+    if (isUnchanged) {
+      setUpdateWarning(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">변경사항이 없습니다.</p>
+          <p>수정할 내용을 입력해주세요.</p>
+        </div>
+      )
+      return
+    }
+
     try {
       // throw new Error('테스트 에러')
       const response = await profileUpdate(data)
@@ -143,9 +162,20 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
         updateUserProfile(data)
         setCheckResult({ status: 'idle', message: '' })
         await queryClient.refetchQueries({ queryKey: ['mypage', user?.id] })
+        setUpdateSuccess(
+          <div className="flex flex-col gap-0.5">
+            <p className="text-base font-semibold">성공적으로 프로필을 수정했습니다.</p>
+            <p>변경사항이 성공적으로 적용되었습니다.</p>
+          </div>
+        )
       }
     } catch {
-      setUpdateError('프로필 수정에 실패했습니다. 다시 시도해주세요.')
+      setUpdateError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">프로필 수정에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -283,27 +313,19 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
             </p>
             <AnimatePresence>
               {updateError && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden rounded-lg border border-[#db202a] bg-[#fff1f1] pt-2 text-sm text-gray-900"
-                >
-                  <div className="flex items-center gap-2 px-2 pb-2">
-                    <LeadingIcon className={cn('h-5 w-5 rotate-90', TOAST_COLORS['error'].icon)} />
-                    <div className="text-sm">{updateError}</div>
-                    <button
-                      type="button"
-                      aria-label="close toast"
-                      onClick={() => setUpdateError(null)}
-                      className="text-danger-500 hover:bg-danger-200 ml-auto cursor-pointer transition-colors focus:outline-none focus-visible:ring-2"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <ToastProgress trackClass="bg-danger-200" fillClass="text-danger-500" durationMs={5000} onEnd={() => setUpdateError(null)} />
-                </motion.div>
+                <InlineNotification type="error" onClose={() => setUpdateError(null)}>
+                  {updateError}
+                </InlineNotification>
+              )}
+              {updateSuccess && (
+                <InlineNotification type="success" onClose={() => setUpdateSuccess(null)}>
+                  {updateSuccess}
+                </InlineNotification>
+              )}
+              {updateWarning && (
+                <InlineNotification type="warning" onClose={() => setUpdateWarning(null)}>
+                  {updateWarning}
+                </InlineNotification>
               )}
             </AnimatePresence>
           </div>

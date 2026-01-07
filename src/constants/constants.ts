@@ -7,9 +7,9 @@ import {
   Trash2,
   Reply,
   MessageCircle,
-  AlertTriangle,
-  CheckCircle2,
-  CircleSlash,
+  TriangleAlert,
+  Check,
+  Slash,
   type LucideIcon,
 } from 'lucide-react'
 import type { ToastType } from '@src/types/toast'
@@ -281,16 +281,16 @@ export const TOAST_DURATION_BY_TYPE: Record<ToastType, number> = {
 
 /** 타입별 아이콘 */
 export const TOAST_ICONS: Record<ToastType, LucideIcon> = {
-  success: CheckCircle2,
-  warning: AlertTriangle,
-  error: CircleSlash,
+  success: Check,
+  warning: TriangleAlert,
+  error: Slash,
 }
 
 /** 타입별 색상 스타일 */
 export const TOAST_COLORS: Record<ToastType, { box: string; icon: string; text: string; bar: string }> = {
   success: {
     box: 'bg-success-100 border-success-500',
-    icon: 'text-success-500',
+    icon: 'text-success-100',
     text: 'text-success-500',
     bar: 'bg-success-100',
   },
