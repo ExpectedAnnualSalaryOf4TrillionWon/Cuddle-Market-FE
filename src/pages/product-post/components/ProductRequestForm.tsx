@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ProductImageUpload from './imageUploadField/ImageUploadField'
 import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
-import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
+// import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 import type { ProductDetailItem, RequestProductPostRequestData } from '@src/types'
 import { requestPostProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
@@ -23,8 +23,6 @@ export interface ProductRequestFormValues {
   subImageUrls?: string[]
   addressSido: Province | ''
   addressGugun: string
-  isDeliveryAvailable?: boolean
-  preferredMeetingPlace?: string
 }
 
 interface ProductRequestPostFormProps {
@@ -105,8 +103,6 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
         subImageUrls: initialData.subImageUrls ?? [],
         addressSido: initialData.addressSido as Province | '',
         addressGugun: initialData.addressGugun,
-        isDeliveryAvailable: initialData.isDeliveryAvailable ?? false,
-        preferredMeetingPlace: initialData.preferredMeetingPlace ?? '',
       })
     }
   }, [isEditMode, initialData, reset])
@@ -143,7 +139,6 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
               mainImageField="mainImageUrl"
               subImagesField="subImageUrls"
             />
-            <TradeInfoSection control={control} setValue={setValue} showProductTradeFilter={false} register={register} />
           </div>
           <div className="flex items-center gap-4">
             <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-300')} type="submit">

@@ -12,8 +12,6 @@ export interface Product {
   createdAt: string
   favoriteCount: number
   isFavorite: boolean
-  isDeliveryAvailable?: boolean
-  preferredMeetingPlace?: string
   viewCount?: number
 }
 
@@ -70,8 +68,6 @@ export interface ProductPostRequestData {
   subImageUrls: string[]
   addressSido: string
   addressGugun: string
-  isDeliveryAvailable: boolean
-  preferredMeetingPlace: string
 }
 
 export interface ProductPostResponse {
@@ -90,8 +86,6 @@ export interface ProductPostResponse {
   subImageUrls: string[]
   addressSido: string
   addressGugun: string
-  isDeliveryAvailable: boolean
-  preferredMeetingPlace: string
   viewCount: number
   favoriteCount: number
   isFavorite: boolean

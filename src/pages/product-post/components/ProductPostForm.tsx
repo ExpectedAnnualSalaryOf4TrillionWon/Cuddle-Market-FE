@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import ProductImageUpload from './imageUploadField/ImageUploadField'
 import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
-import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
 import { patchProduct, postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
@@ -23,8 +22,6 @@ export interface ProductPostFormValues {
   subImageUrls?: string[]
   addressSido: Province | ''
   addressGugun: string
-  isDeliveryAvailable?: boolean
-  preferredMeetingPlace?: string
 }
 
 interface ProductPostFormProps {
@@ -58,8 +55,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
       subImageUrls: [],
       addressSido: '',
       addressGugun: '',
-      isDeliveryAvailable: false,
-      preferredMeetingPlace: '',
     },
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
@@ -84,8 +79,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
       subImageUrls: data.subImageUrls ?? [],
       addressSido: data.addressSido,
       addressGugun: data.addressGugun,
-      isDeliveryAvailable: data.isDeliveryAvailable ?? false,
-      preferredMeetingPlace: data.preferredMeetingPlace ?? '',
     }
 
     try {
@@ -116,8 +109,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
         subImageUrls: initialData.subImageUrls ?? [],
         addressSido: initialData.addressSido as Province | '',
         addressGugun: initialData.addressGugun,
-        isDeliveryAvailable: initialData.isDeliveryAvailable ?? false,
-        preferredMeetingPlace: initialData.preferredMeetingPlace ?? '',
       })
     }
   }, [isEditMode, initialData, reset])
@@ -140,7 +131,6 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
               subImagesField="subImageUrls"
               description="상품 이미지를 업로드 해주세요. 첫번째 이미지가 대표 이미지가 됩니다. (최대 5장)"
             />
-            <TradeInfoSection control={control} setValue={setValue} register={register} />
           </div>
           <div className="flex items-center gap-4">
             <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-300')} type="submit">
