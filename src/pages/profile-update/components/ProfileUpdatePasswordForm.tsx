@@ -7,6 +7,8 @@ import { InputField } from '@src/components/commons/InputField'
 import AlertBox from '@src/components/modal/AlertBox'
 import { useEffect, useState } from 'react'
 import { changePassword } from '@src/api/profile'
+import InlineNotification from '@src/components/commons/InlineNotification'
+import { AnimatePresence } from 'framer-motion'
 
 export interface ProfileUpdatePasswordFormValues {
   currentPassword: string
@@ -31,6 +33,9 @@ export default function ProfileUpdatePasswordForm() {
       confirmPassword: '',
     },
   })
+  const [pwUpdateError, setPwUpdateError] = useState<React.ReactNode | null>(null)
+  const [pwUpdateSuccess, setPwUpdateSuccess] = useState<React.ReactNode | null>(null)
+  const [pwUpdateWarning, setPwUpdateWarning] = useState<React.ReactNode | null>(null)
 
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
@@ -40,11 +45,32 @@ export default function ProfileUpdatePasswordForm() {
   const passwordConfirm = watch('confirmPassword')
 
   const onSubmit = async (requestData: ProfileUpdatePasswordFormValues) => {
+    if (requestData.currentPassword === requestData.newPassword) {
+      setPwUpdateWarning(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">동일한 비밀번호입니다.</p>
+          <p>현재 비밀번호와 다른 비밀번호를 입력해주세요.</p>
+        </div>
+      )
+      return
+    }
+
     try {
       await changePassword({ ...requestData })
       reset()
-    } catch (error) {
-      console.error('비밀번호 변경 실패:', error)
+      setPwUpdateSuccess(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">성공적으로 비밀번호를 변경했습니다.</p>
+          <p>변경사항이 성공적으로 적용되었습니다.</p>
+        </div>
+      )
+    } catch {
+      setPwUpdateError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">비밀번호 변경에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -144,6 +170,23 @@ export default function ProfileUpdatePasswordForm() {
               listColor="text-[#155DFC]"
             />
           </div>
+          <AnimatePresence>
+            {pwUpdateError && (
+              <InlineNotification type="error" onClose={() => setPwUpdateError(null)}>
+                {pwUpdateError}
+              </InlineNotification>
+            )}
+            {pwUpdateSuccess && (
+              <InlineNotification type="success" onClose={() => setPwUpdateSuccess(null)}>
+                {pwUpdateSuccess}
+              </InlineNotification>
+            )}
+            {pwUpdateWarning && (
+              <InlineNotification type="warning" onClose={() => setPwUpdateWarning(null)}>
+                {pwUpdateWarning}
+              </InlineNotification>
+            )}
+          </AnimatePresence>
           <Button size="md" className="bg-primary-300 w-full cursor-pointer text-white" type="submit">
             비밀번호 변경
           </Button>
