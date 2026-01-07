@@ -15,7 +15,10 @@ import { useUserStore } from '@src/store/userStore'
 import { uploadImage } from '@src/api/products'
 import { useQueryClient } from '@tanstack/react-query'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
-import { Camera } from 'lucide-react'
+import { Camera, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { TOAST_COLORS, TOAST_ICONS } from '@src/constants/constants'
+import ToastProgress from '@src/components/commons/ToastProgress'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
@@ -57,9 +60,10 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
 
   const titleLength = watch('introduction')?.length ?? 0
   const queryClient = useQueryClient()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const isMd = useMediaQuery('(min-width: 768px)')
   const [, setIsNicknameVerified] = useState(false)
-
+  const [updateError, setUpdateError] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string>(myData?.profileImageUrl || '')
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
@@ -68,6 +72,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
 
   const nickname = watch('nickname')
   const { user, updateUserProfile } = useUserStore()
+  const LeadingIcon = TOAST_ICONS['error']
 
   const handleNicknameCheck = async () => {
     try {
@@ -95,8 +100,6 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
       setIsNicknameVerified(false)
     }
   }
-
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -131,18 +134,21 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
     // 같은 파일 재선택 가능하도록 초기화
     e.target.value = ''
   }
+
   const onSubmit = async (data: ProfileUpdateBaseFormValues) => {
     try {
+      // throw new Error('테스트 에러')
       const response = await profileUpdate(data)
       if (response.code === 'SUCCESS') {
         updateUserProfile(data)
         setCheckResult({ status: 'idle', message: '' })
         await queryClient.refetchQueries({ queryKey: ['mypage', user?.id] })
       }
-    } catch (error) {
-      console.error('프로필 수정 실패:', error)
+    } catch {
+      setUpdateError('프로필 수정에 실패했습니다. 다시 시도해주세요.')
     }
   }
+
   useEffect(() => {
     if (myData) {
       setPreviewUrl(myData.profileImageUrl || '')
@@ -275,6 +281,31 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
             <p className="border-t border-gray-300 pt-2.5 text-sm text-gray-400">
               본인 인증 정보의 변경이 필요한 경우, 고객센터 1:1 문의를 통해 문의주세요.
             </p>
+            <AnimatePresence>
+              {updateError && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden rounded-lg border border-[#db202a] bg-[#fff1f1] pt-2 text-sm text-gray-900"
+                >
+                  <div className="flex items-center gap-2 px-2 pb-2">
+                    <LeadingIcon className={cn('h-5 w-5 rotate-90', TOAST_COLORS['error'].icon)} />
+                    <div className="text-sm">{updateError}</div>
+                    <button
+                      type="button"
+                      aria-label="close toast"
+                      onClick={() => setUpdateError(null)}
+                      className="text-danger-500 hover:bg-danger-200 ml-auto cursor-pointer transition-colors focus:outline-none focus-visible:ring-2"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <ToastProgress trackClass="bg-danger-200" fillClass="text-danger-500" durationMs={5000} onEnd={() => setUpdateError(null)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <Button size="md" className="bg-primary-300 w-full cursor-pointer text-white" type="submit">
             프로필 수정

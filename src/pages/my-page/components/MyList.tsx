@@ -19,10 +19,12 @@ import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { Z_INDEX } from '@src/constants/ui'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
+
 type MyListProps = Product & {
   activeTab?: MyPageTabId
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
 }
+
 export default function MyList({ id, title, price, mainImageUrl, tradeStatus, viewCount, activeTab, handleConfirmModal }: MyListProps) {
   const [currentTradeStatus, setCurrentTradeStatus] = useState(tradeStatus)
   const currentTradeStatusKo = STATUS_EN_TO_KO.find((s) => s.value === currentTradeStatus)?.name ?? '판매중'
