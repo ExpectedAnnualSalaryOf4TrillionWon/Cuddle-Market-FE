@@ -90,5 +90,6 @@ input[type='date']::-webkit-calendar-picker-indicator {
   animation-name: toast-progress-fill;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
+  /* animation-duration: var(--toast-duration, 90000ms); */
   animation-duration: var(--toast-duration, 4500ms);
 }
