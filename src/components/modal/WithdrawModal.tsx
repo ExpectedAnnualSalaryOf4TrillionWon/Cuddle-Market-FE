@@ -9,6 +9,8 @@ import ModalTitle from './ModalTitle'
 import { useRef } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { Z_INDEX } from '@src/constants/ui'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '../commons/InlineNotification'
 
 export interface WithDrawFormValues {
   reason: string
@@ -20,9 +22,11 @@ interface WithdrawModalProps {
   isOpen: boolean
   onConfirm: (data: WithDrawFormValues) => void
   onCancel: () => void
+  error?: React.ReactNode
+  onClearError?: () => void
 }
 
-export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawModalProps) {
+export default function WithdrawModal({ isOpen, onConfirm, onCancel, error, onClearError }: WithdrawModalProps) {
   const {
     control,
     handleSubmit,
@@ -40,8 +44,9 @@ export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawM
   })
   const titleLength = watch('detailReason')?.length ?? 0
   const modalRef = useRef<HTMLDivElement>(null)
-  // 바깥 클릭 시 onCancel 호출
+
   useOutsideClick(isOpen, [modalRef], onCancel)
+
   const handleCancel = () => {
     reset()
     onCancel()
@@ -59,6 +64,13 @@ export default function WithdrawModal({ isOpen, onConfirm, onCancel }: WithdrawM
     <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 ${Z_INDEX.MODAL}`}>
       <div ref={modalRef} className="flex w-11/12 flex-col gap-4 rounded-lg bg-white p-5 md:w-[16vw] md:min-w-96">
         <ModalTitle heading="회원탈퇴" description="정말로 탈퇴하시겠습니까?" />
+        <AnimatePresence>
+          {error && (
+            <InlineNotification type="error" onClose={() => onClearError?.()}>
+              {error}
+            </InlineNotification>
+          )}
+        </AnimatePresence>
         <AlertBox alertList={WITH_DRAW_ALERT_LIST} />
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

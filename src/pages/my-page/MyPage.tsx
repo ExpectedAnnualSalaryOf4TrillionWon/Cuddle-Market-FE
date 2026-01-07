@@ -20,6 +20,7 @@ function MyPage() {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
+  const [withdrawError, setWithdrawError] = useState<React.ReactNode | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<{
     id: number
     title: string
@@ -100,6 +101,10 @@ function MyPage() {
 
   const { mutate: deleteProductMutate } = useMutation({
     mutationFn: (id: number) => deleteProduct(id),
+    // mutationFn: (id: number) => {
+    //   throw new Error('테스트 에러') // 임시 추가
+    //   // return deleteProduct(id)     // 주석 처리
+    // },
     onSuccess: () => {
       // 삭제 성공 시 상품 목록 다시 불러오기
       queryClient.invalidateQueries({ queryKey: ['myProducts'] })
@@ -134,12 +139,17 @@ function MyPage() {
 
   const handleWithdraw = async (data: WithDrawFormValues) => {
     try {
+      // throw new Error('테스트 에러') // 임시 추가
       await withDraw(data)
-      clearAll() // 모든 사용자 상태 초기화 (user, accessToken, refreshToken, redirectUrl)
-      // 로그인 페이지로 이동
+      clearAll()
       navigate('/')
-    } catch (error) {
-      console.error('회원탈퇴 실패:', error)
+    } catch {
+      setWithdrawError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">회원탈퇴에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -255,7 +265,13 @@ function MyPage() {
         error={deleteError}
         onClearError={() => setDeleteError(null)}
       />
-      <WithdrawModal isOpen={isWithdrawModalOpen} onConfirm={handleWithdraw} onCancel={() => setIsWithdrawModalOpen(false)} />
+      <WithdrawModal
+        isOpen={isWithdrawModalOpen}
+        onConfirm={handleWithdraw}
+        onCancel={() => setIsWithdrawModalOpen(false)}
+        error={withdrawError}
+        onClearError={() => setWithdrawError(null)}
+      />
     </>
   )
 }
