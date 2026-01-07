@@ -33,6 +33,7 @@ export default function CommunityDetail() {
       content: '',
     },
   })
+
   const user = useUserStore((state) => state.user)
   const setRedirectUrl = useUserStore((state) => state.setRedirectUrl)
   const openLoginModal = useLoginModalStore((state) => state.openLoginModal)
@@ -54,6 +55,7 @@ export default function CommunityDetail() {
     queryFn: () => fetchCommunityId(id!),
     enabled: !!id,
   })
+
   const { data: commentData, isLoading: isLoadingCommentData } = useQuery({
     queryKey: ['community', id, 'comments'],
     queryFn: () => fetchComments(id!),
@@ -67,6 +69,7 @@ export default function CommunityDetail() {
       reset()
     },
     onError: () => {
+      console.error('게시글 로드 실패:', error)
       alert('답글 등록에 실패했습니다.')
     },
   })
@@ -87,6 +90,7 @@ export default function CommunityDetail() {
   const handlePostEdit = (postId: number) => {
     navigate(`/community/${postId}/edit`)
   }
+
   const getHeaderContent = () => {
     switch (data?.boardType) {
       case 'FREE':
