@@ -61,13 +61,6 @@ export default function CommunityPostForm() {
 
   const formValues = watch()
 
-  // 새 글 작성 시 폼 데이터 변경마다 sessionStorage에 자동 저장
-  useEffect(() => {
-    if (!isEditMode) {
-      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formValues))
-    }
-  }, [formValues, isEditMode])
-
   const handleCancel = () => {
     clearDraft()
     navigate('/community')
@@ -94,6 +87,7 @@ export default function CommunityPostForm() {
       alert(isEditMode ? '게시글 수정에 실패했습니다.' : '게시글 등록에 실패했습니다.')
     }
   }
+
   useEffect(() => {
     const loadPost = async () => {
       if (isEditMode && id) {
@@ -112,6 +106,13 @@ export default function CommunityPostForm() {
     }
     loadPost()
   }, [id, isEditMode, reset])
+
+  // 새 글 작성 시 폼 데이터 변경마다 sessionStorage에 자동 저장
+  useEffect(() => {
+    if (!isEditMode) {
+      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formValues))
+    }
+  }, [formValues, isEditMode])
 
   return (
     <>

@@ -58,6 +58,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
       setOpenRepliesCommentId(parentId ?? null)
     },
     onError: () => {
+      console.error('답글 등록 실패')
       alert('답글 등록에 실패했습니다.')
     },
   })
@@ -71,6 +72,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
       queryClient.invalidateQueries({ queryKey: ['community', postId, 'replies'] })
     },
     onError: () => {
+      console.error('답글 삭제 실패')
       alert('댓글 삭제에 실패했습니다.')
     },
   })
