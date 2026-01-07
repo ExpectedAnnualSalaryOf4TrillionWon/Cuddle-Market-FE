@@ -42,6 +42,8 @@ export default function CommunityDetail() {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false)
+  const [postDeleteError, setIsPostDeleteError] = useState<React.ReactNode | null>(null)
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
@@ -69,18 +71,23 @@ export default function CommunityDetail() {
       reset()
     },
     onError: () => {
-      console.error('게시글 로드 실패:', error)
-      alert('답글 등록에 실패했습니다.')
+      alert('댓글 등록에 실패했습니다.')
     },
   })
 
   const handlePostDelete = async (id: number) => {
     try {
+      // throw new Error('테스트 에러')
       await deletePost(id)
       queryClient.invalidateQueries({ queryKey: ['community'] })
       navigate('/community')
-    } catch (error) {
-      console.error('게시글 삭제 실패:', error)
+    } catch {
+      setIsPostDeleteError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">게시글 삭제에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
   const handleMoreToggle = () => {
@@ -137,6 +144,18 @@ export default function CommunityDetail() {
       </div>
     )
   }
+  //  if (postLoadError) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center">
+  //       <div className="flex flex-col items-center gap-4">
+  //         <p>게시글 정보를 불러올 수 없습니다</p>
+  //         <button onClick={() => navigate('/community')} className="text-blue-600 hover:text-blue-800">
+  //           목록으로 돌아가기
+  //         </button>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
     <>
@@ -254,6 +273,8 @@ export default function CommunityDetail() {
         postId={Number(id)}
         onConfirm={handlePostDelete}
         onCancel={() => setIsPostDeleteModalOpen(false)}
+        error={postDeleteError}
+        onClearError={() => setIsPostDeleteError(null)}
       />
     </>
   )
