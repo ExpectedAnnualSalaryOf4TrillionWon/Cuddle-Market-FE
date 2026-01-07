@@ -20,7 +20,9 @@ import { ArrowLeft, EllipsisVertical } from 'lucide-react'
 import { IconButton } from '@src/components/commons/button/IconButton'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
+import { AnimatePresence } from 'framer-motion'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
+import InlineNotification from '@src/components/commons/InlineNotification'
 
 export default function CommunityDetail() {
   const {
@@ -43,6 +45,7 @@ export default function CommunityDetail() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false)
   const [postDeleteError, setIsPostDeleteError] = useState<React.ReactNode | null>(null)
+  const [commentPostError, setCommentPostError] = useState<React.ReactNode | null>(null)
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -71,13 +74,17 @@ export default function CommunityDetail() {
       reset()
     },
     onError: () => {
-      alert('댓글 등록에 실패했습니다.')
+      setCommentPostError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">댓글 등록에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     },
   })
 
   const handlePostDelete = async (id: number) => {
     try {
-      // throw new Error('테스트 에러')
       await deletePost(id)
       queryClient.invalidateQueries({ queryKey: ['community'] })
       navigate('/community')
@@ -111,7 +118,9 @@ export default function CommunityDetail() {
     }
   }
   const { title: headerTitle, description: headerDescription } = getHeaderContent()
+
   const onSubmit = (data: ReplyRequestFormValues) => {
+    if (!data.content.trim()) return
     if (!user) {
       setRedirectUrl(location.pathname + location.search)
       openLoginModal()
@@ -144,18 +153,6 @@ export default function CommunityDetail() {
       </div>
     )
   }
-  //  if (postLoadError) {
-  //   return (
-  //     <div className="flex min-h-screen items-center justify-center">
-  //       <div className="flex flex-col items-center gap-4">
-  //         <p>게시글 정보를 불러올 수 없습니다</p>
-  //         <button onClick={() => navigate('/community')} className="text-blue-600 hover:text-blue-800">
-  //           목록으로 돌아가기
-  //         </button>
-  //       </div>
-  //     </div>
-  //   )
-  // }
 
   return (
     <>
@@ -249,6 +246,13 @@ export default function CommunityDetail() {
               </div>
 
               {commentData?.comments && <CommentList comments={commentData.comments} postId={id!} />}
+              <AnimatePresence>
+                {commentPostError && (
+                  <InlineNotification type="error" onClose={() => setCommentPostError(null)}>
+                    {commentPostError}
+                  </InlineNotification>
+                )}
+              </AnimatePresence>
               <CommentForm
                 id="comment-input"
                 placeholder="댓글을 입력하세요"

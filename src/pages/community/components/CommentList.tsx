@@ -8,6 +8,8 @@ import { CommentForm } from './CommentForm'
 import { useForm } from 'react-hook-form'
 import { useUserStore } from '@src/store/userStore'
 import { useLoginModalStore } from '@src/store/modalStore'
+import InlineNotification from '@src/components/commons/InlineNotification'
+import { AnimatePresence } from 'framer-motion'
 
 export interface ReplyRequestFormValues {
   content: string
@@ -36,6 +38,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
   })
   const [openRepliesCommentId, setOpenRepliesCommentId] = useState<number | null>(null)
   const [replyingToId, setReplyingToId] = useState<number | null>(null)
+  const [replyPostError, setReplyPostError] = useState<React.ReactNode | null>(null)
 
   const { data: repliesData } = useQuery({
     queryKey: ['community', postId, 'replies', openRepliesCommentId],
@@ -58,8 +61,12 @@ export function CommentList({ comments, postId }: CommentListProps) {
       setOpenRepliesCommentId(parentId ?? null)
     },
     onError: () => {
-      console.error('답글 등록 실패')
-      alert('답글 등록에 실패했습니다.')
+      setReplyPostError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">답글 등록에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     },
   })
 
@@ -71,11 +78,11 @@ export function CommentList({ comments, postId }: CommentListProps) {
       // 대댓글 목록도 refetch
       queryClient.invalidateQueries({ queryKey: ['community', postId, 'replies'] })
     },
-    onError: () => {
-      console.error('답글 삭제 실패')
-      alert('댓글 삭제에 실패했습니다.')
-    },
   })
+
+  const handleDeleteComment = async (commentId: number) => {
+    await deleteMutation.mutateAsync(commentId)
+  }
 
   const handleOpenReplyForm = (commentId: number) => {
     if (replyingToId === commentId) {
@@ -92,6 +99,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
 
   const onSubmit = (data: ReplyRequestFormValues) => {
     if (!replyingToId) return
+    if (!data.content.trim()) return
     if (!user) {
       setRedirectUrl(location.pathname + location.search)
       openLoginModal()
@@ -116,7 +124,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
             isRepliesOpen={openRepliesCommentId === comment.id}
             showBorder={index !== 0}
             onHandleReply={() => handleOpenReplyForm(comment.id)}
-            onDelete={(commentId) => deleteMutation.mutate(commentId)}
+            onDelete={handleDeleteComment}
           />
 
           {/* 대댓글 목록 */}
@@ -126,7 +134,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
                 <ul className="flex flex-col gap-2 pb-3.5 pl-10">
                   {repliesData.comments.map((reply, index) => (
                     <li key={reply.id}>
-                      <CommentItem comment={reply} isReply showBorder={index !== 0} onDelete={(commentId) => deleteMutation.mutate(commentId)} />
+                      <CommentItem comment={reply} isReply showBorder={index !== 0} onDelete={handleDeleteComment} />
                     </li>
                   ))}
                 </ul>
@@ -135,6 +143,13 @@ export function CommentList({ comments, postId }: CommentListProps) {
           </div>
           {replyingToId === comment.id && (
             <div className="pb-3.5 pl-10">
+              <AnimatePresence>
+                {replyPostError && (
+                  <InlineNotification type="error" onClose={() => setReplyPostError(null)}>
+                    {replyPostError}
+                  </InlineNotification>
+                )}
+              </AnimatePresence>
               <CommentForm
                 id={String(comment.id)}
                 placeholder="답글을 입력하세요"
