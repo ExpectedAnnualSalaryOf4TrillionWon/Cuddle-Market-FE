@@ -11,8 +11,12 @@ import { commonTitleValidationRules, communityContentValidationRules } from '../
 import Markdown from './markdown/Markdown'
 import { ArrowLeft } from 'lucide-react'
 import { fetchCommunityId, patchPost, postCommunity } from '@src/api/community'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { SimpleHeader } from '@src/components/header/SimpleHeader'
+import { Z_INDEX } from '@src/constants/ui'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
 
 const DRAFT_STORAGE_KEY = 'community-post-draft'
 
@@ -59,6 +63,9 @@ export default function CommunityPostForm() {
     defaultValues: isEditMode ? { boardType: 'FREE', title: '', content: '', imageUrls: [] } : getSavedDraft(),
   })
 
+  const [postError, setPostError] = useState<React.ReactNode | null>(null)
+  const [postLoadError, setPostLoadError] = useState(false)
+
   const formValues = watch()
 
   const handleCancel = () => {
@@ -76,6 +83,7 @@ export default function CommunityPostForm() {
 
     try {
       if (isEditMode) {
+        // throw new Error('테스트 에러') // 임시 추가
         await patchPost(Number(id), requestData)
         navigate(`/community/${id}`)
       } else {
@@ -84,7 +92,12 @@ export default function CommunityPostForm() {
         navigate(`/community/${response.id}`)
       }
     } catch {
-      alert(isEditMode ? '게시글 수정에 실패했습니다.' : '게시글 등록에 실패했습니다.')
+      setPostError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">{isEditMode ? '게시글 수정에 실패했습니다.' : '게시글 등록에 실패했습니다.'}</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -99,8 +112,8 @@ export default function CommunityPostForm() {
             content: data.content,
             imageUrls: data.imageUrls ?? [],
           })
-        } catch (error) {
-          console.error('게시글 로드 실패:', error)
+        } catch {
+          setPostLoadError(true) // 에러 상태 설정
         }
       }
     }
@@ -114,17 +127,48 @@ export default function CommunityPostForm() {
     }
   }, [formValues, isEditMode])
 
+  if (postLoadError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>게시글 정보를 불러올 수 없습니다</p>
+          <button onClick={() => navigate('/community')} className="text-blue-600 hover:text-blue-800">
+            목록으로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
-      {/* <SimpleHeader title="커뮤니티 글쓰기" description="일상 이야기를 마음껏 나눠보세요!" /> */}
-      <div className={cn('bg-primary-200 relative mx-auto flex max-w-7xl justify-between px-3.5 py-4')}>
-        {!isMd && (
+      {!isMd ? (
+        <div className={cn('bg-primary-200 sticky top-0 mx-auto flex w-full max-w-7xl justify-between px-3.5 py-4', Z_INDEX.HEADER)}>
           <button type="button" onClick={() => navigate(-1)} className="flex cursor-pointer items-center gap-1 text-gray-600">
             <ArrowLeft size={23} className="text-white" />
           </button>
-        )}
-        <h2 className="heading-h4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-extrabold! text-white">커뮤니티</h2>
+          <h2 className="heading-h4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-extrabold! text-white">커뮤니티</h2>
+        </div>
+      ) : (
+        <SimpleHeader
+          title="커뮤니티 글쓰기"
+          description="일상 이야기를 마음껏 나눠보세요!"
+          layoutClassname="py-5 flex-col justify-between border-b border-gray-200"
+        />
+      )}
+
+      <div className="bg-[#F3F4F6]">
+        <div className="px-lg mx-auto max-w-7xl pt-5">
+          <AnimatePresence>
+            {postError && (
+              <InlineNotification type="error" onClose={() => setPostError(null)}>
+                {postError}
+              </InlineNotification>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
+
       <div className="min-h-screen bg-[#F3F4F6] pt-5">
         <div className="px-lg pb-4xl mx-auto max-w-7xl">
           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
