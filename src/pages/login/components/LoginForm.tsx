@@ -31,7 +31,6 @@ export function LoginForm() {
     try {
       const response = await login(data)
       handleLogin(response.data.user, response.data.accessToken, response.data.refreshToken)
-      console.log('로그인 성공:', response)
       const redirectUrl = useUserStore.getState().redirectUrl
       navigate(redirectUrl || '/')
       useUserStore.getState().setRedirectUrl(null) // 사용 후 초기화

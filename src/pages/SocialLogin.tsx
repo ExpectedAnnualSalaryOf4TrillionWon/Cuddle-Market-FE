@@ -13,13 +13,9 @@ function Login() {
 
   // 카카오 로그인 시작
   const handleKakaoLogin = (): void => {
-    console.log('카카오 로그인 시작')
-
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI
     )}`
-
-    console.log(kakaoAuthUrl)
 
     // 카카오 로그인 페이지로 이동
     window.location.href = kakaoAuthUrl.toString()
@@ -40,13 +36,11 @@ function Login() {
           // 같은 도메인인 경우만 저장
           if (url.origin === window.location.origin) {
             setRedirectUrl(url.pathname) // localStorage 대신 zustand 사용
-            console.log(' 이전 페이지 저장:', url.pathname)
           }
         } catch {
           // from이 상대 경로인 경우
           if (from.startsWith('/')) {
             setRedirectUrl(from) // localStorage 대신 zustand 사용
-            console.log('이전 페이지 저장:', from)
           }
         }
       }
