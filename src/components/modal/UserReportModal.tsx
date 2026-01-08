@@ -2,6 +2,7 @@ import { userReported } from '@src/api/profile'
 import { USER_REPORT_REASON } from '@src/constants/constants'
 import ReportModalBase, { type ReportFormValues } from './ReportModalBase'
 import { useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
 interface UserReportModalProps {
   isOpen: boolean
@@ -12,14 +13,21 @@ interface UserReportModalProps {
 
 export default function UserReportModal({ isOpen, userNickname, userId, onCancel }: UserReportModalProps) {
   const queryClient = useQueryClient()
+  const [userReportError, setUserReportError] = useState<React.ReactNode | null>(null)
 
   const handleSubmit = async (data: ReportFormValues) => {
     try {
       await userReported(userId, { ...data })
       queryClient.invalidateQueries({ queryKey: ['userPage'] })
       onCancel()
-    } catch (error) {
-      console.error('회원신고 실패:', error)
+    } catch {
+      // console.error('회원신고 실패:', error)
+      setUserReportError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">사용자 신고에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -31,6 +39,8 @@ export default function UserReportModal({ isOpen, userNickname, userId, onCancel
       reasons={USER_REPORT_REASON}
       onCancel={onCancel}
       onSubmit={handleSubmit}
+      error={userReportError}
+      onClearError={() => setUserReportError(null)}
     />
   )
 }
