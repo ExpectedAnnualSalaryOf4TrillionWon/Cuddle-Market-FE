@@ -12,7 +12,7 @@ interface productMetadataListProps {
 
 export default function ProductMetadataList({ addressSido, addressGugun, createdAt, viewCount, favoriteCount }: productMetadataListProps) {
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex flex-wrap items-center gap-2 md:gap-5">
       <ProductMetaItem icon={MapPin} label={`${addressSido} ${addressGugun}`} />
       <ProductMetaItem icon={Clock} label={getTimeAgo(createdAt)} />
       <ProductMetaItem icon={Eye} label={`조회 ${viewCount}`} />
