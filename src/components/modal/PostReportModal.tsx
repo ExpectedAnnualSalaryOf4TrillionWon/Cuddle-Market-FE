@@ -1,6 +1,7 @@
 import { POST_REPORT_REASON } from '@src/constants/constants'
 import ReportModalBase, { type ReportFormValues } from './ReportModalBase'
 import { postReported } from '@src/api/community'
+import { useState } from 'react'
 
 interface PostReportModalProps {
   isOpen: boolean
@@ -11,13 +12,21 @@ interface PostReportModalProps {
 }
 
 export default function PostReportModal({ isOpen, postId, authorNickname, postTitle, onCancel }: PostReportModalProps) {
+  const [postReportError, setPostReportError] = useState<React.ReactNode | null>(null)
+
   const handleSubmit = async (data: ReportFormValues) => {
     try {
       await postReported(postId, data)
-      console.log('게시글 신고:', { postId, ...data })
+      // console.log('게시글 신고:', { postId, ...data })
       onCancel()
-    } catch (error) {
-      console.error('게시글 신고 실패:', error)
+    } catch {
+      // console.error('게시글 신고 실패:', error)
+      setPostReportError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">사용자 신고에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
   }
 
@@ -42,6 +51,8 @@ export default function PostReportModal({ isOpen, postId, authorNickname, postTi
       reasons={POST_REPORT_REASON}
       onCancel={onCancel}
       onSubmit={handleSubmit}
+      error={postReportError}
+      onClearError={() => setPostReportError(null)}
     />
   )
 }
