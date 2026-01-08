@@ -17,6 +17,7 @@ import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { Z_INDEX } from '@src/constants/ui'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
+import { useUserStore } from '@src/store/userStore'
 
 const DRAFT_STORAGE_KEY = 'community-post-draft'
 
@@ -50,6 +51,15 @@ export default function CommunityPostForm() {
   const isMd = useMediaQuery('(min-width: 768px)')
   const { id } = useParams()
   const isEditMode = !!id
+  const { user, setRedirectUrl } = useUserStore()
+
+  // 비로그인 시 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!user?.id) {
+      setRedirectUrl(window.location.pathname)
+      navigate('/auth/login')
+    }
+  }, [user, navigate, setRedirectUrl])
 
   const {
     control,

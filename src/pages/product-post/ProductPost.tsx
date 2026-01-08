@@ -1,14 +1,16 @@
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import { useEffect, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PRODUCT_TYPE_TABS, type ProductTypeTabId } from '../../constants/constants'
 import { Tabs } from '@src/components/Tabs'
 import { ProductPostForm } from './components/ProductPostForm'
 import { ProductRequestForm } from './components/ProductRequestForm'
 import { fetchProductById } from '@src/api/products'
 import type { ProductDetailItem } from '@src/types'
+import { useUserStore } from '@src/store/userStore'
 
 function ProductPost() {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab') as ProductTypeTabId | null
   const initialTab = tabParam === 'tab-purchases' ? 'tab-purchases' : 'tab-sales'
@@ -16,8 +18,17 @@ function ProductPost() {
   const [activeProductTypeTab, setActiveProductTypeTab] = useState<ProductTypeTabId>(initialTab)
   const [productData, setProductData] = useState<ProductDetailItem | null>(null)
   const { id } = useParams()
+  const { user, setRedirectUrl } = useUserStore()
 
   const isEditMode = !!id
+
+  // 비로그인 시 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!user?.id) {
+      setRedirectUrl(window.location.pathname)
+      navigate('/auth/login')
+    }
+  }, [user, navigate, setRedirectUrl])
 
   const handleTabChange = (tabId: string) => {
     setActiveProductTypeTab(tabId as ProductTypeTabId)
