@@ -37,6 +37,8 @@ export default function ChattingPage() {
     clearUnreadCount,
     clearRoomMessages,
     chatRoomUpdates,
+    connectionError,
+    setConnectionError,
   } = chatSocketStore()
 
   const {
@@ -236,8 +238,10 @@ export default function ChattingPage() {
                   hasMorePrevious={hasNextPage}
                   isLoadingPrevious={isFetchingNextPage}
                   onRetry={() => refetchMessages()}
-                  error={imageUploadError}
-                  onClearError={() => setImageUploadError(null)}
+                  imageUploadError={imageUploadError}
+                  onClearImageUploadError={() => setImageUploadError(null)}
+                  connectionError={connectionError}
+                  onClearConnectionError={() => setConnectionError(null)}
                 />
               </div>
               <div

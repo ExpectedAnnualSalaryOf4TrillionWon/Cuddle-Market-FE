@@ -14,8 +14,10 @@ interface ChatLogProps {
   hasMorePrevious?: boolean
   isLoadingPrevious?: boolean
   onRetry?: () => void
-  error?: React.ReactNode
-  onClearError?: () => void
+  connectionError?: React.ReactNode
+  onClearConnectionError?: () => void
+  imageUploadError?: React.ReactNode
+  onClearImageUploadError?: () => void
 }
 
 // isMine 계산: HTTP API 응답은 isMine 포함, STOMP는 senderId로 비교
@@ -70,8 +72,10 @@ export function ChatLog({
   hasMorePrevious,
   isLoadingPrevious,
   onRetry,
-  error,
-  onClearError,
+  connectionError,
+  onClearConnectionError,
+  imageUploadError,
+  onClearImageUploadError,
 }: ChatLogProps) {
   const { user } = useUserStore()
   const groupedMessages = groupMessagesByDate(roomMessages)
@@ -118,10 +122,20 @@ export function ChatLog({
   return (
     <div ref={scrollRef} onScroll={handleScroll} className="flex h-full flex-col gap-4 overflow-y-auto">
       <AnimatePresence>
-        {error && (
+        {connectionError && (
           <div className="sticky top-0 left-1/2 z-10 w-fit -translate-x-1/2">
-            <InlineNotification type="error" onClose={() => onClearError?.()}>
-              {error}
+            <InlineNotification type="error" onClose={() => onClearConnectionError?.()}>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-base font-semibold">채팅 서버 연결에 문제가 발생했습니다.</p>
+                <p>{connectionError}</p>
+              </div>
+            </InlineNotification>
+          </div>
+        )}
+        {imageUploadError && (
+          <div className="sticky top-0 left-1/2 z-10 w-fit -translate-x-1/2">
+            <InlineNotification type="error" onClose={() => onClearImageUploadError?.()}>
+              {imageUploadError}
             </InlineNotification>
           </div>
         )}

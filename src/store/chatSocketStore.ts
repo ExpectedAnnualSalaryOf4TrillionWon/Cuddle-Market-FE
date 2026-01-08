@@ -43,6 +43,9 @@ interface ChatSocketState {
   chatRoomUpdates: Record<number, ChatRoomUpdateResponse>
   updateChatRoomInList: (updatedChatRoom: ChatRoomUpdateResponse) => void
   clearUnreadCount: (chatRoomId: number) => void
+  // 연결 에러 상태
+  connectionError: string | null
+  setConnectionError: (error: string | null) => void
 }
 
 export const chatSocketStore = create<ChatSocketState>((set, get) => ({
@@ -52,6 +55,8 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
   subscriptions: {}, // 채팅방별 구독 객체 저장
   isConnected: false, // 연결 상태
   chatRoomUpdates: {},
+  connectionError: null, // 연결 에러 상태
+  setConnectionError: (error: string | null) => set({ connectionError: error }),
 
   connect: (url: string, accessToken: string) => {
     // TOMP Client는 active 속성으로 연결 상태 확인
@@ -66,7 +71,7 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       reconnectDelay: 5000, // 5초 후 자동 재연결
       // STOMP 연결 완료 시 호출
       onConnect: () => {
-        console.log('✅ STOMP 연결됨')
+        // console.log('✅ STOMP 연결됨')
         // [필수] 에러 구독 - 디버깅에 필수!
         socket.subscribe('/user/queue/errors', (message) => {
           const error = JSON.parse(message.body)
@@ -90,12 +95,13 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
         set({ socket, isConnected: true })
       },
       onDisconnect: () => {
-        console.log('⚠️ STOMP 연결 종료')
+        // console.log('⚠️ STOMP 연결 종료')
         set({ isConnected: false })
       },
       // STOMP 에러 발생 시 호출
       onStompError: (frame) => {
-        console.error('❌ STOMP 에러:', frame.headers['message'])
+        // console.error('❌ STOMP 에러:', frame.headers['message'])
+        set({ connectionError: frame.headers['message'] || '채팅 서버 연결에 문제가 발생했습니다.' })
       },
     })
     // 연결 시작
@@ -147,11 +153,8 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       // 메시지 수신 콜백
       // 내가 보낸 메시지도 서버로부터 다시 받아서 UI에 반영합니다.
       (message: IMessage) => {
-        console.log('📩 메시지 수신:', message.body)
         // 메시지 파싱
         const data = JSON.parse(message.body)
-        console.log('📩 파싱된 데이터:', data) // isMine 필드 확인
-        console.log('📩 isMine:', data.isMine) // 추가
         // 메시지 상태 업데이트
         set((state) => ({
           messages: {
@@ -182,11 +185,8 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       // 구독 destination
       `/user/queue/chat-room-list`,
       (message: IMessage) => {
-        console.log('📩 메시지 수신:', message.body)
         // 메시지 파싱
         const data = JSON.parse(message.body)
-        console.log('📩 파싱된 데이터:', data) // isMine 필드 확인
-        console.log('📩 isMine:', data.isMine) // 추가
         // 메시지 상태 업데이트
         set((state) => ({
           messages: {
@@ -206,7 +206,7 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
   sendMessage: (chatRoomId: number, content: string, messageType: 'TEXT' | 'IMAGE' = 'TEXT', imageUrl: string | null = null) => {
     const socket = get().socket
     if (!socket?.active) {
-      console.log('❌ 소켓이 연결되지 않음')
+      set({ connectionError: '메시지를 전송할 수 없습니다. 채팅 서버에 연결되어 있지 않습니다.' })
       return
     }
 
@@ -216,13 +216,14 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       messageType,
       imageUrl,
     }
-    console.log('📤 STOMP publish 요청:', message) // 추가
+    // console.log('📤 STOMP publish 요청:', message)
     socket.publish({
       destination: '/app/chat/message',
       body: JSON.stringify(message),
     })
-    console.log('✅ STOMP publish 완료')
+    // console.log('✅ STOMP publish 완료')
   },
+
   unsubscribeFromRoom: (chatRoomId: number) => {
     const subscription = get().subscriptions[chatRoomId]
     if (subscription) {
