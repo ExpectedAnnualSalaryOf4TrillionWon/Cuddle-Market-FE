@@ -221,7 +221,20 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       destination: '/app/chat/message',
       body: JSON.stringify(message),
     })
-    // console.log('✅ STOMP publish 완료')
+
+    // 채팅방 목록의 lastMessage 즉시 업데이트 (UI 반영)
+    const lastMessageText = messageType === 'IMAGE' ? '사진을 보냈습니다' : content
+    set((state) => ({
+      chatRoomUpdates: {
+        ...state.chatRoomUpdates,
+        [chatRoomId]: {
+          ...(state.chatRoomUpdates[chatRoomId] || {}),
+          chatRoomId,
+          lastMessage: lastMessageText,
+          lastMessageTime: new Date().toISOString(),
+        },
+      },
+    }))
   },
 
   unsubscribeFromRoom: (chatRoomId: number) => {
