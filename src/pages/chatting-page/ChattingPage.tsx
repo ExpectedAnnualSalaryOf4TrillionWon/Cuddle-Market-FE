@@ -185,7 +185,7 @@ export default function ChattingPage() {
     if (!user) {
       navigate('/auth/login')
     }
-  }, [])
+  }, [navigate, user])
 
   if (isLoadingRooms && !rooms) {
     return (
