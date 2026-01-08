@@ -22,6 +22,8 @@ export default function ChattingPage() {
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<fetchChatRoom | null>(null)
   const [inputMessage, setInputMessage] = useState('')
+  const [imageUploadError, setImageUploadError] = useState<React.ReactNode | null>(null)
+
   const navigate = useNavigate()
   const { user, accessToken } = useUserStore()
   const { id: chatRoomId } = useParams()
@@ -107,6 +109,7 @@ export default function ChattingPage() {
     if (!files || files.length === 0 || !selectedRoom) return
 
     try {
+      // throw new Error('테스트 에러')
       // 1. 이미지 업로드 API 호출
       const uploadResult = await uploadImage(Array.from(files))
       const imageUrl = uploadResult.mainImageUrl
@@ -114,8 +117,14 @@ export default function ChattingPage() {
       // 2. 업로드된 URL로 이미지 메시지 전송
       // content는 null, imageUrl에 업로드된 URL 전달
       sendMessage(selectedRoom.chatRoomId, '', 'IMAGE', imageUrl)
-    } catch (error) {
-      console.error('이미지 업로드 실패:', error)
+    } catch {
+      // console.error('이미지 업로드 실패:', error)
+      setImageUploadError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">이미지 업로드에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
     }
     e.target.value = ''
   }
@@ -227,6 +236,8 @@ export default function ChattingPage() {
                   hasMorePrevious={hasNextPage}
                   isLoadingPrevious={isFetchingNextPage}
                   onRetry={() => refetchMessages()}
+                  error={imageUploadError}
+                  onClearError={() => setImageUploadError(null)}
                 />
               </div>
               <div
