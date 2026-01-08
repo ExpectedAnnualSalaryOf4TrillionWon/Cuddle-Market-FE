@@ -8,8 +8,10 @@ import { MY_PAGE_TABS, type MyPageTabId } from '@src/constants/constants'
 import MyPagePanel from './components/MyPagePanel'
 import DeleteConfirmModal from '@src/components/modal/DeleteConfirmModal'
 import WithdrawModal, { type WithDrawFormValues } from '@src/components/modal/WithdrawModal'
-import { withDraw } from '@src/api/profile'
+import { userUnBlocked, withDraw } from '@src/api/profile'
 import ProfileData from '@src/components/profile/ProfileData'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
 
 function MyPage() {
   const [deleteError, setDeleteError] = useState<React.ReactNode | null>(null)
@@ -18,6 +20,7 @@ function MyPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const [unblockError, setUnblockError] = useState<React.ReactNode | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
   const [withdrawError, setWithdrawError] = useState<React.ReactNode | null>(null)
@@ -153,6 +156,24 @@ function MyPage() {
     }
   }
 
+  const { mutate: unblockUser } = useMutation({
+    mutationFn: (blockedUserId: number) => userUnBlocked(blockedUserId),
+    // mutationFn: (blockedUserId: number) => {
+    //   throw new Error('테스트 에러') // 임시 추가
+    // },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myBlocked'] })
+    },
+    onError: () => {
+      setUnblockError(
+        <div className="flex flex-col gap-0.5">
+          <p className="text-base font-semibold">차단 해제에 실패했습니다.</p>
+          <p>잠시 후 다시 시도해주세요.</p>
+        </div>
+      )
+    },
+  })
+
   useEffect(() => {
     const currentTab = tabParam && MY_PAGE_TABS.some((tab) => tab.id === tabParam) ? tabParam : 'tab-sales'
     setActiveMyPageTab(currentTab)
@@ -207,7 +228,16 @@ function MyPage() {
       <div className="pb-4xl bg-white pt-0 md:pt-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3.5 md:flex-row md:gap-8">
           <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} isMyProfile />
-          <section className="flex flex-1 flex-col gap-3.5 md:gap-7">
+          <section className="relative flex flex-1 flex-col gap-3.5 md:gap-7">
+            <AnimatePresence>
+              {unblockError && (
+                <div className="absolute top-11 left-1/2 z-50 w-11/12 -translate-x-1/2 md:w-auto md:pt-8">
+                  <InlineNotification type="error" onClose={() => setUnblockError(null)}>
+                    {unblockError}
+                  </InlineNotification>
+                </div>
+              )}
+            </AnimatePresence>
             <Tabs
               tabs={MY_PAGE_TABS}
               activeTab={activeMyPageTab}
@@ -253,6 +283,7 @@ function MyPage() {
                       : isFetchingNextBlocked
               }
               handleConfirmModal={handleConfirmModal}
+              unblockUser={unblockUser}
             />
           </section>
         </div>
