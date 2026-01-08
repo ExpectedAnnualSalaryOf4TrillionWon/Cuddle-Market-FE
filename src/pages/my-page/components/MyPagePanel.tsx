@@ -7,6 +7,7 @@ import { Button } from '@src/components/commons/button/Button'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
 import { Package, Heart, type LucideIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 interface MyPagePanelProps {
   activeTabCode: string
@@ -23,6 +24,7 @@ interface MyPagePanelProps {
   hasNextPage?: boolean
   isFetchingNextPage: boolean
   handleConfirmModal: (e: React.MouseEvent, id: number, title: string, price: number, mainImageUrl: string) => void
+  unblockUser?: (blockedUserId: number) => void
 }
 
 const TAB_CONFIG: {
@@ -78,6 +80,7 @@ export default function MyPagePanel({
   hasNextPage,
   isFetchingNextPage,
   handleConfirmModal,
+  unblockUser,
 }: MyPagePanelProps) {
   const getProductData = () => {
     switch (activeMyPageTab) {
@@ -134,13 +137,13 @@ export default function MyPagePanel({
             <ul className="flex max-h-[60vh] flex-col items-center justify-start gap-2.5">
               {myBlockedData.map((user) => (
                 <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
-                  <div className="flex items-center gap-4">
+                  <Link to={`/user-profile/${user.blockedUserId}`} className="flex items-center gap-4">
                     <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
                       <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
                     </div>
                     <span className="font-medium">{user.nickname}</span>
-                  </div>
-                  <Button size="sm" className="border border-gray-300">
+                  </Link>
+                  <Button size="sm" className="border border-gray-300" onClick={() => unblockUser?.(user.blockedUserId)}>
                     차단 해제
                   </Button>
                 </li>
