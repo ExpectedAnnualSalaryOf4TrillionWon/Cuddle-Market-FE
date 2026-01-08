@@ -31,14 +31,14 @@ export function useNotificationSSE() {
     // notification 이벤트: 새 알림이 왔을 때
     eventSource.addEventListener('notification', (e) => {
       try {
-        const payload = JSON.parse((e as MessageEvent).data)
-        const notifications = Array.isArray(payload) ? payload : [payload]
-
+        // const payload = JSON.parse((e as MessageEvent).data)
+        // const notifications = Array.isArray(payload) ? payload : [payload]
+        JSON.parse((e as MessageEvent).data)
         queryClient.setQueryData<{ unreadCount: number }>(['notifications', 'unreadCount'], (prev) => ({
           unreadCount: (prev?.unreadCount ?? 0) + 1,
         }))
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        console.log(`[SSE] 새 알림 ${notifications.length}건 수신`, notifications)
+        // console.log(`[SSE] 새 알림 ${notifications.length}건 수신`, notifications)
       } catch (err) {
         console.error('[SSE] notification payload 파싱 오류:', err)
       }
@@ -49,12 +49,12 @@ export function useNotificationSSE() {
       // 30초 타임아웃으로 인한 정상적인 재연결이므로 에러 로그 생략
     }
 
-    eventSource.addEventListener('connect', () => {
-      console.log('[SSE] 연결 성공')
-    })
+    // eventSource.addEventListener('connect', () => {
+    //   console.log('[SSE] 연결 성공')
+    // })
 
     return () => {
-      console.log('[SSE] 연결 종료')
+      // console.log('[SSE] 연결 종료')
       eventSource.close()
     }
   }, [user, accessToken, queryClient])
