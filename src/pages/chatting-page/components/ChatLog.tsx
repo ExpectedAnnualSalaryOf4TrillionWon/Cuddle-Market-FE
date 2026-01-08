@@ -3,6 +3,8 @@ import { cn } from '@src/utils/cn'
 import { useUserStore } from '@src/store/userStore'
 import { useEffect, useRef } from 'react'
 import PlaceholderImage from '@assets/images/placeholder.png'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
 
 interface ChatLogProps {
   isLoadingMessages: boolean
@@ -12,6 +14,8 @@ interface ChatLogProps {
   hasMorePrevious?: boolean
   isLoadingPrevious?: boolean
   onRetry?: () => void
+  error?: React.ReactNode
+  onClearError?: () => void
 }
 
 // isMine 계산: HTTP API 응답은 isMine 포함, STOMP는 senderId로 비교
@@ -66,6 +70,8 @@ export function ChatLog({
   hasMorePrevious,
   isLoadingPrevious,
   onRetry,
+  error,
+  onClearError,
 }: ChatLogProps) {
   const { user } = useUserStore()
   const groupedMessages = groupMessagesByDate(roomMessages)
@@ -111,6 +117,15 @@ export function ChatLog({
 
   return (
     <div ref={scrollRef} onScroll={handleScroll} className="flex h-full flex-col gap-4 overflow-y-auto">
+      <AnimatePresence>
+        {error && (
+          <div className="sticky top-0 left-1/2 z-10 w-fit -translate-x-1/2">
+            <InlineNotification type="error" onClose={() => onClearError?.()}>
+              {error}
+            </InlineNotification>
+          </div>
+        )}
+      </AnimatePresence>
       {Object.entries(groupedMessages).map(([dateKey, messages]) => (
         <div key={dateKey} className="flex flex-col gap-2">
           <div className="flex justify-center">
