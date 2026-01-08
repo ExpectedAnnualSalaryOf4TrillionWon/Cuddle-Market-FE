@@ -3,10 +3,7 @@ import { MapPin, Calendar, Settings, Flag, Ban, LockOpen, ShieldAlert } from 'lu
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
 import { formatJoinDate } from '@src/utils/formatJoinDate'
-import { useUserStore } from '@src/store/userStore'
 import { Button } from '@src/components/commons/button/Button'
-import { userUnBlocked } from '@src/api/profile'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 
@@ -31,25 +28,21 @@ interface ProfileDataProps {
   setIsReportModalOpen?: Dispatch<SetStateAction<boolean>>
   setIsBlockModalOpen?: Dispatch<SetStateAction<boolean>>
   handleUserUnBlocked?: (id: number) => void
+  isMyProfile?: boolean
+  unblockUser?: () => void
 }
 
-export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOpen, setIsBlockModalOpen, data }: ProfileDataProps) {
-  const { user } = useUserStore()
-  const isMyProfile = user?.id === data?.id
-  const queryClient = useQueryClient()
+export default function ProfileData({
+  setIsWithdrawModalOpen,
+  setIsReportModalOpen,
+  setIsBlockModalOpen,
+  data,
+  isMyProfile,
+  unblockUser,
+}: ProfileDataProps) {
   const isMd = useMediaQuery('(min-width: 768px)')
   const { pathname } = useLocation()
   const isProfileEditPage = /^\/profile-update$/.test(pathname)
-
-  const { mutate: unblockUser } = useMutation({
-    mutationFn: () => userUnBlocked(Number(data?.id)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPage'] })
-    },
-    onError: (error) => {
-      console.error('차단 해제 실패:', error)
-    },
-  })
 
   const formattedJoinDate = data?.createdAt ? formatJoinDate(data.createdAt) : ''
 
@@ -124,7 +117,7 @@ export default function ProfileData({ setIsWithdrawModalOpen, setIsReportModalOp
                   </div>
                   <Button
                     icon={LockOpen}
-                    onClick={() => unblockUser()}
+                    onClick={() => unblockUser?.()}
                     className="bg-primary-200 flex cursor-pointer items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
                   >
                     차단 해제하기
