@@ -1,9 +1,9 @@
 import { Search as SearchIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-// import { useDebounce } from '@hooks/useDebounce'
 import { cn } from '@src/utils/cn'
 import { Input } from '@components/commons/Input'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
+import { ROUTES } from '@src/constants/routes'
 
 interface SearchBarProps {
   placeholder?: string
@@ -22,19 +22,43 @@ export function SearchBar({
   inputClass,
 }: SearchBarProps) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
   const currentKeyword = searchParams.get(paramName) || ''
   const [keyword, setKeyword] = useState(currentKeyword)
+  const isHomePage = pathname === ROUTES.HOME
 
   function handleKeywordChange(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       const target = e.target as HTMLInputElement
-      const keyword = target.value.trim()
-      setSearchParams((prev) => {
-        if (keyword) {
-          prev.set(paramName, keyword)
+      const searchKeyword = target.value.trim()
+
+      if (isHomePage) {
+        // 메인페이지에서는 현재 URL에 쿼리 파라미터만 추가
+        setSearchParams((prev) => {
+          if (searchKeyword) {
+            prev.set(paramName, searchKeyword)
+          } else {
+            prev.delete(paramName)
+          }
+          return prev
+        })
+      } else {
+        // 다른 페이지에서는 메인페이지로 이동하면서 검색어 전달
+        if (searchKeyword) {
+          navigate(`${ROUTES.HOME}?${paramName}=${encodeURIComponent(searchKeyword)}`)
         } else {
-          prev.delete(paramName)
+          navigate(ROUTES.HOME)
         }
+      }
+    }
+  }
+  function handleClearKeyword() {
+    setKeyword('')
+
+    if (isHomePage) {
+      setSearchParams((prev) => {
+        prev.delete(paramName)
         return prev
       })
     }
@@ -58,6 +82,7 @@ export function SearchBar({
         borderColor={borderColor}
         backgroundColor="bg-white"
         inputClass={inputClass}
+        onClear={handleClearKeyword}
       />
     </div>
   )

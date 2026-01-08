@@ -9,19 +9,28 @@ import { cn } from '@src/utils/cn'
 const HIDE_HEADER_MOBILE_PATTERNS = [/^\/community\/\d+$/, /^\/community\/\d+\/edit$/, new RegExp(`^${ROUTES.COMMUNITY_POST}$`)]
 
 // SearchBar 숨김 경로 - 모바일만 (정적 경로)
-const HIDE_SEARCHBAR_MOBILE_PATHS: string[] = [ROUTES.PROFILE_UPDATE, ROUTES.PRODUCT_POST, ROUTES.LOGIN, ROUTES.SIGNUP, ROUTES.FIND_PASSWORD, ROUTES.MYPAGE]
+const HIDE_SEARCHBAR_MOBILE_PATHS: string[] = [ROUTES.MYPAGE]
 
 // SearchBar 숨김 경로 - 항상 (정적 경로)
-const HIDE_SEARCHBAR_ALWAYS_PATHS: string[] = [ROUTES.COMMUNITY, ROUTES.COMMUNITY_POST]
+const HIDE_SEARCHBAR_ALWAYS_PATHS: string[] = [
+  ROUTES.COMMUNITY,
+  ROUTES.COMMUNITY_POST,
+  ROUTES.LOGIN,
+  ROUTES.SIGNUP,
+  ROUTES.FIND_PASSWORD,
+  ROUTES.PROFILE_UPDATE,
+  ROUTES.PRODUCT_POST,
+  ROUTES.CHAT,
+]
 
 // 메뉴 버튼 숨김 경로
 const HIDE_MENU_BUTTON_PATHS: string[] = [ROUTES.LOGIN, ROUTES.SIGNUP]
 
 // SearchBar 숨김 패턴 - 모바일만 (동적 경로)
-const HIDE_SEARCHBAR_MOBILE_PATTERNS = [/^\/products\/\d+\/edit$/, /^\/user-profile\/\d+$/]
+const HIDE_SEARCHBAR_MOBILE_PATTERNS = [/^\/user-profile\/\d+$/]
 
 // SearchBar 숨김 패턴 - 항상 (동적 경로)
-const HIDE_SEARCHBAR_ALWAYS_PATTERNS = [/^\/community\/\d+$/, /^\/community\/\d+\/edit$/]
+const HIDE_SEARCHBAR_ALWAYS_PATTERNS = [/^\/community\/\d+$/, /^\/community\/\d+\/edit$/, /^\/products\/\d+\/edit$/, /^\/chat\/\d+$/]
 
 export default function MainLayout() {
   const isMd = useMediaQuery('(min-width: 768px)')
