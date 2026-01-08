@@ -11,7 +11,15 @@ import { useNavigate } from 'react-router-dom'
 function ProfileUpdate() {
   const navigate = useNavigate()
   const [, setIsWithdrawModalOpen] = useState(false)
-  const { user, updateUserProfile } = useUserStore()
+  const { user, updateUserProfile, setRedirectUrl } = useUserStore()
+
+  // 비로그인 시 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!user?.id) {
+      setRedirectUrl(window.location.pathname)
+      navigate('/auth/login')
+    }
+  }, [user, navigate, setRedirectUrl])
   const isMd = useMediaQuery('(min-width: 768px)')
   const {
     data: myData,
