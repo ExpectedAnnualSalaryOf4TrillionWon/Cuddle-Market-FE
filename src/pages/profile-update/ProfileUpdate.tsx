@@ -63,7 +63,7 @@ function ProfileUpdate() {
   return (
     <div className="pb-4xl bg-[#F3F4F6] pt-0 md:bg-white md:pt-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-0 md:flex-row md:gap-8 md:p-0">
-        {isMd && <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />}
+        {isMd && <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} isMyProfile />}
         {!isMd && (
           <div className="flex flex-col gap-2 border-b border-gray-200 bg-white p-5">
             <h2 className="heading-h3">기본 정보</h2>

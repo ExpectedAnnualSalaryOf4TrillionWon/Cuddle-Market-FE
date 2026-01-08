@@ -206,7 +206,7 @@ function MyPage() {
     <>
       <div className="pb-4xl bg-white pt-0 md:pt-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3.5 md:flex-row md:gap-8">
-          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} />
+          <ProfileData setIsWithdrawModalOpen={setIsWithdrawModalOpen} data={myData!} isMyProfile />
           <section className="flex flex-1 flex-col gap-3.5 md:gap-7">
             <Tabs
               tabs={MY_PAGE_TABS}
