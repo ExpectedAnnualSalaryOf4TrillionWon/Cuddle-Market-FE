@@ -10,7 +10,7 @@ import { CommentForm } from './components/CommentForm'
 import { ProfileAvatar } from '@src/components/commons/ProfileAvatar'
 import { useForm } from 'react-hook-form'
 import type { CommentPostRequestData } from '@src/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import PostReportModal from '@src/components/modal/PostReportModal'
 import DeletePostConfirmModal from '@src/components/modal/DeletePostConfirmModal'
 import { useUserStore } from '@src/store/userStore'
@@ -23,6 +23,7 @@ import { Z_INDEX } from '@src/constants/ui'
 import { AnimatePresence } from 'framer-motion'
 import { SimpleHeader } from '@src/components/header/SimpleHeader'
 import InlineNotification from '@src/components/commons/InlineNotification'
+import { useOutsideClick } from '@src/hooks/useOutsideClick'
 
 export default function CommunityDetail() {
   const {
@@ -46,6 +47,8 @@ export default function CommunityDetail() {
   const [isPostDeleteModalOpen, setIsPostDeleteModalOpen] = useState(false)
   const [postDeleteError, setIsPostDeleteError] = useState<React.ReactNode | null>(null)
   const [commentPostError, setCommentPostError] = useState<React.ReactNode | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOutsideClick(isMoreMenuOpen, [modalRef], () => setIsMoreMenuOpen(false))
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -181,7 +184,7 @@ export default function CommunityDetail() {
                   <EllipsisVertical size={16} className="text-gray-500" />
                 </IconButton>
                 {isMoreMenuOpen && (
-                  <div className="absolute top-7 right-0 flex flex-col rounded border border-gray-200 bg-white shadow-md md:min-w-14">
+                  <div className="absolute top-7 right-0 flex flex-col rounded border border-gray-200 bg-white shadow-md md:min-w-14" ref={modalRef}>
                     {user?.id === data?.authorId ? (
                       <>
                         <button
