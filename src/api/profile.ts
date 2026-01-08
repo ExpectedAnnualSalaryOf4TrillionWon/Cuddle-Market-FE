@@ -59,16 +59,12 @@ export const userReported = async (targetUserId: number, requestData: ReportedRe
 
 export const sendValidCode = async (email: string): Promise<EmailCheckResponse> => {
   const response = await axios.post(`${API_BASE_URL}/auth/password/reset/send`, { email })
-  console.log(response)
-  console.log(response.data)
 
   return response.data
 }
 
 export const checkValidCode = async (email: string, code: string): Promise<EmailCheckResponse> => {
   const response = await axios.post(`${API_BASE_URL}/auth/password/reset/verify`, { email, verificationCode: code })
-  console.log(response)
-  console.log(response.data)
   return response.data
 }
 

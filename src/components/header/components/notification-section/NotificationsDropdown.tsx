@@ -69,7 +69,6 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
       chatSocketStore.getState().clearUnreadCount(notification.relatedEntityId)
     }
     const path = getNavigationPath(notification)
-    console.log('이동할 경로:', path)
     setIsNotificationOpen(false)
     navigate(path)
     await readNotification(notification.notificationId)
