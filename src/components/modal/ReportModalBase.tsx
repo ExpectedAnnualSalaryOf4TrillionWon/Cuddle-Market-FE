@@ -7,6 +7,8 @@ import ImageUploadField from '@src/pages/product-post/components/imageUploadFiel
 import { useRef, type ReactNode } from 'react'
 import { useOutsideClick } from '@src/hooks/useOutsideClick'
 import { Z_INDEX } from '@src/constants/ui'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '../commons/InlineNotification'
 
 export interface ReportFormValues {
   reasonCode: string
@@ -26,9 +28,11 @@ interface ReportModalBaseProps {
   reasons: ReportReason[]
   onCancel: () => void
   onSubmit: (data: ReportFormValues) => Promise<void>
+  error?: React.ReactNode
+  onClearError?: () => void
 }
 
-export default function ReportModalBase({ isOpen, heading, description, reasons, onCancel, onSubmit }: ReportModalBaseProps) {
+export default function ReportModalBase({ isOpen, heading, description, reasons, onCancel, onSubmit, error, onClearError }: ReportModalBaseProps) {
   const {
     handleSubmit,
     register,
@@ -68,7 +72,13 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
     <div className={`fixed inset-0 flex items-center justify-center bg-gray-900/70 p-4 ${Z_INDEX.MODAL}`}>
       <div ref={modalRef} className="flex max-h-[90vh] w-11/12 flex-col gap-4 overflow-y-auto rounded-lg bg-white p-5 md:w-1/5 md:min-w-96">
         <ModalTitle heading={heading} description={description} />
-
+        <AnimatePresence>
+          {error && (
+            <InlineNotification type="error" onClose={() => onClearError?.()}>
+              {error}
+            </InlineNotification>
+          )}
+        </AnimatePresence>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col gap-4">
           <div className="flex flex-col gap-6 pt-2">
             <div className="flex flex-col gap-1">
