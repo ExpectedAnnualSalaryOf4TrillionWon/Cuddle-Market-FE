@@ -12,6 +12,10 @@ import { login, signup } from '@src/api/auth'
 import type { SignUpRequestData } from '@src/types'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@src/store/userStore'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
+import { isAxiosError } from 'axios'
+import type { ToastType } from '@src/types/toast'
 
 export interface SignUpFormValues {
   email: string
@@ -52,6 +56,7 @@ export function SignUpForm() {
   const [isNicknameVerified, setIsNicknameVerified] = useState(false)
   const [isEmailVerified, setIsEmailVerified] = useState(false)
   const [isEmailCodeVerified, setIsEmailCodeVerified] = useState(false)
+  const [signupNotification, setSignupNotification] = useState<{ message: string; type: ToastType } | null>(null)
   const navigate = useNavigate()
 
   const { handleLogin } = useUserStore()
@@ -111,7 +116,20 @@ export function SignUpForm() {
       navigate(redirectUrl || '/')
       useUserStore.getState().setRedirectUrl(null)
     } catch (error) {
-      console.error('회원가입 실패:', error)
+      if (isAxiosError(error)) {
+        const status = error.response?.status
+        const message = error.response?.data?.message
+
+        if (status === 409) {
+          setSignupNotification({ message: message || '이미 가입된 이메일입니다.', type: 'error' })
+        } else if (status === 400) {
+          setSignupNotification({ message: message || '입력 정보를 다시 확인해주세요.', type: 'error' })
+        } else {
+          setSignupNotification({ message: '회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.', type: 'warning' })
+        }
+      } else {
+        setSignupNotification({ message: '네트워크 연결을 확인해주세요.', type: 'warning' })
+      }
     }
   }
 
@@ -134,6 +152,13 @@ export function SignUpForm() {
           />
           <PasswordField register={register} errors={errors} watch={watch} setError={setError} clearErrors={clearErrors} />
         </div>
+        <AnimatePresence>
+          {signupNotification && (
+            <InlineNotification type={signupNotification.type} onClose={() => setSignupNotification(null)}>
+              {signupNotification.message}
+            </InlineNotification>
+          )}
+        </AnimatePresence>
         <Button size="md" className="bg-primary-300 w-full cursor-pointer text-white" type="submit">
           회원가입
         </Button>
