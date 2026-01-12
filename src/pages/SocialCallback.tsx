@@ -9,8 +9,9 @@ export default function SocialCallback() {
 
   const handleSocialAuth = useCallback(
     async (accessToken: string, refreshToken: string) => {
-      console.log('[SocialCallback] 1. 토큰 저장 시작', new Date().toISOString())
-      // 1. 토큰 먼저 저장
+      console.log('[SocialCallback] 1. 기존 상태 클리어 후 토큰 저장 시작', new Date().toISOString())
+      // 1. 기존 상태 클리어 후 새 토큰 저장 (회원탈퇴 후 재로그인 시 옛날 토큰 문제 방지)
+      useUserStore.getState().clearAll()
       setAccessToken(accessToken)
       setRefreshToken(refreshToken)
 
