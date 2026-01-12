@@ -6,12 +6,12 @@ export function SocialLoginButtons() {
   const handleGoogleLogin = () => {
     // window.location.href = 'https://cuddle-market.duckdns.org/oauth2/authorization/google'
     // window.location.href = 'https://cmarket-api.duckdns.org/oauth2/authorization/google'
-    window.location.href = 'https://cuddle-market-fe.vercel.app//oauth2/authorization/google'
+    window.location.href = 'https://cuddle-market-fe.vercel.app/oauth2/authorization/google'
   }
   const handleKakaoLogin = () => {
     // window.location.href = 'https://cuddle-market.duckdns.org/oauth2/authorization/kakao'
     // window.location.href = 'https://cmarket-api.duckdns.org/oauth2/authorization/kakao'
-    window.location.href = 'https://cuddle-market-fe.vercel.app//oauth2/authorization/kakao'
+    window.location.href = 'https://cuddle-market-fe.vercel.app/oauth2/authorization/kakao'
   }
 
   return (
