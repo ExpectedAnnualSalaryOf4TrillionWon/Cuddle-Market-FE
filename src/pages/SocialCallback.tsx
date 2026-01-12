@@ -19,7 +19,10 @@ export default function SocialCallback() {
 
       handleLogin(user, accessToken, refreshToken)
 
-      // 저장된 redirectUrl이 있으면 해당 페이지로, 없으면 홈으로 이동
+      // 3. localStorage에 persist가 완료될 때까지 대기
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // 4. 저장된 redirectUrl이 있으면 해당 페이지로, 없으면 홈으로 이동
       const redirectUrl = useUserStore.getState().redirectUrl
       navigate(redirectUrl || '/')
       useUserStore.getState().setRedirectUrl(null)
