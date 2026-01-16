@@ -41,7 +41,7 @@ export function ProductThumbnail({
   return (
     <div className="relative flex-1 overflow-hidden pb-[35%] md:flex-none md:pb-[75%]">
       <div className="top-sm px-sm absolute flex w-full justify-between">
-        <ProductBadge petTypeName={petTypeName} productStatusName={productStatusName} />
+        <ProductBadge petTypeName={petTypeName} productStatusName={productStatusName} productTypeName={productTypeName} />
         <Button
           type="button"
           className="z-1 flex cursor-pointer items-center justify-center rounded-full bg-gray-100"
