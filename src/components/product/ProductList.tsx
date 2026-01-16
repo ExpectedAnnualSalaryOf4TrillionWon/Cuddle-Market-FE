@@ -1,9 +1,8 @@
 import ProductCard from '@src/components/product/ProductCard'
-import { ROUTES } from '@src/constants/routes'
 import { useLoginModalStore } from '@src/store/modalStore'
 import { useUserStore } from '@src/store/userStore'
 import type { Product } from '@src/types'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { cn } from '@src/utils/cn'
 
 interface ProductListProps {
