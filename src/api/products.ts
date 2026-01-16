@@ -106,8 +106,9 @@ export const postProduct = async (requestData: ProductPostRequestData): Promise<
 }
 
 // 판매요청 상품 등록
-export const requestPostProduct = async (requestData: RequestProductPostRequestData): Promise<void> => {
-  await api.post(`/products/requests`, requestData)
+export const requestPostProduct = async (requestData: RequestProductPostRequestData): Promise<ProductPostResponse> => {
+  const response = await api.post<{ data: ProductPostResponse }>(`/products/requests`, requestData)
+  return response.data.data
 }
 
 // 판매요청 상품 수정
