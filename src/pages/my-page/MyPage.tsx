@@ -110,7 +110,11 @@ function MyPage() {
     // },
     onSuccess: () => {
       // 삭제 성공 시 상품 목록 다시 불러오기
-      queryClient.invalidateQueries({ queryKey: ['myProducts'] })
+      if (activeMyPageTab === 'tab-sales') {
+        queryClient.invalidateQueries({ queryKey: ['myProducts', user?.id] })
+      } else if (activeMyPageTab === 'tab-purchases') {
+        queryClient.invalidateQueries({ queryKey: ['myRequest', user?.id] })
+      }
       setIsModalOpen(false)
       setSelectedProduct(null)
     },

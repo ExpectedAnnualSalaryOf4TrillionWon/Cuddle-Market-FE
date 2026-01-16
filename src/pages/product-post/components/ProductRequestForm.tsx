@@ -82,8 +82,8 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
     }
 
     try {
-      await requestPostProduct(requestData)
-      navigate(`/products/${id}`)
+      const response = await requestPostProduct(requestData)
+      navigate(`/products/${isEditMode ? id : response.id}`)
     } catch {
       alert(isEditMode ? '상품 수정에 실패했습니다.' : '상품 등록에 실패했습니다.')
     }
