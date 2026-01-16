@@ -146,7 +146,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
             <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-300')} type="submit">
               {isEditMode ? '수정' : '등록'}
             </Button>
-            <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button">
+            <Button size="md" className="w-[20%] cursor-pointer bg-gray-100 text-gray-900" type="button" onClick={() => navigate(-1)}>
               취소
             </Button>
           </div>
