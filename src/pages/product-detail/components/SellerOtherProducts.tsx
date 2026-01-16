@@ -18,7 +18,7 @@ export default function SellerOtherProducts({ sellerInfo, sellerOtherProducts }:
       <h3 className="heading-h3 text-text-primary mb-lg">{sellerInfo?.sellerNickname}님의 다른 판매 상품</h3>
 
       {sellerOtherProducts?.length !== 0 ? (
-        <ProductList products={sellerOtherProducts} />
+        <ProductList products={sellerOtherProducts.slice(0, 3)} showMoreButton sellerId={sellerInfo.sellerId} />
       ) : (
         <EmptyState
           icon={Package}
