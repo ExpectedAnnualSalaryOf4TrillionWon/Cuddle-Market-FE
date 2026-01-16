@@ -9,6 +9,7 @@ import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
 import { patchProduct, postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
 import { useEffect, useMemo } from 'react'
+import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 
 export interface ProductPostFormValues {
   petType: string
@@ -121,6 +122,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
           <div className="flex flex-col gap-5">
             <BasicInfoSection control={control} setValue={setValue} register={register} errors={errors} titleLength={watch('title')?.length ?? 0} />
             <PriceAndStatusSection control={control} register={register} errors={errors} />
+            <TradeInfoSection control={control} setValue={setValue} />
             <ProductImageUpload
               initialImages={initialImages}
               setValue={setValue}
