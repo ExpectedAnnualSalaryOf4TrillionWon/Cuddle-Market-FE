@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ProductImageUpload from './imageUploadField/ImageUploadField'
 import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
-// import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
+import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 import type { ProductDetailItem, RequestProductPostRequestData } from '@src/types'
 import { requestPostProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
@@ -110,7 +110,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
     <div role="tabpanel" id="panel-REQUEST" aria-labelledby="tab-purchases">
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="flex flex-col gap-5">
-          <legend className="sr-only">회원가입폼</legend>
+          <legend className="sr-only">판매요청 등록폼</legend>
           <div className="flex flex-col gap-5">
             <BasicInfoSection
               control={control}
@@ -130,6 +130,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
               priceLabel="희망 가격"
               heading="가격"
             />
+            <TradeInfoSection control={control} setValue={setValue} />
             <ProductImageUpload
               initialImages={initialImages}
               setValue={setValue}
@@ -140,6 +141,7 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
               subImagesField="subImageUrls"
             />
           </div>
+
           <div className="flex items-center gap-4">
             <Button size="md" className={cn('w-[80%] flex-1 cursor-pointer text-white', !isValid ? 'bg-gray-300' : 'bg-primary-300')} type="submit">
               {isEditMode ? '수정' : '등록'}
