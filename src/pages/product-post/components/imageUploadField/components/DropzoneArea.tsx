@@ -64,13 +64,18 @@ export default function DropzoneArea<T extends FieldValues>({
 
       try {
         const uploadedUrl = await uploadImage(acceptedFiles)
+        // 새로 업로드된 URL들
+        const newUrls = [uploadedUrl.mainImageUrl, ...(uploadedUrl.subImageUrls || [])]
+        // 기존 URL들과 합침
+        const allUrls = [...previewUrls, ...newUrls]
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(mainImageField, uploadedUrl.mainImageUrl as any)
+        setValue(mainImageField, allUrls[0] as any)
         if (subImagesField) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(subImagesField, uploadedUrl.subImageUrls as any)
+          setValue(subImagesField, allUrls.slice(1) as any)
         }
-        setPreviewUrls((prev) => [...prev, uploadedUrl.mainImageUrl, ...(uploadedUrl.subImageUrls || [])])
+        setPreviewUrls(allUrls)
       } catch {
         setError(mainImageField, {
           type: 'manual',
