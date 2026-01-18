@@ -245,7 +245,7 @@ export default function CommunityPage() {
               <div className="flex items-center justify-between">
                 <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
                 {isLogin() && (
-                  <Link to={ROUTES.COMMUNITY_POST} type="button" className="bg-primary-300 rounded-lg px-3 py-2 text-white">
+                  <Link to={`${ROUTES.COMMUNITY_POST}?tab=${activeCommunityTypeTab}`} type="button" className="bg-primary-300 rounded-lg px-3 py-2 text-white">
                     글쓰기
                   </Link>
                 )}
@@ -364,7 +364,7 @@ export default function CommunityPage() {
       </div>
       {!isMd && isLogin() && (
         <Link
-          to={ROUTES.COMMUNITY_POST}
+          to={`${ROUTES.COMMUNITY_POST}?tab=${activeCommunityTypeTab}`}
           type="button"
           className={`bg-primary-200 fixed right-4 bottom-4 rounded-full px-3 py-3 text-white ${Z_INDEX.FLOATING_BUTTON}`}
         >
