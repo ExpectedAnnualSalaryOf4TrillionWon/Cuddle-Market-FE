@@ -26,6 +26,14 @@ export interface CommunityPostFormValues {
   imageUrls?: string[]
 }
 
+// Storage key 생성 함수
+const getDraftStorageKey = (boardType: string) => `community-post-draft-${boardType}`
+
+// 임시 저장 데이터 삭제
+const clearDraft = (boardType: string) => {
+  sessionStorage.removeItem(getDraftStorageKey(boardType))
+}
+
 // sessionStorage에서 임시 저장된 데이터 불러오기
 const getSavedDraft = (boardType: string): CommunityPostFormValues => {
   const saved = sessionStorage.getItem(getDraftStorageKey(boardType))
@@ -33,18 +41,10 @@ const getSavedDraft = (boardType: string): CommunityPostFormValues => {
     try {
       return JSON.parse(saved)
     } catch {
-      return { boardType: 'FREE', title: '', content: '', imageUrls: [] }
+      return { boardType, title: '', content: '', imageUrls: [] }
     }
   }
-  return { boardType: 'FREE', title: '', content: '', imageUrls: [] }
-}
-
-// const DRAFT_STORAGE_KEY = 'community-post-draft'
-const getDraftStorageKey = (boardType: string) => `community-post-draft-${boardType}`
-
-// 임시 저장 데이터 삭제
-const clearDraft = (boardType: string) => {
-  sessionStorage.removeItem(getDraftStorageKey(boardType))
+  return { boardType, title: '', content: '', imageUrls: [] }
 }
 
 export default function CommunityPostForm() {
