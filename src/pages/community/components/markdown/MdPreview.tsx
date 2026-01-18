@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import rehypeSanitize from 'rehype-sanitize'
+import remarkBreaks from 'remark-breaks'
 import { cn } from '@src/utils/cn'
 import { mdSanitizeSchema } from './sanitizeSchema'
 
@@ -13,6 +14,7 @@ export default function MdPreview({ value, height, className }: MdPreviewProps) 
   return (
     <div className={cn('overflow-y-auto bg-white p-3', className)} style={height ? { height, overflowY: 'auto' } : undefined}>
       <ReactMarkdown
+        remarkPlugins={[remarkBreaks]}
         rehypePlugins={[[rehypeSanitize, mdSanitizeSchema]]}
         components={{
           h1: (p) => <h1 {...p} className="mt-2 mb-2 text-2xl font-semibold" />,
