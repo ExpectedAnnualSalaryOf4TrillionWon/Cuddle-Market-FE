@@ -7,7 +7,7 @@ import BasicInfoSection from './basicInfoSection/BasicInfoSection'
 import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection'
 import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
 import type { ProductDetailItem, RequestProductPostRequestData } from '@src/types'
-import { requestPostProduct } from '@src/api/products'
+import { patchRequestProduct, requestPostProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
 import { useEffect, useMemo } from 'react'
 
@@ -82,8 +82,15 @@ export function ProductRequestForm({ isEditMode, productId: id, initialData }: P
     }
 
     try {
-      const response = await requestPostProduct(requestData)
-      navigate(`/products/${isEditMode ? id : response.id}`)
+      if (isEditMode && id) {
+        // 편집 모드: 기존 상품 ID로 수정
+        await patchRequestProduct(requestData, Number(id))
+        navigate(`/products/${id}`)
+      } else {
+        // 새 등록: 서버에서 생성된 ID로 이동
+        const response = await requestPostProduct(requestData)
+        navigate(`/products/${response.id}`)
+      }
     } catch {
       alert(isEditMode ? '상품 수정에 실패했습니다.' : '상품 등록에 실패했습니다.')
     }

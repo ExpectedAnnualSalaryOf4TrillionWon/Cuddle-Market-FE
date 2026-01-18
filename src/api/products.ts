@@ -111,9 +111,15 @@ export const requestPostProduct = async (requestData: RequestProductPostRequestD
   return response.data.data
 }
 
-// 판매요청 상품 수정
+// 판매 상품 수정
 export const patchProduct = async (requestData: ProductPostRequestData, id: number): Promise<ProductPostResponse> => {
   const response = await api.patch<{ data: ProductPostResponse }>(`/products/${id}`, requestData)
+  return response.data.data
+}
+
+// 판매요청 상품 수정
+export const patchRequestProduct = async (requestData: RequestProductPostRequestData, id: number): Promise<ProductPostResponse> => {
+  const response = await api.patch<{ data: ProductPostResponse }>(`/products/requests/${id}`, requestData)
   return response.data.data
 }
 
