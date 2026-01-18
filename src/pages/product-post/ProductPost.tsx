@@ -22,19 +22,6 @@ function ProductPost() {
 
   const isEditMode = !!id
 
-  // 비로그인 시 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!user?.id) {
-      setRedirectUrl(window.location.pathname)
-      navigate('/auth/login')
-    }
-  }, [user, navigate, setRedirectUrl])
-
-  const handleTabChange = (tabId: string) => {
-    setActiveProductTypeTab(tabId as ProductTypeTabId)
-    setSearchParams({ tab: tabId }, { replace: true })
-  }
-
   const isSalesTab = activeProductTypeTab === 'tab-sales'
   const headerTitle = isSalesTab ? (isEditMode ? '판매 상품 수정' : '판매 상품 등록') : isEditMode ? '판매 요청 수정' : '판매 요청 등록'
   const headerDescription = isSalesTab
@@ -45,10 +32,24 @@ function ProductPost() {
       ? '등록된 판매 요청 정보를 수정할 수 있습니다.'
       : '원하는 상품이 없을 때 판매를 요청할 수 있습니다.'
 
+  const handleTabChange = (tabId: string) => {
+    setActiveProductTypeTab(tabId as ProductTypeTabId)
+    setSearchParams({ tab: tabId }, { replace: true })
+  }
+
+  // 비로그인 시 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!user?.id) {
+      setRedirectUrl(window.location.pathname)
+      navigate('/auth/login')
+    }
+  }, [user, navigate, setRedirectUrl])
+
   useEffect(() => {
     const loadProduct = async () => {
       if (isEditMode && id) {
         const data = await fetchProductById(id)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
         setProductData(data)
         const tabId = data.productType === 'SELL' ? 'tab-sales' : 'tab-purchases'
         setActiveProductTypeTab(tabId)
