@@ -18,6 +18,7 @@ import { Z_INDEX } from '@src/constants/ui'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
 import { useUserStore } from '@src/store/userStore'
+import DraftModal from '@src/components/modal/DraftModal'
 
 export interface CommunityPostFormValues {
   boardType: string
@@ -55,6 +56,8 @@ export default function CommunityPostForm() {
   const { user, setRedirectUrl } = useUserStore()
   const [searchParams] = useSearchParams()
   const initialBoardType = searchParams.get('tab') === 'tab-question' ? 'QUESTION' : searchParams.get('tab') === 'tab-info' ? 'INFO' : 'FREE'
+  const [showDraftModal, setShowDraftModal] = useState(false)
+  const [isDraftChecked, setIsDraftChecked] = useState(false)
 
   // 비로그인 시 로그인 페이지로 리다이렉트
   useEffect(() => {
@@ -73,7 +76,7 @@ export default function CommunityPostForm() {
     formState: { errors, isValid },
   } = useForm<CommunityPostFormValues>({
     mode: 'onChange',
-    defaultValues: isEditMode ? { boardType: 'FREE', title: '', content: '', imageUrls: [] } : getSavedDraft(initialBoardType),
+    defaultValues: { boardType: initialBoardType, title: '', content: '', imageUrls: [] },
   })
 
   const [postError, setPostError] = useState<React.ReactNode | null>(null)
@@ -96,7 +99,6 @@ export default function CommunityPostForm() {
 
     try {
       if (isEditMode) {
-        // throw new Error('테스트 에러') // 임시 추가
         await patchPost(Number(id), requestData)
         navigate(`/community/${id}`)
       } else {
@@ -135,10 +137,28 @@ export default function CommunityPostForm() {
 
   // 새 글 작성 시 폼 데이터 변경마다 sessionStorage에 자동 저장
   useEffect(() => {
-    if (!isEditMode) {
+    if (!isEditMode && isDraftChecked) {
       sessionStorage.setItem(getDraftStorageKey(formValues.boardType), JSON.stringify(formValues))
     }
-  }, [formValues, isEditMode])
+  }, [formValues, isEditMode, isDraftChecked])
+
+  useEffect(() => {
+    // if (isEditMode) return // 수정 모드에서는 임시저장 무시
+    if (isEditMode) {
+      setIsDraftChecked(true) // 수정 모드면 바로 체크 완료
+      return
+    }
+
+    const draft = getSavedDraft(initialBoardType)
+    // 임시저장에 실제 내용이 있는지 확인 (제목이나 내용이 있으면)
+    const hasSavedContent = draft.title.trim() !== '' || draft.content.trim() !== ''
+
+    if (hasSavedContent) {
+      setShowDraftModal(true)
+    } else {
+      setIsDraftChecked(true) // 임시저장 없으면 바로 자동저장 시작
+    }
+  }, [initialBoardType, isEditMode])
 
   if (postLoadError) {
     return (
@@ -258,6 +278,17 @@ export default function CommunityPostForm() {
           </form>
         </div>
       </div>
+      {showDraftModal && (
+        <DraftModal
+          initialBoardType={initialBoardType}
+          setIsDraftChecked={setIsDraftChecked}
+          showDraftModal={showDraftModal}
+          setShowDraftModal={setShowDraftModal}
+          clearDraft={clearDraft}
+          getSavedDraft={getSavedDraft}
+          reset={reset}
+        />
+      )}
     </>
   )
 }

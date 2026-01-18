@@ -38,7 +38,7 @@ export default function LoginModal() {
           <p>{description}</p>
         </div>
         <div className="flex w-full gap-3">
-          <Button size="md" className="flex-1 cursor-pointer border border-gray-300" onClick={closeModal}>
+          <Button size="md" className="flex-1 cursor-pointer border border-gray-300" onClick={closeModal} type="button">
             취소
           </Button>
           {isLogin ? (
