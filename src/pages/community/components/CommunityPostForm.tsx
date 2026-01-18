@@ -1,6 +1,6 @@
 import { Button } from '@src/components/commons/button/Button'
 import { Controller, useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import type { CommunityPostRequestData } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
@@ -19,8 +19,6 @@ import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
 import { useUserStore } from '@src/store/userStore'
 
-const DRAFT_STORAGE_KEY = 'community-post-draft'
-
 export interface CommunityPostFormValues {
   boardType: string
   title: string
@@ -29,8 +27,8 @@ export interface CommunityPostFormValues {
 }
 
 // sessionStorage에서 임시 저장된 데이터 불러오기
-const getSavedDraft = (): CommunityPostFormValues => {
-  const saved = sessionStorage.getItem(DRAFT_STORAGE_KEY)
+const getSavedDraft = (boardType: string): CommunityPostFormValues => {
+  const saved = sessionStorage.getItem(getDraftStorageKey(boardType))
   if (saved) {
     try {
       return JSON.parse(saved)
@@ -41,9 +39,12 @@ const getSavedDraft = (): CommunityPostFormValues => {
   return { boardType: 'FREE', title: '', content: '', imageUrls: [] }
 }
 
+// const DRAFT_STORAGE_KEY = 'community-post-draft'
+const getDraftStorageKey = (boardType: string) => `community-post-draft-${boardType}`
+
 // 임시 저장 데이터 삭제
-const clearDraft = () => {
-  sessionStorage.removeItem(DRAFT_STORAGE_KEY)
+const clearDraft = (boardType: string) => {
+  sessionStorage.removeItem(getDraftStorageKey(boardType))
 }
 
 export default function CommunityPostForm() {
@@ -52,6 +53,8 @@ export default function CommunityPostForm() {
   const { id } = useParams()
   const isEditMode = !!id
   const { user, setRedirectUrl } = useUserStore()
+  const [searchParams] = useSearchParams()
+  const initialBoardType = searchParams.get('tab') === 'tab-question' ? 'QUESTION' : searchParams.get('tab') === 'tab-info' ? 'INFO' : 'FREE'
 
   // 비로그인 시 로그인 페이지로 리다이렉트
   useEffect(() => {
@@ -70,7 +73,7 @@ export default function CommunityPostForm() {
     formState: { errors, isValid },
   } = useForm<CommunityPostFormValues>({
     mode: 'onChange',
-    defaultValues: isEditMode ? { boardType: 'FREE', title: '', content: '', imageUrls: [] } : getSavedDraft(),
+    defaultValues: isEditMode ? { boardType: 'FREE', title: '', content: '', imageUrls: [] } : getSavedDraft(initialBoardType),
   })
 
   const [postError, setPostError] = useState<React.ReactNode | null>(null)
@@ -79,7 +82,7 @@ export default function CommunityPostForm() {
   const formValues = watch()
 
   const handleCancel = () => {
-    clearDraft()
+    clearDraft(formValues.boardType)
     navigate('/community')
   }
 
@@ -98,7 +101,7 @@ export default function CommunityPostForm() {
         navigate(`/community/${id}`)
       } else {
         const response = await postCommunity(requestData)
-        clearDraft()
+        clearDraft(formValues.boardType)
         navigate(`/community/${response.id}`)
       }
     } catch {
@@ -133,7 +136,7 @@ export default function CommunityPostForm() {
   // 새 글 작성 시 폼 데이터 변경마다 sessionStorage에 자동 저장
   useEffect(() => {
     if (!isEditMode) {
-      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formValues))
+      sessionStorage.setItem(getDraftStorageKey(formValues.boardType), JSON.stringify(formValues))
     }
   }, [formValues, isEditMode])
 
