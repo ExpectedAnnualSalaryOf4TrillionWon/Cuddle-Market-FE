@@ -104,8 +104,7 @@ export function SignUpForm() {
     }
 
     try {
-      const response = await signup(requestData)
-      console.log('회원가입 성공:', response)
+      await signup(requestData)
       const loginResponse = await login({
         email: data.email,
         password: data.password,
