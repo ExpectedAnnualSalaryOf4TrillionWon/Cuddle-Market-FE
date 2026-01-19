@@ -206,7 +206,7 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
                   className="hover:bg-primary-300 flex-1 cursor-pointer border border-gray-300 hover:font-bold hover:text-white"
                   onClick={isWishlistTab ? handleCancelFavorite : (e: React.MouseEvent) => handleConfirmModal(e, id, title, price, mainImageUrl)}
                 >
-                  삭제
+                  찜 취소
                 </Button>
               </div>
             )}
