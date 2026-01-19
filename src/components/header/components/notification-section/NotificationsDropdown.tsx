@@ -78,7 +78,7 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
   return (
     <div
       ref={modalRef}
-      className={cn('absolute top-12 right-0 max-h-[819.2px] overflow-hidden rounded-lg border border-gray-200 bg-white', `${Z_INDEX.DROPDOWN}`)}
+      className={cn('absolute top-12 right-0 min-w-[364px] max-h-[819.2px] overflow-hidden rounded-lg border border-gray-200 bg-white', `${Z_INDEX.DROPDOWN}`)}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between border-b border-gray-200 px-4 pt-4 pb-[17px]">
@@ -98,7 +98,7 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
       <div className="scrollbar-hide flex max-h-80 flex-col overflow-y-auto" role="tabpanel">
         {isLoading ? (
           <NotificationsSkeleton />
-        ) : notificationsData?.pages.length !== 0 ? (
+        ) : notificationsData?.pages.some((page) => page.content.length > 0) ? (
           <>
             {notificationsData?.pages.flatMap((page) =>
               page.content.map((notification: NotificationItemType) => (
@@ -110,10 +110,10 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
                 />
               ))
             )}
-            <div ref={observerTargetRef} className="h-4" />
+            <div ref={observerTargetRef} className="h-1" />
           </>
         ) : (
-          <div className="flex h-32 min-w-[364px] items-center justify-center text-sm text-gray-500">표시할 알림이 없습니다.</div>
+          <div className="flex h-32 items-center justify-center text-sm text-gray-500">표시할 알림이 없습니다.</div>
         )}
       </div>
       <div className="flex h-[45px] border-t border-gray-200" />
