@@ -8,6 +8,7 @@ import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
 import { Package, Heart, type LucideIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { cn } from '@src/utils/cn'
 
 interface MyPagePanelProps {
   activeTabCode: string
@@ -97,13 +98,16 @@ export default function MyPagePanel({
 
   const productData = getProductData()
   const config = activeMyPageTab !== 'tab-blocked' ? TAB_CONFIG[activeMyPageTab] : null
+  const hasContent =
+    (activeMyPageTab !== 'tab-blocked' && (productData?.content?.length || config)) ||
+    (activeMyPageTab === 'tab-blocked' && myBlockedData?.length)
 
   return (
     <div
       role="tabpanel"
       id={`panel-${activeTabCode}`}
       aria-labelledby={activeMyPageTab}
-      className="flex flex-col gap-6 rounded-xl border-gray-200 px-5 py-7 md:border md:p-5"
+      className={cn('flex flex-col rounded-xl border-gray-200 px-5 py-7 md:border md:p-5', hasContent && 'gap-6')}
     >
       {config ? (
         <MyPageTitle
