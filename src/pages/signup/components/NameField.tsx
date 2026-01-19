@@ -23,6 +23,7 @@ export function NameField({ register, errors }: NameFieldProps) {
         classname="flex flex-col gap-2.5"
         error={errors.name}
         registration={register('name', signupValidationRules.name)}
+        autoFocus
       />
     </div>
   )
