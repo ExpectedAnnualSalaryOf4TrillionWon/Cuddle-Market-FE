@@ -18,6 +18,7 @@ interface InputFieldProps {
   registration: UseFormRegisterReturn
   id?: string
   suffix?: string
+  autoFocus?: boolean
 }
 
 export function InputField({ error, checkResult, registration, classname, inputClass, id, suffix, ...inputProps }: InputFieldProps) {
