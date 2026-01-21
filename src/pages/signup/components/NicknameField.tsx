@@ -11,7 +11,7 @@ import {
 } from 'react-hook-form'
 import { signupValidationRules } from '../validationRules'
 import { checkNickname } from '@src/api/auth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface NicknameFieldProps<T extends FieldValues> {
   watch: UseFormWatch<T>
@@ -57,6 +57,11 @@ export function NicknameField<T extends FieldValues>({ register, errors, watch, 
       setIsNicknameVerified(false)
     }
   }
+
+  useEffect(() => {
+    setCheckResult({ status: 'idle', message: '' })
+    setIsNicknameVerified(false)
+  }, [nickname, setIsNicknameVerified])
 
   return (
     <div className="flex flex-col gap-2.5">
