@@ -11,7 +11,7 @@ import {
 } from 'react-hook-form'
 import { signupValidationRules } from '../validationRules'
 import { checkNickname } from '@src/api/auth'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 interface NicknameFieldProps<T extends FieldValues> {
   watch: UseFormWatch<T>
@@ -19,13 +19,23 @@ interface NicknameFieldProps<T extends FieldValues> {
   errors: FieldErrors<T>
   setIsNicknameVerified: (verified: boolean) => void
   clearErrors: UseFormClearErrors<T>
+  setCheckResult: (result: { status: 'idle' | 'success' | 'error'; message: string }) => void
+  checkResult: { status: 'idle' | 'success' | 'error'; message: string }
 }
 
-export function NicknameField<T extends FieldValues>({ register, errors, watch, setIsNicknameVerified, clearErrors }: NicknameFieldProps<T>) {
-  const [checkResult, setCheckResult] = useState<{
-    status: 'idle' | 'success' | 'error'
-    message: string
-  }>({ status: 'idle', message: '' })
+export function NicknameField<T extends FieldValues>({
+  register,
+  errors,
+  watch,
+  setIsNicknameVerified,
+  clearErrors,
+  setCheckResult,
+  checkResult,
+}: NicknameFieldProps<T>) {
+  // const [checkResult, setCheckResult] = useState<{
+  //   status: 'idle' | 'success' | 'error'
+  //   message: string
+  // }>({ status: 'idle', message: '' })
 
   const nickname = watch('nickname' as Path<T>)
 
@@ -61,7 +71,7 @@ export function NicknameField<T extends FieldValues>({ register, errors, watch, 
   useEffect(() => {
     setCheckResult({ status: 'idle', message: '' })
     setIsNicknameVerified(false)
-  }, [nickname, setIsNicknameVerified])
+  }, [nickname, setIsNicknameVerified, setCheckResult])
 
   return (
     <div className="flex flex-col gap-2.5">
