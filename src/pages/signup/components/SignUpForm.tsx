@@ -57,6 +57,10 @@ export function SignUpForm() {
   const [isEmailVerified, setIsEmailVerified] = useState(false)
   const [isEmailCodeVerified, setIsEmailCodeVerified] = useState(false)
   const [signupNotification, setSignupNotification] = useState<{ message: string; type: ToastType } | null>(null)
+  const [checkResult, setCheckResult] = useState<{
+    status: 'idle' | 'success' | 'error'
+    message: string
+  }>({ status: 'idle', message: '' })
   const navigate = useNavigate()
 
   const { handleLogin } = useUserStore()
@@ -65,7 +69,9 @@ export function SignUpForm() {
     // 검증 완료 여부 확인
     let hasError = false
 
-    if (!isNicknameVerified) {
+    if (checkResult.status === 'error') {
+      hasError = true
+    } else if (!isNicknameVerified) {
       setError('nickname', {
         type: 'manual',
         message: '닉네임 중복 확인을 완료해주세요.',
@@ -138,7 +144,15 @@ export function SignUpForm() {
         <legend className="sr-only">회원가입폼</legend>
         <div className="flex flex-col gap-6">
           <NameField register={register} errors={errors} />
-          <NicknameField register={register} errors={errors} watch={watch} setIsNicknameVerified={setIsNicknameVerified} clearErrors={clearErrors} />
+          <NicknameField
+            register={register}
+            errors={errors}
+            watch={watch}
+            setIsNicknameVerified={setIsNicknameVerified}
+            clearErrors={clearErrors}
+            checkResult={checkResult}
+            setCheckResult={setCheckResult}
+          />
           <AddressField<SignUpFormValues> control={control} setValue={setValue} primaryName="addressSido" secondaryName="addressGugun" />
           <BirthDateField control={control} />
           <EmailValidCode

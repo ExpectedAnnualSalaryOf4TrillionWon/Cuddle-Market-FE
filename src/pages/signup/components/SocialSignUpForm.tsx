@@ -46,11 +46,27 @@ export function SocialSignUpForm() {
   const [signupNotification, setSignupNotification] = useState<{ message: string; type: ToastType } | null>(null)
   const navigate = useNavigate()
 
+  const [checkResult, setCheckResult] = useState<{
+    status: 'idle' | 'success' | 'error'
+    message: string
+  }>({ status: 'idle', message: '' })
+
   const onSubmit = async (data: SocialSignUpFormValues) => {
     // 검증 완료 여부 확인
     let hasError = false
 
-    if (!isNicknameVerified) {
+    // if (!isNicknameVerified) {
+    //   setError('nickname', {
+    //     type: 'manual',
+    //     message: '닉네임 중복 확인을 완료해주세요.',
+    //   })
+    //   hasError = true
+    // }
+
+    if (checkResult.status === 'error') {
+      // 이미 중복 에러가 표시되어 있으므로 추가 에러 메시지 불필요
+    } else if (!isNicknameVerified) {
+      // 중복체크를 아예 안 한 경우에만 "닉네임 중복 확인을 완료해주세요" 표시
       setError('nickname', {
         type: 'manual',
         message: '닉네임 중복 확인을 완료해주세요.',
@@ -100,7 +116,15 @@ export function SocialSignUpForm() {
       <fieldset className="flex flex-col gap-9">
         <legend className="sr-only">회원가입폼</legend>
         <div className="flex flex-col gap-6">
-          <NicknameField register={register} errors={errors} watch={watch} setIsNicknameVerified={setIsNicknameVerified} clearErrors={clearErrors} />
+          <NicknameField
+            register={register}
+            errors={errors}
+            watch={watch}
+            setIsNicknameVerified={setIsNicknameVerified}
+            clearErrors={clearErrors}
+            checkResult={checkResult}
+            setCheckResult={setCheckResult}
+          />
           <AddressField<SocialSignUpFormValues> control={control} setValue={setValue} primaryName="addressSido" secondaryName="addressGugun" />
           <BirthDateField control={control} />
         </div>
