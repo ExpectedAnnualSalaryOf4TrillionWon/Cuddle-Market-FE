@@ -20,10 +20,8 @@ export default function SocialCallback() {
       const user = userResponse.data.data
 
       if (!user.addressSido || !user.birthDate) {
-        // 신규 회원: user 정보만 저장 (로그인 상태는 아님)
-        useUserStore.getState().setUser(user)
         // 신규 회원: 프로필 완성 페이지로 이동 (handleLogin 호출 안 함 → 헤더 비로그인 상태)
-        navigate('/auth/social-signup')
+        navigate('/auth/social-signup', { state: user })
         return
       } else {
         // 기존 회원: 로그인 처리 후 홈으로 이동
