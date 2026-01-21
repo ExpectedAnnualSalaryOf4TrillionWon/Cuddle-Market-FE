@@ -2,7 +2,6 @@
 // import AlarmPage from '@pages/AlarmPage';
 import Home from '@src/pages/home/Home'
 
-
 import Login from '@src/pages/login/Login'
 import MyPage from '@src/pages/my-page/MyPage'
 // import ProductDetail from '@pages/ProductDetail';
@@ -23,11 +22,13 @@ import CommunityPostForm from '@src/pages/community/components/CommunityPostForm
 import CommunityDetail from '@src/pages/community/CommunityDetail'
 import SocialCallback from '@src/pages/SocialCallback'
 import ChattingPage from '@src/pages/chatting-page/ChattingPage'
+import SocialSignup from '@src/pages/signup/SocialSignup'
 
 const routes = [
   { path: ROUTES.HOME, element: <Home /> },
   { path: ROUTES.LOGIN, element: <Login /> },
   { path: ROUTES.SIGNUP, element: <Signup /> },
+  { path: ROUTES.SOCIAL_SIGNUP, element: <SocialSignup /> },
   { path: ROUTES.FIND_PASSWORD, element: <FindPasswordPage /> },
   { path: ROUTES.MYPAGE, element: <MyPage /> },
   { path: ROUTES.DETAIL, element: <ProductDetail /> },

@@ -1,11 +1,10 @@
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import 'react-datepicker/dist/react-datepicker.css'
 import './BirthDateField.css'
-import { Controller, type Control } from 'react-hook-form'
-import type { SignUpFormValues } from './SignUpForm'
+import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form'
 
-interface BirthDateFieldProps {
-  control: Control<SignUpFormValues>
+interface BirthDateFieldProps<T extends FieldValues> {
+  control: Control<T>
 }
 
 const validateBirthDate = (value: string): string | true => {
@@ -38,7 +37,7 @@ const validateBirthDate = (value: string): string | true => {
   return actualAge >= 14 || '만 14세 이상만 가입 가능합니다'
 }
 
-export function BirthDateField({ control }: BirthDateFieldProps) {
+export function BirthDateField<T extends FieldValues>({ control }: BirthDateFieldProps<T>) {
   const isNumber = (e: React.ChangeEvent<HTMLInputElement>, maxLength: number) => {
     const value = e.target.value.replace(/[^0-9]/g, '')
     return value.slice(0, maxLength)
@@ -48,7 +47,7 @@ export function BirthDateField({ control }: BirthDateFieldProps) {
     <div className="flex flex-col gap-2.5">
       <RequiredLabel htmlFor="signup-birthdate">생년월일</RequiredLabel>
       <Controller
-        name="birthDate"
+        name={'birthDate' as Path<T>}
         control={control}
         rules={{
           required: '생년월일을 입력해주세요',

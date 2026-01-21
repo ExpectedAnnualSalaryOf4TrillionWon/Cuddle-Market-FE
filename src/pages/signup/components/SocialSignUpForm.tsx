@@ -1,0 +1,97 @@
+import { Button } from '@src/components/commons/button/Button'
+import { AddressField } from '@src/components/commons/AddressField'
+import { useForm } from 'react-hook-form'
+import { type Province } from '@src/constants/cities'
+import { useState } from 'react'
+import { BirthDateField } from './BirthDateField'
+import { useNavigate } from 'react-router-dom'
+import { useUserStore } from '@src/store/userStore'
+import { AnimatePresence } from 'framer-motion'
+import InlineNotification from '@src/components/commons/InlineNotification'
+import { isAxiosError } from 'axios'
+import type { ToastType } from '@src/types/toast'
+import type { SocialSignUpRequestData } from '@src/types/auth'
+import { api } from '@src/api/api'
+
+export interface SocialSignUpFormValues {
+  birthDate: string
+  addressSido: Province | ''
+  addressGugun: string
+}
+
+export function SocialSignUpForm() {
+  const {
+    control,
+    handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
+    setValue,
+  } = useForm<SocialSignUpFormValues>({
+    defaultValues: {
+      birthDate: '',
+      addressSido: '',
+      addressGugun: '',
+    },
+  }) // 폼에서 관리할 필드들의 타입(이름) 정의.
+
+  const [signupNotification, setSignupNotification] = useState<{ message: string; type: ToastType } | null>(null)
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: SocialSignUpFormValues) => {
+    // 검증 완료 여부 확인
+    const hasError = false
+    if (hasError) {
+      return
+    }
+    const requestData: SocialSignUpRequestData = {
+      birthDate: data.birthDate,
+      addressSido: data.addressSido,
+      addressGugun: data.addressGugun,
+    }
+
+    try {
+      // 업데이트된 유저 정보를 store에 반영
+      const userResponse = await api.patch('/profile/me', requestData)
+      const user = userResponse.data.data
+
+      useUserStore.getState().setUser(user)
+
+      const redirectUrl = useUserStore.getState().redirectUrl
+      navigate(redirectUrl || '/')
+      useUserStore.getState().setRedirectUrl(null)
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const status = error.response?.status
+        const message = error.response?.data?.message
+
+        if (status === 400) {
+          setSignupNotification({ message: message || '입력 정보를 다시 확인해주세요.', type: 'error' })
+        } else {
+          setSignupNotification({ message: '회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.', type: 'warning' })
+        }
+      } else {
+        setSignupNotification({ message: '네트워크 연결을 확인해주세요.', type: 'warning' })
+      }
+    }
+  }
+
+  return (
+    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+      <fieldset className="flex flex-col gap-9">
+        <legend className="sr-only">회원가입폼</legend>
+        <div className="flex flex-col gap-6">
+          <AddressField<SocialSignUpFormValues> control={control} setValue={setValue} primaryName="addressSido" secondaryName="addressGugun" />
+          <BirthDateField control={control} />
+        </div>
+        <AnimatePresence>
+          {signupNotification && (
+            <InlineNotification type={signupNotification.type} onClose={() => setSignupNotification(null)}>
+              {signupNotification.message}
+            </InlineNotification>
+          )}
+        </AnimatePresence>
+        <Button size="md" className="bg-primary-300 w-full cursor-pointer text-white" type="submit">
+          회원가입
+        </Button>
+      </fieldset>
+    </form>
+  )
+}

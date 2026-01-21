@@ -15,13 +15,18 @@ export default function SocialCallback() {
       setRefreshToken(refreshToken)
 
       // 2. 토큰으로 user 정보 조회 API 호출
+      // 유저 정보 확인 → nickname, addressSido가 없으면 프로필 완성 페이지로 리다이렉트
       const userResponse = await api.get('/profile/me')
       const user = userResponse.data.data
 
-      handleLogin(user, accessToken, refreshToken)
-
-      // 3. localStorage에 persist가 완료될 때까지 대기
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      if (!user.nickname || !user.addressSido) {
+        // 토큰은 저장하되, 프로필 완성 페이지로 이동
+        handleLogin(user, accessToken, refreshToken)
+        // 3. localStorage에 persist가 완료될 때까지 대기
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        navigate('/auth/social-signup')
+        return
+      }
 
       // 4. 저장된 redirectUrl이 있으면 해당 페이지로, 없으면 홈으로 이동
       const redirectUrl = useUserStore.getState().redirectUrl
@@ -43,6 +48,7 @@ export default function SocialCallback() {
       navigate('/login')
     }
   }, [handleSocialAuth, navigate])
+
   return (
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
       <h2>로그인 처리 중...</h2>
