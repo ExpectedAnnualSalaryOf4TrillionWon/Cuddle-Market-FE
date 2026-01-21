@@ -12,37 +12,57 @@ import { isAxiosError } from 'axios'
 import type { ToastType } from '@src/types/toast'
 import type { SocialSignUpRequestData } from '@src/types/auth'
 import { api } from '@src/api/api'
+import { NicknameField } from './NicknameField'
 
 export interface SocialSignUpFormValues {
   birthDate: string
+  nickname: string
   addressSido: Province | ''
   addressGugun: string
 }
 
 export function SocialSignUpForm() {
+  const user = useUserStore((state) => state.user)
+
   const {
     control,
+    register,
+    watch,
+    setError,
+    clearErrors,
     handleSubmit, // form onSubmit에 들어가는 함수 : 제출 시 실행할 함수를 감싸주는 함수
     setValue,
+    formState: { errors },
   } = useForm<SocialSignUpFormValues>({
     defaultValues: {
+      nickname: user?.nickname || '',
       birthDate: '',
       addressSido: '',
       addressGugun: '',
     },
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
-
+  const [isNicknameVerified, setIsNicknameVerified] = useState(false)
   const [signupNotification, setSignupNotification] = useState<{ message: string; type: ToastType } | null>(null)
   const navigate = useNavigate()
 
   const onSubmit = async (data: SocialSignUpFormValues) => {
     // 검증 완료 여부 확인
-    const hasError = false
+    let hasError = false
+
+    if (!isNicknameVerified) {
+      setError('nickname', {
+        type: 'manual',
+        message: '닉네임 중복 확인을 완료해주세요.',
+      })
+      hasError = true
+    }
+
     if (hasError) {
       return
     }
+
     const requestData: SocialSignUpRequestData = {
-      nickname: useUserStore.getState().user?.nickname || '',
+      nickname: user?.nickname || '',
       birthDate: data.birthDate,
       addressSido: data.addressSido,
       addressGugun: data.addressGugun,
@@ -79,6 +99,7 @@ export function SocialSignUpForm() {
       <fieldset className="flex flex-col gap-9">
         <legend className="sr-only">회원가입폼</legend>
         <div className="flex flex-col gap-6">
+          <NicknameField register={register} errors={errors} watch={watch} setIsNicknameVerified={setIsNicknameVerified} clearErrors={clearErrors} />
           <AddressField<SocialSignUpFormValues> control={control} setValue={setValue} primaryName="addressSido" secondaryName="addressGugun" />
           <BirthDateField control={control} />
         </div>

@@ -1,26 +1,33 @@
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { InputWithButton } from '@src/components/commons/InputWithButton'
-import type { SignUpFormValues } from './SignUpForm'
-import { type UseFormRegister, type FieldErrors, type UseFormWatch, type UseFormClearErrors } from 'react-hook-form'
+import {
+  type FieldError,
+  type FieldValues,
+  type Path,
+  type UseFormRegister,
+  type FieldErrors,
+  type UseFormWatch,
+  type UseFormClearErrors,
+} from 'react-hook-form'
 import { signupValidationRules } from '../validationRules'
 import { checkNickname } from '@src/api/auth'
 import { useState } from 'react'
 
-interface NicknameFieldProps {
-  watch: UseFormWatch<SignUpFormValues>
-  register: UseFormRegister<SignUpFormValues>
-  errors: FieldErrors<SignUpFormValues>
+interface NicknameFieldProps<T extends FieldValues> {
+  watch: UseFormWatch<T>
+  register: UseFormRegister<T>
+  errors: FieldErrors<T>
   setIsNicknameVerified: (verified: boolean) => void
-  clearErrors: UseFormClearErrors<SignUpFormValues>
+  clearErrors: UseFormClearErrors<T>
 }
 
-export function NicknameField({ register, errors, watch, setIsNicknameVerified, clearErrors }: NicknameFieldProps) {
+export function NicknameField<T extends FieldValues>({ register, errors, watch, setIsNicknameVerified, clearErrors }: NicknameFieldProps<T>) {
   const [checkResult, setCheckResult] = useState<{
     status: 'idle' | 'success' | 'error'
     message: string
   }>({ status: 'idle', message: '' })
 
-  const nickname = watch('nickname')
+  const nickname = watch('nickname' as Path<T>)
 
   const handleNicknameCheck = async () => {
     try {
@@ -33,7 +40,7 @@ export function NicknameField({ register, errors, watch, setIsNicknameVerified, 
           message: response.message, // "사용 가능한 닉네임입니다."
         })
         setIsNicknameVerified(true)
-        clearErrors('nickname')
+        clearErrors('nickname' as Path<T>)
       } else {
         // 중복 (data: false)
         setCheckResult({
@@ -58,9 +65,9 @@ export function NicknameField({ register, errors, watch, setIsNicknameVerified, 
         id="signup-nickname"
         type="text"
         placeholder="닉네임을 입력해주세요"
-        error={errors.nickname}
+        error={errors.nickname as FieldError | undefined}
         checkResult={checkResult}
-        registration={register('nickname', signupValidationRules.nickname)}
+        registration={register('nickname' as Path<T>, signupValidationRules.nickname)}
         buttonText="중복체크"
         onButtonClick={handleNicknameCheck}
       />
