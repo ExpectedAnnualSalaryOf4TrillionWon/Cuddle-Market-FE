@@ -20,12 +20,14 @@ export default function SocialCallback() {
       const user = userResponse.data.data
 
       if (!user.nickname || !user.addressSido) {
-        // 토큰은 저장하되, 프로필 완성 페이지로 이동
-        handleLogin(user, accessToken, refreshToken)
-        // 3. localStorage에 persist가 완료될 때까지 대기
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        // 신규 회원: 프로필 완성 페이지로 이동 (handleLogin 호출 안 함 → 헤더 비로그인 상태)
         navigate('/auth/social-signup')
         return
+      } else {
+        // 기존 회원: 로그인 처리 후 홈으로 이동
+        handleLogin(user, accessToken, refreshToken)
+        // localStorage에 persist가 완료될 때까지 대기
+        await new Promise((resolve) => setTimeout(resolve, 100))
       }
 
       // 4. 저장된 redirectUrl이 있으면 해당 페이지로, 없으면 홈으로 이동
