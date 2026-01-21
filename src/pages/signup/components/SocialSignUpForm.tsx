@@ -65,6 +65,7 @@ export function SocialSignUpForm() {
 
     if (checkResult.status === 'error') {
       // 이미 중복 에러가 표시되어 있으므로 추가 에러 메시지 불필요
+      hasError = true
     } else if (!isNicknameVerified) {
       // 중복체크를 아예 안 한 경우에만 "닉네임 중복 확인을 완료해주세요" 표시
       setError('nickname', {
