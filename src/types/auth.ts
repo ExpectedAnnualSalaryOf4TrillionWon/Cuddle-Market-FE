@@ -27,6 +27,7 @@ export interface SignUpRequestData {
 }
 
 export interface SocialSignUpRequestData {
+  nickname?: string
   birthDate: string
   addressSido: Province | ''
   addressGugun: string

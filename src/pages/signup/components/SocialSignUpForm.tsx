@@ -42,6 +42,7 @@ export function SocialSignUpForm() {
       return
     }
     const requestData: SocialSignUpRequestData = {
+      nickname: useUserStore.getState().user?.nickname || '',
       birthDate: data.birthDate,
       addressSido: data.addressSido,
       addressGugun: data.addressGugun,
