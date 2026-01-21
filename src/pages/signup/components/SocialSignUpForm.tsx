@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { type Province } from '@src/constants/cities'
 import { useState } from 'react'
 import { BirthDateField } from './BirthDateField'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useUserStore } from '@src/store/userStore'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
@@ -22,8 +22,9 @@ export interface SocialSignUpFormValues {
 }
 
 export function SocialSignUpForm() {
-  const user = useUserStore((state) => state.user)
-
+  // const user = useUserStore((state) => state.user)
+  const location = useLocation()
+  const user = location.state
   const {
     control,
     register,
@@ -62,7 +63,7 @@ export function SocialSignUpForm() {
     }
 
     const requestData: SocialSignUpRequestData = {
-      nickname: user?.nickname || '',
+      nickname: data?.nickname || '',
       birthDate: data.birthDate,
       addressSido: data.addressSido,
       addressGugun: data.addressGugun,
