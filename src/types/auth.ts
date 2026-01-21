@@ -17,10 +17,16 @@ export interface EmailCheckResponse {
 }
 
 export interface SignUpRequestData {
-  email: string
-  password: string
-  name: string
-  nickname: string
+  email?: string
+  password?: string
+  name?: string
+  nickname?: string
+  birthDate: string
+  addressSido: Province | ''
+  addressGugun: string
+}
+
+export interface SocialSignUpRequestData {
   birthDate: string
   addressSido: Province | ''
   addressGugun: string
@@ -44,7 +50,7 @@ export interface SignUpResponse {
 }
 
 export interface LoginRequestData {
-  email: string
+  email?: string
   password: string
 }
 

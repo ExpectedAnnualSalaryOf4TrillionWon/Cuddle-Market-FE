@@ -28,5 +28,6 @@ export const ROUTES = {
   // Auth
   LOGIN: '/auth/login',
   SIGNUP: '/auth/signup',
+  SOCIAL_SIGNUP: '/auth/social-signup',
   FIND_PASSWORD: '/auth/find-password',
 } as const
