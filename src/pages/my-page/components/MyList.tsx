@@ -37,6 +37,10 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
   const queryClient = useQueryClient()
   const { mutate } = useMutation({
     mutationFn: (newStatus: TransactionStatus) => patchProductTradeStatus(id, newStatus),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myRequest'] })
+      queryClient.invalidateQueries({ queryKey: ['myProducts'] })
+    },
   })
 
   const { mutate: cancelFavorite } = useMutation({
@@ -52,7 +56,8 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
     mutate(koToEn as TransactionStatus)
   }
 
-  const productTradeStatusCompleted = () => {
+  const productTradeStatusCompleted = (e: React.MouseEvent) => {
+    e.preventDefault()
     setCurrentTradeStatus('COMPLETED')
     mutate('COMPLETED')
   }
