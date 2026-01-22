@@ -147,9 +147,6 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
               style={{ height: isCommunityOpen ? `${communityHeight}px` : '0' }}
             >
               <div className="flex flex-col gap-2 pt-2 pl-4">
-                <Link to={`${ROUTES.COMMUNITY}?tab=tab-free`} onClick={onClose}>
-                  자유게시판
-                </Link>
                 <Link to={`${ROUTES.COMMUNITY}?tab=tab-question`} onClick={onClose}>
                   질문 있어요
                 </Link>

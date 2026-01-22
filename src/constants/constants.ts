@@ -141,7 +141,6 @@ export type MyPageTabId = (typeof MY_PAGE_TABS)[number]['id']
 
 // 커뮤니티 용 탭
 export const COMMUNITY_TABS = [
-  { id: 'tab-free', label: '자유게시판', code: 'FREE' },
   { id: 'tab-question', label: '질문 있어요', code: 'QUESTION' },
   { id: 'tab-info', label: '정보 공유', code: 'INFO' },
 ] as const

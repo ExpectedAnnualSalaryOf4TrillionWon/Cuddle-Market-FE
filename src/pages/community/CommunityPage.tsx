@@ -6,7 +6,7 @@ import { SearchBar } from '@src/components/header/components/SearchBar'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { ROUTES } from '@src/constants/routes'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { fetchFreeCommunity, fetchInfoCommunity, fetchQuestionCommunity } from '@src/api/community'
+import { fetchInfoCommunity, fetchQuestionCommunity } from '@src/api/community'
 import { UserRound, Clock, MessageSquare, Eye, Dot, Plus, MessageSquareText } from 'lucide-react'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { getTimeAgo } from '@src/utils/getTimeAgo'
@@ -21,7 +21,7 @@ import { EmptyState } from '@src/components/EmptyState'
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab') as CommunityTabId | null
-  const initialTab = tabParam === 'tab-question' ? 'tab-question' : tabParam === 'tab-info' ? 'tab-info' : 'tab-free'
+  const initialTab = tabParam === 'tab-question' ? 'tab-question' : 'tab-info'
   const isMd = useMediaQuery('(min-width: 768px)')
   const { isCollapsed: isFilterCollapsed } = useScrollDirection()
 
@@ -68,22 +68,6 @@ export default function CommunityPage() {
     setSelectedSearchType(searchTypeItem.label)
   }
 
-  // 자유게시판
-  const {
-    data: freeData,
-    fetchNextPage: fetchNextFree,
-    hasNextPage: hasNextFree,
-    isFetchingNextPage: isFetchingNextFree,
-    isLoading: isLoadingFree,
-    error: errorFree,
-  } = useInfiniteQuery({
-    queryKey: ['community', 'free', searchType, currentKeyword, sortBy],
-    queryFn: ({ pageParam }) => fetchFreeCommunity(pageParam, 10, searchType, currentKeyword, sortBy),
-    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
-    initialPageParam: 0,
-    enabled: activeCommunityTypeTab === 'tab-free',
-  })
-
   // 질문 게시판
   const {
     data: questionData,
@@ -117,18 +101,15 @@ export default function CommunityPage() {
   })
 
   // 현재 탭에 맞는 로딩/에러 상태 선택
-  const currentData = activeCommunityTypeTab === 'tab-free' ? freeData : activeCommunityTypeTab === 'tab-question' ? questionData : infoData
+  const currentData = activeCommunityTypeTab === 'tab-question' ? questionData : infoData
 
-  const isLoading =
-    activeCommunityTypeTab === 'tab-free' ? isLoadingFree : activeCommunityTypeTab === 'tab-question' ? isLoadingQuestion : isLoadingInfo
+  const isLoading = activeCommunityTypeTab === 'tab-question' ? isLoadingQuestion : isLoadingInfo
 
-  const error = activeCommunityTypeTab === 'tab-free' ? errorFree : activeCommunityTypeTab === 'tab-question' ? errorQuestion : errorInfo
+  const error = activeCommunityTypeTab === 'tab-question' ? errorQuestion : errorInfo
 
   // 현재 탭에 맞는 데이터 선택
   const communityPosts = (() => {
     switch (activeCommunityTypeTab) {
-      case 'tab-free':
-        return freeData?.pages.flatMap((page) => page.content) ?? []
       case 'tab-question':
         return questionData?.pages.flatMap((page) => page.content) ?? []
       case 'tab-info':
@@ -139,17 +120,11 @@ export default function CommunityPage() {
   })()
 
   // 현재 탭에 맞는 페이지네이션 함수/상태
-  const fetchNextPage =
-    activeCommunityTypeTab === 'tab-free' ? fetchNextFree : activeCommunityTypeTab === 'tab-question' ? fetchNextQuestion : fetchNextInfo
+  const fetchNextPage = activeCommunityTypeTab === 'tab-question' ? fetchNextQuestion : fetchNextInfo
 
-  const hasNextPage = activeCommunityTypeTab === 'tab-free' ? hasNextFree : activeCommunityTypeTab === 'tab-question' ? hasNextQuestion : hasNextInfo
+  const hasNextPage = activeCommunityTypeTab === 'tab-question' ? hasNextQuestion : hasNextInfo
 
-  const isFetchingNextPage =
-    activeCommunityTypeTab === 'tab-free'
-      ? isFetchingNextFree
-      : activeCommunityTypeTab === 'tab-question'
-        ? isFetchingNextQuestion
-        : isFetchingNextInfo
+  const isFetchingNextPage = activeCommunityTypeTab === 'tab-question' ? isFetchingNextQuestion : isFetchingNextInfo
 
   // const { title: headerTitle, description: headerDescription } = getHeaderContent()
   const { isLogin } = useUserStore()
@@ -245,7 +220,11 @@ export default function CommunityPage() {
               <div className="flex items-center justify-between">
                 <CommunityTabs tabs={COMMUNITY_TABS} activeTab={activeCommunityTypeTab} onTabChange={handleTabChange} ariaLabel="커뮤니티 타입" />
                 {isLogin() && (
-                  <Link to={`${ROUTES.COMMUNITY_POST}?tab=${activeCommunityTypeTab}`} type="button" className="bg-primary-300 rounded-lg px-3 py-2 text-white">
+                  <Link
+                    to={`${ROUTES.COMMUNITY_POST}?tab=${activeCommunityTypeTab}`}
+                    type="button"
+                    className="bg-primary-300 rounded-lg px-3 py-2 text-white"
+                  >
                     글쓰기
                   </Link>
                 )}
