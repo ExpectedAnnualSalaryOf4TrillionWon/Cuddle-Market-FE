@@ -33,7 +33,7 @@ export default function UserControls({ isSideOpen, setIsSideOpen, hideMenuButton
   })
 
   return (
-    <div className="flex items-center gap-2 md:gap-4">
+    <div className="flex items-center gap-2 xl:gap-4">
       {isLogin() ? (
         <div className="flex items-center gap-1">
           <Link to={ROUTES.CHAT} className="ml-1">

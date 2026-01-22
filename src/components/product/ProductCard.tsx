@@ -43,7 +43,7 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
 
   return (
     <Link
-      className="border-border bg-bg text-text-primary flex cursor-pointer flex-row-reverse overflow-hidden rounded-xl border shadow-md transition-shadow duration-200 hover:shadow-xl md:flex-col-reverse"
+      className="border-border text-text-primary flex cursor-pointer flex-row-reverse overflow-hidden rounded-xl border bg-white shadow-md transition-shadow duration-200 hover:shadow-xl md:flex-col-reverse"
       onClick={handleCardClick}
       data-index={dataIndex}
       aria-label={`${title}, ${price}원, ${productStatusName}, ${petTypeName}, ${productTradeName}`}
