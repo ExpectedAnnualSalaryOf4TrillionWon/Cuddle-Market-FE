@@ -55,7 +55,7 @@ export default function CommunityPostForm() {
   const isEditMode = !!id
   const { user, setRedirectUrl } = useUserStore()
   const [searchParams] = useSearchParams()
-  const initialBoardType = searchParams.get('tab') === 'tab-question' ? 'QUESTION' : searchParams.get('tab') === 'tab-info' ? 'INFO' : 'FREE'
+  const initialBoardType = searchParams.get('tab') === 'tab-question' ? 'QUESTION' : 'INFO'
   const [showDraftModal, setShowDraftModal] = useState(false)
   const [isDraftChecked, setIsDraftChecked] = useState(false)
 
@@ -223,7 +223,7 @@ export default function CommunityPostForm() {
                           value: category.code,
                           label: category.label,
                         }))}
-                        placeholder="자유게시판"
+                        placeholder="질문 있어요"
                         optionClassName="text-base"
                         buttonClassName="border-gray-400 bg-white border text-gray-900 px-3 py-3 border text-base"
                       />

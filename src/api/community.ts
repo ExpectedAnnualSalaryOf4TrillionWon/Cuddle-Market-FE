@@ -14,30 +14,6 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 import { api } from './api'
-// 커뮤니티 자유게시판 목록 조회
-export const fetchFreeCommunity = async (
-  page: number = 0,
-  size: number = 10,
-  searchType?: string | null,
-  keyword?: string | null,
-  sortBy?: string | null
-) => {
-  const params = new URLSearchParams({
-    page: page.toString(),
-    size: size.toString(),
-  })
-  if (searchType) {
-    params.append('searchType', searchType)
-  }
-  if (keyword) {
-    params.append('keyword', keyword)
-  }
-  if (sortBy) {
-    params.append('sortBy', sortBy)
-  }
-  const response = await axios.get<CommunityResponse>(`${API_BASE_URL}/community/posts?boardType=FREE&${params.toString()}`)
-  return response.data.data
-}
 
 // 커뮤니티 질문 있어요 목록 조회
 export const fetchQuestionCommunity = async (

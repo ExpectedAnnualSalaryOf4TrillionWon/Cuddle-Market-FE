@@ -110,14 +110,12 @@ export default function CommunityDetail() {
 
   const getHeaderContent = () => {
     switch (data?.boardType) {
-      case 'FREE':
-        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
       case 'QUESTION':
         return { title: '질문 있어요', description: '궁금한 점을 질문해보세요!', tabId: 'tab-question' }
       case 'INFO':
         return { title: '정보 공유', description: '유용한 정보를 공유해보세요!', tabId: 'tab-info' }
       default:
-        return { title: '자유게시판', description: '일상 이야기를 마음껏 나눠보세요!', tabId: 'tab-free' }
+        return { title: '질문 있어요', description: '궁금한 점을 질문해보세요!', tabId: 'tab-question' }
     }
   }
   const { title: headerTitle, description: headerDescription } = getHeaderContent()

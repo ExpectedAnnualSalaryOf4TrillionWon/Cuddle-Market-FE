@@ -16,9 +16,6 @@ function Footer() {
             <h4 className="font-semibold text-gray-500">커뮤니티</h4>
             <ul className="flex flex-col gap-3 text-gray-500">
               <li>
-                <Link to={`${ROUTES.COMMUNITY}?tab=tab-free`}>자유게시판</Link>
-              </li>
-              <li>
                 <Link to={`${ROUTES.COMMUNITY}?tab=tab-info`}>정보 공유해요</Link>
               </li>
               <li>
