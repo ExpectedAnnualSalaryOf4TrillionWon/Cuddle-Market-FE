@@ -44,8 +44,8 @@ export function ProductPetTypeTabs({ activeTab, onTabChange }: ProductPetTypeTab
             type="button"
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              'bg-primary-100 flex-1 cursor-pointer rounded-full text-base whitespace-nowrap md:rounded-2xl md:bg-white md:whitespace-normal',
-              activeTab === tab.id ? 'bg-primary-500 md:bg-primary-300 font-bold text-white' : 'hover:bg-primary-100 text-gray-900'
+              'bg-primary-100 flex-1 cursor-pointer rounded-full text-base whitespace-nowrap xl:rounded-2xl xl:bg-white xl:whitespace-normal',
+              activeTab === tab.id ? 'bg-primary-500 xl:bg-primary-300 font-bold text-white' : 'hover:bg-primary-100 text-gray-900'
             )}
             role="tab"
             aria-selected={activeTab === tab.id}

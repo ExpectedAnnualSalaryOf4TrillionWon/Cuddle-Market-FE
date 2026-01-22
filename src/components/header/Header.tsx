@@ -17,7 +17,7 @@ interface HeaderProps {
 }
 
 function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) {
-  const isMd = useMediaQuery('(min-width: 768px)')
+  const isXl = useMediaQuery('(min-width: 1280px)')
   const [isSideOpen, setIsSideOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchBarRef = useRef<HTMLDivElement>(null)
@@ -29,20 +29,34 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
     }
   }, [])
 
+  // 헤더 높이를 CSS 변수로 설정 (검색바 열림/닫힘에 따라)
+  useEffect(() => {
+    // 기본 헤더 높이: pt-3(12px) + h-12(48px) + pb-3(12px) = 72px
+    // 검색바 열림 시: 72px + marginTop(12px) + searchBarHeight + marginBottom(12px)
+    const baseHeight = 72
+    const expandedHeight = baseHeight + 12 + searchBarHeight + 12
+
+    if (!isXl && isSearchOpen) {
+      document.documentElement.style.setProperty('--header-height', `${expandedHeight}px`)
+    } else {
+      document.documentElement.style.setProperty('--header-height', `${baseHeight}px`)
+    }
+  }, [isSearchOpen, searchBarHeight, isXl])
+
   return (
     <>
       <header
         className={cn(
-          'bg-primary-200 fixed top-0 flex w-full items-center justify-center py-3',
-          hideSearchBar ? 'h-16 md:h-24' : 'h-auto pb-0 md:h-24',
+          'bg-primary-200 fixed top-0 flex w-full items-center justify-center pt-3 xl:pb-3',
+          !isXl && (isSearchOpen ? 'pb-0' : 'pb-3'),
           `${Z_INDEX.HEADER}`
         )}
       >
-        <div className="flex w-full flex-col px-4 md:block md:max-w-7xl md:gap-3 md:px-3.5">
-          <div className="flex items-center justify-between gap-4">
+        <div className="flex w-full flex-col px-4 xl:block xl:max-w-7xl xl:gap-3 xl:px-3.5">
+          <div className="flex h-12 items-center justify-between gap-4">
             <div className="flex items-center gap-8">
               <Logo />
-              {isMd && (
+              {isXl && (
                 <>
                   <NavLink
                     to={ROUTES.HOME}
@@ -59,10 +73,10 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
                 </>
               )}
             </div>
-            <div className="flex items-center gap-1 md:gap-8">
-              {!hideSearchBar && <SearchBar className="hidden md:block" />}
+            <div className="flex items-center gap-1 xl:gap-8">
+              {!hideSearchBar && <SearchBar className="hidden xl:block" />}
               {/* 모바일 검색 아이콘 */}
-              {!hideSearchBar && !isMd && (
+              {!hideSearchBar && !isXl && (
                 <IconButton aria-label="검색" onClick={() => setIsSearchOpen(!isSearchOpen)}>
                   <Search className="text-white" />
                 </IconButton>
@@ -74,13 +88,14 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
           {!hideSearchBar && (
             <div
               ref={searchBarRef}
-              className="mt-3 overflow-hidden transition-[height] duration-300 md:hidden"
+              className="overflow-hidden transition-all duration-300 xl:hidden"
               style={{
                 height: isSearchOpen ? `${searchBarHeight}px` : '0',
+                marginTop: isSearchOpen ? '12px' : '0',
                 marginBottom: isSearchOpen ? '12px' : '0',
               }}
             >
-              <SearchBar className="h-8 md:hidden" inputClass="py-1 text-sm" />
+              <SearchBar className="h-8 xl:hidden" inputClass="py-1 text-sm" />
             </div>
           )}
         </div>

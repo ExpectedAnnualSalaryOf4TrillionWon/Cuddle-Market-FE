@@ -67,7 +67,7 @@ export function Input({
       />
       {suffix && <span className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">{suffix}</span>}
       {value && onClear && (
-        <button onClick={onClear} type="button" className="mr-2 rounded-full bg-gray-300 p-0.5">
+        <button onClick={onClear} type="button" className="mr-2 cursor-pointer rounded-full bg-gray-300 p-0.5">
           <X size={14} />
         </button>
       )}

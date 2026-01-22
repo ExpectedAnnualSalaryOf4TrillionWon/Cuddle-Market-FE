@@ -3,7 +3,6 @@ import Header from '@components/header/Header'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { ROUTES } from '@src/constants/routes'
-import { cn } from '@src/utils/cn'
 
 // Header 숨김 패턴 (모바일에서만 숨김)
 const HIDE_HEADER_MOBILE_PATTERNS = [/^\/community\/\d+$/, /^\/community\/\d+\/edit$/, new RegExp(`^${ROUTES.COMMUNITY_POST}$`)]
@@ -33,13 +32,13 @@ const HIDE_SEARCHBAR_MOBILE_PATTERNS = [/^\/user-profile\/\d+$/]
 const HIDE_SEARCHBAR_ALWAYS_PATTERNS = [/^\/community\/\d+$/, /^\/community\/\d+\/edit$/, /^\/products\/\d+\/edit$/, /^\/chat\/\d+$/]
 
 export default function MainLayout() {
-  const isMd = useMediaQuery('(min-width: 768px)')
+  const isXl = useMediaQuery('(min-width: 1280px)')
   const { pathname } = useLocation()
 
-  const hideHeaderMobile = !isMd && HIDE_HEADER_MOBILE_PATTERNS.some((pattern) => pattern.test(pathname))
+  const hideHeaderMobile = !isXl && HIDE_HEADER_MOBILE_PATTERNS.some((pattern) => pattern.test(pathname))
   const showHeader = !hideHeaderMobile
   const hideSearchBarMobile =
-    !isMd && (HIDE_SEARCHBAR_MOBILE_PATHS.includes(pathname) || HIDE_SEARCHBAR_MOBILE_PATTERNS.some((pattern) => pattern.test(pathname)))
+    !isXl && (HIDE_SEARCHBAR_MOBILE_PATHS.includes(pathname) || HIDE_SEARCHBAR_MOBILE_PATTERNS.some((pattern) => pattern.test(pathname)))
   const hideSearchBarAlways =
     HIDE_SEARCHBAR_ALWAYS_PATHS.includes(pathname) || HIDE_SEARCHBAR_ALWAYS_PATTERNS.some((pattern) => pattern.test(pathname))
   const hideSearchBar = hideSearchBarMobile || hideSearchBarAlways
@@ -48,7 +47,10 @@ export default function MainLayout() {
     <div className="flex min-h-screen flex-col">
       {showHeader && <Header hideSearchBar={hideSearchBar} hideMenuButton={hideMenuButton} />}
       {/* <ChatFloatButton /> */}
-      <main className={cn('w-full flex-1', showHeader ? 'pt-16 md:pt-24' : 'pt-0')}>
+      <main
+        className="w-full flex-1 transition-[padding-top] duration-300"
+        style={{ paddingTop: showHeader ? 'var(--header-height, 72px)' : '0' }}
+      >
         <Outlet />
       </main>
     </div>

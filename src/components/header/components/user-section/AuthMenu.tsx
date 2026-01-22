@@ -11,13 +11,13 @@ interface AuthMenuProps {
 }
 
 export default function AuthMenu({ isSideOpen, setIsSideOpen, hideMenuButton = false }: AuthMenuProps) {
-  const isMd = useMediaQuery('(min-width: 768px)')
-  return isMd ? (
+  const isXl = useMediaQuery('(min-width: 1280px)')
+  return isXl ? (
     <div className="flex items-center gap-5">
       <Link to={ROUTES.LOGIN} className="font-bold text-white">
         로그인
       </Link>
-      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 md:px-4 md:py-2">
+      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 xl:px-4 xl:py-2">
         회원가입
       </Link>
     </div>

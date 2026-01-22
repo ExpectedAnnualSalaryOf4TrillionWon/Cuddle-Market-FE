@@ -229,7 +229,7 @@ function Home() {
 
   return (
     <>
-      <div className="bg-bg pb-4xl pt-8">
+      <div className="pb-4xl bg-white pt-6">
         <div className="px-lg mx-auto max-w-7xl">
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-7">
