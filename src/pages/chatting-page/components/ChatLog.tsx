@@ -166,6 +166,8 @@ export function ChatLog({
                       <img
                         src={message.imageUrl || PlaceholderImage}
                         alt={message.senderNickname}
+                        fetchPriority="high"
+                        loading="eager"
                         onError={(e) => {
                           e.currentTarget.src = PlaceholderImage
                         }}

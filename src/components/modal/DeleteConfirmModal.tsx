@@ -44,6 +44,8 @@ function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel, error, onCle
               <img
                 src={product.mainImageUrl || PlaceholderImage}
                 alt={product.title}
+                fetchPriority="high"
+                loading="eager"
                 className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
               />
             </div>
