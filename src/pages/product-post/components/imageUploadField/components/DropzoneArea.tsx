@@ -7,6 +7,7 @@ import { uploadImage } from '@src/api/products'
 import { MAX_FILES } from '@src/constants/constants'
 import DropzoneGuide from './DropzoneGuide'
 import SortableImageList from './SortableImageList'
+import imageCompression from 'browser-image-compression'
 
 const IMAGE_UPLOAD_ERRORS = {
   'file-too-large': '파일 크기는 5MB를 초과할 수 없습니다.',
@@ -37,6 +38,16 @@ export default function DropzoneArea<T extends FieldValues>({
 }: DropzoneAreaProps<T>) {
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
+  const compressImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 1, // 최대 1MB로 압축
+      maxWidthOrHeight: 1200, // 최대 1200px로 리사이징
+      useWebWorker: true, // 웹 워커 사용 (UI 블로킹 방지)
+      fileType: 'image/webp' as const, // WebP 형식으로 변환
+    }
+    return await imageCompression(file, options)
+  }
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
     // maxFiles 옵션 제거 - 직접 검증으로 대체 (react-dropzone의 maxFiles는 누적 카운트 문제 발생)
@@ -63,7 +74,8 @@ export default function DropzoneArea<T extends FieldValues>({
       }
 
       try {
-        const uploadedUrl = await uploadImage(acceptedFiles)
+        const compressedFiles = await Promise.all(acceptedFiles.map((file) => compressImage(file)))
+        const uploadedUrl = await uploadImage(compressedFiles)
         // 새로 업로드된 URL들
         const newUrls = [uploadedUrl.mainImageUrl, ...(uploadedUrl.subImageUrls || [])]
         // 기존 URL들과 합침
