@@ -115,6 +115,8 @@ export const useUserStore = create<UserState>()(
           refreshToken: null,
           redirectUrl: null,
         })
+        // localStorage에서도 완전히 제거
+        localStorage.removeItem('user-storage')
       },
 
       // ===== 계산된 값 (getter) =====
