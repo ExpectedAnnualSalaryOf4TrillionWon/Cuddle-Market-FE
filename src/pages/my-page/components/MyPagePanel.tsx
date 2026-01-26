@@ -142,11 +142,16 @@ export default function MyPagePanel({
                   <Link to={`/user-profile/${user.blockedUserId}`} className="flex items-center gap-4">
                     <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
                       {user.profileImageUrl ? (
-                        <img src={user.profileImageUrl} alt={user.nickname} className="h-full w-full object-cover" />
+                        <img
+                          src={user.profileImageUrl}
+                          fetchPriority="high"
+                          loading="eager"
+                          alt={user.nickname}
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         <div className="heading-h4">{user?.nickname.charAt(0).toUpperCase()}</div>
                       )}
-                      {/* <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" /> */}
                     </div>
                     <span className="font-medium">{user.nickname}</span>
                   </Link>

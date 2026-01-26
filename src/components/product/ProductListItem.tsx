@@ -28,6 +28,8 @@ export function ProductListItem({ product, children }: ProductListItemProps) {
           <img
             src={mainImageUrl || PlaceholderImage}
             alt={title}
+            fetchPriority="high"
+            loading="eager"
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
           />
           {!isMd &&

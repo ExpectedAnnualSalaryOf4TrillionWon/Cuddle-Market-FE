@@ -97,6 +97,8 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
           <img
             src={mainImageUrl || PlaceholderImage}
             alt={title}
+            fetchPriority="high"
+            loading="eager"
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
           />
           {!isMd && trade_status && <Badge className={cn('absolute top-2 left-2 bg-[#48BB78] text-white', productTradeColor)}>{trade_status}</Badge>}
