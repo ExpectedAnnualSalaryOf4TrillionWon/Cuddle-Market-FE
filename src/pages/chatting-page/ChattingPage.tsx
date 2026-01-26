@@ -120,7 +120,6 @@ export default function ChattingPage() {
       // content는 null, imageUrl에 업로드된 URL 전달
       sendMessage(selectedRoom.chatRoomId, '', 'IMAGE', imageUrl)
     } catch {
-      // console.error('이미지 업로드 실패:', error)
       setImageUploadError(
         <div className="flex flex-col gap-0.5">
           <p className="text-base font-semibold">이미지 업로드에 실패했습니다.</p>

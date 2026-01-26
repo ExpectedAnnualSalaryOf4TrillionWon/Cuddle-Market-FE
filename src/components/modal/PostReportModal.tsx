@@ -17,10 +17,8 @@ export default function PostReportModal({ isOpen, postId, authorNickname, postTi
   const handleSubmit = async (data: ReportFormValues) => {
     try {
       await postReported(postId, data)
-      // console.log('게시글 신고:', { postId, ...data })
       onCancel()
     } catch {
-      // console.error('게시글 신고 실패:', error)
       setPostReportError(
         <div className="flex flex-col gap-0.5">
           <p className="text-base font-semibold">사용자 신고에 실패했습니다.</p>

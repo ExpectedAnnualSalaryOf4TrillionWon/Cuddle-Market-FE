@@ -4,7 +4,7 @@ import Logo from '../Logo'
 import { SearchBar } from './components/SearchBar'
 import UserControls from './components/UserControls'
 import MobileNavigation from './components/MobileNavigation'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useEffect, useRef, useState } from 'react'
@@ -22,6 +22,9 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const searchBarRef = useRef<HTMLDivElement>(null)
   const [searchBarHeight, setSearchBarHeight] = useState(0)
+  const location = useLocation()
+  const isMarketActive = location.pathname === '/' || location.pathname.startsWith('/market')
+  const isCommunityActive = location.pathname.startsWith('/community')
 
   useEffect(() => {
     if (searchBarRef.current) {
@@ -60,13 +63,13 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
                 <>
                   <NavLink
                     to={ROUTES.HOME}
-                    className={({ isActive }) => cn('text-lg', isActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
+                    className={cn('text-lg', isMarketActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
                   >
                     마켓
                   </NavLink>
                   <NavLink
                     to={ROUTES.COMMUNITY}
-                    className={({ isActive }) => cn('text-lg', isActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
+                    className={cn('text-lg', isCommunityActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
                   >
                     커뮤니티
                   </NavLink>
