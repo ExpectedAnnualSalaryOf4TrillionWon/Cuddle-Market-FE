@@ -39,13 +39,22 @@ export default function DropzoneArea<T extends FieldValues>({
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] },
-    maxFiles: maxFiles,
+    // maxFiles 옵션 제거 - 직접 검증으로 대체 (react-dropzone의 maxFiles는 누적 카운트 문제 발생)
     maxSize: 5 * 1024 * 1024,
     onDrop: async (acceptedFiles, rejectedFiles) => {
+      console.log('🔍 onDrop 시작')
+      console.log('🔍 acceptedFiles:', acceptedFiles.length, '개')
+      console.log('🔍 rejectedFiles:', rejectedFiles.length, '개')
+      console.log('🔍 현재 previewUrls:', previewUrls.length, '개')
+
       clearErrors(mainImageField)
+      console.log('🔍 clearErrors 호출됨')
 
       const totalCount = previewUrls.length + acceptedFiles.length
+      console.log('🔍 totalCount:', totalCount, 'maxFiles:', maxFiles)
+
       if (totalCount > maxFiles) {
+        console.log('🔍 maxFiles 초과 - 에러 설정')
         setError(mainImageField, { type: 'manual', message: getTooManyFilesError(maxFiles) })
         return
       }
@@ -70,12 +79,13 @@ export default function DropzoneArea<T extends FieldValues>({
         const allUrls = [...previewUrls, ...newUrls]
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(mainImageField, allUrls[0] as any)
+        setValue(mainImageField, allUrls as any, { shouldValidate: true })
         if (subImagesField) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setValue(subImagesField, allUrls.slice(1) as any)
         }
         setPreviewUrls(allUrls)
+        console.log('🔍 업로드 성공 - setValue with shouldValidate 호출됨')
       } catch {
         setError(mainImageField, {
           type: 'manual',
