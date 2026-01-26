@@ -18,6 +18,7 @@ import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { Camera } from 'lucide-react'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
+import imageCompression from 'browser-image-compression'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
@@ -78,6 +79,16 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
   const titleLength = watch('introduction')?.length ?? 0
   const nickname = watch('nickname')
 
+  const compressImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 1, // 최대 1MB로 압축
+      maxWidthOrHeight: 1200, // 최대 1200px로 리사이징
+      useWebWorker: true, // 웹 워커 사용 (UI 블로킹 방지)
+      fileType: 'image/webp', // WebP 형식으로 변환
+    }
+    return await imageCompression(file, options)
+  }
+
   const handleNicknameCheck = async () => {
     try {
       const response = await checkNickname(nickname)
@@ -125,7 +136,8 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
     }
 
     try {
-      const uploadedUrl = await uploadImage([file])
+      const compressedFile = await compressImage(file)
+      const uploadedUrl = await uploadImage([compressedFile])
       setValue('profileImageUrl', uploadedUrl.mainImageUrl)
       setPreviewUrl(uploadedUrl.mainImageUrl)
     } catch {

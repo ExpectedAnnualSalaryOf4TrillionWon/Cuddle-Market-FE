@@ -14,8 +14,10 @@ import ChatInput from './components/ChatInput'
 import { uploadImage } from '@src/api/products'
 import { cn } from '@src/utils/cn'
 import { Z_INDEX } from '@src/constants/ui'
-// const WS_URL = 'http://192.168.45.25:8080/ws-stomp'
+import imageCompression from 'browser-image-compression'
+
 const VITE_WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws-stomp'
+
 export default function ChattingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
@@ -106,6 +108,17 @@ export default function ChattingPage() {
       setInputMessage('')
     }
   }
+
+  const compressImage = async (file: File) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+      fileType: 'image/webp' as const,
+    }
+    return await imageCompression(file, options)
+  }
+
   const handleImageSend = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length === 0 || !selectedRoom) return
@@ -113,7 +126,8 @@ export default function ChattingPage() {
     try {
       // throw new Error('테스트 에러')
       // 1. 이미지 업로드 API 호출
-      const uploadResult = await uploadImage(Array.from(files))
+      const compressedFiles = await Promise.all(Array.from(files).map((file) => compressImage(file)))
+      const uploadResult = await uploadImage(compressedFiles)
       const imageUrl = uploadResult.mainImageUrl
 
       // 2. 업로드된 URL로 이미지 메시지 전송
