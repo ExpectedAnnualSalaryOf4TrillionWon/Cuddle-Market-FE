@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
-import { MapPin, Calendar, Settings, Flag, Ban, LockOpen, ShieldAlert } from 'lucide-react'
+import { MapPin, Calendar, Settings, Flag, Ban, LockOpen, ShieldAlert, Route } from 'lucide-react'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
 import { formatJoinDate } from '@src/utils/formatJoinDate'
 import { Button } from '@src/components/commons/button/Button'
 import { ROUTES } from '@src/constants/routes'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
+import { useUserStore } from '@src/store/userStore'
 
 export interface MyPageData {
   id: number
@@ -40,11 +41,19 @@ export default function ProfileData({
   isMyProfile,
   unblockUser,
 }: ProfileDataProps) {
+  const user = useUserStore((state) => state.user)
   const isMd = useMediaQuery('(min-width: 768px)')
   const { pathname } = useLocation()
   const isProfileEditPage = /^\/profile-update$/.test(pathname)
-
   const formattedJoinDate = data?.createdAt ? formatJoinDate(data.createdAt) : ''
+
+  const getProvider = (email: string | undefined) => {
+    if (email?.includes('gmail')) return 'google'
+    if (email?.includes('kakao')) return 'kakao'
+    return '이메일' // 일반 회원
+  }
+
+  const provider = getProvider(user?.email)
 
   return (
     <section className="flex h-fit flex-col rounded-none border-b border-gray-200 px-5 py-0 pt-5 md:max-w-72 md:min-w-72 md:rounded-xl md:border md:py-5">
@@ -82,6 +91,7 @@ export default function ProfileData({
                   <div className="flex flex-col gap-2.5">
                     <ProductMetaItem icon={MapPin} iconSize={17} label={`${data?.addressSido} ${data?.addressGugun}`} className="gap-2" />
                     <ProductMetaItem icon={Calendar} iconSize={17} label={`가입일: ${formattedJoinDate}`} className="gap-2" />
+                    <ProductMetaItem icon={Route} iconSize={17} label={`가입 경로: ${provider}`} className="gap-2" />
                   </div>
                 )}
                 {!isProfileEditPage && (
@@ -94,15 +104,13 @@ export default function ProfileData({
                   </Link>
                 )}
               </div>
-              {!isProfileEditPage && (
-                <button
-                  type="button"
-                  className="w-full cursor-pointer rounded-lg border-gray-300 pb-5 text-right text-sm text-gray-500 hover:underline md:border-t md:pt-6 md:pb-0 md:text-left"
-                  onClick={() => setIsWithdrawModalOpen?.(true)}
-                >
-                  회원탈퇴
-                </button>
-              )}
+              <button
+                type="button"
+                className="w-full cursor-pointer border-gray-300 pb-5 text-right text-sm text-gray-500 hover:underline md:border-t md:pt-6 md:pb-0 md:text-left"
+                onClick={() => setIsWithdrawModalOpen?.(true)}
+              >
+                회원탈퇴
+              </button>
             </>
           )}
 
