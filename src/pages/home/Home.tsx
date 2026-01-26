@@ -15,6 +15,7 @@ import { useUserStore } from '@src/store/userStore'
 import { useMediaQuery } from '@src/hooks/useMediaQuery'
 import { useFilterStore } from '@src/store/filterStore'
 import { Z_INDEX } from '@src/constants/ui'
+import HomeSkeleton from './components/product-section/HomeSkeleton'
 
 function Home() {
   const { isLogin } = useUserStore()
@@ -205,15 +206,6 @@ function Home() {
     }
   }, [searchParams])
 
-  if (isLoading && !data) {
-    return (
-      <div className="px-lg py-md tablet:py-xl mx-auto max-w-7xl">
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" role="status" aria-label="상품 로딩 중"></div>
-        </div>
-      </div>
-    )
-  }
   if (error || !data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -258,14 +250,26 @@ function Home() {
                 onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)}
                 ariaLabel="상품 타입 분류"
               />
-              <ProductsSection
+              {/* <ProductsSection
                 products={allProducts}
                 totalElements={totalElements}
                 activeTab={activeProductTypeTab}
                 selectedSort={selectedSort as SORT_LABELS}
                 setSelectedSort={setSelectedSort}
                 // onSortChange={handleSortChange}
-              />
+              /> */}
+              {isLoading ? (
+                <HomeSkeleton />
+              ) : (
+                <ProductsSection
+                  products={allProducts}
+                  totalElements={totalElements}
+                  activeTab={activeProductTypeTab}
+                  selectedSort={selectedSort as SORT_LABELS}
+                  setSelectedSort={setSelectedSort}
+                  // onSortChange={handleSortChange}
+                />
+              )}
             </div>
           </div>
           {/* 무한 스크롤 감지용 요소 */}
@@ -278,7 +282,6 @@ function Home() {
           )}
         </div>
       </div>
-      {/* <ChatButton /> */}
       {isLoggedIn && (
         <div className={`fixed right-10 bottom-5 ${Z_INDEX.FLOATING_BUTTON}`}>
           <Button size={isMd ? 'lg' : 'md'} className="bg-primary-300 cursor-pointer text-white" icon={Plus} onClick={toGoProductPostPage}>
