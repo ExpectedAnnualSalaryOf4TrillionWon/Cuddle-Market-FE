@@ -82,7 +82,7 @@ export default function DropzoneArea<T extends FieldValues>({
         const allUrls = [...previewUrls, ...newUrls]
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(mainImageField, allUrls as any, { shouldValidate: true })
+        setValue(mainImageField, allUrls[0] as any, { shouldValidate: true })
         if (subImagesField) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setValue(subImagesField, allUrls.slice(1) as any)
