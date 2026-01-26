@@ -56,6 +56,10 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
 
   const titleLength = watch('detailReason')?.length ?? 0
 
+  // 디버깅용
+  console.log('🔍 ReportModal - isValid:', isValid)
+  console.log('🔍 ReportModal - errors:', errors)
+
   const handleCancel = () => {
     reset()
     onCancel()
@@ -125,7 +129,7 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
                 setError={setError}
                 clearErrors={clearErrors}
                 mainImageField="imageFiles"
-                heading="신고 이미지 첨부 (선택항목)"
+                heading="신고 이미지 첨부 (선택항목/최대 3장)"
                 showSection={false}
                 maxFiles={3}
                 className="gap-1"
