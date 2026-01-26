@@ -86,9 +86,6 @@ export function SocialSignUpForm() {
       addressGugun: data.addressGugun,
     }
 
-    console.log('📤 PATCH /profile/me 요청 데이터:', requestData)
-    console.log('📤 birthDate 값:', data.birthDate, '타입:', typeof data.birthDate)
-
     try {
       // 업데이트된 유저 정보를 store에 반영
       const userResponse = await api.patch('/profile/me', requestData)

@@ -2,7 +2,6 @@ import type { MyPageTabId } from '@src/constants/constants'
 import type { BlockedUser, Product } from '@src/types'
 import MyPageTitle from './MyPageTitle'
 import MyList from './MyList'
-import PlaceholderImage from '@assets/images/placeholder.png'
 import { Button } from '@src/components/commons/button/Button'
 import { LoadMoreButton } from '@src/components/commons/button/LoadMoreButton'
 import { EmptyState } from '@src/components/EmptyState'
@@ -99,8 +98,7 @@ export default function MyPagePanel({
   const productData = getProductData()
   const config = activeMyPageTab !== 'tab-blocked' ? TAB_CONFIG[activeMyPageTab] : null
   const hasContent =
-    (activeMyPageTab !== 'tab-blocked' && (productData?.content?.length || config)) ||
-    (activeMyPageTab === 'tab-blocked' && myBlockedData?.length)
+    (activeMyPageTab !== 'tab-blocked' && (productData?.content?.length || config)) || (activeMyPageTab === 'tab-blocked' && myBlockedData?.length)
 
   return (
     <div
@@ -143,7 +141,12 @@ export default function MyPagePanel({
                 <li key={user.blockedUserId} className="flex w-full items-center justify-between gap-6 rounded-lg border border-gray-300 p-3.5">
                   <Link to={`/user-profile/${user.blockedUserId}`} className="flex items-center gap-4">
                     <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
-                      <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" />
+                      {user.profileImageUrl ? (
+                        <img src={user.profileImageUrl} alt={user.nickname} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="heading-h4">{user?.nickname.charAt(0).toUpperCase()}</div>
+                      )}
+                      {/* <img src={user.profileImageUrl || PlaceholderImage} alt={user.nickname} className="h-full w-full object-cover" /> */}
                     </div>
                     <span className="font-medium">{user.nickname}</span>
                   </Link>
