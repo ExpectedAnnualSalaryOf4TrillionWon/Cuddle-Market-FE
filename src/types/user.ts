@@ -61,6 +61,7 @@ export interface MyBlockedUsersResponse {
 // ========== 프로필 수정 요청 타입 ==========
 export interface ProfileUpdateRequestData {
   nickname?: string
+  birthDate?: string
   addressSido?: string
   addressGugun?: string
   profileImageUrl?: string

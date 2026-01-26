@@ -21,6 +21,7 @@ import InlineNotification from '@src/components/commons/InlineNotification'
 
 export interface ProfileUpdateBaseFormValues {
   nickname: string
+  birthDate: string
   profileImageUrl: string
   introduction: string
   addressSido: Province | ''
@@ -50,6 +51,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
     mode: 'onChange',
     defaultValues: {
       nickname: '',
+      birthDate: '',
       profileImageUrl: '',
       introduction: '',
       addressSido: '',
@@ -140,6 +142,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
   const onSubmit = async (data: ProfileUpdateBaseFormValues) => {
     const isUnchanged =
       data.nickname === myData?.nickname &&
+      data.birthDate === myData?.birthDate &&
       data.profileImageUrl === myData?.profileImageUrl &&
       data.introduction === myData?.introduction &&
       data.addressSido === myData?.addressSido &&
@@ -184,6 +187,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
       setPreviewUrl(myData.profileImageUrl || '')
       reset({
         nickname: myData.nickname || '',
+        birthDate: myData.birthDate || '',
         profileImageUrl: myData.profileImageUrl || '',
         introduction: myData.introduction || '',
         addressSido: (myData.addressSido as Province) || '',
