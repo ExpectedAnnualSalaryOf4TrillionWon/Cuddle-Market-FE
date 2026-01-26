@@ -137,7 +137,11 @@ export default function MobileNavigation({ isOpen, onClose }: MobileNavigationPr
             <span className="font-bold">마켓</span>
           </Link>
           <div>
-            <button type="button" onClick={() => setIsCommunityOpen(!isCommunityOpen)} className="flex w-full items-center justify-between py-2">
+            <button
+              type="button"
+              onClick={() => setIsCommunityOpen(!isCommunityOpen)}
+              className="flex w-full cursor-pointer items-center justify-between py-2"
+            >
               <span className="font-bold">커뮤니티</span>
               <ChevronDown className={cn('h-5 w-5 transition-transform', isCommunityOpen && 'rotate-180')} />
             </button>

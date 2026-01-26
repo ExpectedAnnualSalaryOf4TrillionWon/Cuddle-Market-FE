@@ -56,10 +56,6 @@ export default function ReportModalBase({ isOpen, heading, description, reasons,
 
   const titleLength = watch('detailReason')?.length ?? 0
 
-  // 디버깅용
-  console.log('🔍 ReportModal - isValid:', isValid)
-  console.log('🔍 ReportModal - errors:', errors)
-
   const handleCancel = () => {
     reset()
     onCancel()

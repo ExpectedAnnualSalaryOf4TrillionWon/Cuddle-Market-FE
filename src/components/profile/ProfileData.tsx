@@ -144,7 +144,7 @@ export default function ProfileData({
                 {!data?.isBlocked && (
                   <button
                     type="button"
-                    className="1.5 tex1.5-sm p3 bg-tra3arent roun4ed-l4 flex w-full cursor-pointer items-center justify-center gap-2 text-gray-500 hover:bg-gray-100 md:py-1.5"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-transparent px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 md:py-1.5"
                     onClick={() => setIsBlockModalOpen?.(true)}
                   >
                     <Ban size={16} />
