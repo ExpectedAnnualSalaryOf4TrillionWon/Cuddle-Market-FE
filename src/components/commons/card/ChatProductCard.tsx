@@ -19,6 +19,8 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
       <div className={`relative aspect-square shrink-0 overflow-hidden rounded-lg ${sizeClasses[size]}`}>
         <img
           src={productImageUrl || PlaceholderImage}
+          fetchPriority="high"
+          loading="eager"
           alt={productTitle}
           className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
         />

@@ -59,6 +59,8 @@ export function ProductThumbnail({
       <img
         src={imageUrl || PlaceholderImage}
         alt={title}
+        fetchPriority="high"
+        loading="eager"
         className="t-0 l-0 absolute h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
       />
     </div>
