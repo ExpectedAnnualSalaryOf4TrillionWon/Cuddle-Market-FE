@@ -1,4 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 
 interface MainImageProps {
   mainImageUrl: string | null

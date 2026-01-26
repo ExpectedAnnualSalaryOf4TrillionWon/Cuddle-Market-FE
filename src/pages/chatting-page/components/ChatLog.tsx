@@ -2,7 +2,7 @@ import type { Message } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { useUserStore } from '@src/store/userStore'
 import { useEffect, useRef } from 'react'
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
 

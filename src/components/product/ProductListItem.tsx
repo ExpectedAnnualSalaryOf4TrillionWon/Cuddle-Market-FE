@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { ProductMetaItem } from './ProductMetaItem'
 import { ROUTES } from '@src/constants/routes'
