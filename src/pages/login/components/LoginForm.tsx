@@ -35,7 +35,6 @@ export function LoginForm() {
       navigate(redirectUrl || '/')
       useUserStore.getState().setRedirectUrl(null) // 사용 후 초기화
     } catch (error) {
-      // console.error('로그인 실패:', error)
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 400) {
           // root 에러로 설정 (특정 필드가 아닌 폼 전체 에러)

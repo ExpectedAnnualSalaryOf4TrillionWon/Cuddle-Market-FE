@@ -71,7 +71,6 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       reconnectDelay: 5000, // 5초 후 자동 재연결
       // STOMP 연결 완료 시 호출
       onConnect: () => {
-        // console.log('✅ STOMP 연결됨')
         // [필수] 에러 구독 - 디버깅에 필수!
         socket.subscribe('/user/queue/errors', (message) => {
           const error = JSON.parse(message.body)
@@ -95,12 +94,10 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
         set({ socket, isConnected: true })
       },
       onDisconnect: () => {
-        // console.log('⚠️ STOMP 연결 종료')
         set({ isConnected: false })
       },
       // STOMP 에러 발생 시 호출
       onStompError: (frame) => {
-        // console.error('❌ STOMP 에러:', frame.headers['message'])
         set({ connectionError: frame.headers['message'] || '채팅 서버 연결에 문제가 발생했습니다.' })
       },
     })
@@ -216,7 +213,6 @@ export const chatSocketStore = create<ChatSocketState>((set, get) => ({
       messageType,
       imageUrl,
     }
-    // console.log('📤 STOMP publish 요청:', message)
     socket.publish({
       destination: '/app/chat/message',
       body: JSON.stringify(message),

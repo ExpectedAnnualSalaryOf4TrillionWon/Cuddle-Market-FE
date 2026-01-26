@@ -21,7 +21,6 @@ export default function UserReportModal({ isOpen, userNickname, userId, onCancel
       queryClient.invalidateQueries({ queryKey: ['userPage'] })
       onCancel()
     } catch {
-      // console.error('회원신고 실패:', error)
       setUserReportError(
         <div className="flex flex-col gap-0.5">
           <p className="text-base font-semibold">사용자 신고에 실패했습니다.</p>
