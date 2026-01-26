@@ -68,9 +68,22 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
     if (notification.relatedEntityType === 'CHAT_ROOM') {
       chatSocketStore.getState().clearUnreadCount(notification.relatedEntityId)
     }
-    const path = getNavigationPath(notification)
+    const currentPath = window.location.pathname
+    const targetPath = getNavigationPath(notification)
     setIsNotificationOpen(false)
-    navigate(path)
+
+    if (currentPath === targetPath) {
+      // 같은 페이지 로직
+      if (notification.relatedEntityType === 'POST') {
+        // 게시글 + 댓글 모두 refetch
+        queryClient.invalidateQueries({
+          queryKey: ['community', String(notification.relatedEntityId)],
+        })
+      }
+    } else {
+      // 다른 페이지 로직 (기존 navigate)
+      navigate(targetPath)
+    }
     await readNotification(notification.notificationId)
     refetch()
   }
@@ -78,7 +91,10 @@ export default function NotificationsDropdown({ isNotificationOpen, setIsNotific
   return (
     <div
       ref={modalRef}
-      className={cn('absolute top-12 right-0 min-w-[364px] max-h-[819.2px] overflow-hidden rounded-lg border border-gray-200 bg-white', `${Z_INDEX.DROPDOWN}`)}
+      className={cn(
+        'absolute top-12 right-0 max-h-[819.2px] min-w-[364px] overflow-hidden rounded-lg border border-gray-200 bg-white',
+        `${Z_INDEX.DROPDOWN}`
+      )}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between border-b border-gray-200 px-4 pt-4 pb-[17px]">

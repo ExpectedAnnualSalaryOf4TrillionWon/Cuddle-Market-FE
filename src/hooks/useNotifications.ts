@@ -11,15 +11,20 @@ export function useNotificationSSE() {
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
   useEffect(() => {
+    console.log('[SSE] useEffect 실행 - user:', !!user, 'accessToken:', !!accessToken)
+
     if (!user || !accessToken) {
+      console.log('[SSE] 조건 불충족으로 연결 안함')
       return
     }
 
     // 이전 연결 정리
     if (eventSourceRef.current) {
+      console.log('[SSE] 이전 연결 정리')
       eventSourceRef.current.close()
     }
 
+    console.log('[SSE] 연결 시도:', `${API_BASE_URL}/notifications/stream`)
     const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/notifications/stream`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -28,33 +33,37 @@ export function useNotificationSSE() {
     })
     eventSourceRef.current = eventSource
 
+    eventSource.onopen = () => {
+      console.log('[SSE] 연결 성공')
+    }
+
     // notification 이벤트: 새 알림이 왔을 때
     eventSource.addEventListener('notification', (e) => {
+      console.log('[SSE] notification 이벤트 수신:', (e as MessageEvent).data)
       try {
-        // const payload = JSON.parse((e as MessageEvent).data)
-        // const notifications = Array.isArray(payload) ? payload : [payload]
-        JSON.parse((e as MessageEvent).data)
+        const payload = JSON.parse((e as MessageEvent).data)
+        console.log('[SSE] 파싱된 payload:', payload)
         queryClient.setQueryData<{ unreadCount: number }>(['notifications', 'unreadCount'], (prev) => ({
           unreadCount: (prev?.unreadCount ?? 0) + 1,
         }))
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        // console.log(`[SSE] 새 알림 ${notifications.length}건 수신`, notifications)
       } catch (err) {
         console.error('[SSE] notification payload 파싱 오류:', err)
       }
     })
 
-    eventSource.onerror = () => {
-      // CLOSED: 연결 종료됨, CONNECTING: 재연결 시도 중 (타임아웃 후 자동 재연결)
-      // 30초 타임아웃으로 인한 정상적인 재연결이므로 에러 로그 생략
+    // message 이벤트도 수신해보기 (서버가 다른 이벤트 타입을 사용할 수 있음)
+    eventSource.onmessage = (e) => {
+      console.log('[SSE] message 이벤트 수신 (기본):', e.data)
     }
 
-    // eventSource.addEventListener('connect', () => {
-    //   console.log('[SSE] 연결 성공')
-    // })
+    eventSource.onerror = (e) => {
+      console.log('[SSE] 에러 발생:', e)
+      // CLOSED: 연결 종료됨, CONNECTING: 재연결 시도 중 (타임아웃 후 자동 재연결)
+    }
 
     return () => {
-      // console.log('[SSE] 연결 종료')
+      console.log('[SSE] 연결 종료 (cleanup)')
       eventSource.close()
     }
   }, [user, accessToken, queryClient])
