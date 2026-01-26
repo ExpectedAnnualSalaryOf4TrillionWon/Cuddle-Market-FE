@@ -1,4 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '../commons/button/Button'
 import AlertBox from './AlertBox'

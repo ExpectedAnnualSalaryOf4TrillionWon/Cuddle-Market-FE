@@ -1,4 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { STATUS_EN_TO_KO, type TransactionStatus, type MyPageTabId } from '@src/constants/constants'
