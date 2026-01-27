@@ -7,6 +7,22 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-ui': ['lucide-react', '@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-markdown': ['react-markdown', 'rehype-sanitize', 'remark-breaks'],
+          'vendor-form': ['react-hook-form', 'react-dropzone', 'react-datepicker'],
+          'vendor-chat': ['@stomp/stompjs', 'sockjs-client'],
+          'vendor-utils': ['date-fns', 'axios', 'zustand', 'browser-image-compression'],
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@src': fileURLToPath(new URL('./src', import.meta.url)),

@@ -1,6 +1,3 @@
-// import './App.css';
-// vim 사용예시 커밋 작성
-
 import { useEffect } from 'react'
 import AppRoutes from './routes/index'
 import LoginModal from './components/modal/LoginModal'
