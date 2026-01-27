@@ -1,14 +1,7 @@
-// import Header from '@src/components/commons/header/Header';
-// import AlarmPage from '@pages/AlarmPage';
 import Home from '@src/pages/home/Home'
-
 import Login from '@src/pages/login/Login'
 import MyPage from '@src/pages/my-page/MyPage'
-// import ProductDetail from '@pages/ProductDetail';
-// import ProductPost from '@pages/ProductPost';
-// import ProfileUpdate from '@pages/ProfileUpdate';
 import Signup from '@src/pages/signup/Signup'
-// import UserPage from '@pages/UserPage';
 import { Route, Routes } from 'react-router-dom'
 import MainLayout from '@src/layouts/MainLayout'
 import { ROUTES } from '@src/constants/routes'
