@@ -188,6 +188,9 @@ export const COMMUNITY_SEARCH_TYPE = [
 
 export const MAX_FILES = 5
 
+// ========== 이미지 처리 관련 상수 ==========
+export const IMAGE_PROCESSING_DELAY = 2000 // Lambda 이미지 리사이징 처리 대기 시간 (ms)
+
 // ========== 회원탈퇴 이유 관련 상수 ==========
 export const WiTH_DRAW_REASON = [
   { id: 'SERVICE_DISSATISFACTION', label: '서비스 불만족' },
