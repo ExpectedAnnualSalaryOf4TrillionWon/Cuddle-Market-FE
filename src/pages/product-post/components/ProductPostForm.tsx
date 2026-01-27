@@ -8,8 +8,9 @@ import PriceAndStatusSection from './priceAndStatusSection/PriceAndStatusSection
 import type { ProductDetailItem, ProductPostRequestData } from '@src/types'
 import { patchProduct, postProduct } from '@src/api/products'
 import { cn } from '@src/utils/cn'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import TradeInfoSection from './tradeInfoSection/TradeInfoSection'
+import { IMAGE_PROCESSING_DELAY } from '@src/constants/constants'
 
 export interface ProductPostFormValues {
   petType: string
@@ -59,6 +60,7 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
     },
   }) // 폼에서 관리할 필드들의 타입(이름) 정의.
   const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const initialImages = useMemo(() => {
     if (initialData) {
@@ -82,17 +84,23 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
       addressGugun: data.addressGugun,
     }
 
+    setIsSubmitting(true)
     try {
       if (isEditMode && id) {
         // 편집 모드: 기존 상품 ID로 이동
         await patchProduct(requestData, Number(id))
+        // Lambda 이미지 리사이징 처리 대기
+        await new Promise((resolve) => setTimeout(resolve, IMAGE_PROCESSING_DELAY))
         navigate(`/products/${id}`)
       } else {
         // 새 등록: 서버에서 생성된 ID로 이동
         const createdProduct = await postProduct(requestData)
+        // Lambda 이미지 리사이징 처리 대기
+        await new Promise((resolve) => setTimeout(resolve, IMAGE_PROCESSING_DELAY))
         navigate(`/products/${createdProduct.id}`)
       }
     } catch {
+      setIsSubmitting(false)
       alert(isEditMode ? '상품 수정에 실패했습니다.' : '상품 등록에 실패했습니다.')
     }
   }
@@ -113,6 +121,17 @@ export function ProductPostForm({ isEditMode, productId: id, initialData }: Prod
       })
     }
   }, [isEditMode, initialData, reset])
+
+  if (isSubmitting) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+          <p className="text-gray-600">상품을 {isEditMode ? '수정' : '등록'}하고 있습니다...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div role="tabpanel" id="panel-SELL" aria-labelledby="tab-sales">
