@@ -34,13 +34,6 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-  //   if (e.key === 'Enter' || e.key === ' ') {
-  //     e.preventDefault()
-  //     ;(e.currentTarget as HTMLDivElement).click()
-  //   }
-  // }
-
   return (
     <Link
       className="border-border text-text-primary flex cursor-pointer flex-row-reverse overflow-hidden rounded-xl border bg-white shadow-md transition-shadow duration-200 hover:shadow-xl md:flex-col-reverse"
