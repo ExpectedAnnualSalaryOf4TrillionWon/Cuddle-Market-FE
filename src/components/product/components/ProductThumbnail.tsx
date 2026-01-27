@@ -3,7 +3,7 @@ import { Button } from '@src/components/commons/button/Button'
 import { Heart } from 'lucide-react'
 import { Badge } from '@src/components/commons/badge/Badge'
 // import bowl from '@assets/images/bowl.jpg'
-import PlaceholderImage from '@assets/images/placeholder.png'
+import PlaceholderImage from '@assets/images/placeholder.webp'
 import { cn } from '@src/utils/cn'
 
 interface ProductThumbnailProps {
