@@ -1,5 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.webp'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { STATUS_EN_TO_KO, type TransactionStatus, type MyPageTabId } from '@src/constants/constants'
@@ -96,19 +95,19 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
       >
         <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static">
           <img
-            src={mainImageUrl ? toResizedWebpUrl(mainImageUrl, 400) : PlaceholderImage}
-            srcSet={mainImageUrl ? getImageSrcSet(mainImageUrl) : undefined}
-            sizes={mainImageUrl ? IMAGE_SIZES.smallThumbnail : undefined}
+            src={mainImageUrl ? toResizedWebpUrl(mainImageUrl, 400) : PLACEHOLDER_IMAGES[400]}
+            srcSet={mainImageUrl ? getImageSrcSet(mainImageUrl) : PLACEHOLDER_SRCSET}
+            sizes={IMAGE_SIZES.smallThumbnail}
             alt={title}
-            fetchPriority="high"
-            loading="eager"
+            loading="lazy"
             onError={(e) => {
               const img = e.currentTarget
               if (mainImageUrl && img.src !== mainImageUrl) {
                 img.srcset = ''
                 img.src = mainImageUrl
               } else {
-                img.src = PlaceholderImage
+                img.srcset = PLACEHOLDER_SRCSET
+                img.src = PLACEHOLDER_IMAGES[400]
               }
             }}
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"

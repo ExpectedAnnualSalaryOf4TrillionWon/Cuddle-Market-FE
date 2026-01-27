@@ -2,9 +2,8 @@ import { ProductBadge } from './ProductBadge'
 import { Button } from '@src/components/commons/button/Button'
 import { Heart } from 'lucide-react'
 import { Badge } from '@src/components/commons/badge/Badge'
-import PlaceholderImage from '@assets/images/placeholder.webp'
 import { cn } from '@src/utils/cn'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 
 interface ProductThumbnailProps {
   imageUrl: string
@@ -60,9 +59,9 @@ export function ProductThumbnail({
       <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{displayTradeStatus}</Badge>
       <img
         alt={title}
-        src={imageUrl ? toResizedWebpUrl(imageUrl, 800) : PlaceholderImage}
-        srcSet={imageUrl ? getImageSrcSet(imageUrl) : undefined}
-        sizes={imageUrl ? IMAGE_SIZES.productThumbnail : undefined}
+        src={imageUrl ? toResizedWebpUrl(imageUrl, 800) : PLACEHOLDER_IMAGES[800]}
+        srcSet={imageUrl ? getImageSrcSet(imageUrl) : PLACEHOLDER_SRCSET}
+        sizes={IMAGE_SIZES.productThumbnail}
         fetchPriority={priority ? 'high' : 'auto'}
         loading={priority ? 'eager' : 'lazy'}
         onError={(e) => {
@@ -71,7 +70,8 @@ export function ProductThumbnail({
             img.srcset = ''
             img.src = imageUrl
           } else {
-            img.src = PlaceholderImage
+            img.srcset = PLACEHOLDER_SRCSET
+            img.src = PLACEHOLDER_IMAGES[800]
           }
         }}
         className="t-0 l-0 absolute h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"

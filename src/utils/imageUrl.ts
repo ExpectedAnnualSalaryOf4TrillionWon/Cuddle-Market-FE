@@ -1,4 +1,20 @@
+import Placeholder150 from '@assets/images/placeholder-150.webp'
+import Placeholder400 from '@assets/images/placeholder-400.webp'
+import Placeholder800 from '@assets/images/placeholder-800.webp'
+
 type ImageSize = 150 | 400 | 800
+
+// Placeholder 이미지 (크기별)
+export const PLACEHOLDER_IMAGES = {
+  150: Placeholder150,
+  400: Placeholder400,
+  800: Placeholder800,
+} as const
+
+/**
+ * Placeholder srcset 생성
+ */
+export const PLACEHOLDER_SRCSET = `${Placeholder150} 150w, ${Placeholder400} 400w, ${Placeholder800} 800w`
 
 /**
  * 원본 이미지 URL을 리사이즈된 WebP URL로 변환

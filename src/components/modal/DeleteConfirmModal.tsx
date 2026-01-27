@@ -1,5 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.webp'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '../commons/button/Button'
 import AlertBox from './AlertBox'
@@ -43,13 +42,21 @@ function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel, error, onCle
           <li className="flex gap-2.5 rounded-lg border border-gray-300 bg-gray-100/30 p-2.5">
             <div className="aspect-square w-16 shrink-0 overflow-hidden rounded-lg">
               <img
-                src={product.mainImageUrl ? toResizedWebpUrl(product.mainImageUrl, 150) : PlaceholderImage}
-                srcSet={product.mainImageUrl ? getImageSrcSet(product.mainImageUrl) : undefined}
-                sizes={product.mainImageUrl ? IMAGE_SIZES.tinyThumbnail : undefined}
+                src={product.mainImageUrl ? toResizedWebpUrl(product.mainImageUrl, 150) : PLACEHOLDER_IMAGES[150]}
+                srcSet={product.mainImageUrl ? getImageSrcSet(product.mainImageUrl) : PLACEHOLDER_SRCSET}
+                sizes={IMAGE_SIZES.tinyThumbnail}
                 alt={product.title}
-                fetchPriority="high"
-                loading="eager"
-                className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
+                onError={(e) => {
+                  const img = e.currentTarget
+                  if (product.mainImageUrl && img.src !== product.mainImageUrl) {
+                    img.srcset = ''
+                    img.src = product.mainImageUrl
+                  } else {
+                    img.srcset = PLACEHOLDER_SRCSET
+                    img.src = PLACEHOLDER_IMAGES[150]
+                  }
+                }}
+                className="h-full w-full object-cover"
               />
             </div>
             <div className="flex flex-col gap-1">

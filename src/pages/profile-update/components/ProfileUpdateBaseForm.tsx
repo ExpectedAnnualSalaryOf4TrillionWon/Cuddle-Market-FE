@@ -1,3 +1,4 @@
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { RequiredLabel } from '@src/components/commons/RequiredLabel'
 import { InputWithButton } from '@src/components/commons/InputWithButton'
 import { AddressField } from '@src/components/commons/AddressField'
@@ -226,7 +227,21 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
               <div className="bg-primary-50 relative flex h-28 w-28 cursor-pointer items-center justify-center rounded-full">
                 <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" onChange={handleImageChange} className="hidden" />
                 {previewUrl ? (
-                  <img src={previewUrl ?? ''} alt={myData?.nickname} className="h-full w-full object-cover" />
+                  <img
+                    src={toResizedWebpUrl(previewUrl, 150)}
+                    srcSet={getImageSrcSet(previewUrl)}
+                    sizes={IMAGE_SIZES.tinyThumbnail}
+                    alt={myData?.nickname}
+                    loading="lazy"
+                    onError={(e) => {
+                      const img = e.currentTarget
+                      if (previewUrl && img.src !== previewUrl) {
+                        img.srcset = ''
+                        img.src = previewUrl
+                      }
+                    }}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <div className="heading-h1 font-normal!">{myData?.nickname.charAt(0).toUpperCase()}</div>
                 )}
