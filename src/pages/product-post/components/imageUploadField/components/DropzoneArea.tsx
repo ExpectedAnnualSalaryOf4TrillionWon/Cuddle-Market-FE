@@ -41,7 +41,7 @@ export default function DropzoneArea<T extends FieldValues>({
   const compressImage = async (file: File) => {
     const options = {
       maxSizeMB: 1, // 최대 1MB로 압축
-      maxWidthOrHeight: 1200, // 최대 1200px로 리사이징
+      maxWidthOrHeight: 800, // 최대 800px로 리사이징 (백엔드 최대 사이즈에 맞춤)
       useWebWorker: true, // 웹 워커 사용 (UI 블로킹 방지)
       fileType: 'image/webp' as const, // WebP 형식으로 변환
     }

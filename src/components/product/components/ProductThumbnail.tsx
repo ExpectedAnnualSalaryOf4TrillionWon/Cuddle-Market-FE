@@ -4,6 +4,7 @@ import { Heart } from 'lucide-react'
 import { Badge } from '@src/components/commons/badge/Badge'
 import PlaceholderImage from '@assets/images/placeholder.webp'
 import { cn } from '@src/utils/cn'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 
 interface ProductThumbnailProps {
   imageUrl: string
@@ -58,8 +59,10 @@ export function ProductThumbnail({
       </div>
       <Badge className={cn('bottom-sm right-sm absolute z-1 text-white', productTradeColor)}>{displayTradeStatus}</Badge>
       <img
-        src={imageUrl || PlaceholderImage}
         alt={title}
+        src={imageUrl ? toResizedWebpUrl(imageUrl, 800) : PlaceholderImage}
+        srcSet={imageUrl ? getImageSrcSet(imageUrl) : undefined}
+        sizes={imageUrl ? IMAGE_SIZES.productThumbnail : undefined}
         fetchPriority={priority ? 'high' : 'auto'}
         loading={priority ? 'eager' : 'lazy'}
         className="t-0 l-0 absolute h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"

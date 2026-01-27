@@ -1,4 +1,5 @@
 import PlaceholderImage from '@assets/images/placeholder.webp'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { formatPrice } from '@src/utils/formatPrice'
 
 interface ChatProductCardProps {
@@ -18,7 +19,9 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
     <>
       <div className={`relative aspect-square shrink-0 overflow-hidden rounded-lg ${sizeClasses[size]}`}>
         <img
-          src={productImageUrl || PlaceholderImage}
+          src={productImageUrl ? toResizedWebpUrl(productImageUrl, 150) : PlaceholderImage}
+          srcSet={productImageUrl ? getImageSrcSet(productImageUrl) : undefined}
+          sizes={productImageUrl ? IMAGE_SIZES.tinyThumbnail : undefined}
           fetchPriority="high"
           loading="eager"
           alt={productTitle}

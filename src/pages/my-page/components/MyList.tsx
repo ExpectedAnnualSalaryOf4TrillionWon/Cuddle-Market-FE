@@ -1,4 +1,5 @@
 import PlaceholderImage from '@assets/images/placeholder.webp'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { SelectDropdown } from '@src/components/commons/select/SelectDropdown'
 import { STATUS_EN_TO_KO, type TransactionStatus, type MyPageTabId } from '@src/constants/constants'
@@ -95,7 +96,9 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
       >
         <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static">
           <img
-            src={mainImageUrl || PlaceholderImage}
+            src={mainImageUrl ? toResizedWebpUrl(mainImageUrl, 400) : PlaceholderImage}
+            srcSet={mainImageUrl ? getImageSrcSet(mainImageUrl) : undefined}
+            sizes={mainImageUrl ? IMAGE_SIZES.smallThumbnail : undefined}
             alt={title}
             fetchPriority="high"
             loading="eager"
