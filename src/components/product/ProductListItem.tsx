@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import PlaceholderImage from '@assets/images/placeholder.webp'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { Badge } from '@src/components/commons/badge/Badge'
 import { ProductMetaItem } from './ProductMetaItem'
 import { ROUTES } from '@src/constants/routes'
@@ -26,7 +27,9 @@ export function ProductListItem({ product, children }: ProductListItemProps) {
       <Link to={ROUTES.DETAIL_ID(id)} className="flex w-full items-center justify-center gap-6 rounded-lg border border-gray-300 p-3.5">
         <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static md:w-[10%]">
           <img
-            src={mainImageUrl || PlaceholderImage}
+            src={mainImageUrl ? toResizedWebpUrl(mainImageUrl, 400) : PlaceholderImage}
+            srcSet={mainImageUrl ? getImageSrcSet(mainImageUrl) : undefined}
+            sizes={mainImageUrl ? IMAGE_SIZES.smallThumbnail : undefined}
             alt={title}
             fetchPriority="high"
             loading="eager"

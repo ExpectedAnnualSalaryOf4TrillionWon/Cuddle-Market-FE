@@ -112,7 +112,7 @@ export default function ChattingPage() {
   const compressImage = async (file: File) => {
     const options = {
       maxSizeMB: 1,
-      maxWidthOrHeight: 1200,
+      maxWidthOrHeight: 800, // 백엔드 최대 사이즈에 맞춤
       useWebWorker: true,
       fileType: 'image/webp' as const,
     }

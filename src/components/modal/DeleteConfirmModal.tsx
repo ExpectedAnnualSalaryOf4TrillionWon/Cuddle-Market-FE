@@ -1,4 +1,5 @@
 import PlaceholderImage from '@assets/images/placeholder.webp'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { formatPrice } from '@src/utils/formatPrice'
 import { Button } from '../commons/button/Button'
 import AlertBox from './AlertBox'
@@ -42,7 +43,9 @@ function DeleteConfirmModal({ isOpen, product, onConfirm, onCancel, error, onCle
           <li className="flex gap-2.5 rounded-lg border border-gray-300 bg-gray-100/30 p-2.5">
             <div className="aspect-square w-16 shrink-0 overflow-hidden rounded-lg">
               <img
-                src={product.mainImageUrl || PlaceholderImage}
+                src={product.mainImageUrl ? toResizedWebpUrl(product.mainImageUrl, 150) : PlaceholderImage}
+                srcSet={product.mainImageUrl ? getImageSrcSet(product.mainImageUrl) : undefined}
+                sizes={product.mainImageUrl ? IMAGE_SIZES.tinyThumbnail : undefined}
                 alt={product.title}
                 fetchPriority="high"
                 loading="eager"
