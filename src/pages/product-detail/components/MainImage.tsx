@@ -16,6 +16,16 @@ export default function MainImage({ mainImageUrl, title }: MainImageProps) {
         alt={title}
         fetchPriority="high"
         loading="eager"
+        onError={(e) => {
+          const img = e.currentTarget
+          // 리사이즈 이미지 실패 시 원본 URL로 fallback
+          if (mainImageUrl && img.src !== mainImageUrl) {
+            img.srcset = ''
+            img.src = mainImageUrl
+          } else {
+            img.src = PlaceholderImage
+          }
+        }}
         className="t-0 l-0 absolute h-full w-full object-cover"
       />
     </div>

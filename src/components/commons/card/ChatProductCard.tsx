@@ -25,6 +25,15 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
           fetchPriority="high"
           loading="eager"
           alt={productTitle}
+          onError={(e) => {
+            const img = e.currentTarget
+            if (productImageUrl && img.src !== productImageUrl) {
+              img.srcset = ''
+              img.src = productImageUrl
+            } else {
+              img.src = PlaceholderImage
+            }
+          }}
           className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
         />
       </div>

@@ -33,6 +33,15 @@ export function ProductListItem({ product, children }: ProductListItemProps) {
             alt={title}
             fetchPriority="high"
             loading="eager"
+            onError={(e) => {
+              const img = e.currentTarget
+              if (mainImageUrl && img.src !== mainImageUrl) {
+                img.srcset = ''
+                img.src = mainImageUrl
+              } else {
+                img.src = PlaceholderImage
+              }
+            }}
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
           />
           {!isMd &&
