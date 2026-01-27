@@ -1,5 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.webp'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 
 interface SubImagesProps {
   mainImageUrl: string
@@ -15,8 +14,8 @@ export default function SubImages({ mainImageUrl, subImageUrls, title }: SubImag
         {subImageUrls.map((image, idx) => (
           <div key={idx} className="relative overflow-hidden rounded-lg bg-white pb-[100%]">
             <img
-              src={image ? toResizedWebpUrl(image, 400) : PlaceholderImage}
-              srcSet={image ? getImageSrcSet(image) : undefined}
+              src={image ? toResizedWebpUrl(image, 400) : PLACEHOLDER_IMAGES[400]}
+              srcSet={image ? getImageSrcSet(image) : PLACEHOLDER_SRCSET}
               sizes={IMAGE_SIZES.subImages}
               alt={`${title} - ${idx + 1}`}
               fetchPriority="high"
@@ -28,7 +27,8 @@ export default function SubImages({ mainImageUrl, subImageUrls, title }: SubImag
                   img.srcset = ''
                   img.src = image
                 } else {
-                  img.src = PlaceholderImage
+                  img.srcset = PLACEHOLDER_SRCSET
+                  img.src = PLACEHOLDER_IMAGES[400]
                 }
               }}
               className="t-0 l-0 absolute h-full w-full object-cover object-top"

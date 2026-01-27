@@ -1,3 +1,4 @@
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { Button } from '@src/components/commons/button/Button'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@src/store/userStore'
@@ -29,7 +30,21 @@ export default function SellerProfileCard({ sellerInfo }: SellerProfileCardProps
         <div className="flex items-center gap-2">
           <div className="bg-primary-50 flex h-10 w-10 items-center justify-center overflow-hidden rounded-full">
             {sellerInfo.sellerProfileImageUrl ? (
-              <img src={sellerInfo.sellerProfileImageUrl ?? ''} alt={sellerInfo?.sellerNickname} className="h-full w-full object-cover" />
+              <img
+                src={toResizedWebpUrl(sellerInfo.sellerProfileImageUrl, 150)}
+                srcSet={getImageSrcSet(sellerInfo.sellerProfileImageUrl)}
+                sizes={IMAGE_SIZES.tinyThumbnail}
+                alt={sellerInfo?.sellerNickname}
+                loading="lazy"
+                onError={(e) => {
+                  const img = e.currentTarget
+                  if (sellerInfo.sellerProfileImageUrl && img.src !== sellerInfo.sellerProfileImageUrl) {
+                    img.srcset = ''
+                    img.src = sellerInfo.sellerProfileImageUrl
+                  }
+                }}
+                className="h-full w-full object-cover"
+              />
             ) : (
               <div className="heading-h5 font-normal!">{sellerInfo?.sellerNickname.charAt(0).toUpperCase()}</div>
             )}

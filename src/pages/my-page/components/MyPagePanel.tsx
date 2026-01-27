@@ -1,3 +1,4 @@
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import type { MyPageTabId } from '@src/constants/constants'
 import type { BlockedUser, Product } from '@src/types'
 import MyPageTitle from './MyPageTitle'
@@ -143,10 +144,18 @@ export default function MyPagePanel({
                     <div className="aspect-square w-12 shrink-0 overflow-hidden rounded-full">
                       {user.profileImageUrl ? (
                         <img
-                          src={user.profileImageUrl}
-                          fetchPriority="high"
-                          loading="eager"
+                          src={toResizedWebpUrl(user.profileImageUrl, 150)}
+                          srcSet={getImageSrcSet(user.profileImageUrl)}
+                          sizes={IMAGE_SIZES.tinyThumbnail}
+                          loading="lazy"
                           alt={user.nickname}
+                          onError={(e) => {
+                            const img = e.currentTarget
+                            if (user.profileImageUrl && img.src !== user.profileImageUrl) {
+                              img.srcset = ''
+                              img.src = user.profileImageUrl
+                            }
+                          }}
                           className="h-full w-full object-cover"
                         />
                       ) : (

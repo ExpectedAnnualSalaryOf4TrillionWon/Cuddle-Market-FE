@@ -2,8 +2,7 @@ import type { Message } from '@src/types'
 import { cn } from '@src/utils/cn'
 import { useUserStore } from '@src/store/userStore'
 import { useEffect, useRef } from 'react'
-import PlaceholderImage from '@assets/images/placeholder.webp'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 import { AnimatePresence } from 'framer-motion'
 import InlineNotification from '@src/components/commons/InlineNotification'
 
@@ -165,16 +164,22 @@ export function ChatLog({
                   {message.messageType === 'IMAGE' ? (
                     <div className="relative aspect-square w-32 shrink-0 overflow-hidden rounded-lg md:static">
                       <img
-                        src={message.imageUrl ? toResizedWebpUrl(message.imageUrl, 400) : PlaceholderImage}
-                        srcSet={message.imageUrl ? getImageSrcSet(message.imageUrl) : undefined}
-                        sizes={message.imageUrl ? IMAGE_SIZES.smallThumbnail : undefined}
+                        src={message.imageUrl ? toResizedWebpUrl(message.imageUrl, 400) : PLACEHOLDER_IMAGES[400]}
+                        srcSet={message.imageUrl ? getImageSrcSet(message.imageUrl) : PLACEHOLDER_SRCSET}
+                        sizes={IMAGE_SIZES.smallThumbnail}
                         alt={message.senderNickname}
-                        fetchPriority="high"
-                        loading="eager"
+                        loading="lazy"
                         onError={(e) => {
-                          e.currentTarget.src = PlaceholderImage
+                          const img = e.currentTarget
+                          if (message.imageUrl && img.src !== message.imageUrl) {
+                            img.srcset = ''
+                            img.src = message.imageUrl
+                          } else {
+                            img.srcset = PLACEHOLDER_SRCSET
+                            img.src = PLACEHOLDER_IMAGES[400]
+                          }
                         }}
-                        className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   ) : (

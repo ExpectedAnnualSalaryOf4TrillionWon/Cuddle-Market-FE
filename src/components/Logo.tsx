@@ -1,4 +1,4 @@
-import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage.webp'
+import CuddleMarketLogo from '@assets/images/CuddleMarketLogoImage_100.webp'
 import { ROUTES } from '@src/constants/routes'
 import { Link, useSearchParams } from 'react-router-dom'
 import { cn } from '@src/utils/cn'

@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { MapPin, Calendar, Settings, Flag, Ban, LockOpen, ShieldAlert, Route } from 'lucide-react'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 import { ProductMetaItem } from '@src/components/product/ProductMetaItem'
 import { type Dispatch, type SetStateAction } from 'react'
 import { formatJoinDate } from '@src/utils/formatJoinDate'
@@ -62,7 +63,21 @@ export default function ProfileData({
           <div className="flex flex-row items-center gap-3.5 md:flex-col">
             <div className="bg-primary-50 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full">
               {data?.profileImageUrl ? (
-                <img src={data.profileImageUrl} alt={data.nickname} className="h-full w-full object-cover" />
+                <img
+                  src={toResizedWebpUrl(data.profileImageUrl, 150)}
+                  srcSet={getImageSrcSet(data.profileImageUrl)}
+                  sizes={IMAGE_SIZES.tinyThumbnail}
+                  alt={data.nickname}
+                  loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget
+                    if (data.profileImageUrl && img.src !== data.profileImageUrl) {
+                      img.srcset = ''
+                      img.src = data.profileImageUrl
+                    }
+                  }}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="heading-h4">{data?.nickname.charAt(0).toUpperCase()}</div>
               )}

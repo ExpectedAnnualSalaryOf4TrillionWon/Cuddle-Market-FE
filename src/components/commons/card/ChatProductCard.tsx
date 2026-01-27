@@ -1,5 +1,4 @@
-import PlaceholderImage from '@assets/images/placeholder.webp'
-import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl, PLACEHOLDER_IMAGES, PLACEHOLDER_SRCSET } from '@src/utils/imageUrl'
 import { formatPrice } from '@src/utils/formatPrice'
 
 interface ChatProductCardProps {
@@ -19,11 +18,10 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
     <>
       <div className={`relative aspect-square shrink-0 overflow-hidden rounded-lg ${sizeClasses[size]}`}>
         <img
-          src={productImageUrl ? toResizedWebpUrl(productImageUrl, 150) : PlaceholderImage}
-          srcSet={productImageUrl ? getImageSrcSet(productImageUrl) : undefined}
-          sizes={productImageUrl ? IMAGE_SIZES.tinyThumbnail : undefined}
-          fetchPriority="high"
-          loading="eager"
+          src={productImageUrl ? toResizedWebpUrl(productImageUrl, 150) : PLACEHOLDER_IMAGES[150]}
+          srcSet={productImageUrl ? getImageSrcSet(productImageUrl) : PLACEHOLDER_SRCSET}
+          sizes={IMAGE_SIZES.tinyThumbnail}
+          loading="lazy"
           alt={productTitle}
           onError={(e) => {
             const img = e.currentTarget
@@ -31,7 +29,8 @@ export function ChatProductCard({ productImageUrl, productTitle, productPrice, s
               img.srcset = ''
               img.src = productImageUrl
             } else {
-              img.src = PlaceholderImage
+              img.srcset = PLACEHOLDER_SRCSET
+              img.src = PLACEHOLDER_IMAGES[150]
             }
           }}
           className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"

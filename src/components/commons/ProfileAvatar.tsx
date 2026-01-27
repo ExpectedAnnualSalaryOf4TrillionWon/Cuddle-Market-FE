@@ -1,4 +1,5 @@
 import { cn } from '@src/utils/cn'
+import { getImageSrcSet, IMAGE_SIZES, toResizedWebpUrl } from '@src/utils/imageUrl'
 
 interface ProfileAvatarProps {
   imageUrl?: string | null
@@ -16,7 +17,25 @@ const sizeClasses = {
 export function ProfileAvatar({ imageUrl, nickname, size = 'md', className }: ProfileAvatarProps) {
   return (
     <div className={cn('bg-primary-50 flex items-center justify-center overflow-hidden rounded-full', sizeClasses[size], className)}>
-      {imageUrl ? <img src={imageUrl} alt={nickname} className="h-full w-full object-cover" /> : <span>{nickname.charAt(0).toUpperCase()}</span>}
+      {imageUrl ? (
+        <img
+          src={toResizedWebpUrl(imageUrl, 150)}
+          srcSet={getImageSrcSet(imageUrl)}
+          sizes={IMAGE_SIZES.tinyThumbnail}
+          alt={nickname}
+          loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget
+            if (imageUrl && img.src !== imageUrl) {
+              img.srcset = ''
+              img.src = imageUrl
+            }
+          }}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <span>{nickname.charAt(0).toUpperCase()}</span>
+      )}
     </div>
   )
 }
