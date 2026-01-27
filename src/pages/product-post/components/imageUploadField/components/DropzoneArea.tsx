@@ -38,18 +38,31 @@ export default function DropzoneArea<T extends FieldValues>({
 }: DropzoneAreaProps<T>) {
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
 
+  const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height })
+        URL.revokeObjectURL(img.src)
+      }
+      img.src = URL.createObjectURL(file)
+    })
+  }
+
   const compressImage = async (file: File) => {
-    console.log('압축 전:', file.name, file.size, file.type)
+    const beforeDim = await getImageDimensions(file)
+    console.log('압축 전:', file.name, file.size, file.type, `${beforeDim.width}x${beforeDim.height}`)
+
     const options = {
       maxSizeMB: 1, // 최대 1MB로 압축
       maxWidthOrHeight: 1200, // 최대 1200px로 리사이징
       useWebWorker: true, // 웹 워커 사용 (UI 블로킹 방지)
       fileType: 'image/webp' as const, // WebP 형식으로 변환
     }
-    // return await imageCompression(file, options)
     const compressed = await imageCompression(file, options)
 
-    console.log('압축 후:', compressed.name, compressed.size, compressed.type)
+    const afterDim = await getImageDimensions(compressed)
+    console.log('압축 후:', compressed.name, compressed.size, compressed.type, `${afterDim.width}x${afterDim.height}`)
     return compressed
   }
 
