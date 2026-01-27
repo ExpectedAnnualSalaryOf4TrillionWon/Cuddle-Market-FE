@@ -21,6 +21,16 @@ export default function SubImages({ mainImageUrl, subImageUrls, title }: SubImag
               alt={`${title} - ${idx + 1}`}
               fetchPriority="high"
               loading="eager"
+              onError={(e) => {
+                const img = e.currentTarget
+                // 리사이즈 이미지 실패 시 원본 URL로 fallback
+                if (image && img.src !== image) {
+                  img.srcset = ''
+                  img.src = image
+                } else {
+                  img.src = PlaceholderImage
+                }
+              }}
               className="t-0 l-0 absolute h-full w-full object-cover object-top"
             />
           </div>

@@ -102,6 +102,15 @@ export default function MyList({ id, title, price, mainImageUrl, tradeStatus, vi
             alt={title}
             fetchPriority="high"
             loading="eager"
+            onError={(e) => {
+              const img = e.currentTarget
+              if (mainImageUrl && img.src !== mainImageUrl) {
+                img.srcset = ''
+                img.src = mainImageUrl
+              } else {
+                img.src = PlaceholderImage
+              }
+            }}
             className="h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
           />
           {!isMd && trade_status && <Badge className={cn('absolute top-2 left-2 bg-[#48BB78] text-white', productTradeColor)}>{trade_status}</Badge>}

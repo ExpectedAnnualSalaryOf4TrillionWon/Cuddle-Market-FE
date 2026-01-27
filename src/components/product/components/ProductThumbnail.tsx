@@ -65,6 +65,15 @@ export function ProductThumbnail({
         sizes={imageUrl ? IMAGE_SIZES.productThumbnail : undefined}
         fetchPriority={priority ? 'high' : 'auto'}
         loading={priority ? 'eager' : 'lazy'}
+        onError={(e) => {
+          const img = e.currentTarget
+          if (imageUrl && img.src !== imageUrl) {
+            img.srcset = ''
+            img.src = imageUrl
+          } else {
+            img.src = PlaceholderImage
+          }
+        }}
         className="t-0 l-0 absolute h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
       />
     </div>
