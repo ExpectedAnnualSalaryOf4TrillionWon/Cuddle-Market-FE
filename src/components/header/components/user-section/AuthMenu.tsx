@@ -17,7 +17,7 @@ export default function AuthMenu({ isSideOpen, setIsSideOpen, hideMenuButton = f
       <Link to={ROUTES.LOGIN} className="font-bold text-white">
         로그인
       </Link>
-      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 xl:px-4 xl:py-2">
+      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 text-center xl:min-w-20 xl:px-4 xl:py-2">
         회원가입
       </Link>
     </div>

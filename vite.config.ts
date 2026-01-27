@@ -8,6 +8,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
+    target: 'esnext',
     rollupOptions: {
       output: {
         manualChunks: {
