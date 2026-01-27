@@ -2,7 +2,6 @@ import { ProductBadge } from './ProductBadge'
 import { Button } from '@src/components/commons/button/Button'
 import { Heart } from 'lucide-react'
 import { Badge } from '@src/components/commons/badge/Badge'
-// import bowl from '@assets/images/bowl.jpg'
 import PlaceholderImage from '@assets/images/placeholder.webp'
 import { cn } from '@src/utils/cn'
 
@@ -16,6 +15,7 @@ interface ProductThumbnailProps {
   productTradeColor: string
   isFavorite: boolean
   onLikeClick: (e: React.MouseEvent) => void
+  priority?: boolean
 }
 
 export function ProductThumbnail({
@@ -28,6 +28,7 @@ export function ProductThumbnail({
   productTradeColor,
   isFavorite,
   onLikeClick,
+  priority = false,
 }: ProductThumbnailProps) {
   const getDisplayTradeStatus = () => {
     if (productTypeName === '판매요청') {
@@ -59,8 +60,8 @@ export function ProductThumbnail({
       <img
         src={imageUrl || PlaceholderImage}
         alt={title}
-        fetchPriority="high"
-        loading="eager"
+        fetchPriority={priority ? 'high' : 'auto'}
+        loading={priority ? 'eager' : 'lazy'}
         className="t-0 l-0 absolute h-full w-full object-cover transition-all duration-300 ease-in-out group-hover:scale-105"
       />
     </div>
