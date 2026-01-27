@@ -206,7 +206,7 @@ function Home() {
     }
   }, [searchParams])
 
-  if (error || !data) {
+  if (error && !isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -250,14 +250,6 @@ function Home() {
                 onTabChange={(tabId) => setActiveProductTypeTab(tabId as ProductTypeTabId)}
                 ariaLabel="상품 타입 분류"
               />
-              {/* <ProductsSection
-                products={allProducts}
-                totalElements={totalElements}
-                activeTab={activeProductTypeTab}
-                selectedSort={selectedSort as SORT_LABELS}
-                setSelectedSort={setSelectedSort}
-                // onSortChange={handleSortChange}
-              /> */}
               {isLoading ? (
                 <HomeSkeleton />
               ) : (
@@ -267,7 +259,6 @@ function Home() {
                   activeTab={activeProductTypeTab}
                   selectedSort={selectedSort as SORT_LABELS}
                   setSelectedSort={setSelectedSort}
-                  // onSortChange={handleSortChange}
                 />
               )}
             </div>

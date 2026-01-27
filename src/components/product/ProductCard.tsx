@@ -54,6 +54,7 @@ function ProductCard({ data, 'data-index': dataIndex }: ProductCardProps) {
         productTradeColor={productTradeColor}
         isFavorite={isFavorite}
         onLikeClick={handleToggleFavorite}
+        priority={dataIndex !== undefined && dataIndex < 4}
       />
     </Link>
   )
