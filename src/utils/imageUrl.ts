@@ -42,11 +42,11 @@ export function getImageSrcSet(originalUrl: string | null | undefined): string {
  */
 export const IMAGE_SIZES = {
   // ProductThumbnail: 모바일 ~350px, 데스크탑 ~670px
-  productThumbnail: '(max-width: 768px) 350px, 670px',
+  productThumbnail: '(max-width: 1024px) 160px, 400px',
   // MainImage: 상세페이지 전체 너비
   mainImage: '100vw',
   // SubImages: 4열 그리드
-  subImages: '(max-width: 768px) 25vw, 200px',
+  subImages: '(max-width: 1024px) 25vw, 200px',
   // 작은 썸네일: 128px 고정
   smallThumbnail: '128px',
   // 아주 작은 썸네일: 64px 이하

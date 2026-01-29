@@ -36,6 +36,6 @@
 @theme {
   /* 폰트 패밀리 */
   --font-pretendard: 'Pretendard Variable';
-  --font-family-sans: 'Pretendard Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-family-sans: 'Pretendard Variable', 'Pretendard Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, monospace;
 }
