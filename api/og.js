@@ -21,6 +21,8 @@ export default function handler(request) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: '#ffffff',
+          color: '#000000',
         },
       },
     },
