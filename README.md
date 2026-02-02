@@ -25,46 +25,62 @@
 ## 주요 기능
 
 ### 상품 거래
+
 - **무한 스크롤 상품 목록** - Intersection Observer API를 활용한 성능 최적화
 - **다중 필터링** - 동물 종류, 카테고리, 가격대, 지역별 실시간 필터링
 - **상품 CRUD** - 이미지 다중 업로드, 자동 압축, 드래그 앤 드롭 지원
 - **찜하기** - Optimistic Update로 즉각적인 UI 반응
 
 ### 실시간 채팅
+
 - **WebSocket 양방향 통신** - STOMP 프로토콜 기반 실시간 메시지
 - **자동 재연결** - 네트워크 끊김 시 자동 복구
 - **SSE 알림** - Server-Sent Events를 통한 실시간 알림
 
 ### 사용자
-- **카카오 소셜 로그인** - OAuth 2.0 인증
+
+- **소셜 로그인** - 카카오, 구글 OAuth 2.0 인증
 - **자동 토큰 갱신** - 401 응답 시 토큰 자동 갱신 후 요청 재시도
-- **프로필 관리** - 닉네임, 프로필 이미지, 지역 설정
+- **프로필 관리** - 닉네임, 프로필 이미지, 지역 설정, 비밀번호 변경
+
+### 커뮤니티
+
+- **게시판** - 질문 있어요, 정보 공유 탭 분류
+- **마크다운 에디터** - 이미지 업로드 지원
+- **댓글 & 대댓글** - 계층형 댓글 구조
+- **검색 & 정렬** - 키워드 검색, 정렬 옵션
 
 ---
 
 ## 기술 스택
 
 ### Core
+
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript_5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
 ### State Management & Data Fetching
+
 ![Zustand](https://img.shields.io/badge/Zustand-433E38?style=for-the-badge&logo=zustand&logoColor=white)
 ![React Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
 
 ### Real-time Communication
+
 ![WebSocket](https://img.shields.io/badge/STOMP_WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
 ![SSE](https://img.shields.io/badge/Server_Sent_Events-FF6C37?style=for-the-badge)
 
 ### Styling & UI
+
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
 
 ### Form & Validation
+
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white)
 
 ### Development
+
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
 ![MSW](https://img.shields.io/badge/MSW-FF6A33?style=for-the-badge&logo=mockserviceworker&logoColor=white)
@@ -172,10 +188,10 @@ src/
 
 ### 개발 타임라인
 
-| 기간 | 내용 |
-|------|------|
-| 2024.08 | 팀 프로젝트 초기 개발 (FE 4명, BE 3명) |
-| 2024.10 - 2024.11 | 요구사항 재정의 (BE 2명과 협업, 약 3주) |
+| 기간              | 내용                                     |
+| ----------------- | ---------------------------------------- |
+| 2024.08           | 팀 프로젝트 개발 (FE 4명, BE 3명) 약 4주 |
+| 2024.10 - 2024.11 | 요구사항 재정의 (BE 2명과 협업, 약 3주)  |
 | 2024.11 - 2025.02 | **단독 리팩토링, QA 및 배포 (약 3개월)** |
 
 ### 기여 내용
@@ -191,49 +207,41 @@ src/
 
 ## 문서
 
-| 문서 | 링크 |
-|------|------|
-| 플로우 차트 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Flow-Chart) |
-| 와이어프레임 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Wire-Frame) |
-| 화면정의서 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Prototype) |
-| API 명세서 | [GitHub](https://github.com/jinioh88/cmarket_api/tree/main/documents/API%EB%AC%B8%EC%84%9C) |
+| 문서            | 링크                                                                                                     |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| 프로젝트 노션   | [Notion](https://diagnostic-hollyhock-e9a.notion.site/Cuddle-Market-29826170466f80f9af44c0c4abaf2cab)    |
+| 플로우 차트     | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Flow-Chart)           |
+| 와이어프레임    | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Wire-Frame)           |
+| 화면정의서      | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Prototype)            |
+| API 명세서      | [GitHub](https://github.com/jinioh88/cmarket_api/tree/main/documents/API%EB%AC%B8%EC%84%9C)              |
 | 요구사항 정의서 | [Notion](https://diagnostic-hollyhock-e9a.notion.site/2d926170466f80c1910eda9d007690bf?source=copy_link) |
-| 트러블슈팅 | (작성 예정) |
 
 <details>
 <summary>API 엔드포인트 목록</summary>
 
-| 기능 | 메서드 | 엔드포인트 | 인증 |
-|------|--------|-----------|:----:|
-| 소셜 로그인 | `POST` | `/api/v1/auth/social/kakao` | - |
-| 로그아웃 | `POST` | `/api/v1/auth/logout` | ✅ |
-| 마이페이지 조회 | `GET` | `/api/v1/users/mypage` | ✅ |
-| 프로필 수정 | `PATCH` | `/api/v1/users/mypage/profile` | ✅ |
-| 회원 탈퇴 | `DELETE` | `/api/v1/users/withdraw` | ✅ |
-| 상품 목록 | `GET` | `/api/v1/products` | - |
-| 상품 상세 | `GET` | `/api/v1/products/{id}` | - |
-| 상품 등록 | `POST` | `/api/v1/products` | ✅ |
-| 상품 수정 | `PATCH` | `/api/v1/products/{id}` | ✅ |
-| 상품 삭제 | `DELETE` | `/api/v1/products/{id}` | ✅ |
-| 거래 상태 변경 | `PATCH` | `/api/v1/products/{id}/status` | ✅ |
-| 상품 검색 | `GET` | `/api/v1/products/search` | - |
-| 찜 추가 | `POST` | `/api/v1/likes` | ✅ |
-| 찜 삭제 | `DELETE` | `/api/v1/likes` | ✅ |
-| 찜 목록 | `GET` | `/api/v1/likes` | ✅ |
-| 채팅방 목록 | `GET` | `/api/v1/chatrooms` | ✅ |
-| 채팅방 생성 | `POST` | `/api/v1/chatrooms` | ✅ |
-| 채팅방 삭제 | `DELETE` | `/api/v1/chatrooms/{id}` | ✅ |
-| 채팅 메시지 조회 | `GET` | `/api/v1/chatrooms/{id}/messages` | ✅ |
-| 채팅 전송 | `POST` | `/api/v1/chatrooms/{id}/messages` | ✅ |
-| 알림 조회 | `GET` | `/api/v1/notifications` | ✅ |
-| 카테고리 조회 | `GET` | `/api/v1/categories` | - |
+| 기능             | 메서드   | 엔드포인트                        | 인증 |
+| ---------------- | -------- | --------------------------------- | :--: |
+| 소셜 로그인      | `POST`   | `/api/v1/auth/social/kakao`       |  -   |
+| 로그아웃         | `POST`   | `/api/v1/auth/logout`             |  ✅  |
+| 마이페이지 조회  | `GET`    | `/api/v1/users/mypage`            |  ✅  |
+| 프로필 수정      | `PATCH`  | `/api/v1/users/mypage/profile`    |  ✅  |
+| 회원 탈퇴        | `DELETE` | `/api/v1/users/withdraw`          |  ✅  |
+| 상품 목록        | `GET`    | `/api/v1/products`                |  -   |
+| 상품 상세        | `GET`    | `/api/v1/products/{id}`           |  -   |
+| 상품 등록        | `POST`   | `/api/v1/products`                |  ✅  |
+| 상품 수정        | `PATCH`  | `/api/v1/products/{id}`           |  ✅  |
+| 상품 삭제        | `DELETE` | `/api/v1/products/{id}`           |  ✅  |
+| 거래 상태 변경   | `PATCH`  | `/api/v1/products/{id}/status`    |  ✅  |
+| 상품 검색        | `GET`    | `/api/v1/products/search`         |  -   |
+| 찜 추가          | `POST`   | `/api/v1/likes`                   |  ✅  |
+| 찜 삭제          | `DELETE` | `/api/v1/likes`                   |  ✅  |
+| 찜 목록          | `GET`    | `/api/v1/likes`                   |  ✅  |
+| 채팅방 목록      | `GET`    | `/api/v1/chatrooms`               |  ✅  |
+| 채팅방 생성      | `POST`   | `/api/v1/chatrooms`               |  ✅  |
+| 채팅방 삭제      | `DELETE` | `/api/v1/chatrooms/{id}`          |  ✅  |
+| 채팅 메시지 조회 | `GET`    | `/api/v1/chatrooms/{id}/messages` |  ✅  |
+| 채팅 전송        | `POST`   | `/api/v1/chatrooms/{id}/messages` |  ✅  |
+| 알림 조회        | `GET`    | `/api/v1/notifications`           |  ✅  |
+| 카테고리 조회    | `GET`    | `/api/v1/categories`              |  -   |
 
 </details>
-
----
-
-## 관련 링크
-
-| | |
-|---|---|
-| 배포 URL | https://cuddle-market-fe.vercel.app |
