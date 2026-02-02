@@ -5,11 +5,6 @@
 <div> 
 <img  alt="Image" src="https://github.com/user-attachments/assets/6ea2172e-9a39-454d-8e13-461cc12dc075" /> </div>
 <br/>
-<!-- CUDDLE MARKET는 반려동물을 사랑하는 사람들을 위한 반려동물 중고용품 웹 플랫폼입니다.<br/>
-더 이상 사용하지 않는 반려동물 용품을 쉽게 사고팔 수 있고, 다른 반려인들과 따뜻한 커뮤니티를 형성할 수 있습니다.
-- 🐾 반려동물 용품의 합리적인 재사용
-- 🐾 사용자 친화적인 간단한 UI/UX
-- 🐾 따뜻한 감성을 담은 브랜드 아이덴티티 -->
 
 **"더 이상 반려동물 용품은 한 번 쓰고 버리는 물건이 아닙니다."**
 
@@ -27,8 +22,89 @@
 
 <a href="https://cuddle-market-fe.vercel.app/">👉 cuddle market 바로가기</a>
 
+## 주요 기능
 
-## Final Web View
+### 상품 거래
+- **무한 스크롤 상품 목록** - Intersection Observer API를 활용한 성능 최적화
+- **다중 필터링** - 동물 종류, 카테고리, 가격대, 지역별 실시간 필터링
+- **상품 CRUD** - 이미지 다중 업로드, 자동 압축, 드래그 앤 드롭 지원
+- **찜하기** - Optimistic Update로 즉각적인 UI 반응
+
+### 실시간 채팅
+- **WebSocket 양방향 통신** - STOMP 프로토콜 기반 실시간 메시지
+- **자동 재연결** - 네트워크 끊김 시 자동 복구
+- **SSE 알림** - Server-Sent Events를 통한 실시간 알림
+
+### 사용자
+- **카카오 소셜 로그인** - OAuth 2.0 인증
+- **자동 토큰 갱신** - 401 응답 시 토큰 자동 갱신 후 요청 재시도
+- **프로필 관리** - 닉네임, 프로필 이미지, 지역 설정
+
+---
+
+## 기술 스택
+
+### Core
+![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript_5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+
+### State Management & Data Fetching
+![Zustand](https://img.shields.io/badge/Zustand-433E38?style=for-the-badge&logo=zustand&logoColor=white)
+![React Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
+
+### Real-time Communication
+![WebSocket](https://img.shields.io/badge/STOMP_WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+![SSE](https://img.shields.io/badge/Server_Sent_Events-FF6C37?style=for-the-badge)
+
+### Styling & UI
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+
+### Form & Validation
+![React Hook Form](https://img.shields.io/badge/React_Hook_Form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white)
+
+### Development
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
+![MSW](https://img.shields.io/badge/MSW-FF6A33?style=for-the-badge&logo=mockserviceworker&logoColor=white)
+
+---
+
+## 프로젝트 구조
+
+```
+src/
+├── api/                 # API 레이어 (도메인별 분리)
+│   ├── api.ts           # Axios 인스턴스, 인터셉터
+│   ├── auth.ts          # 인증 API
+│   ├── products.ts      # 상품 API
+│   └── chatting.ts      # 채팅 API
+│
+├── components/          # 재사용 가능한 UI 컴포넌트
+│   ├── commons/         # Button, Input, Modal 등 19개 공통 컴포넌트
+│   └── layout/          # Header, Footer, Navigation
+│
+├── hooks/               # 커스텀 훅 (7개)
+│   ├── useIntersectionObserver.ts   # 무한 스크롤
+│   ├── useScrollDirection.ts        # 스크롤 방향 감지
+│   ├── useFavorite.ts               # 찜하기 (Optimistic Update)
+│   └── useNotificationSSE.ts        # SSE 실시간 알림
+│
+├── store/               # Zustand 전역 상태 (5개 스토어)
+│   ├── userStore.ts     # 사용자 인증 상태 (persist)
+│   ├── chatSocketStore.ts # WebSocket 연결 상태
+│   └── filterStore.ts   # 필터 상태
+│
+├── pages/               # 페이지 컴포넌트 (16개)
+├── types/               # TypeScript 타입 정의
+├── utils/               # 유틸리티 함수
+└── constants/           # 상수 및 설정값
+```
+
+---
+
+## 화면 미리보기
 
 <table>
 <thead>
@@ -39,997 +115,125 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/메인화면.gif"><img src="./public/assets/gif/메인화면.gif" alt="MainPage" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/소셜 로그인.gif"><img src="./public/assets/gif/소셜 로그인.gif" alt="Login" style="width: 400px;"></a></td>
+<td align="center"><img src="./public/assets/gif/메인화면.gif" alt="MainPage" width="400"></td>
+<td align="center"><img src="./public/assets/gif/소셜 로그인.gif" alt="Login" width="400"></td>
 </tr>
 </tbody>
 </table>
+
 <table>
 <thead>
 <tr>
-<th align="center">마이 페이지</th>
-<th align="center">프로필 수정</th>
+<th align="center">필터링 & 무한스크롤</th>
+<th align="center">상품 상세</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/마이페이지.gif"><img src="./public/assets/gif/마이페이지.gif" alt="MyPage" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/프로필 수정.gif"><img src="./public/assets/gif/프로필 수정.gif" alt="ProfileUpdate" style="width: 400px;"></a></td>
+<td align="center"><img src="./public/assets/gif/필터링.gif" alt="Filtering" width="400"></td>
+<td align="center"><img src="./public/assets/gif/상품 상세페이지.gif" alt="ProductDetail" width="400"></td>
 </tr>
 </tbody>
 </table>
-<table>
-<thead>
-<tr>
-<th align="center">필터링</th>
-<th align="center">상세 페이지</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/필터링.gif"><img src="./public/assets/gif/필터링.gif" alt="Filtered" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품 상세페이지.gif"><img src="./public/assets/gif/상품 상세페이지.gif" alt="ProductDetail" style="width: 400px;"></a></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th align="center">찜하기</th>
-<th align="center">찜 취소</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/찜하기.gif"><img src="./public/assets/gif/찜하기.gif" alt="Like" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/찜 취소.gif"><img src="./public/assets/gif/찜 취소.gif" alt="LikeCancel"  style="width: 400px;"></a></td>
-</tr>
-</tbody>
-</table>
+
 <table>
 <thead>
 <tr>
 <th align="center">상품 등록</th>
-<th align="center">상품 수정</th>
+<th align="center">실시간 채팅</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품등록.gif"><img src="./public/assets/gif/상품등록.gif" alt="ProductRegister" style="width: 400px;"></a></td>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/상품 수정.gif"><img src="./public/assets/gif/상품 수정.gif" alt="ProductUpdate" style="width: 400px;"></a></td>
+<td align="center"><img src="./public/assets/gif/상품등록.gif" alt="ProductRegister" width="400"></td>
+<td align="center"><img src="./public/assets/gif/채팅.gif" alt="Chatting" width="400"></td>
 </tr>
 </tbody>
 </table>
-<table>
-<thead>
-<tr>
-<th align="center">채팅</th>
-<th align="center">로그아웃</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/채팅.gif"><img src="./public/assets/gif/채팅.gif" alt="Chatting" style="width: 400px;"></a></td>
-  <td align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="./public/assets/gif/로그아웃.gif"><img src="./public/assets/gif/로그아웃.gif" alt="Logout" style="width: 400px;"></a></td>
-</tr>
-</tbody>
-</table>
-
-## 사용 스택
-
-### 🔧 System Architecture
-
-
-
-### FE
-
-<div>
-<img align="center" src="https://img.shields.io/badge/HTML5-FE642E?style=flat-square&logo=html5&logoColor=white"/>
-<img align="center" src="https://img.shields.io/badge/CSS3-2E9AFE?style=flat-square&logo=CSS3&logoColor=white"/>
-<img align="center" src="https://img.shields.io/badge/Javascript-f7df1e?style=flat-square&logo=Javascript&logoColor=black"/><br>
-<img align="center" src="https://img.shields.io/badge/React-2E2E2E?style=flat-square&logo=React&logoColor=61dafb"/>
-<img align="center" src="https://img.shields.io/badge/TypeScript-3178c6?style=flat-square&logo=TypeScript&logoColor=white"/>
-<img align="center" src="https://img.shields.io/badge/figma-A259FF?style=flat-square&logo=figma&logoColor=fff
-"/><br>
-<img align="center" src="https://img.shields.io/badge/prettier-61e1e6?style=flat-square&logo=prettier&logoColor=magenta"/>
-<img align="center" src="https://img.shields.io/badge/Tailwind-06B6D4?style=flat-square&logo=tailwind-css&logoColor=fff"/>
-<img align="center" src="https://img.shields.io/badge/zustand-lightgray?style=flat-square"/>
-<img align="center" src="https://img.shields.io/badge/npm-%23CB3837?style=flat-square&logo=npm"/>
-</div>
-
-### BE
-
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Django](https://img.shields.io/badge/Django-092E20?style=flat&logo=django&logoColor=white)
-![DRF](https://img.shields.io/badge/DRF-FF1709?style=flat&logo=django&logoColor=white)
-![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=flat&logo=socketdotio&logoColor=white)
-![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)<br>
-![Amazon RDS](https://img.shields.io/badge/Amazon%20RDS-527FFF?style=flat&logo=amazonrds&logoColor=white)
-![Amazon EC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat&logo=amazonec2&logoColor=white)
-![Amazon S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=flat&logo=amazons3&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)<br>
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-![Daphne](https://img.shields.io/badge/Daphne-0A0A0A?style=flat&logo=asciinema&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
-![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=black)
-
-## Team
 
 <table>
 <thead>
 <tr>
-<th align="center"><a href="https://github.com/Dayeon-00"><img src="https://img.shields.io/badge/github-Dayeon-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
-<th align="center"><a href="https://github.com/jjub0217"><img src="https://img.shields.io/badge/github-jjub0217-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
-<th align="center"><a href="https://github.com/minjekim64"><img src="https://img.shields.io/badge/github-minjekim64-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
+<th align="center">마이페이지</th>
+<th align="center">찜하기</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">총 팀장<br>(BackEnd 팀장)</td> 
-<td align="center">부 팀장<br>(FrontEnd 팀장)</td>
-<td align="center">팀원<br>(FrontEnd)</td>
-
-</tr>
-<tr>
-<td align="center">권다연</td>
-<td align="center">강주현</td>
-<td align="center">김민제</td>
-
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th align="center"><a href="https://github.com/dirage1"><img src="https://img.shields.io/badge/github-dirage1-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
-<th align="center"><a href="https://github.com/ParkKangbin"><img src="https://img.shields.io/badge/github-ParkKangbin-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
-<th align="center"><a href="https://github.com/ark2313"><img src="https://img.shields.io/badge/github-ark2313-blue?style=for-the-badge&logo=github&logoColor=%23fff&labelColor=%23181717" width="100px/" style="max-width: 100%;"></a><br></th>
-
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">팀원<br>(FrontEnd)</td>
-<td align="center">팀원<br>(BackEnd)</td>
-<td align="center">팀원<br>(BackEnd)</td>
-</tr>
-<tr>
-<td align="center">김승원</td>
-<td align="center">박강빈</td>
-<td align="center">이상민</td>
+<td align="center"><img src="./public/assets/gif/마이페이지.gif" alt="MyPage" width="400"></td>
+<td align="center"><img src="./public/assets/gif/찜하기.gif" alt="Like" width="400"></td>
 </tr>
 </tbody>
 </table>
 
-## Document
+---
 
+## 개발 기간 및 기여도
 
-<a href="https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Flow-Chart">플로우 차트</a><br> 
-<a href="https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Wire-Frame">와이어프레임</a><br> 
-<a href="https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Prototype">화면정의서</a><br>
-<a href="https://dbdiagram.io/d/Copy-of-Copy-of-%EC%95%A0%EC%99%84%EB%8F%99%EB%AC%BC-%EC%A4%91%EA%B3%A0%EB%A7%88%EC%BC%93-ERD-689c9a3b1d75ee360a6f743a">ERD 문서</a><br> 
-<a href="https://docs.google.com/spreadsheets/d/12iKca5DBOynjGHntoxBUpVeOxhgDCU8V7FaVWBBDrTw/edit?gid=0#gid=0">테이블 명세서 문서</a><br> 
+### 개발 타임라인
 
+| 기간 | 내용 |
+|------|------|
+| 2024.08 | 팀 프로젝트 초기 개발 (FE 4명, BE 3명) |
+| 2024.10 - 2024.11 | 요구사항 재정의 (BE 2명과 협업, 약 3주) |
+| 2024.11 - 2025.02 | **단독 리팩토링, QA 및 배포 (약 3개월)** |
+
+### 기여 내용
+
+팀 프로젝트로 시작했으나, 이후 **프론트엔드 전체를 단독으로 리팩토링하여 완성**했습니다.
+
+- **아키텍처 재설계**: 컴포넌트 구조, 상태 관리 전략, API 레이어 설계
+- **실시간 기능 구현**: WebSocket 채팅, SSE 알림 시스템
+- **성능 최적화**: 무한 스크롤, 토큰 갱신 동기화, Optimistic Update
+- **코드 품질 개선**: TypeScript 타입 커버리지 확대, 커스텀 훅 라이브러리화
+
+---
+
+## 문서
+
+| 문서 | 링크 |
+|------|------|
+| 플로우 차트 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Flow-Chart) |
+| 와이어프레임 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Wire-Frame) |
+| 화면정의서 | [Wiki](https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Prototype) |
+| API 명세서 | [GitHub](https://github.com/jinioh88/cmarket_api/tree/main/documents/API%EB%AC%B8%EC%84%9C) |
+| 요구사항 정의서 | [Notion](https://diagnostic-hollyhock-e9a.notion.site/2d926170466f80c1910eda9d007690bf?source=copy_link) |
+| 트러블슈팅 | (작성 예정) |
 
 <details>
-<summary>API 문서</summary>
-<div markdown="1">
+<summary>API 엔드포인트 목록</summary>
+
+| 기능 | 메서드 | 엔드포인트 | 인증 |
+|------|--------|-----------|:----:|
+| 소셜 로그인 | `POST` | `/api/v1/auth/social/kakao` | - |
+| 로그아웃 | `POST` | `/api/v1/auth/logout` | ✅ |
+| 마이페이지 조회 | `GET` | `/api/v1/users/mypage` | ✅ |
+| 프로필 수정 | `PATCH` | `/api/v1/users/mypage/profile` | ✅ |
+| 회원 탈퇴 | `DELETE` | `/api/v1/users/withdraw` | ✅ |
+| 상품 목록 | `GET` | `/api/v1/products` | - |
+| 상품 상세 | `GET` | `/api/v1/products/{id}` | - |
+| 상품 등록 | `POST` | `/api/v1/products` | ✅ |
+| 상품 수정 | `PATCH` | `/api/v1/products/{id}` | ✅ |
+| 상품 삭제 | `DELETE` | `/api/v1/products/{id}` | ✅ |
+| 거래 상태 변경 | `PATCH` | `/api/v1/products/{id}/status` | ✅ |
+| 상품 검색 | `GET` | `/api/v1/products/search` | - |
+| 찜 추가 | `POST` | `/api/v1/likes` | ✅ |
+| 찜 삭제 | `DELETE` | `/api/v1/likes` | ✅ |
+| 찜 목록 | `GET` | `/api/v1/likes` | ✅ |
+| 채팅방 목록 | `GET` | `/api/v1/chatrooms` | ✅ |
+| 채팅방 생성 | `POST` | `/api/v1/chatrooms` | ✅ |
+| 채팅방 삭제 | `DELETE` | `/api/v1/chatrooms/{id}` | ✅ |
+| 채팅 메시지 조회 | `GET` | `/api/v1/chatrooms/{id}/messages` | ✅ |
+| 채팅 전송 | `POST` | `/api/v1/chatrooms/{id}/messages` | ✅ |
+| 알림 조회 | `GET` | `/api/v1/notifications` | ✅ |
+| 카테고리 조회 | `GET` | `/api/v1/categories` | - |
 
-| 기능 (FR) | HTTP 메서드 | 엔드포인트 | 인증 | 설명 |
-| --- | --- | --- | --- | --- |
-| **FR-001** | `POST` | `/api/v1/auth/social/kakao` | ❌ | 소셜 로그인 / 회원가입 |
-| **FR-002** | `GET` | `/api/v1/users/mypage` | ✅ | 마이페이지 조회 |
-| **FR-003** | `PATCH`  | `/api/v1/users/mypage/profile` | ✅ | 프로필 정보 수정 |
-| **FR-004** | `DELETE` | `/api/v1/users/withdraw` | ✅ | 회원 탈퇴 |
-| **FR-005** | `POST` | `/api/v1/auth/logout` | ✅ | 로그아웃 |
-| **FR-006** | `POST` | `/api/v1/products` | ✅ | 상품 등록 |
-| **FR-007** | `GET` | `/api/v1/products` | ❌ | 메인 페이지 상품 게시글 목록 조회 |
-| **FR-008** | `GET` | `/api/v1/products/{product_id}` | ❌ | 상품 상세 조회 |
-| **FR-009** | `PATCH` | `/api/v1/products/{product_id}` | ✅ | 상품 수정(제목, 거래상태 등) |
-| **FR-010** | `DELETE` | `/api/v1/products/{product_id}` | ✅ | 상품 삭제 |
-| **FR-010-1** | `PATCH` | `/api/v1/products/{product_id}/status` | ✅ | 거래 상태 변경 |
-| **FR-011** | `GET` | `/api/v1/products/search` | ❌ | 통합 검색(필터링, 정렬) |
-| **FR-012** | `POST` | `/api/v1/likes` | ✅ | 관심 목록 추가 |
-| **FR-013** | `DELETE` | `/api/v1/likes` | ✅ | 관심 목록 삭제 |
-| **FR-014** | `GET` | `/api/v1/likes` | ✅ | 관심 목록 조회 |
-| **FR-015** | `GET` | `/api/v1/chatrooms` | ✅ | 채팅방 목록 |
-| **FR-016** | `POST` | `/api/v1/chatrooms` | ✅ | 채팅방 생성 |
-| **FR-017** | `DELETE` | `/api/v1/chatrooms/{chatroom_id}` | ✅ | 채팅방 삭제 |
-| **FR-018** | `POST` | `/api/v1/chatrooms/{chatroom_id}/messages` | ✅ | 채팅 전송 |
-| **FR-019** | `GET` | `/api/v1/chatrooms/{chatroom_id}/messages` | ✅ | 채팅 내역 조회 |
-| **FR-020** | `GET` | `/api/v1/notifications` | ✅ | 알림 기능 |
-| FR-021 | `GET` | `/api/v1/users/profile` | ✅ | 유저 프로필 조회 |
-| FR-023 | `GET` | `/api/v1/categories/` | ❌ | 카테고리 필터링 |
-| FR-024 | `GET` | `/api/v1/categories/filters/` | ✅ | 서브 필터 |
-| FR-025 | `GET` | `/api/v1/products/my-products/` |  | 내가 등록한 상품 목록 |
-| FR-026 | `GET` | `/api/v1/products/{product_id}/view-count` | ❌ | 상품 조회수 조회 |
-
-### 2. 엔드포인트 상세 명세
-
-### 2.1 소셜 로그인 / 회원가입
-
-`POST` `/api/v1/auth/social/kakao` — ❌ *(인증 불필요)*
-
-**Path Params**
-
-- `provider` *(string, 필수)* — `google`, `kakao`, `naver` 중 하나
-
-**Request Body** ✅
-
-```json
-
-{
-  "code": "소셜로그인_인가코드"
-}
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-{
-  "access_token": "jwt_access_token",
-  "refresh_token": "jwt_refresh_token",
-"user":{
-  "id": 1,
-  "provider": "kakao",
-  "email": "user@example.com",
-  "name": "홍길동",
-  "nickname": "길동이",
-  "profile_image": "https://example.com/profile.jpg",
-  "birthday": "1998-01-01",
-  "is_active": true,
-  "is_staff": false,
-  "is_superuser": false,
-  "profile_completed": true,
-  "last_login": "2025-09-08T12:34:56Z",
-  "created_at": "2025-09-01T09:30:00Z",
-  "state_name": "서울특별시",
-  "city_name": "강남구",
-  }
-}
-
-```
-
----
-
-### 2.2 마이페이지 조회
-
-`GET` `/api/v1/users/mypage` — ✅ *(인증 필요)*
-
-**Request Body** ❌
-
-**Query Params** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-{
-  "my_product_list": [
-		  {
-		  "title": "제목",
-		  "price": "123.00",
-		  "transaction_status": "판매중",
-		  "view_count": 123,
-		  "main_image": "url"
-		  },
-		  {"title": "제목2", ...}
-	],
-  "liked_product_list": [
-		  {
-		  "title": "제목",
-		  "price": "123.00",
-		  "transaction_status": "판매중",
-		  "view_count": 123,
-		  "main_image": "url"
-		  },
-		  {"title": "제목2", ...}
-	]
-}
-
-```
-
----
-
-### 2.2.1 유저페이지 조회
-
-`GET` `/api/v1/users/profile` — ✅ *(인증 필요)*
-
-**Request Body** ❌
-
-**Query Params** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-{
-	  "id": 1,
-    "nickname": "닉네임",
-    "profile_image": "https://example.com/profile.jpg",
-    "state": "서울",
-	  "city": "강남구",
-    "created_at": "2025-01-01T00:00:00"
-}
-```
-
----
-
-### 2.3 프로필 정보 수정
-
-`PATCH` `/api/v1/users/mypage/profile` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "nickname": "새닉네임",
-  "profile_image": "https://example.com/new_image.jpg",
-  "state": "서울",
-  "city": "강남구"
-}
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "프로필 정보가 수정되었습니다."
-}
-
-```
-
----
-
-### 2.4 회원 탈퇴
-
-`DELETE` `/api/v1/users/withdraw` — ✅ *(인증 필요)*
-
-**Request Body** ❌
-
-**Query Params** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "회원 탈퇴 완료"
-}
-
-```
-
----
-
-### 2.5 로그아웃
-
-`POST` `/api/v1/auth/logout` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "refresh_token": "리프레시토큰값"
-}
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "로그아웃 완료"
-}
-
-```
-
----
-
-### 2.6 상품 등록
-
-`POST` `/api/v1/products` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-{
-  "title": "강아지 장난감",
-  "description": "강아지가 좋아해요",
-  "price": 15000.00,
-  "images": {
-		  "main": "https://example.com/image1.jpg",
-			"sub": ["1번사진url", "2번사진url"]	  
-	},
-	"state_code": "서울특별시",
-	"city_code": "강남구",
-	"category_code": "사료/간식",
-	"pet_type_code": "포유류",
-	"pet_type_detail_code": "강아지",
-	"condition_status": "새 것"
-}
-```
-
-**응답 예시 (201 Created)**
-
-```json
-{
-  "message": "상품 등록 완료"
-}
-```
-
----
-
-### 2.7 메인 페이지 상품 게시글 목록 조회
-
-`GET` `/api/v1/products` — ❌ *(인증 불필요)*
-
-**Query Params** 
-
-`last_id`  (string, 최초 외에 필수)
-
-`size` (int, 필수, 기본값20)
-
-**응답 예시 (200 OK)**
-
-```json
-{
-  "product_list": [
-    {
-      "id": 1,
-      "thumbnail": "https://s3.amazonaws.com/bucket/products/1.jpg",
-      "title": "강아지 장난감",
-      "price": 15000,
-      "pet_type_code": "강아지",
-      "condition_status": "거의 새것",
-      "transaction_status": "판매중",
-      "elapsed_time": "2시간 전",
-      "like_count": 12
-    }
-  ]
-}
-
-```
-
----
-
-### 2.8 상품 상세 조회
-
-`GET` `/api/v1/products/{product_id}` — ❌ *(인증 불필요)*
-
-**Path Params**
-
-- `product_id` *(integer, 필수)*
-
-**응답 예시 (200 OK)**
-
-```json
-{
-  		"id": 1,
-		  "title": "강아지 장난감",
-		  "description": "강아지가 좋아해요",
-		  "price": 15000.00,
-		  "images": "https://example.com/image1.jpg",
-			"state_code": "서울특별시",
-			"city_code": "서초구",
-			"category_code": "사료/간식",
-			"pet_type_code": "포유류",
-			"pet_type_detail_code": "강아지",
-			"transaction_status": "판매중",
-			"condition_status": "새 것",
-			"view_count": 1234,
-			"like_count": 123,
-			"seller_info": {
-							"id": 1,
-							"seller_images": "https:example.com/image3.jpg",
-							"nickname": "홍길동",
-							"state": "서울특별시",
-							"city": "서초구"
-			},
-			"seller_products":[
-			{
-			 "id":123,
-			 "thumbnail": "https:example.com/image3.jpg",
-			 "PetTypeDetail": "강아지",
-       "condition": "거의 새것",
-       "transaction_status": "판매중",
-			 "title": "상품 제목",
-			 "price":20000,
-			 "elapsed_time": "2025-08-08T13:20:00",
-			 "like_count":5
-			}				
-		]
-	}
-
-```
-
----
-
-### 2.9 상품 수정
-
-`PATCH` `/api/v1/products/{product_id}` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `product_id` *(integer, 필수)*
-
-**Request Body** ✅
-
-```json
-
-{
-	"id": 123,
-	"pet_type_id": 3,
-	"pet_type_name": "강아지",
-	"category_id":5,
-	"category_name":"사료"
-  "title": "수정된 상품명",
-  "description": "설명 수정",
-  "price": 20000,
-	"condition_status":"MINT",
-	"images":[
-	"https://example.com/images1.jpg",
-	"https://example.com/images1.jpg"
-	],
-	"state_id": 1,
-	"state_name": "서울특별시"
-	"city_id":12,
-	"city_name": "강남구"
-	
-  }
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "상품 정보가 수정되었습니다."
-}
-
-```
-
-### 2.10-1 거래 상태 변경
-
-`PATCH` `/api/v1/products/{product_id}/status` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `product_id` *(integer, 필수)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "transaction_status": "SOLD"
-}
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "product_id": 1,
-  "transaction_status": "SOLD",
-  "message": "거래 상태가 변경되었습니다."
-}
-
-```
-
----
-
-### 2.11 상품 삭제
-
-`DELETE` `/api/v1/products/{product_id}` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `product_id` *(integer, 필수)*
-
-**Request Body** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "상품 삭제 완료",
-  "deleted_product_id": 101
-}
-
-```
-
----
-
-### 2.12 통합 검색
-
-`GET` `/api/v1/products/search` — ❌ *(인증 불필요)*
-
-**Query Params** ✅
-
-- `keyword` *(string, 필수)*
-
-**응답 예시 (200 OK)**
-
-```json
-
-[
-  {
-    "id": 1,
-    "thumbnail": "string(url)",
-    "PetTypeDetail": "강아지",
-    "condition": "거의 새것",
-    "transaction_status": "판매중"
-    "title": "강아지 장난감",
-    "price": 15000,
-    "created_at": "2025-08-13T10:32:00",
-    "like_count": 15
-  }
-]
-
-```
-
----
-
-### 2.13 카테고리 필터링
-
-`GET` `/api/v1/categories/` — ❌ *(인증 불필요)*
-
-**Request Body** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "id": 1,
-  "name": "포유류",
-  "code": "MAMMAL",
-  "children": [
-    {
-      "id": 10,
-      "name": "강아지",
-      "code": "DOG",
-      "children": [
-        { "id": 101, "name": "사료/간식", "code": "FOOD" },
-        { "id": 102, "name": "장난감", "code": "TOY" },
-        { "id": 103, "name": "사육장/하우스", "code": "CAGE" }
-      ]
-    },
-    {
-      "id": 11,
-      "name": "고양이",
-      "code": "CAT",
-      "children": [
-        { "id": 104, "name": "사료/간식", "code": "FOOD" },
-        { "id": 105, "name": "캣타워", "code": "TOWER" }
-      ]
-    }
-  ]
-}
-
-```
-
----
-
-### 2.14 서브 필터
-
-`GET` `/api/v1/categories/filter` — ❌ *(인증 불필요)*
-
-**Query Params** *(선택)*
-
-- `price_min` *(integer)*
-- `price_max` *(integer)*
-- `state` *(string)*
-- `city` *(string)*
-
-**응답 예시 (200 OK)**
-
-```json
-
-[
-  {
-    "id": 1,
-    "title": "고양이 사료",
-    "price": 12000,
-    "thumbnail": "https://example.com/image.jpg", //“필터링 걸쳐져서 대표 상품 이미지 URL
-    "state": "서울특별시",
-    "city": "강남구"
-  }
-]
-
-```
-
----
-
-### 2.15 관심 목록 추가
-
-`POST` `/api/v1/likes/` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "product_id": 1
-}
-
-```
-
-**응답 예시 (201 Created)**
-
-```json
-
-{
-  "message": "관심 목록에 추가되었습니다."
-  "product_id": 1,
-  "is_liked": true
-}
-
-```
-
----
-
-### 2.16 관심 목록 삭제
-
-`DELETE` `/api/v1/likes/` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "product_id": 1
-}
-
-```
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "관심 목록에서 삭제되었습니다.",
-  "product_id": 1,
-  "is_liked": false
-}
-
-```
-
----
-
-### 2.17 관심 목록 조회
-
-`GET` `/api/v1/likes/` — ✅ *(인증 필요)*
-
-**Request Body** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-[
-  {
-    "product_id": 1,
-    "title": "강아지 장난감",
-    "price": 15000,
-    "thumbnail": "https://example.com/image.jpg",
-    "view_count": 3,
-    "transaction_status": "SELLING
-  }
-]
-
-```
-
----
-
-### 2.19 채팅방 목록 조회
-
-`GET` `/api/v1/chatrooms` — ✅ *(인증 필요)*
-
-**Query Params** *(선택)*
-
-- `page` *(integer)* — 기본값 1
-- `page_size` *(integer)* — 기본값 20
-
-**응답 예시 (200 OK)**
-
-```json
-[
-  {
-    "partner_nickname": "고양이파",  # 상대방 닉네임
-    "product_image": "https://example.com/image.jpg", 
-    "product_title": "강아지 장난감",
-    "product_price": 15000,
-    "last_message": "안녕하세요!",
-    "last_message_time": "2025-08-13T10:32:00"
-  }
-]
-
-```
-
----
-
-### 2.20 채팅방 생성
-
-`POST` `/api/v1/chatrooms/` — ✅ *(인증 필요)*
-
-**Request Body** ✅
-
-```json
-
-{
-	"buyer_id" : 1, 
-  "product_id": 1,
-  "seller_id": 2
-}
-
-```
-
-**응답 예시 (201 Created)**
-
-```json
-
-{
-  "chatroom_id": 12,
-  "message": "채팅방이 생성되었습니다."
-}
-
-```
-
----
-
-### 2.21 채팅 전송
-
-`POST` `/api/v1/chatrooms/{chatroom_id}/messages/` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `chatroom_id` *(integer, 필수)*
-
-**Request Body** ✅
-
-```json
-
-{
-  "content": "안녕하세요!",
-}
-
-```
-
-**응답 예시 (201 Created)**
-
-```json
-
-{
-  "message": "메시지 전송 완료"
-}
-
-```
-
----
-
-### 2.22 채팅방 삭제
-
-`DELETE` `/api/v1/chatrooms/{chatroom_id}` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `chatroom_id` *(integer, 필수)*
-
-**Request Body** ❌
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "message": "채팅방이 삭제되었습니다.",
-}
-
-```
-
----
-
-### 2.23 채팅 내역 조회
-
-`GET` `/api/v1/chatrooms/{chatroom_id}/messages/` — ✅ *(인증 필요)*
-
-**Path Params**
-
-- `chatroom_id` *(integer, 필수)*
-
-**Query Params** *(선택)*
-
-- `page` *(integer)* — 기본값 1
-- `page_size` *(integer)* — 기본값 50
-
-**응답 예시 (200 OK)**
-
-```json
-{
-  "messages": [
-    {
-      "sender_nickname": "강아지사랑",
-      "message": "안녕하세요!"
-    },
-    {
-      "sender_nickname": "고양이파",
-      "message": "반갑습니다!"
-    }
-  ]
-
-```
-
----
-
-### 2.24 알림 기능
-
-`GET` `/api/v1/notifications` — ✅ *(인증 필요)*
-
-**Query Params** *(선택)*
-
-- `is_read` *(boolean)* — 읽음 여부 필터
-
-**응답 예시 (200 OK)**
-
-```json
-
-[
-  {
-    "id": 123,
-    "type": "CHAT",
-    "message": "새로운 채팅 메시지가 도착했습니다.",
-  }
-]
-
-```
-
----
-
-### 2.26 상품 조회수 조회
-
-`GET` `/api/v1/products/{product_id}/view-count` — ❌ *(인증 불필요)*
-
-**Path Params**
-
-- `product_id` *(integer, 필수)*
-
-**응답 예시 (200 OK)**
-
-```json
-
-{
-  "product_id": 1,
-  "view_count": 152
-}
-
-```
-</div>
 </details>
 
+---
 
-<details>
-<summary>사용자 요구사항 정의서</summary>
-<div markdown="1">
+## 관련 링크
 
-<img width="1342" height="867" alt="image" src="https://github.com/user-attachments/assets/f671f60a-f2ba-4525-a58d-d651433646e9" />
-<img width="1327" height="888" alt="image" src="https://github.com/user-attachments/assets/b6ed201e-bf22-4c76-8374-1eaa5e3d2537" />
-<img width="1338" height="851" alt="image" src="https://github.com/user-attachments/assets/2901cb4f-4f35-4b35-a11c-567f76e0f671" />
-<img width="1340" height="877" alt="image" src="https://github.com/user-attachments/assets/ccb17b5b-cc63-4f8f-b99b-d9c1c25461f1" />
-
-
-</div>
-</details>
-<a href="https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-FE/wiki/Requirements">요구사항 정의서 링크</a><br>
-
-## More Info
-
-<a href="https://github.com/ExpectedAnnualSalaryOf4TrillionWon/Cuddle-Market-BE">🔐 Cuddle market Server Repository</a><br>
+| | |
+|---|---|
+| 배포 URL | https://cuddle-market-fe.vercel.app |
