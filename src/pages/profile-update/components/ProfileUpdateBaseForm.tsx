@@ -266,7 +266,7 @@ export default function ProfileUpdateBaseForm({ myData }: ProfileUpdateBaseFormP
                   <div className="flex w-full flex-1 flex-col gap-1">
                     <div className="flex flex-col gap-2">
                       <span className="font-medium text-gray-600">이름</span>
-                      <div className="bg-primary-50/50 rounded-lg p-3 font-medium text-gray-400">{myData?.nickname}</div>
+                      <div className="bg-primary-50/50 rounded-lg p-3 font-medium text-gray-400">{myData?.name}</div>
                     </div>
                     <p className="text-sm font-bold text-gray-400">본인 인증 정보로 변경할 수 없습니다.</p>
                   </div>
