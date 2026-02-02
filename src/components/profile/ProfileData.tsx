@@ -115,7 +115,7 @@ export default function ProfileData({
                     className="bg-primary-200 flex items-center justify-center gap-2.5 rounded-lg px-3 py-2 text-white transition-all"
                   >
                     <Settings size={19} />
-                    <span>내 정보 수정</span>
+                    <span className="lg:text-sm lg:font-bold">내 정보 수정</span>
                   </Link>
                 )}
               </div>

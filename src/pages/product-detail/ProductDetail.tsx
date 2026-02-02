@@ -59,7 +59,7 @@ function ProductDetail() {
             </div>
 
             <div className="flex flex-1 flex-col gap-3.5">
-              <div className="flex flex-col gap-9">
+              <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-3.5">
                   <ProductBadges {...data} />
                   <ProductSummary data={data} />
