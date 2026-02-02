@@ -14,11 +14,8 @@ export default function AuthMenu({ isSideOpen, setIsSideOpen, hideMenuButton = f
   const isXl = useMediaQuery('(min-width: 1280px)')
   return isXl ? (
     <div className="flex items-center gap-5">
-      <Link to={ROUTES.LOGIN} className="font-bold text-white">
-        로그인
-      </Link>
-      <Link to={ROUTES.SIGNUP} className="rounded-lg bg-white px-2 py-1 text-center xl:min-w-20 xl:px-4 xl:py-2">
-        회원가입
+      <Link to={ROUTES.LOGIN} className="rounded-lg bg-white px-2 py-1 text-center xl:min-w-20 xl:px-4 xl:py-2">
+        로그인 / 회원가입
       </Link>
     </div>
   ) : hideMenuButton ? null : (

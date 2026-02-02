@@ -11,7 +11,6 @@ import ProductDescription from './components/ProductDescription'
 import ProductActions from './components/ProductActions'
 import SellerOtherProducts from './components/SellerOtherProducts'
 import { useEffect } from 'react'
-import { useSEO } from '@src/hooks/useSEO'
 
 function ProductDetail() {
   const navigate = useNavigate()
@@ -21,11 +20,6 @@ function ProductDetail() {
     queryKey: ['product', id],
     queryFn: () => fetchProductById(id!),
     enabled: !!id,
-  })
-  const seo = useSEO({
-    title: data?.title,
-    description: data?.description,
-    image: data?.mainImageUrl,
   })
 
   useEffect(() => {
@@ -55,7 +49,6 @@ function ProductDetail() {
 
   return (
     <>
-      {seo}
       <div className="px-lg pb-4xl mx-auto max-w-7xl bg-white pt-8">
         <div className="flex flex-col gap-20">
           <div className="flex flex-col justify-center gap-8 md:flex-row">
