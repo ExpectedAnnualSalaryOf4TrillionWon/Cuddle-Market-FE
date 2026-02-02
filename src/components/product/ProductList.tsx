@@ -30,7 +30,7 @@ export default function ProductList({ products, showMoreButton = false, sellerId
           <ProductCard data-index={index} data={product} />
         </li>
       ))}
-      {showMoreButton && sellerId && (
+      {showMoreButton && sellerId && products.length >= 4 && (
         <button
           type="button"
           onClick={() => goToUserPage(sellerId)}

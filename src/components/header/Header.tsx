@@ -61,15 +61,12 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
               <Logo />
               {isXl && (
                 <>
-                  <NavLink
-                    to={ROUTES.HOME}
-                    className={cn('text-md font-extrabold', isMarketActive ? 'border-b-2 border-white text-white' : 'text-gray-700')}
-                  >
+                  <NavLink to={ROUTES.HOME} className={cn('text-md font-extrabold', isMarketActive ? 'border-white text-white' : 'text-gray-700')}>
                     마켓
                   </NavLink>
                   <NavLink
                     to={ROUTES.COMMUNITY}
-                    className={cn('text-md font-extrabold', isCommunityActive ? 'border-b-2 border-white text-white' : 'text-gray-700')}
+                    className={cn('text-md font-extrabold', isCommunityActive ? 'border-white text-white' : 'text-gray-700')}
                   >
                     커뮤니티
                   </NavLink>
