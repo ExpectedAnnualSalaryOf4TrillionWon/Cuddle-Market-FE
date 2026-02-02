@@ -63,13 +63,13 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
                 <>
                   <NavLink
                     to={ROUTES.HOME}
-                    className={cn('text-lg', isMarketActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
+                    className={cn('text-md font-extrabold', isMarketActive ? 'border-b-2 border-white text-white' : 'text-gray-700')}
                   >
                     마켓
                   </NavLink>
                   <NavLink
                     to={ROUTES.COMMUNITY}
-                    className={cn('text-lg', isCommunityActive ? 'border-b-2 border-white font-extrabold text-white' : 'text-gray-700')}
+                    className={cn('text-md font-extrabold', isCommunityActive ? 'border-b-2 border-white text-white' : 'text-gray-700')}
                   >
                     커뮤니티
                   </NavLink>
@@ -77,7 +77,7 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
               )}
             </div>
             <div className="flex items-center gap-1 xl:gap-8">
-              {!hideSearchBar && <SearchBar className="hidden xl:block" />}
+              {!hideSearchBar && <SearchBar className="hidden xl:block" inputClass="text-sm" />}
               {/* 모바일 검색 아이콘 */}
               {!hideSearchBar && !isXl && (
                 <IconButton aria-label="검색" onClick={() => setIsSearchOpen(!isSearchOpen)}>

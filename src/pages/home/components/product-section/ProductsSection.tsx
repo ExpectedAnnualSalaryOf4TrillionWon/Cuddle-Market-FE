@@ -10,14 +10,9 @@ interface ProductListHeaderProps {
 
 function ProductListHeader({ totalElements }: ProductListHeaderProps) {
   return (
-    <div>
-      <h2 id="product-list-title" className="heading4 text-text-primary">
-        전체 상품
-      </h2>
-      <p className="mt-xs bodySmall text-text-secondary" aria-live="polite">
-        {`총 ${totalElements}개의 상품`}
-      </p>
-    </div>
+    <p className="text-text-secondary" aria-live="polite">
+      {`총 ${totalElements}개의 상품`}
+    </p>
   )
 }
 

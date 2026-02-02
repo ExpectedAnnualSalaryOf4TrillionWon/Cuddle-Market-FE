@@ -230,8 +230,9 @@ function Home() {
                 onTabChange={setActivePetTypeTab}
                 selectedDetailPet={selectedDetailPet}
                 onPetDetailTypeChange={setSelectedDetailPet}
+                headingClassName="heading-h5"
               />
-              <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
+              <CategoryFilter selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} headingClassName="heading-h5" />
               <DetailFilter
                 isOpen={isDetailFilterOpen}
                 onToggle={handleDetailFilterToggle}
@@ -241,9 +242,10 @@ function Home() {
                 onMinPriceChange={setSelectedProductPrice}
                 onLocationChange={setSelectedLocation}
                 filterReset={filterReset}
+                headingClassName="lg:text-base!"
               />
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-3">
               <Tabs
                 tabs={PRODUCT_TYPE_TABS}
                 activeTab={activeProductTypeTab}

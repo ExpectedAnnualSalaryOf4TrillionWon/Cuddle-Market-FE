@@ -14,6 +14,7 @@ interface DetailFilterProps {
   onMinPriceChange?: (priceRange: PriceRange | null) => void
   onLocationChange?: (location: LocationFilterType | null) => void
   filterReset: (e: React.MouseEvent) => void
+  headingClassName?: string
 }
 
 export const DetailFilter = memo(function DetailFilterSection({
@@ -25,6 +26,7 @@ export const DetailFilter = memo(function DetailFilterSection({
   onMinPriceChange,
   onLocationChange,
   filterReset,
+  headingClassName,
 }: DetailFilterProps) {
   return (
     <div className="flex flex-col gap-2.5">
@@ -36,9 +38,14 @@ export const DetailFilter = memo(function DetailFilterSection({
           id="detail-filter-content"
           aria-label="세부 필터 옵션"
         >
-          <ProductStateFilter selectedProductStatus={selectedProductStatus} onProductStatusChange={onProductStatusChange} useUrlSync />
-          <PriceFilter selectedPriceRange={selectedPriceRange} onMinPriceChange={onMinPriceChange} />
-          <LocationFilter onLocationChange={onLocationChange} />
+          <ProductStateFilter
+            selectedProductStatus={selectedProductStatus}
+            onProductStatusChange={onProductStatusChange}
+            useUrlSync
+            headingClassName={headingClassName}
+          />
+          <PriceFilter selectedPriceRange={selectedPriceRange} onMinPriceChange={onMinPriceChange} headingClassName={headingClassName} />
+          <LocationFilter onLocationChange={onLocationChange} headingClassName={headingClassName} />
         </div>
       )}
     </div>
