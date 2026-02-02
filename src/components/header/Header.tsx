@@ -74,7 +74,7 @@ function Header({ hideSearchBar = false, hideMenuButton = false }: HeaderProps) 
               )}
             </div>
             <div className="flex items-center gap-1 xl:gap-8">
-              {!hideSearchBar && <SearchBar className="hidden xl:block" inputClass="text-sm" />}
+              {!hideSearchBar && <SearchBar className="hidden xl:block" inputClass="text-sm py-0" />}
               {/* 모바일 검색 아이콘 */}
               {!hideSearchBar && !isXl && (
                 <IconButton aria-label="검색" onClick={() => setIsSearchOpen(!isSearchOpen)}>
