@@ -21,7 +21,7 @@ import { EmptyState } from '@src/components/EmptyState'
 export default function CommunityPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab') as CommunityTabId | null
-  const initialTab = tabParam === 'tab-question' ? 'tab-question' : 'tab-info'
+  const initialTab = tabParam === 'tab-info' ? 'tab-info' : 'tab-question'
   const isMd = useMediaQuery('(min-width: 768px)')
   const { isCollapsed: isFilterCollapsed } = useScrollDirection()
 

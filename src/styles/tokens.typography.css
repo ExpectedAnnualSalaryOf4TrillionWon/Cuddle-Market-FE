@@ -13,6 +13,12 @@
   --text-h2--weight: 700;
   --text-h2--tracking: 0;
 
+  /* H2.5 */
+  --text-h2_5: 28px;
+  --text-h2_5--line-height: 38px;
+  --text-h2_5--weight: 700;
+  --text-h2_5--tracking: 0;
+
   /* H3 */
   --text-h3: 24px;
   --text-h3--line-height: 32px;
