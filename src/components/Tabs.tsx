@@ -19,7 +19,7 @@ export function Tabs({ tabs, activeTab, onTabChange, ariaLabel, excludeTabId }: 
   const filteredTabs = excludeTabId ? tabs.filter((tab) => tab.id !== excludeTabId) : tabs
   const isMd = useMediaQuery('(min-width: 768px)')
   return (
-    <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex gap-1 px-3.5 md:gap-2.5 md:border-b-2 md:p-0 md:pb-1')}>
+    <div role="tablist" aria-label={ariaLabel} className={cn('border-b-primary-200 flex gap-1 md:gap-2.5 md:border-b-2 md:pb-1')}>
       {filteredTabs.map((tab) => (
         <Button
           key={tab.id}
