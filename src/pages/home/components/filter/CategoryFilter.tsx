@@ -41,7 +41,7 @@ export function CategoryFilter({ headingClassName, selectedCategory, onCategoryC
             type="button"
             size="sm"
             className={cn(
-              'bg-primary-100 cursor-pointer',
+              'border-primary-200 cursor-pointer border',
               selectedCategory === category.code ? 'bg-primary-300 font-bold text-white' : 'hover:bg-primary-300 text-gray-900 hover:text-white'
             )}
             onClick={(e) => handleProductCategory(e, category.code)}

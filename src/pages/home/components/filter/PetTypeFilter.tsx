@@ -52,12 +52,9 @@ export function PetTypeFilter({ activeTab, headingClassName, selectedDetailPet, 
 
   // 모바일 + "전체" 탭일 때만 더보기 기능 적용 (데스크탑은 항상 전체 표시)
   const displayedPetDetails =
-    isMobile && selectedPetTypeCode === 'ALL' && !showAll
-      ? filteredPetDetails.slice(0, INITIAL_DISPLAY_COUNT)
-      : filteredPetDetails
+    isMobile && selectedPetTypeCode === 'ALL' && !showAll ? filteredPetDetails.slice(0, INITIAL_DISPLAY_COUNT) : filteredPetDetails
 
-  const hasMoreItems =
-    isMobile && selectedPetTypeCode === 'ALL' && filteredPetDetails.length > INITIAL_DISPLAY_COUNT
+  const hasMoreItems = isMobile && selectedPetTypeCode === 'ALL' && filteredPetDetails.length > INITIAL_DISPLAY_COUNT
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -71,7 +68,7 @@ export function PetTypeFilter({ activeTab, headingClassName, selectedDetailPet, 
               type="button"
               size="sm"
               className={cn(
-                'bg-primary-100 cursor-pointer',
+                'border-primary-200 cursor-pointer border',
                 selectedDetailPet === pet.code ? 'bg-primary-300 font-bold text-white' : 'hover:bg-primary-300 text-gray-900 hover:text-white'
               )}
               onClick={(e) => handleProductPetDetailType(e, pet.code)}
@@ -81,12 +78,7 @@ export function PetTypeFilter({ activeTab, headingClassName, selectedDetailPet, 
             </Button>
           ))}
           {hasMoreItems && !showAll && (
-            <Button
-              type="button"
-              size="sm"
-              className="cursor-pointer bg-gray-100 text-gray-600 md:hidden"
-              onClick={() => setShowAll(true)}
-            >
+            <Button type="button" size="sm" className="cursor-pointer bg-gray-100 text-gray-600 md:hidden" onClick={() => setShowAll(true)}>
               더보기 ({filteredPetDetails.length - INITIAL_DISPLAY_COUNT}개)
             </Button>
           )}
