@@ -1,3 +1,10 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://cuddle-market.vercel.app/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
